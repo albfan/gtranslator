@@ -31,5 +31,6 @@
 #include "stylistics.h"
 #include "team-database.h"
 #include "team-handle.h"
+#include <libgnome/gnome-i18n.h>
 
 #endif

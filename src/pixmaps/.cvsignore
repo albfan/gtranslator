@@ -1,2 +1,5 @@
 Makefile
 Makefile.in
+.xvpics
+.thumbnails
+.nautilus-metafile.xml
