@@ -25,5 +25,4 @@ data/mime/gtranslator.keys.in
 libgtranslator/main.c
 libgtranslator/preferences.c
 libgtranslator/stylistics.c
-libgtranslator/team-handle.c
 libgtranslator/vfs-handle.c

@@ -1,3 +1,14 @@
+2001-02-08  Fatih Demir <kabalak@kabalak.net>
+
+	* libgtranslator.h: Removed all the team handle stuff from
+		here.
+
+	* team-*.c/.h: Removed the team handle sources.
+
+	* Makefile.am: Removed the now useless MESSAGE_DB_DIR define,
+		removed non-existing files from the targets and removed
+		 not used team handle sources and xml flags from here.
+
 2001-02-05  Gediminas Paulauskas <menesis@delfi.lt>
 
 	* stylistics.c: fixed font loading: if no name given, set ours,
