@@ -247,7 +247,6 @@ static gboolean actual_parse(void)
 					 && (msgstr_ok == FALSE))
 					append_line(&msg->msgstr, line);
 				else
-					/*g_assert_not_reached();*/
 					goto ERRR;
 			} else {
 				ERRR:
@@ -701,6 +700,8 @@ static void free_a_message(gpointer data, gpointer useless)
  */
 static void free_po(void)
 {
+	if(!po)
+		return;
 	if (po->messages) {
 		g_list_foreach(po->messages, free_a_message, NULL);
 		g_list_free(po->messages);
