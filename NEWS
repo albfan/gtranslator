@@ -1,6 +1,13 @@
 NEWS from gtranslator R 0.34:
 ----------------------------
 
+- Implemented all preferences items in "real" application life.
+- Header routines fixed -- no translated language name is written
+    into the po file anylonger.
+- More enhanced open file dialog (it opens up in the same dir as
+    in which the current/last po file is residenting).
+- Some more error sources were corrected.
+- "Advanced" history has been implemented.
 - Opening of _all_ natively supported kinds of po files from
     remote http/ftp servers is now also supported if gtranslator
      is compiled with GnomeVFS support.
@@ -86,5 +93,5 @@ NEWS from gtranslator R 0.21:
 - libgtranslator have been started to be written ( huh ?! ).
 
 ###############################################################################
-	/Fatih Demir/kabalak@gmx.net/2001-02-01
+	/Fatih Demir/kabalak@gmx.net/2001-02-05
 ###############################################################################
