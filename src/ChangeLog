@@ -1,3 +1,8 @@
+2004-08-07  Ross Golder  <ross@golder.org>
+
+	* src/parse.c: Handle extra argument to gettext's 'read_po_file'
+	function.
+
 2004-07-29  Emmanuel Saracco <esaracco@users.labs.libre-entreprise.org>
 
 	* src/prefs.c: Fixed a problem with validation popups on closing

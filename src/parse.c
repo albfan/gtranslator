@@ -168,6 +168,7 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	gboolean first_is_fuzzy;
 	gchar *base;
 	int i;
+	char *errptr = NULL;
 
 	g_return_val_if_fail(filename!=NULL, NULL);
 
@@ -195,7 +196,18 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	 * Grab a list-of-messages gettext style. TODO: Should warn if
 	 * opening a PO file with multiple domains.
 	 */
-	if((po->mdlp = read_po_file (po->filename)) == NULL)
+	po->mdlp = read_po_file(po->filename, &errptr);
+	if(errptr != NULL) {
+		g_set_error(error,
+			GTR_PARSER_ERROR,
+			GTR_PARSER_ERROR_GETTEXT,
+			_("Gettext returned an error parsing '%s': %s"),
+			po->filename, errptr);
+		free(errptr);
+		gtranslator_po_free(po);
+		return NULL;
+	}
+	if(po->mdlp == NULL)
 	{
 		g_set_error(error,
 			GTR_PARSER_ERROR,
