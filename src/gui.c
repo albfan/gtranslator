@@ -72,12 +72,16 @@
  */
 GtkWidget *gtranslator_application;
 GtkWidget *gtranslator_messages_table;
-GtkTextView *trans_box;
-GtkTextView *text_box;
 GtkWidget *gtranslator_application_bar;
-
 GtkWidget *content_pane;
 GtkWidget *table_pane;
+
+GtkWidget *text_vbox;
+GtkTextView *text_msgid;
+GtkTextView *text_msgid_plural;
+GtkWidget *trans_vbox;
+GtkTextView *trans_msgstr[16];
+
 #ifdef NOT_PORTED
 guint text_box_insert_text_signal_id;
 guint text_box_delete_text_signal_id;
@@ -92,6 +96,8 @@ GtrExtraContentArea *extra_content_view;
 
 gboolean nothing_changes;
 
+static GtkTextBuffer* get_selection_buffer(GtkTextBuffer *buffer);
+
 /*
  * Internal text callbacks/handlers.
  */
@@ -105,8 +111,6 @@ static void delete_text_handler(GtkTextBuffer *textbuf, GtkTextIter *start,
 static void selection_get_handler(GtkWidget *widget,
 	GtkSelectionData *selection_data, guint info,
 	guint time_stamp, gpointer data);
-
-static GtkTextBuffer* get_selection_buffer(GtkTextBuffer *buffer);
 
 /*
  * The target formats
@@ -232,12 +236,8 @@ void gtranslator_create_main_window(void)
 				       GTK_POLICY_NEVER,
 				       GTK_POLICY_AUTOMATIC);
 
-	text_box = GTK_TEXT_VIEW(gtk_text_view_new ());
-	gtk_text_view_set_editable(text_box, FALSE);
-	gtk_text_view_set_wrap_mode(text_box, GTK_WRAP_CHAR);
-	gtk_text_view_set_cursor_visible(text_box, FALSE);
-
-	gtk_container_add(GTK_CONTAINER(original_text_scrolled_window), GTK_WIDGET(text_box));
+	text_vbox = gtk_vbox_new(TRUE, 1);
+	gtk_container_add(GTK_CONTAINER(original_text_scrolled_window), text_vbox);
 
 	translation_text_scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 	gtk_box_pack_start(GTK_BOX(vertical_box), translation_text_scrolled_window, TRUE, TRUE, 0);
@@ -245,12 +245,10 @@ void gtranslator_create_main_window(void)
 				       GTK_POLICY_NEVER,
 				       GTK_POLICY_AUTOMATIC);
 
-	trans_box = GTK_TEXT_VIEW(gtk_text_view_new());
-	gtk_text_view_set_editable(trans_box, TRUE);
-	gtk_text_view_set_wrap_mode(trans_box, GTK_WRAP_CHAR);
-	gtk_text_view_set_cursor_visible(trans_box, TRUE);
-
-	gtk_container_add(GTK_CONTAINER(translation_text_scrolled_window), GTK_WIDGET(trans_box));
+	/* Translation box is a vbox, containing one textview in most cases,
+	   or more in the case of a plural message */
+	trans_vbox = gtk_vbox_new(TRUE, 1);
+	gtk_container_add(GTK_CONTAINER(translation_text_scrolled_window), trans_vbox);
 
 	gtranslator_application_bar = gnome_appbar_new(TRUE, TRUE, GNOME_PREFERENCES_NEVER);
 	gnome_app_set_statusbar(GNOME_APP(gtranslator_application), gtranslator_application_bar);
@@ -261,20 +259,9 @@ void gtranslator_create_main_window(void)
 	gnome_app_install_menu_hints(GNOME_APP(gtranslator_application), the_menus);
 
 	gtranslator_actions_set_up_default();
-	gtranslator_actions_set_up_state_no_file();
 
 	gtranslator_history_show();
 
-	/*
-	 * Set up our special styles for the text boxes.
-	 */
-	//	gtranslator_set_style(GTK_WIDGET(text_box), 0);
-	//gtranslator_set_style(GTK_WIDGET(trans_box), 1);
-	/*
-	 *  Initialize highlighting
-	 */
-	 gtranslator_syntax_init(trans_box);
-	 gtranslator_syntax_init(text_box);
 	/*
 	 * The callbacks list
 	 */
@@ -284,34 +271,6 @@ void gtranslator_create_main_window(void)
 	g_signal_connect(G_OBJECT(extra_content_view->edit_button), "clicked",
 			 G_CALLBACK(gtranslator_edit_comment_dialog), NULL);
 
-	g_signal_connect_after(G_OBJECT(text_box), "selection-get",
-			 G_CALLBACK(selection_get_handler), NULL);
-	g_signal_connect_after(G_OBJECT(trans_box), "selection-get",
-			 G_CALLBACK(selection_get_handler), NULL);
-
-#ifdef NOT_PORTED
-	text_box_insert_text_signal_id = g_signal_connect(
-		G_OBJECT(gtk_text_view_get_buffer(text_box)), 
-		"insert-text",
-		G_CALLBACK(insert_text_handler), NULL);
-	text_box_delete_text_signal_id = g_signal_connect(
-		G_OBJECT(gtk_text_view_get_buffer(text_box)),
-		"delete-range",
-		G_CALLBACK(delete_text_handler), NULL);
-#endif
-	trans_box_insert_text_signal_id = g_signal_connect(
-		G_OBJECT(gtk_text_view_get_buffer(trans_box)), 
-		"insert-text",
-		G_CALLBACK(insert_text_handler), NULL);
-	trans_box_delete_text_signal_id = g_signal_connect(
-		G_OBJECT(gtk_text_view_get_buffer(trans_box)), 
-		"delete-range",
-		G_CALLBACK(delete_text_handler), NULL);
-	
-	g_signal_connect(G_OBJECT(gtk_text_view_get_buffer(trans_box)), 
-			 "changed",
-			 G_CALLBACK(gtranslator_translation_changed), NULL);
-	
 	/*
 	 * The D'n'D signals
 	 */
@@ -319,9 +278,11 @@ void gtranslator_create_main_window(void)
 			  GTK_DEST_DEFAULT_ALL | GTK_DEST_DEFAULT_HIGHLIGHT,
 			  dragtypes, sizeof(dragtypes) / sizeof(dragtypes[0]),
 			  GDK_ACTION_COPY);
+
 	g_signal_connect(G_OBJECT(gtranslator_application), "drag-data-received",
 			 G_CALLBACK(gtranslator_dnd),
 			 GUINT_TO_POINTER(dnd_type));
+
 }
 
 /*
@@ -454,22 +415,6 @@ void gtranslator_quit(GtkWidget  * widget, GdkEventAny  * e,
 	return;
 }
 
-/*
- * Cleans up the text boxes.
- */
-void gtranslator_text_boxes_clean()
-{
-	GtkTextIter start, end;
-	GtkTextBuffer *buffer;
-
-	buffer = GTK_TEXT_BUFFER(gtk_text_view_get_buffer(text_box));
-	gtk_text_buffer_get_bounds(buffer, &start, &end);
-	gtk_text_buffer_delete(buffer, &start, &end);
-
-	buffer = GTK_TEXT_BUFFER(gtk_text_view_get_buffer(trans_box));
-	gtk_text_buffer_get_bounds(buffer, &start, &end);
-	gtk_text_buffer_delete(buffer, &start, &end);
-}
 
 void gtranslator_application_bar_update(gint pos)
 {
@@ -605,11 +550,7 @@ void gtranslator_clipboard_cut(GtkWidget  * widget, gpointer useless)
 	GtkTextIter start_iter;
 	GtkTextIter end_iter;
 
-	/* We're only cutting from the translation box */
-	if (gtk_widget_is_focus(GTK_WIDGET(trans_box)) == FALSE)
-		return;
-
-	buffer = gtk_text_view_get_buffer(trans_box);
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 	g_return_if_fail(buffer != NULL);
 
 	/* Copy text after replacing dots with spaces */
@@ -620,46 +561,33 @@ void gtranslator_clipboard_cut(GtkWidget  * widget, gpointer useless)
 	gtk_text_buffer_get_selection_bounds(buffer, &start_iter, &end_iter);
 	gtk_text_buffer_delete_interactive(buffer, &start_iter, &end_iter, TRUE);
 	
-	gtk_text_view_scroll_mark_onscreen(trans_box,
-									   gtk_text_buffer_get_mark(buffer,
-																"insert"));
+	gtk_text_view_scroll_mark_onscreen(GTK_TEXT_VIEW(widget),
+		gtk_text_buffer_get_mark(buffer, "insert"));
 }
 
 void gtranslator_clipboard_copy(GtkWidget  * widget, gpointer useless)
 {
-	GtkTextView* focused_box = NULL;
 	GtkTextBuffer* buffer = NULL;
 	GtkTextBuffer* selection_buffer = NULL;
 	
-	if (gtk_widget_is_focus(GTK_WIDGET(text_box)))
-		focused_box = text_box;
+	g_return_if_fail(widget != NULL);
 	
-	if (gtk_widget_is_focus(GTK_WIDGET(trans_box)))
-		focused_box = trans_box;
-	
-	g_return_if_fail(focused_box != NULL);
-	
-	buffer = gtk_text_view_get_buffer(focused_box);
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 	g_return_if_fail(buffer != NULL);
 
 	/* Copy text after replacing dots with spaces */
 	selection_buffer = get_selection_buffer(buffer);
 	gtk_text_buffer_copy_clipboard(selection_buffer, gtk_clipboard_get(GDK_NONE));
   	
-	gtk_text_view_scroll_mark_onscreen(focused_box,
-									   gtk_text_buffer_get_mark(buffer,
-																"insert"));
+	gtk_text_view_scroll_mark_onscreen(GTK_TEXT_VIEW(widget),
+		gtk_text_buffer_get_mark(buffer, "insert"));
 }
 
 void gtranslator_clipboard_paste(GtkWidget  * widget, gpointer useless)
 {
 	GtkTextBuffer* buffer = NULL;
 
-	/* We're only pasting into the translation box */
-	if (gtk_widget_is_focus(GTK_WIDGET(trans_box)) == FALSE)
-		return;
-
-	buffer = gtk_text_view_get_buffer(trans_box);
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 	g_return_if_fail (buffer != NULL);
 
 
@@ -667,9 +595,8 @@ void gtranslator_clipboard_paste(GtkWidget  * widget, gpointer useless)
 					gtk_clipboard_get(GDK_NONE),
 					NULL, TRUE);
   	
-	gtk_text_view_scroll_mark_onscreen(trans_box,
-					   gtk_text_buffer_get_mark(buffer,
-								    "insert"));
+	gtk_text_view_scroll_mark_onscreen(GTK_TEXT_VIEW(widget),
+		gtk_text_buffer_get_mark(buffer, "insert"));
 }
 
 void
@@ -698,10 +625,12 @@ gtranslator_selection_set(GtkTextView *text_view, gint start, gint end)
 	gtk_text_buffer_move_mark_by_name(buffer, "selection_bound", &start_iter);
 }
 
-
-void gtranslator_selection_clear(GtkWidget  * widget, gpointer useless)
+void gtranslator_selection_clear(GtkWidget *widget, gpointer useless)
 {
-	GtkTextBuffer *buffer = GTK_TEXT_BUFFER(gtk_text_view_get_buffer(trans_box));
+	GtkTextBuffer *buffer;
+
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
+
 	gtk_text_buffer_delete_selection(buffer, TRUE, TRUE);
 }
 
@@ -736,7 +665,7 @@ void gtranslator_translation_changed(GtkWidget  *buffer, gpointer useless)
 		     	gtranslator_message_status_set_fuzzy(msg, FALSE);
 			po->fuzzy--;
 			gtk_check_menu_item_set_active(
-				GTK_CHECK_MENU_ITEM(the_edit_menu[19].widget),
+				GTK_CHECK_MENU_ITEM(the_edit_menu[17].widget),
 				FALSE
 			);
 		}
@@ -745,6 +674,23 @@ void gtranslator_translation_changed(GtkWidget  *buffer, gpointer useless)
 			gtranslator_messages_table_update_row(msg);
 		}
 	}
+}
+
+void selection_get_handler(GtkWidget *widget, GtkSelectionData *selection_data,
+			   guint info, guint time_stamp, gpointer data)
+{
+	gchar *text;
+	gchar *undotted_text;
+
+	if(!GtrPreferences.dot_char)
+		return;
+
+	text = g_strndup(selection_data->data, selection_data->length);
+	undotted_text = gtranslator_utils_invert_dot(text);
+	gtk_selection_data_set(selection_data, selection_data->type,
+			       8, undotted_text, strlen(text));
+	g_free(text);
+	g_free(undotted_text);
 }
 
 /*
@@ -785,21 +731,4 @@ void insert_text_handler (GtkTextBuffer *textbuffer, GtkTextIter *pos,
 	//gtk_text_buffer_place_cursor(textbuffer, pos);
 
 	g_free(result);
-}
-
-void selection_get_handler(GtkWidget *widget, GtkSelectionData *selection_data,
-			   guint info, guint time_stamp, gpointer data)
-{
-	gchar *text;
-	gchar *undotted_text;
-
-	if(!GtrPreferences.dot_char)
-		return;
-
-	text = g_strndup(selection_data->data, selection_data->length);
-	undotted_text = gtranslator_utils_invert_dot(text);
-	gtk_selection_data_set(selection_data, selection_data->type,
-			       8, undotted_text, strlen(text));
-	g_free(text);
-	g_free(undotted_text);
 }

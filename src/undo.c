@@ -133,7 +133,7 @@ void gtranslator_undo_run_undo()
 	g_return_if_fail(undo->position >= 0);
 	g_return_if_fail(undo->text!=NULL);
 
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(trans_box));
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(trans_msgstr[0]));
 	gtk_text_buffer_get_end_iter(buffer, end);
 
 	/*

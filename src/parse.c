@@ -1192,7 +1192,6 @@ void gtranslator_file_close(GtkWidget * widget, gpointer useless)
 	}
 #endif /* NOT_PORTED */	
 
-	gtranslator_text_boxes_clean();
 	gtk_label_set_text(GTK_LABEL(extra_content_view->comment), "");
 	gtk_widget_set_sensitive(GTK_WIDGET(extra_content_view->edit_button), FALSE);
 	gtk_paned_set_position(GTK_PANED(content_pane), 0);

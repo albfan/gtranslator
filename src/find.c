@@ -120,58 +120,79 @@ static GList *get_find_pos(gchar *str)
   return pl;
 }
 
-#define SEARCH(str)                                                \
-{                                                                  \
+#define GTR_SEARCH(field)                                          \
 	g_list_free(poslist);                                      \
-	poslist = get_find_pos((gchar *)GTR_MSG(msg->data)->message->str);  \
-	hits = g_list_length(poslist);                             \
-}
+	poslist = get_find_pos((gchar *)field);			   \
+	hits = g_list_length(poslist);
 
 /*
  * while (pos[hits].rm_so != -1 && hits < MAXHITS) hits++;
  */
 
-/* Returns: 1 if found, 0 if not found, -1 on error (?) */
+/* Returns: 1 if found, 0 if not found */
 static gint find_in_msg(GList * msg, gpointer useless, gboolean first,
 	gboolean find_in_comments, gboolean find_in_english, gboolean find_in_translation)
 {
+	message_ty *message;
 	static int step = 0;
 	static int hits = 0, actpos = 0;
 	GList *poslist = NULL;
 	regmatch_t *pos;
+	char *p;
+	int i;
 
+	message = GTR_MSG(msg->data)->message;
 	if (first) step = 0;
 
-	if (find_in_translation && 1 == step) {
-		if (hits >= actpos) SEARCH(msgstr);
-
-		if (hits > 0 && actpos < hits) {
-			/*
-			 * We found it!
-			 */
-			gtranslator_message_go_to(msg);
-			pos = (regmatch_t *)g_list_nth_data(poslist, actpos);
-			gtranslator_selection_set(trans_box,
-						  pos->rm_so, pos->rm_eo);
-			actpos++;
-
-			return 1;
-		} else actpos = 0;
-	}
 	if (find_in_english && 0 == step) {
-		if (hits >= actpos) SEARCH(msgid);
+		if (hits >= actpos) GTR_SEARCH(message->msgid);
 		if (hits > 0 && actpos < hits) {
 			/*
 			 * We found it!
 			 */
 			gtranslator_message_go_to(msg);
 			pos = (regmatch_t *)g_list_nth_data(poslist, actpos);			
-			gtranslator_selection_set(text_box,
+			gtranslator_selection_set(text_msgid,
 						  pos->rm_so, pos->rm_eo);
 			actpos++;
 		
 			return 1;
 		} else actpos = 0;
+		if (message->msgid_plural) {
+			if (hits >= actpos) GTR_SEARCH(message->msgid_plural);
+			if (hits > 0 && actpos < hits) {
+				/*
+				 * We found it!
+				 */
+				gtranslator_message_go_to(msg);
+				pos = (regmatch_t *)g_list_nth_data(poslist, actpos);
+				gtranslator_selection_set(text_msgid_plural,
+							  pos->rm_so, pos->rm_eo);
+				actpos++;
+
+				return 1;
+			} else actpos = 0;
+		}
+	}
+	if (find_in_translation && 1 == step) {
+		for (p = (char *)message->msgstr, i = 0;
+			p < message->msgstr + message->msgstr_len;
+			p += strlen (p) + 1, i++)
+		{
+			if (hits >= actpos) GTR_SEARCH(message->msgstr[i]);
+			if (hits > 0 && actpos < hits) {
+				/*
+				 * We found it!
+				 */
+				gtranslator_message_go_to(msg);
+				pos = (regmatch_t *)g_list_nth_data(poslist, actpos);
+				gtranslator_selection_set(trans_msgstr[i],
+							  pos->rm_so, pos->rm_eo);
+				actpos++;
+
+				return 1;
+			} else actpos = 0;
+		}
 	}
 	if(find_in_comments && 2 == step) {
 		if (hits >= actpos)
@@ -197,10 +218,8 @@ static gint find_in_msg(GList * msg, gpointer useless, gboolean first,
 		step = 0;
 		return -1;
 	}
-
         return 0;
 }
-#undef SEARCH
 
 /*
  * The real search function

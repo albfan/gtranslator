@@ -54,6 +54,7 @@ void gtranslator_message_go_to_no(GtkWidget  * widget, gpointer number);
 /*
  * Various GUI/message handling functions.
  */
+void gtranslator_message_remove_textfields(void);
 void gtranslator_message_update(void);
 void gtranslator_message_show(GtrMsg  * msg);
 void gtranslator_message_toggle_fuzzy(GtkWidget  * widget, gpointer useless);

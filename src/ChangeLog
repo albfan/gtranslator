@@ -1,3 +1,19 @@
+2004-08-19  Ross Golder  <ross@golder.org>
+
+	* action.[ch], dialogs.c, menus.c: Remove 'query_dialog' stuff. I'm
+	hoping to replace with a gedit-style MDI interface soon.
+	* color-schemes.c, prefs.c: Removed calls to 'gtranslator_set_style'.
+	* action.[ch]: Remove some redundant UTF8_CODE.
+	* dnd.c, messages-table.c, undo.c: Use 'trans_msgstr[0]' instead of
+	'trans_box'.
+	* find.c: Extend to search msgid_plural and all msgstr fields.
+	* gui.[ch], message.[ch]: Replace static 'text_box' and 'trans_box'
+	with 'text_vbox' and 'trans_vbox' for packing variable numbers of
+	GtkTextViews, to better handle messages with plural translations.
+	* gui.c: Removed calls to 'gtranslator_set_style' and 
+	'gtranslator_syntax_init'.
+	* parse.c: Remove call to 'gtranslator_text_boxes_clean'.
+	
 2004-08-12  Ross Golder  <ross@golder.org>
 
 	* parse.[ch]: Implement 'gtranslator_parser_report_error'

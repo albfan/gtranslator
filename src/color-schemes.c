@@ -574,9 +574,6 @@ void apply_colorscheme(GtkWidget *widget, gchar *scheme_name)
 
 		GTR_FREE(scheme_name);
 	}
-
-	gtranslator_set_style(GTK_WIDGET(text_box), 0);
-        gtranslator_set_style(GTK_WIDGET(trans_box), 1);
 }
 
 /*

@@ -169,7 +169,7 @@ static void read_messages_table_colors()
 
 	/* If no custom color is set, use the default style color. */
 	if (messages_table_colors->translated == NULL) {
-		style=gtk_widget_get_style(GTK_WIDGET(trans_box));
+		style=gtk_widget_get_style(GTK_WIDGET(trans_msgstr[0]));
 		messages_table_colors->translated_color=style->text[GTK_STATE_NORMAL];
 	} else {
 		gdk_color_parse(messages_table_colors->translated, &messages_table_colors->translated_color);

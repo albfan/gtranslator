@@ -39,8 +39,11 @@
  */
 extern GtkWidget *gtranslator_application;
 extern GtkWidget *gtranslator_messages_table;
-extern GtkTextView *trans_box;
-extern GtkTextView *text_box;
+extern GtkWidget *text_vbox;
+extern GtkTextView *text_msgid;
+extern GtkTextView *text_msgid_plural;
+extern GtkWidget *trans_vbox;
+extern GtkTextView *trans_msgstr[16];
 extern GtkWidget *gtranslator_application_bar;
 
 extern GtkWidget *sidebar_pane;
@@ -76,7 +79,6 @@ void gtranslator_quit(GtkWidget *widget, GdkEventAny *e,
  * Various functions for displaying messages 
  */
 void gtranslator_application_bar_update(gint pos);
-void gtranslator_text_boxes_clean(void);
 
 /*
  * Callbacks for text operations

@@ -46,7 +46,7 @@ void gtranslator_dnd(GtkWidget * widget, GdkDragContext * context, int x,
 	}
 	else if(dnd_type==TARGET_TEXT_PLAIN)
 	{
-		gtranslator_insert_text(trans_box, file);
+		gtranslator_insert_text(trans_msgstr[0], file);
 		gtk_drag_finish(context, TRUE, FALSE, time);
 	}
 	else

@@ -859,9 +859,6 @@ static void gtranslator_preferences_dialog_close(GtkWidget * widget, gint respon
 	gtranslator_color_values_set(GNOME_COLOR_PICKER(mt_translated), 
 		COLOR_MESSAGES_TABLE_TRANSLATED);
 
-	gtranslator_set_style(GTK_WIDGET(text_box), 0);
-	gtranslator_set_style(GTK_WIDGET(trans_box), 1);
-
 	gtranslator_config_set_bool("toggles/save_geometry", GtrPreferences.save_geometry);
 	gtranslator_config_set_bool("toggles/warn_if_fuzzy", GtrPreferences.warn_if_fuzzy);
 	gtranslator_config_set_bool("toggles/set_non_fuzzy_if_changed", 
@@ -1112,18 +1109,6 @@ void gtranslator_preferences_read(void)
 		"toggles/collapse_all");
 	GtrPreferences.show_plural_forms = gtranslator_config_get_bool(
 		"toggles/show_plural_forms");
-
-	/*
-	 * Check if we'd to use special styles.
-	 */
-	if(GtrPreferences.use_own_fonts || GtrPreferences.use_own_colors)
-	{
-		/*
-		 * Set the own specs for colors and for the font.
-		 */
-		gtranslator_set_style(GTK_WIDGET(text_box), 0);
-		gtranslator_set_style(GTK_WIDGET(trans_box), 1);
-	}
 }
 
 /*

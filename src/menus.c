@@ -150,14 +150,6 @@ GnomeUIInfo the_edit_menu[] = {
 	GNOMEUIINFO_MENU_REPLACE_ITEM(gtranslator_replace_dialog, NULL),
 	GNOMEUIINFO_SEPARATOR,
 	{
-		GNOME_APP_UI_ITEM, N_("_Query..."),
-		N_("Query for a string"),
-		gtranslator_query_dialog, NULL, NULL,
-		GNOME_APP_PIXMAP_DATA, query_xpm,
-		GDK_F7, 0, NULL
-	},
-	GNOMEUIINFO_SEPARATOR,
-	{
 		GNOME_APP_UI_ITEM, N_("_Header..."),
 		N_("Edit po file header"),
 		gtranslator_header_edit_dialog, NULL, NULL,
@@ -355,12 +347,5 @@ GnomeUIInfo the_navibar[] = {
 			       N_("Replace string in po file"),
 			       gtranslator_replace_dialog,
 			       GTK_STOCK_FIND_AND_REPLACE),
-	{
-		GNOME_APP_UI_ITEM, N_("Query"),
-		N_("Query for a string"),
-		gtranslator_query_dialog, NULL, NULL,
-		GNOME_APP_PIXMAP_DATA, query_big_xpm,
-		0, 0, NULL
-	},
 	GNOMEUIINFO_END
 };

@@ -55,14 +55,27 @@
 static gboolean is_fuzzy(GList *msg, gpointer useless);
 static gboolean is_untranslated(GList *msg, gpointer useless);
 
-GtkSpell *gtrans_spell = NULL;
-
 /*
- * The callback handling the editing of the plural forms and the correcponding tree handle.
+ * Remove textviews from text and trans vboxes
  */
-static void plural_forms_edited(GtkCellRendererText *crtext, gchar *path, gchar *str, gpointer message);
+void gtranslator_message_remove_textviews(void) {
+	GList *children;
 
-static GtkTreeStore *plural_forms_store;
+	if(text_vbox) {
+		children = gtk_container_get_children(GTK_CONTAINER(text_vbox));
+		while (children) {
+			gtk_widget_destroy(GTK_WIDGET(children->data));
+			children = children->next;
+		}
+	}
+	if(trans_vbox) {
+		children = gtk_container_get_children(GTK_CONTAINER(trans_vbox));
+		while (children) {
+			gtk_widget_destroy(GTK_WIDGET(children->data));
+			children = children->next;
+		}
+	}
+}
 
 /*
  * Calls function func on each item in list 'begin'. Starts from 
@@ -147,115 +160,93 @@ void gtranslator_message_go_to_next_untranslated(GtkWidget * widget, gpointer us
 }
 
 /*
- * The used callback if the user edits a plural form in the plural forms dialog
+ * Invert spaces/dots if required
  */
-static void plural_forms_edited(GtkCellRendererText *crtext, gchar *path, gchar *str, gpointer msg)
+char *gtranslator_invert_dots(char *str) {
+	char *response;
+
+	if(GtrPreferences.dot_char) {
+		/* Should probably move this function in here directly */
+		response = gtranslator_utils_invert_dot(str);
+	}
+	else {
+		response = g_strdup(str);
+	}
+
+	return response;
+}
+
+/*
+ * Create new widgets (text) and attach spellchecker where required.
+ */
+GtkTextView *gtranslator_new_textview(GtkWidget *vbox,
+	char *thetext, gboolean iseditable)
 {
-	GtkTreeIter	iter;
-	GtkTreePath	*pathie;
-	message_ty	*message;
-	char		*msgstr[16];
-	char		*newmsgstr;
-	char		*nextmsg;
-	char		*ptr;
-	int		index;
-	int		newmsgstrlen;
-	int		msgstrlen;
+	GtkTextView *widget;
+	GtkTextBuffer *editable;
+	GError *error = NULL;
+	GtkSpell *gtrans_spell = NULL;
+	char *text, *errortext = NULL;
 
-	g_return_if_fail(msg!=NULL);
-	g_return_if_fail(path!=NULL);
+	/* Set up widget */
+	widget = GTK_TEXT_VIEW(gtk_text_view_new());
+	gtk_text_view_set_wrap_mode(widget, GTK_WRAP_CHAR);
+	gtk_text_view_set_editable(widget, iseditable);
+	gtk_text_view_set_cursor_visible(widget, iseditable);
 
-	/*
-	 * Get a GtkTreePath according to the path string given by the "edited" callback from
-	 *  the GtkCellRendererText which holds all our strings inside it.
-	 */
-	pathie=gtk_tree_path_new_from_string(path);
-	gtk_tree_model_get_iter(GTK_TREE_MODEL(plural_forms_store), &iter, pathie);
-	gtk_tree_path_free(pathie);
+	/* Set text */
+	editable = gtk_text_view_get_buffer(widget);
+	text = gtranslator_invert_dots(thetext);
+	gtk_text_buffer_set_text(editable, text, -1);
+	g_free(text);
 
-	/*
-	 * Unpack the plurals from the message_ty
-	 */
-	message = GTR_MSG(msg)->message;
-	if (message->msgid_plural != NULL)
-	{
-		unsigned int i;
-		const char *p;
+	/* Connect signals */
+	g_signal_connect(G_OBJECT (editable), "changed",
+			  G_CALLBACK (gtranslator_translation_changed), NULL);
+#ifdef NOT_PORTED
+	g_signal_connect_after(G_OBJECT(editable), "selection-get",
+			 G_CALLBACK(selection_get_handler), NULL);
+	trans_box_insert_text_signal_id = g_signal_connect(
+		G_OBJECT(gtk_text_view_get_buffer(trans_box)), 
+		"insert-text",
+		G_CALLBACK(insert_text_handler), NULL);
+	trans_box_delete_text_signal_id = g_signal_connect(
+		G_OBJECT(gtk_text_view_get_buffer(trans_box)), 
+		"delete-range",
+		G_CALLBACK(delete_text_handler), NULL);
+#endif
+	/* Pack into vertical box */
+	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(widget),
+		TRUE, TRUE, 0);
 
-		for (p = message->msgstr, i = 0;
-			p < message->msgstr + message->msgstr_len;
-			p += strlen (p) + 1, i++)
-		{
-			*msgstr[i] = (char *)p;
+	/* Set up spellchecking, if enabled */
+	if(GtrPreferences.instant_spell_check) {
+		gtrans_spell = gtkspell_new_attach(widget, NULL, &error);
+		if(gtrans_spell == NULL) {
+			g_print(_("gtkspell error: %s\n"), error->message);
+			errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"), error->message);
+			g_error_free(error);
 		}
 	}
 
-	/*
-	 * According to the path which was given to us (as we're using a fixed tree structure we can
-	 *  do the handling via the old and easy way via an if/else if/else tree here :-)
-	 */
-	if(!strcmp(path, "0:1"))
-	{
-		index = 2;
-	}
-	else if(!strcmp(path, "0:0"))
-	{
-		index = 1;
-	}
-	else
-	{
-		index = 0;
-	}
-
-	/*
-	 * We're freeing the previous string and getting the string from the cell renderer, assigning
-	 *  it and also updating the tree store/view with the new data.
-	 */
-	GTR_FREE(msgstr[index]);
-	msgstr[index] = g_strdup(str);
-		gtk_tree_store_set(GTK_TREE_STORE(plural_forms_store), &iter,
-		1, msgstr[index], -1);
-
-	/*
-	 * Pack the plurals back into the message_ty
-	 */
-	index = newmsgstrlen = 0;
-	while((nextmsg = msgstr[index]) != NULL)
-	{
-		newmsgstrlen += strlen(nextmsg) + 1;
-	}
-	ptr = newmsgstr = g_malloc0(newmsgstrlen);
-	index = msgstrlen = 0;
-	while((nextmsg = msgstr[index]) != NULL) {
-		msgstrlen = strlen(nextmsg);
-		strcpy(ptr, nextmsg);
-		ptr += msgstrlen + 1;
-	}
-	g_free((gpointer *)message->msgstr);
-	message->msgstr = newmsgstr;
-	message->msgstr_len = newmsgstrlen;
-
-	/*
-	 * Update the translation specs, statistics etc.
-	 */
-	gtranslator_translation_changed(NULL, NULL);
+	return widget;
 }
 
 /* 
- * Display the message in text boxes
+ * Display the given message in a bunch of text boxes
  */
 void gtranslator_message_show(GtrMsg *msg)
 {
+	GList *children;
+	GtkWidget *child;
+	char *p;
+	int i, msgcount;
 
-	if(!file_opened)
-	{
-		return;
-	}
-	
+	g_assert(GTK_IS_VBOX(text_vbox));
+	g_assert(GTK_IS_VBOX(trans_vbox));
 	g_return_if_fail(msg!=NULL);
 
 	nothing_changes = TRUE;
-	gtranslator_text_boxes_clean();
 
 	/*
 	 * Set up the comment display.
@@ -263,256 +254,126 @@ void gtranslator_message_show(GtrMsg *msg)
 	gtranslator_comment_display(GTR_COMMENT(msg->comment));
 	
 	/*
-	 * Substitute the free spaces in the msgid only if this is wished and
-	 *  possible.
-	 *
-	 * FIXME: this is also done by insert_text_handler. It does not do
-	 *  syntax stuff, but should. Then here only gtk_text_insert should be
-	 *   left.
-	 */ 
-	if(GtrPreferences.dot_char)
-	{
-		gchar *temp;
+	 * Free any existing widgets in use for the previous message
+	 */
+	gtranslator_message_remove_textviews();
 
-		g_return_if_fail(msg!=NULL);
-		g_return_if_fail(msg->message!=NULL);
-		g_return_if_fail(msg->message->msgid!=NULL);
-		
-		temp = gtranslator_utils_invert_dot(msg->message->msgid);
-		gtranslator_insert_text(text_box, temp);
-		
-		GTR_FREE(temp);
+	text_msgid = gtranslator_new_textview(text_vbox,
+		(char *)msg->message->msgid, FALSE);
 
-		if (msg->message->msgstr) {
-			temp = gtranslator_utils_invert_dot(msg->message->msgstr);
-			
-			gtranslator_insert_text(trans_box, temp);
-			
-			GTR_FREE(temp);
-		}
-	} else {
-		gtranslator_insert_text(text_box, msg->message->msgid);
-		gtranslator_insert_text(trans_box, msg->message->msgstr);
+	if(msg->message->msgid_plural) {
+		text_msgid_plural = gtranslator_new_textview(text_vbox,
+			(char*)msg->message->msgid_plural, FALSE);
 	}
+	gtk_widget_show_all(text_vbox);
 
 	/*
-	 * Use instant spell checking via gtkspell only if the corresponding
-	 *  setting in the preferences is set.
+	 * Unpack the plurals from the message_ty directly into GtkTextViews
 	 */
-	if(GtrPreferences.instant_spell_check)
+	for (p = (char*)msg->message->msgstr, i = 0;
+		p < msg->message->msgstr + msg->message->msgstr_len;
+		p += strlen (p) + 1, i++)
 	{
-		/*
-		 * Start up gtkspell if not already done.
-		 */ 
-		GError *error = NULL;
-		char *errortext = NULL;
-		
-		if (gtrans_spell == NULL && trans_box != NULL) {
-		    gtrans_spell = gtkspell_new_attach(trans_box, NULL, &error);
-		    if (gtrans_spell == NULL) {
-			g_print(_("gtkspell error: %s\n"), error->message);
-			errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"), error->message);
-			g_error_free(error);
-		    }
-		} 		
-	} else {
-	    if (gtrans_spell != NULL) {
-		gtkspell_detach(gtrans_spell);
-		gtrans_spell = NULL;
-	    }
+		trans_msgstr[i] = gtranslator_new_textview(trans_vbox, p, TRUE);
 	}
+	gtk_widget_show_all(trans_vbox);
 
+	/*
+	 * Disable/enable fuzzy action
+	 */
 	gtk_check_menu_item_set_active(
-		GTK_CHECK_MENU_ITEM(the_edit_menu[19].widget),
-		msg->message->is_fuzzy
-	);
+		GTK_CHECK_MENU_ITEM(the_edit_menu[17].widget),
+		msg->message->is_fuzzy);
 
+	/*
+	 * Reset changed flags
+	 */
 	nothing_changes = FALSE;
 	message_changed = FALSE;
-
-	/*
-	 * Form an informative plural forms displaying dialog if the user desires it.
-	 */
-	if(po->header->plural_forms && msg->message->msgid_plural && GtrPreferences.show_plural_forms)
-	{
-		enum
-		{ 
-			MSG_COL,
-			TRANS_COL,
-			N_COL
-		};
-
-		GtkWidget	*dialog=NULL;
-		GtkWidget	*tree=NULL;
-
-		GtkTreeIter	iter_par, iter_ch;
-
-		GtkTreeViewColumn	*col;
-		GtkCellRenderer		*render;
-
-		message_ty	*message;
-		char	*msgstr[16];
-
-		/*
-		 * Unpack the plurals from the message_ty
-		 */
-		message = GTR_MSG(msg)->message;
-		if (message->msgid_plural != NULL)
-		{
-			unsigned int i;
-			const char *p;
-
-			for (p = message->msgstr, i = 0;
-				p < message->msgstr + message->msgstr_len;
-				p += strlen (p) + 1, i++)
-			{
-				*msgstr[i] = (char *)p;
-			}
-		}
-	
-		dialog=gtk_dialog_new_with_buttons(
-			_("gtranslator -- edit plural forms of message translation"),
-			GTK_WINDOW(gtranslator_application),
-			GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			NULL);
-
-		plural_forms_store=gtk_tree_store_new(N_COL, G_TYPE_STRING, G_TYPE_STRING);
-		gtk_tree_store_append(plural_forms_store, &iter_par, NULL);
-
-		gtk_tree_store_set(plural_forms_store, &iter_par,
-			MSG_COL, msg->message->msgid,
-			TRANS_COL, msgstr[0],
-			-1);
-
-		gtk_tree_store_append(plural_forms_store, &iter_ch, &iter_par);
-		gtk_tree_store_set(plural_forms_store, &iter_ch,
-			MSG_COL, msg->message->msgid_plural,
-			TRANS_COL, msgstr[1],
-			-1);
-
-		if(msgstr[2])
-		{
-			gtk_tree_store_append(plural_forms_store, &iter_ch, &iter_par);
-			gtk_tree_store_set(plural_forms_store, &iter_ch,
-				MSG_COL, "",
-				TRANS_COL, msgstr[2],
-				-1);
-		}
-
-		tree=gtk_tree_view_new_with_model(GTK_TREE_MODEL(plural_forms_store));
-
-		render=gtk_cell_renderer_text_new();
-		col=gtk_tree_view_column_new_with_attributes("Message",
-			render, "text", MSG_COL, NULL);
-
-		gtk_tree_view_append_column(GTK_TREE_VIEW(tree), col);
-
-		render=gtk_cell_renderer_text_new();
-		g_object_set(G_OBJECT(render), "editable", TRUE, NULL);
-
-		col=gtk_tree_view_column_new_with_attributes("Translation",
-			render, "text", TRANS_COL, NULL);
-
-		gtk_tree_view_append_column(GTK_TREE_VIEW(tree), col);
-
-		g_signal_connect(G_OBJECT(render), "edited", G_CALLBACK(plural_forms_edited), msg);
-		
-		gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), tree,
-			FALSE, FALSE, 0);
-		gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_CANCEL);
-
-		gtranslator_dialog_show(&dialog, "gtranslator -- edit plural forms of message translation");
-
-		if(gtk_dialog_run(GTK_DIALOG(dialog)))
-		{
-			gtk_widget_destroy(GTK_WIDGET(dialog));
-		}
-	}
 }
 
-void gtranslator_message_update(void)
+void gtranslator_message_update()
 {
-  guint len; 
-  //		pos;
+	char *p;
+	guchar *newmsgstr, *newp, *str;
+	guint newmsgstrlen = 0, msgcount = 0, i;
 	GtkTextIter start, end;
-	GtrMsg 
-		*msg = GTR_MSG(po->current->data);
-		
+	GtrMsg *msg;
+
 	if (!message_changed)
 		return;
-	//	pos = gtk_editable_get_position( GTK_EDITABLE(trans_box) );
-	// gtk_text_freeze( GTK_TEXT(trans_box) );
-	len = gtk_text_buffer_get_char_count(gtk_text_view_get_buffer(trans_box));
-	if (len) {
-		gtk_text_buffer_get_bounds(gtk_text_view_get_buffer(trans_box), &start, &end);
+
+	msg = GTR_MSG(po->current->data);
+
+	/* 		
+	/*
+	 * Work out the length of the new msgstr and check for faulty
+	 * translations
+	 */
+	for (p = (char *)msg->message->msgstr, i = 0;
+		p < msg->message->msgstr + msg->message->msgstr_len;
+		p += strlen (p) + 1, i++)
+	{
+		GtkTextBuffer *buf = gtk_text_view_get_buffer(trans_msgstr[i]);
+		gtk_text_buffer_get_bounds(buf, &start, &end);
+		newp = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
 
 		/* Make both strings end with or without endline */
-		// XXX fix it
-		/*
-		if (msg->message->msgid[strlen(msg->message->msgid) - 1] == '\n') {
-			if (GTK_TEXT_INDEX(trans_box), len - 1)
-			    != '\n')
-				gtk_editable_insert_text(
-				    GTK_EDITABLE(trans_box), "\n", 1, &len);
-		} else {
-			if (GTK_TEXT_INDEX(GTK_TEXT(trans_box), len - 1)
-			    == '\n') {
-				gtk_editable_delete_text(
-				    GTK_EDITABLE(trans_box), len-1, len);
-				len--;
+		if(strlen(p) > 0 && g_utf8_strlen(newp, -1) > 0) {
+			gtk_text_buffer_get_end_iter(buf, &end);
+			if(p[strlen(p) - 1] == '\n' && newp[strlen(newp) - 1] != '\n') {
+				gtk_text_buffer_insert(buf, &end, "\n", 1);
+			}
+			if(p[strlen(p) - 1] == '\n' && newp[strlen(newp) - 1] != '\n') {
+				gtk_text_buffer_delete(buf, &end, &end - 1);
 			}
 		}
-		*/
 
-		g_free((gpointer *)msg->message->msgstr);
-
-#ifdef UTF8_CODE
-		if(po->utf8)
-		{
-			msg->message->msgstr=gtranslator_utf8_get_gtk_text_as_utf8_string(GTK_WIDGET(trans_box));
-		}
-		else
-		{
-			msg->message->msgstr=gtk_editable_get_chars(
-				GTK_EDITABLE(trans_box), 0, len);
-		}
-		*/
-		// XXX we always work with utf-8
-		// YYY that's why I'm preparing to carve out all
-		//     the utf-8 stuff except and make sure there
-		//     are g_converts on load/save (for non-utf8
-		//     users).
-#endif
-
-		msg->message->msgstr = gtk_text_buffer_get_text(gtk_text_view_get_buffer(trans_box), &start, &end, FALSE);
-		
-		/*
-		 * If spaces were substituted with dots, replace them back
-		 */
-		if(GtrPreferences.dot_char) {
-			char *old;
-			old = msg->message->msgstr;
-			msg->message->msgstr = gtranslator_utils_invert_dot(old);
-			g_free((gpointer *)old);
-		}
-		if (msg->message->msgstr[0] != '\0') {
-			po->translated++;
-		}
-
-		/*
-		 * Learn the msgstr as a string.
-		 */
-		if(GtrPreferences.auto_learn)
-		{
-			gtranslator_learn_string(msg->message->msgid, msg->message->msgstr);
-		}
-		
-	} else {
-		msg->message->msgstr = NULL;
-		po->translated--;
+		/* Determine new msgstr string length */
+		newmsgstrlen += strlen(newp) + 1;
+		msgcount++;
 	}
-	
+
+	/*
+	 * Pack the msgstrs back into a new msgstr
+	 */
+	newmsgstr = g_malloc(newmsgstrlen);
+	for (i = 0; i < msgcount; i++)
+	{
+		GtkTextBuffer *buf = gtk_text_view_get_buffer(trans_msgstr[i]);
+		gtk_text_buffer_get_bounds(buf, &start, &end);
+		newp = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
+
+		/* Remove dots and append msgstr */
+		str = gtranslator_invert_dots(newp);
+		newmsgstr = g_stpcpy(newmsgstr, str) + 1;
+		g_free(str);
+	}
+
+	/*
+	 * Replace in message_ty
+	 */
+	g_free((gpointer *)msg->message->msgstr);
+	msg->message->msgstr = newmsgstr;
+
+	/*
+	 * Alter message counts
+	 */		
+	if(msg->message->msgstr[0] != '\0') {
+		po->translated++;
+	}
+
+	/*
+	 * Learn the msgstr as a string.
+	 */
+	if(GtrPreferences.auto_learn)
+	{
+		gtranslator_learn_string(msg->message->msgid, msg->message->msgstr);
+	}
+
+	/*
+	 * Mark message as committed to memory
+	 */
 	message_changed = FALSE;
 	
 	/*
@@ -537,8 +398,6 @@ void gtranslator_message_update(void)
 	{
 		gtranslator_actions_enable(ACT_REMOVE_ALL_TRANSLATIONS);
 	}
-	//	gtk_text_thaw( GTK_TEXT(trans_box) );
-	//	gtk_editable_set_position( GTK_EDITABLE(trans_box), pos );
 }
 
 void gtranslator_message_toggle_fuzzy(GtkWidget  * item, gpointer data)
@@ -585,28 +444,8 @@ void gtranslator_message_go_to(GList * to_go)
 		gtranslator_actions_enable(ACT_NEXT, ACT_LAST);
 	}
 
-	/* Save cursor position */
-	buffer = gtk_text_view_get_buffer(trans_box);
-	if (buffer != NULL) {
-		mark = gtk_text_buffer_get_insert(buffer);
-		gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
-
-		msg = GTR_MSG(po->current->data);
-		msg->cursor_offset = gtk_text_iter_get_offset(&iter);
-	}
-	
 	po->current = to_go;
 	gtranslator_message_show(po->current->data);
-
-	/* Restore cursor position */
-	buffer = gtk_text_view_get_buffer(trans_box);
-	if (buffer != NULL) {
-		msg = GTR_MSG(po->current->data);
-		if (msg->cursor_offset > 0) {
-			gtk_text_buffer_get_iter_at_offset(buffer, &iter, msg->cursor_offset);
-			gtk_text_buffer_place_cursor(buffer, &iter);
-		}
-	}
 
 	if(GtrPreferences.show_messages_table)
 	{
@@ -759,3 +598,4 @@ void gtranslator_message_free(gpointer data, gpointer useless)
 #endif
 	GTR_FREE(data);
 }
+
