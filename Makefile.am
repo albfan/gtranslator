@@ -15,9 +15,9 @@ EXTRA_DIST= \
 		DEPENDS \
 		HACKING \
 		po/update.sh \
-		xml-i18n-extract \
-		xml-i18n-merge \
-		xml-i18n-update \
+		xml-i18n-extract.in \
+		xml-i18n-merge.in \
+		xml-i18n-update.in \
 		$(Teamdatabase_DATA)
 
 distpacks: distdir
