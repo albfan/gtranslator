@@ -62,20 +62,16 @@ gtranslator which will make gtranslator\n\
 more work like you want it to .", 39},
   {"Saving file ...", 40},
   {"Open a .po-file first !", 41},
-  {"Getting the next ...", 42},
-  {"Happy translation !", 43},
-  {"Inited reading process .", 44},
-  {"Reading now msgid's ...", 45},
-  {"Error while parsing the msgid's !", 46},
-  {"Reading now the msgstr's ...", 47},
-  {"Error while parsing the msgstr's !", 48},
-  {"Couldn't find pixmap file: %s", 49},
-  {"Couldn't create pixmap from file: %s", 50},
-  {"The msgids will appear here .", 51},
-  {"Your translation goes here .", 52},
-  {"\
-gtranslator is a GnomeApplication for translation .po-files more comfortable \
-than in (X)Emacs .", 53},
+  {"You're already at the first translatable string !", 42},
+  {"Getting the next ...", 43},
+  {"No .po-file is opened at the moment !", 44},
+  {"You are at the first translatable string !", 45},
+  {"File has been changed !", 46},
+  {"Happy translation !", 47},
+  {"Inited reading process .", 48},
+  {"Reading now msgid's ...", 49},
+  {"Couldn't find pixmap file: %s", 50},
+  {"Couldn't create pixmap from file: %s", 51},
 };
 
-int _msg_tbl_length = 53;
+int _msg_tbl_length = 51;

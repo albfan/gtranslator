@@ -5,8 +5,7 @@
 	
 #include <gnome.h>
 
-char iline[256][65000],sline[256][65000];
-FILE *input_ids,*input_strs;
+const char *filename;
 
 void
 on_open1_activate                      (GtkMenuItem     *menuitem,

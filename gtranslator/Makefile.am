@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = intl po help macros prep-scripts src
+SUBDIRS = intl po help macros src
 
 Appldir = $(datadir)/gnome/apps/Applications
 
@@ -14,7 +14,7 @@ Applicondir = $(datadir)/pixmaps
 
 Applicon_DATA = gtranslator.png
 
-EXTRA_DIST=$(Appl_DATA) $(Applicon_DATA) $(mime_DATA) gtranslator.tem 
+EXTRA_DIST=$(Appl_DATA) $(Applicon_DATA) $(mime_DATA)
 
 install-data-local:
 	@$(NORMAL_INSTALL)

@@ -1,3 +1,44 @@
+2000-02-13  Fatih Demir		( kabalak@gmx.net )
+
+	+	Removed all scripts , gtranslator
+		will be C-native .
+
+	+	Re-checked gtranslator to Gnome-CVS
+
+2000-02-10  Fatih Demir		( kabalak@gmx.net )
+		
+	+	Corrected the split_it_with_awk.sh
+		script to work like wished (->TODO) 
+	
+	+	Removed the sed/head searches ( ->
+		using `which sed/head` for that ).
+	
+	+	Will not use the po.el , as far as
+		I DO NOT USE emacs/have any info/man
+		pages of it ( I'm using vim ... ) .
+	
+	+	The parser-module is been written at
+		the moment , put version to 0.14 .
+
+2000-02-08  Fatih Demir		( kabalak@gmx.net )
+
+	+	Put version to 0.13 , made changes in
+		the sources .
+
+2000-02-07  Kjartan Maraas  <kmaraas@online.no>
+
+	* */*: Removed Makefile.in and po/gtranslator.pot
+	since these are generated files.
+	* *: Added .cvsignore files
+		
+2000-02-06  Kjartan Maraas  <kmaraas@online.no>
+
+	* configure.in: Added "no" to ALL_LINGUAS.
+	
+2000-02-04  Fatih Demir		( kabalak@gmx.net )
+
+	+	Put gtranslator to the Gnome CVS-tree 
+
 2000-02-03  Fatih Demir		( kabalak@gmx.net )
 
 	+	Added a separate ChangeLog for the src-subdir 
@@ -6,7 +47,6 @@
     
 	+	Made the parse-module almost finished ( 
 		it does only crash a bit too often .. )
-	    
 	
 2000-01-31  Fatih Demir		( kabalak@gmx.net )
 

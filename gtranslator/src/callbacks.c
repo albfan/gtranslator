@@ -1,7 +1,7 @@
 /*
 *	-> Fatih Demir [ kabalak@gmx.net ]
 *	A GLADE'd interface's callbacks suite ...
-*	It's too anormally written / don't look for many sense in it ...	
+*	It's too anormally written / don't look for many sense in it ...
 */
 
 #ifdef HAVE_CONFIG_H
@@ -23,9 +23,6 @@
 /*
 *	The variables for all that ....
 */
-const char *filename;
-const char *home_dir;
-const char *scripts_dir=SCRIPTS_DIR;
 char cmd[256];
 char fname[768];
 static GnomeHelpMenuEntry help_me = { "gtranslator", "index.html" };
@@ -183,11 +180,7 @@ on_first_button_pressed                (GtkButton       *button,
 {
 	if(file_opened==TRUE)
 	{
-		gtk_text_backward_delete(GTK_TEXT(text1),gtk_text_get_length(GTK_TEXT(text1)));
-		count=0;
-	    gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-        gtk_text_backward_delete(GTK_TEXT(trans_box),gtk_text_get_length(GTK_TEXT(trans_box)));
-	  	gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
+		/* ... */
 	}
 	else
 	{
@@ -200,20 +193,20 @@ void
 on_back_button_pressed                 (GtkButton       *button,
                                         gpointer         user_data)
 {
-	if(file_opened==TRUE)
+	if(at_the_first==TRUE)
 	{
-		if(count<max_count)
-		{
-			gtk_text_backward_delete(GTK_TEXT(text1),gtk_text_get_length(GTK_TEXT(text1)));
-			count--;
-			gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-			gtk_text_backward_delete(GTK_TEXT(trans_box),gtk_text_get_length(GTK_TEXT(trans_box)));
-			gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
-		}
+		gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("You're already at the first translatable string !"));
 	}
 	else
 	{
-		gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("Open a .po-file first !"));
+		if(file_opened==TRUE)
+		{
+			/* ... */
+		}
+		else
+		{
+			gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("Open a .po-file first !"));
+		}
 	}
 }
 
@@ -222,19 +215,10 @@ void
 on_next_button_pressed                 (GtkButton       *button,
                                         gpointer         user_data)
 {
+	at_the_first=FALSE;
 	if(file_opened==TRUE)
 	{
-		if(count<max_count)
-		{
-		#ifdef DEBUGGY
-		gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("Getting the next ..."));
-		#endif
-		gtk_text_backward_delete(GTK_TEXT(text1),gtk_text_get_length(GTK_TEXT(text1)));
-		count++;
-		gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-		gtk_text_backward_delete(GTK_TEXT(trans_box),gtk_text_get_length(GTK_TEXT(trans_box)));
-		gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
-		}
+			/* .. */
 	}
 	else
 	{
@@ -247,16 +231,10 @@ void
 on_last_button_pressed                 (GtkButton       *button,
                                         gpointer         user_data)
 {
+	at_the_first=FALSE;
 	if(file_opened==TRUE)
 	{
-		if(max_count > 0)
-		{
-			count=max_count;
-			gtk_text_backward_delete(GTK_TEXT(text1),gtk_text_get_length(GTK_TEXT(text1)));
-			gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-   	        gtk_text_backward_delete(GTK_TEXT(trans_box),gtk_text_get_length(GTK_TEXT(trans_box)));
-           	gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
-		}
+		/* ... */
 	}
 }
 
@@ -273,9 +251,16 @@ void
 on_compile_button_pressed              (GtkButton       *button,
                                         gpointer         user_data)
 {
-	GtkWidget* comp_;
-	comp_=create_compiling_po();
-	gtk_widget_show(comp_);
+	if(file_opened==TRUE)
+	{
+		GtkWidget* comp_;
+		comp_=create_compiling_po();
+		gtk_widget_show(comp_);
+	}
+	else
+	{
+		gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("No .po-file is opened at the moment !"));	
+	}
 }
 
 
@@ -292,9 +277,7 @@ on_first1_activate                     (GtkMenuItem     *menuitem,
 {
 	if(file_opened==TRUE)
 	{
-		count=0;
-		gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-		gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
+		/* ... */
 	}
 	else
 	{
@@ -307,15 +290,20 @@ void
 on_back1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-	if(file_opened==TRUE)
+	if(at_the_first==TRUE)
 	{
-		count--;
-		gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-		gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
+		gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("You are at the first translatable string !"));
 	}
 	else
 	{
-		gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("Open a .po-file first !"));
+		if(file_opened==TRUE)
+		{
+				/* .. */
+		}
+		else
+		{
+			gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("Open a .po-file first !"));
+		}
 	}
 }
 
@@ -324,11 +312,10 @@ void
 on_next1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+	at_the_first=FALSE;
 	if(file_opened==TRUE)
 	{
-		count++;
-        gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-		gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
+		/* .. */
 	}
 	else
 	{
@@ -343,14 +330,7 @@ on_last1_activate                      (GtkMenuItem     *menuitem,
 {
 	if(file_opened==TRUE)
         {
-                if(max_count > 0)
-                {
-                        count=max_count;
-                        gtk_text_backward_delete(GTK_TEXT(text1),gtk_text_get_length(GTK_TEXT(text1)));
-                        gtk_text_insert(GTK_TEXT(text1),NULL,NULL,NULL,iline[count],-1);
-                        gtk_text_backward_delete(GTK_TEXT(trans_box),gtk_text_get_length(GTK_TEXT(trans_box)));
-                        gtk_text_insert(GTK_TEXT(trans_box),NULL,NULL,NULL,sline[count],-1);
-                }
+		/* .. */
         }
 }
 
@@ -360,7 +340,7 @@ on_trans_box_changed                   (GtkWidget	*w,
                                         gpointer	user_data)
 {
 	file_changed=TRUE;	
-	gnome_appbar_set_status(GNOME_APPBAR(appbar1),_(""));
+	gnome_appbar_set_status(GNOME_APPBAR(appbar1),_("File has been changed !"));
 }
 
 
@@ -524,19 +504,8 @@ void
 on_ok_button_of_open_file_pressed      (GtkButton       *button,
                                         GtkFileSelection *fsel)	
 {
-	home_dir = getenv("HOME");
-	sprintf(ids_file,"%s/.gtranslator/msgids.dat",home_dir);
-	sprintf(strs_file,"%s/.gtranslator/msgstrs.dat",home_dir);
-	sprintf(cmd,"%scomplex.sh",scripts_dir);
-	filename = gtk_file_selection_get_filename(GTK_FILE_SELECTION(fsel));
-	sprintf(fname,"%s %s",cmd,filename);
-	#ifdef DEBUGGY
-	g_print("Got exec-str : %s\n",fname);
-	#endif
-	gnome_execute_shell(NULL,fname);
 	gtk_widget_hide(GTK_FILE_SELECTION(fsel));
-	init_reading();
-	parse_this_file_all_through();
+	parse();
 	file_opened=TRUE;
 }
 
