@@ -34,10 +34,10 @@ dnl -------------------------------------------------------------------
 dnl The standard checks for the compiler and the X includes/libs.
 dnl -------------------------------------------------------------------
 
-GNOME_INIT
 AC_ISC_POSIX
 AC_PROG_CC
 AC_HEADER_STDC
+GNOME_INIT
 GNOME_X_CHECKS
 
 dnl -------------------------------------------------------------------
@@ -110,14 +110,9 @@ else
 	AC_MSG_RESULT(["+++ Will not use the found GConf as \$NO_GCONF is set to _yes_ ..."])
 	else
 	AC_MSG_RESULT(["+++ Will use GConf..."])
+	AC_DEFINE(GCONF_IS_PRESENT)
 	fi
 fi
-GNOME_CFLAGS=`gnome-config --cflags gnome`
-GNOME_LIBS=`gnome-config --libs gnome`
-GNOME_LIB_CONF_DIR=`gnome-config --libdir`
-AC_SUBST(GNOME_CFLAGS)
-AC_SUBST(GNOME_LIBS)
-AC_SUBST(GNOME_LIB_CONF_DIR)
 AM_CONDITIONAL(GCONF_IS_PRESENT, test x$gconf_is_present = xyes)
 
 dnl -------------------------------------------------------------------
@@ -165,17 +160,18 @@ if gnome-config --cflags vfs 2>&1 >/dev/null ; then
 "+++ Your GnomeVFS is too old, it is $VFS_VERSION < gnome-vfs 0.4"])
 	fi
 	dnl -----------------------------------------------------------
-	dnl Get the CFLAGS and the LIBS
-	dnl -----------------------------------------------------------
-	VFS_CFLAGS=`gnome-config --cflags vfs`
-	VFS_LIBS=`gnome-config --libs vfs`
-	dnl -----------------------------------------------------------
 	dnl Define the USE_VFS_STUFF directive...
 	dnl -----------------------------------------------------------
 	if test "x$vfs_stuff" = "xyes" ; then
 	AC_MSG_RESULT(["+++ Defining VFS flags... "])
+		dnl ---------------------------------------------------
+		dnl Get the CFLAGS and the LIBS
+		dnl ---------------------------------------------------
+		VFS_CFLAGS=`gnome-config --cflags vfs`
+		VFS_LIBS=`gnome-config --libs vfs`
 		AC_SUBST(VFS_CFLAGS)
 		AC_SUBST(VFS_LIBS)
+		AC_DEFINE(USE_VFS_STUFF)
 	fi	
 else
 	dnl -----------------------------------------------------------
