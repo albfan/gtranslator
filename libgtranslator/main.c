@@ -31,7 +31,9 @@
 #include <liboaf/liboaf.h>
 #include <libgnome/gnome-defs.h>
 #include <libgnome/gnome-i18n.h>
+#ifdef GCONF_IS_PRESENT
 #include <gconf/gconf.h>
+#endif
 
 /*
  * The static variable used for the popt argument.

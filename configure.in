@@ -214,24 +214,6 @@ AM_CONDITIONAL(BIND_MIME,test x$enable_mime_bind = xyes)
 
 
 dnl -------------------------------------------------------------------
-dnl Get the message-db.d directories place.
-dnl -------------------------------------------------------------------
-AC_ARG_WITH(message-db-dir,
-     [  --with-message-db-dir=DIR        Define the message-db.d location],,with_message_db_dir=NONE)
-AC_MSG_CHECKING([where to put the message-db.d directory ])
-if test "z$with_message_db_dir" = "zNONE" ; then
-	AC_MSG_RESULT([" "
-"+++ Will put the message-db.d dir into gtranslators datadir."])
-	MESSAGE_DB_DIR=${datadir}/gtranslator
-	AC_SUBST(MESSAGE_DB_DIR)
-else
-	AC_MSG_RESULT([" "
-"+++ Will put the message-db.d dir to ${with_message_db_dir}."])
-	MESSAGE_DB_DIR=${with_message_db_dir}
-	AC_SUBST(MESSAGE_DB_DIR)
-fi
-
-dnl -------------------------------------------------------------------
 dnl Enable debug builds.
 dnl -------------------------------------------------------------------
 AC_ARG_WITH(debug-specs,
@@ -331,15 +313,11 @@ help/tr/index.html
 man/Makefile
 man/gtranslator.1
 libgtranslator/Makefile
-message-db.d/Makefile
 ])
 
 dnl ------------------------------------------------------------------
 dnl Print an information screen at the end of the process
 dnl ------------------------------------------------------------------
-if test "q${with_message_db_dir}" = "qNONE" ; then
-	with_message_db_dir=
-fi
 grep -sq USE_WINDOW_ICON\ 1  config.h && \
 use_window_icon_feature=yes
 echo "
@@ -350,9 +328,6 @@ gtranslator version	:	${VERSION}
 
 bind the po-files  
  with gtranslator  	:	${enable_mime_bind:-possibly}	
-
-where to put the
- message-db.d dir  	:	${with_message_db_dir:-gtranslator datadir}
 
 use the window-icon
  feature of gnome-libs  :	${use_window_icon_feature:-no}

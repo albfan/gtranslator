@@ -1,6 +1,7 @@
 2001-02-03  Gediminas Paulauskas <menesis@delfi.lt>
 
 	* message-db.d/: removed dir which will never be used.
+	* configure.in: remove any message-db mention from here.
 
 2001-02-02  Fatih Demir	<kabalak@gmx.net>
 

@@ -56,7 +56,9 @@ void gtranslator_config_init(void)
  */
 void gtranslator_config_close(void)
 {
-	#ifndef GCONF_IS_PRESENT
+	#ifdef GCONF_IS_PRESENT
+	gconf_client_suggest_sync(client, NULL);
+	#else
 	gnome_config_pop_prefix();
 	gnome_config_sync();
 	#endif
