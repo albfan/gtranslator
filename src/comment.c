@@ -27,7 +27,6 @@
 #include "nautilus-string.h"
 #include "parse.h"
 #include "prefs.h"
-#include "utf8.h"
 #include "utils.h"
 
 #include <gtk/gtklabel.h>
@@ -133,28 +132,6 @@ GtrComment *gtranslator_comment_new(const gchar *comment_string)
 		comment->pure_comment=g_strstrip(comment->pure_comment);
 	}
 	
-#ifdef UTF8_COMMENT
-	/*
-	 * Set up the UTF-8 representations for the GtrComment parts.
-	 */
-	comment->utf8_comment=
-		g_convert(comment->comment, -1,
-	                  "UTF-8", po->header->charset,
-	                  NULL, NULL, NULL);
-
-	if(GTR_COMMENT(comment)->pure_comment)
-	{
-		comment->pure_utf8_comment=
-			g_convert(comment->pure_comment, -1,
-				  "UTF-8", po->header->charset,
-				  NULL, NULL, NULL);
-	}
-	else
-	{
-		comment->pure_utf8_comment=NULL;
-	}
-#endif
-
 	/*
 	 * Set the fuzzy flag at all if the comment stands for a fuzzy message.
 	 */
@@ -206,10 +183,6 @@ GtrComment *gtranslator_comment_copy(GtrComment *comment)
 
 	copy->comment=g_strdup(comment->comment);
 	copy->pure_comment=g_strdup(comment->pure_comment);
-#ifdef UTF8_COMMENT
-	copy->utf8_comment=g_strdup(comment->utf8_comment);
-	copy->pure_utf8_comment=g_strdup(comment->pure_utf8_comment);
-#endif
 	copy->type=comment->type;	
 
 	return copy;
@@ -235,11 +208,6 @@ void gtranslator_comment_free(GtrComment **comment)
 	{
 		GTR_FREE((*comment)->comment);
 		GTR_FREE((*comment)->pure_comment);
-#ifdef UTF8_COMMENT
-		GTR_FREE((*comment)->utf8_comment);
-		GTR_FREE((*comment)->pure_utf8_comment);
-#endif
-		
 		GTR_FREE(*comment);
 	}
 }
@@ -267,12 +235,6 @@ gboolean gtranslator_comment_search(GtrComment *comment, const gchar *search_str
 	{
 		return TRUE;
 	}
-#ifdef UTF8_COMMENT
-	else if(strstr(comment->pure_utf8_comment, search_string))
-	{
-		return TRUE;
-	}
-#endif
 
 	return FALSE;
 }

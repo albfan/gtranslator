@@ -1,8 +1,11 @@
 2004-08-19  Ross Golder  <ross@golder.org>
 
+	* Makefile.am: Removed redundant 'utf8.[ch]'.
 	* action.[ch], dialogs.c, menus.c: Remove 'query_dialog' stuff. I'm
 	hoping to replace with a gedit-style MDI interface soon.
 	* color-schemes.c, prefs.c: Removed calls to 'gtranslator_set_style'.
+	* comment.[ch], dialogs.c, menus.c, message.c, message-table.c,
+	parse.[ch], utils.c: Removed 'utf8' references.
 	* action.[ch]: Remove some redundant UTF8_CODE.
 	* dnd.c, messages-table.c, undo.c: Use 'trans_msgstr[0]' instead of
 	'trans_box'.

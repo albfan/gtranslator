@@ -72,7 +72,6 @@ gtranslator_SOURCES = \
 	translator.c translator.h \
 	undo.c undo.h \
 	update.c \
-	utf8.c utf8.h \
 	utils.c utils.h \
 	utils_gui.c utils_gui.h \
 	vfs-handle.c vfs-handle.h

@@ -36,9 +36,6 @@
 #include "prefs.h"
 #include "syntax.h"
 #include "undo.h"
-#ifdef UTF8_CODE
-# include "utf8.h"
-#endif
 #include "utils.h"
 #include "utils_gui.h"
 
