@@ -74,8 +74,8 @@ static gint create_popup_menu(GtkText *widget, GdkEventButton *event, gpointer d
 	
 static void invert_dot(gchar *str);
 static void update_appbar(gint pos);
-static void call_gtranslator_homepage(GtkWidget  * widget, gpointer useless);
-static gint gtranslator_quit(GtkWidget  * widget, GdkEventAny  * e,
+static void call_gtranslator_homepage(GtkWidget *widget, gpointer useless);
+static gint gtranslator_quit(GtkWidget *widget, GdkEventAny *e,
 			     gpointer useless);
 
 /*
@@ -577,7 +577,7 @@ void create_app1(void)
 /*
  * The own quit-code
  */
-static gint gtranslator_quit(GtkWidget  * widget, GdkEventAny  * e,
+static gint gtranslator_quit(GtkWidget *widget, GdkEventAny *e,
 			     gpointer useless)
 {
 	/*
@@ -586,7 +586,6 @@ static gint gtranslator_quit(GtkWidget  * widget, GdkEventAny  * e,
 	if (!ask_to_save_file())
 		return TRUE;
 	close_file(NULL, NULL);
-	gnome_appbar_set_status(GNOME_APPBAR(appbar1), _("Bye bye!"));
 	save_geometry();
 	/*
 	 * Free the preferences stuff.

@@ -20,6 +20,7 @@
 #include <libgtranslator/preferences.h>
 #include "history.h"
 #include "gui.h"
+#include "dialogs.h"
 #include "parse.h"
 #include "open-differently.h"
 #include "prefs.h"
@@ -30,6 +31,9 @@
 void remove_duplicate_entries(GList *list, GtrHistoryEntry *entry);
 
 void open_file_from_history(GtkWidget *widget, gchar *filename);
+
+/* Utility callback to free userdata */
+void free_userdata(GtkWidget *widget, gpointer userdata);
 
 /*
  * Save the given GList of GtrHistoryEntry's.
@@ -191,6 +195,12 @@ void gtranslator_history_show(void)
 		gnome_app_install_menu_hints(GNOME_APP(app1), menu);
 
 		/*
+		 * FIXME: this is intended to free hint
+		 */
+		gtk_signal_connect(GTK_OBJECT(menu->widget), "destroy",
+				   GTK_SIGNAL_FUNC(free_userdata), menu->hint);
+
+		/*
 		 * Free the string and the GnomeUIInfo structure.
 		 */
 		g_free(menu->label);
@@ -198,8 +208,16 @@ void gtranslator_history_show(void)
 	}
 }
 
+void free_userdata(GtkWidget *widget, gpointer userdata)
+{
+	g_free(userdata);
+}
+
 void open_file_from_history(GtkWidget *widget, gchar *filename)
 {
+	if (!ask_to_save_file())
+		return;
+	close_file(NULL, NULL);
 	/*
 	 * Also detect the right open function in the recent files' list.
 	 */

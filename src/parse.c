@@ -413,8 +413,7 @@ void parse(const gchar *filename)
 	/*
 	 * Test if the filename is NOT equivalent to our temp file's name
 	 */
-	if(strcmp(po->filename, g_strdup_printf("%s/%s",
-		g_get_home_dir(), "gtranslator-temp-po-file")))
+	if(strcmp(g_basename(po->filename), "gtranslator-temp-po-file"))
 	{
 		gtranslator_history_add(po->filename,
 			po->header->prj_name, po->header->prj_version);
@@ -800,6 +799,9 @@ void compile(GtkWidget * widget, gpointer useless)
 	FILE *fs;
 	gboolean changed = po->file_changed;
 
+	if (!file_opened) 
+		return;
+	
 	/*
 	 * Check if msgfmt is available on the system.
 	 */
@@ -809,9 +811,6 @@ void compile(GtkWidget * widget, gpointer useless)
 		return;
 	}
 			
-	if (!file_opened) 
-		return;
-	
 #define RESULT "gtr_result.tmp"
 #define PO_FILE "gtr_po.tmp"
 	actual_write(PO_FILE);
