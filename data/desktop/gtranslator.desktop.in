@@ -1,11 +1,14 @@
 [Desktop Entry]
-Encoding=UTF-8
-_Name=gtranslator
-_Comment=The GNOME translation program
-Icon=gtranslator.png
-Exec=gtranslator
-Terminal=false
+Version=1.0
 Type=Application
+Encoding=UTF-8
+Name=gtranslator
+Comment=A program for maintaining translation files
+TryExec=gtranslator
+Exec=gtranslator
+Icon=gtranslator.png
+MimeType=text/x-gettext-translation
+Terminal=false
 StartupNotify=true
 Categories=Application;Development;
 X-GNOME-Bugzilla-Bugzilla=GNOME

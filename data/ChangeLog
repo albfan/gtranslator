@@ -1,3 +1,8 @@
+2004-08-01  Ross Golder  <ross@golder.org>
+
+	* desktop/gtranslator.desktop.in: Updated according to latest
+	  freedesktop.org desktop file spec.
+
 2004-01-28  Ross Golder  <ross@golder.org>
 
 	* mime/gtranslator.keys & mime/gtranslator.mime: Changed
