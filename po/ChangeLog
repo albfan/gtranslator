@@ -1,3 +1,7 @@
+2001-02-06  Christian Rose  <menthos@menthos.com>
+
+        * sv.po: Updated Swedish translation.
+
 2001-02-04  Gediminas Paulauskas <menesis@delfi.lt>
 
 	* POTFILES.in: removed parse-db.c and handle-db.c.
