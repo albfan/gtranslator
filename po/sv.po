@@ -1,6 +1,6 @@
 # Swedish translation of gtranslator
 # Copyright (C) 2000 Free Software Foundation, Inc.
-# Martin Norbäck <d95mback@dtek.chalmers.se>, 2000
+# Martin Norbäck <d95mback@dtek.chalmers.se>, 2000-2001.
 # Christian Rose <menthos@menthos.com>, 2000.
 #
 # $Id$
@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtranslator\n"
-"POT-Creation-Date: 2001-02-06 01:21+0100\n"
+"POT-Creation-Date: 2001-02-07 14:09+0100\n"
 "PO-Revision-Date: 2001-02-06 02:03+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -81,7 +81,7 @@ msgstr "Gör skillnad på gemener/VERSALER"
 msgid "English"
 msgstr "Engelska"
 
-#: src/dialogs.c:289 src/gui.c:832
+#: src/dialogs.c:289 src/gui.c:831
 msgid "Translated"
 msgstr "Översatt"
 
@@ -184,7 +184,7 @@ msgstr "_Gå till..."
 
 #: src/gui.c:179
 msgid "Goto specified message number"
-msgstr "Gå till det valda meddelandenumret"
+msgstr "Gå till angivet meddelandenummer"
 
 #: src/gui.c:184
 msgid "Next fuz_zy"
@@ -228,7 +228,7 @@ msgstr "Klistra detta meddelande"
 
 #: src/gui.c:235
 msgid "gtranslator _website"
-msgstr "_Webbplats för gtranslator"
+msgstr "_webbplats för gtranslator"
 
 #: src/gui.c:236
 msgid "gtranslator's homepage on the web"
@@ -310,7 +310,7 @@ msgstr "Sista"
 msgid "Missing"
 msgstr "Saknade"
 
-#: src/gui.c:314 src/gui.c:819 src/gui.c:823
+#: src/gui.c:314 src/gui.c:818 src/gui.c:822
 msgid "Fuzzy"
 msgstr "Luddig"
 
@@ -337,34 +337,30 @@ msgstr "Sök sträng i po-filen"
 msgid "gtranslator"
 msgstr "gtranslator"
 
-#: src/gui.c:589
-msgid "Bye bye!"
-msgstr "Hej då!"
-
-#: src/gui.c:819
+#: src/gui.c:818
 #, c-format
 msgid "%s [ %i Fuzzy left ]"
 msgstr "%s [ %i luddiga kvar ]"
 
-#: src/gui.c:823
+#: src/gui.c:822
 #, c-format
 msgid "%s [ No fuzzy left ]"
 msgstr "%s [ Inga luddiga kvar ]"
 
-#: src/gui.c:830
+#: src/gui.c:829
 msgid "Stick"
 msgstr "Klistra"
 
-#: src/gui.c:841
+#: src/gui.c:840
 #, c-format
 msgid "%s [ %i Untranslated left ]"
 msgstr "%s [ %i oöversatta kvar ]"
 
-#: src/gui.c:841 src/gui.c:843
+#: src/gui.c:840 src/gui.c:842
 msgid "Untranslated"
 msgstr "Oöversatt"
 
-#: src/gui.c:843
+#: src/gui.c:842
 #, c-format
 msgid "%s [ No untranslated left ]"
 msgstr "%s [ Inga oöversatta kvar ]"
@@ -372,7 +368,7 @@ msgstr "%s [ Inga oöversatta kvar ]"
 #.
 #. * Assign the first part.
 #.
-#: src/gui.c:854
+#: src/gui.c:853
 #, c-format
 msgid "Message %d / %d / Status: %s"
 msgstr "Meddelande %d / %d / Status: %s"
@@ -683,8 +679,7 @@ msgstr ""
 msgid "There's no file to open!"
 msgstr "Det finns ingen fil att öppna!"
 
-#: src/parse.c:337 src/parse.c:623
-#, c-format
+#: src/parse.c:337 src/parse.c:622
 msgid "The file `%s' doesn't exist at all!"
 msgstr "Filen \"%s\" finns inte alls!"
 
@@ -698,11 +693,10 @@ msgid "Successfully parsed the file \"%s\""
 msgstr "Tolkade filen \"%s\" utan problem"
 
 #: src/parse.c:392
-#, c-format
 msgid "gtranslator -- %s"
 msgstr "gtranslator -- %s"
 
-#: src/parse.c:584
+#: src/parse.c:583
 #, c-format
 msgid ""
 "You are trying to save file with *.pot extension.\n"
@@ -713,7 +707,7 @@ msgstr ""
 "Sådana filer genereras dock av program.\n"
 "Din fil bör sparas med en *.po-ändelse, troligtvis %s.po"
 
-#: src/parse.c:647
+#: src/parse.c:646
 #, c-format
 msgid ""
 "File %s\n"
@@ -722,8 +716,7 @@ msgstr ""
 "Filen %s\n"
 "innehåller %d luddiga meddelanden"
 
-#: src/parse.c:683
-#, c-format
+#: src/parse.c:682
 msgid ""
 "You didn't change anything in\n"
 "%s\n"
@@ -733,11 +726,11 @@ msgstr ""
 "%s\n"
 "Vill du spara den ändå?"
 
-#: src/parse.c:691
+#: src/parse.c:690
 msgid "gtranslator -- unchanged"
 msgstr "gtranslator -- oförändrad"
 
-#: src/parse.c:769
+#: src/parse.c:768
 #, c-format
 msgid ""
 "File %s\n"
@@ -746,11 +739,11 @@ msgstr ""
 "Filen %s\n"
 "har ändrats. Vill du återgå till den sparade kopian?"
 
-#: src/parse.c:808
+#: src/parse.c:810
 msgid "Sorry, msgfmt isn't available on your system!"
 msgstr "Tyvärr, msgfmt finns inte tillgängligt på ditt system!"
 
-#: src/parse.c:833
+#: src/parse.c:832
 #, c-format
 msgid ""
 "Compile successfull:\n"
@@ -759,12 +752,12 @@ msgstr ""
 "Kompileringen lyckades:\n"
 "%s"
 
-#: src/parse.c:862
+#: src/parse.c:861
 #, c-format
 msgid "You don't have read permissions on file `%s'"
 msgstr "Du har inte läsrättigheter för filen \"%s\""
 
-#: src/parse.c:881
+#: src/parse.c:880
 #, c-format
 msgid ""
 "You don't have write permissions on file `%s'.\n"
@@ -855,7 +848,7 @@ msgstr ""
 
 #: src/prefs.c:305
 msgid "Save geometry on exit & restore it on startup"
-msgstr "Spara gtranslators geometri vid avslut och återställ vid uppstart"
+msgstr "Spara geometrin vid avslut och återställ vid uppstart"
 
 #: src/prefs.c:308
 msgid "Don't show the update information dialogs"
@@ -908,7 +901,7 @@ msgstr "gtranslator -- förgrundsfärg"
 msgid "gtranslator -- background color"
 msgstr "gtranslator -- bakgrundsfärg"
 
-#: src/prefs.c:481
+#: src/prefs.c:493
 msgid ""
 "With the Preferences box you can define some variables\n"
 "with which you can make gtranslator make more work\n"
@@ -918,8 +911,7 @@ msgstr ""
 "som får gtranslator att göra de saker som DU vill.\n"
 " "
 
-#: src/prefs.c:645
-#, c-format
+#: src/prefs.c:657
 msgid "The geometry string \"%s\" couldn't be parsed!"
 msgstr "Geometristrängen \"%s\" kunde inte tolkas!"
 
@@ -965,21 +957,21 @@ msgstr "gtranslatord-meddelandedatabasen och teamhanteringsdemonen"
 msgid "The Gnome translation program"
 msgstr "Gnome-översättningsprogrammet"
 
-#: libgtranslator/main.c:49
-msgid "The language to parse the db for"
-msgstr "Språket som ska sökas i databasen för"
+#: data/mime/gtranslator.keys.in.h:1
+msgid "Compiled gettext po files"
+msgstr "Kompilerade gettext po-filer"
 
-#: libgtranslator/main.c:49
-msgid "language_code"
-msgstr "språkkod"
+#: data/mime/gtranslator.keys.in.h:2
+msgid "Gettext po files"
+msgstr "Gettext po-filer"
 
-#: libgtranslator/main.c:94
+#: libgtranslator/main.c:87
 msgid ""
 "gtranslatord has started successfully and will do some operations now ...\n"
 msgstr ""
 "gtranslatord startades utan problem och kommer att göra en del saker nu...\n"
 
-#: libgtranslator/main.c:112
+#: libgtranslator/main.c:95
 #, c-format
 msgid ""
 "GConf initialization error:\n"
@@ -998,7 +990,7 @@ msgstr "%Y-%m-%d %H.%M"
 
 #: libgtranslator/preferences.c:229
 msgid "Couldn't generate the current date!"
-msgstr "Kunde inte skapa aktuellt datum!"
+msgstr "Kunde inte generera dagens datum!"
 
 #: libgtranslator/stylistics.c:52 libgtranslator/stylistics.c:99
 msgid "No color path found!"
@@ -1015,13 +1007,12 @@ msgstr "Inget typsnitt angivet! Använder standardtypsnittet"
 msgid "-misc-fixed-medium-r-normal-*-*-120-*-*-c-*-iso8859-1"
 msgstr "-misc-fixed-medium-r-normal-*-*-120-*-*-c-*-iso8859-1"
 
-#: libgtranslator/team-handle.c:55
+#: libgtranslator/team-handle.c:53
 #, c-format
 msgid "Couldn't open the team database file `%s'!"
 msgstr "Kunde inte öppna lagdatabasfilen \"%s\"!"
 
 #: libgtranslator/vfs-handle.c:81
-#, c-format
 msgid "Couldn't create temporary directory `%s'!"
 msgstr "Kunde inte skapa den temporära katalogen \"%s\"!"
 
@@ -1053,6 +1044,102 @@ msgstr "Värden \"%s\" har ingen adress!"
 #: libgtranslator/vfs-handle.c:132
 msgid "Transfer interrupted!"
 msgstr "Överföringen avbröts!"
+
+#, fuzzy
+#~ msgid "The msg_db to use"
+#~ msgstr "Meddelandedatabasen som ska användas"
+
+#, fuzzy
+#~ msgid "Po-file has been compiled successfully."
+#~ msgstr "Sessionen återställdes utan problem."
+
+#, fuzzy
+#~ msgid "Couldn't store current geometry!"
+#~ msgstr "Kunde inte skapa aktuellt datum!"
+
+#, fuzzy
+#~ msgid "_Header"
+#~ msgstr "Huvud"
+
+#, fuzzy
+#~ msgid "Search for a message"
+#~ msgstr "_Fråga efter meddelande..."
+
+#, fuzzy
+#~ msgid "Goto this message"
+#~ msgstr "Gå till det första meddelandet"
+
+#, fuzzy
+#~ msgid "Find in the personal catalog"
+#~ msgstr "Sök i po-filen"
+
+#, fuzzy
+#~ msgid "Edit the header informations"
+#~ msgstr "Redigera huvudet"
+
+#, fuzzy
+#~ msgid "Open File"
+#~ msgstr "Öppna en po-fil"
+
+#, fuzzy
+#~ msgid "Save file as"
+#~ msgstr "Spara fil"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "The file stream is lost! Error no. `%i'"
+#~ msgstr ""
+#~ "\n"
+#~ "Filströmmen försvunnen!\n"
+#~ "%s"
+
+#~ msgid "gtranslator lost the list of translations!\n"
+#~ msgstr "gtranslator tappade bort listan med översättningar!\n"
+
+#, fuzzy
+#~ msgid "The msg_db `%s' seems not to be inited!\n"
+#~ msgstr "Meddelandedatabasen verkar inte ha initierats!\n"
+
+#~ msgid "Got no message entry!\n"
+#~ msgstr "Fick ingen meddelandepost!\n"
+
+#, fuzzy
+#~ msgid "Not available"
+#~ msgstr "Ingen meddelandedatabas tillgänglig!"
+
+#, fuzzy
+#~ msgid "No entry found in the msg_db."
+#~ msgstr "Ingen post hittad"
+
+#, fuzzy
+#~ msgid "Select your desired po-file to open"
+#~ msgstr "Det finns ingen fil att öppna!"
+
+#, fuzzy
+#~ msgid "gtranslator -- search-box"
+#~ msgstr "gtranslator -- %s"
+
+#, fuzzy
+#~ msgid "GoTo message entry"
+#~ msgstr "Fick ingen meddelandepost!\n"
+
+#, fuzzy
+#~ msgid "Goto the specified message entry."
+#~ msgstr "Gå till det valda meddelandenumret"
+
+#, fuzzy
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "Kunde inte öppna mo-filen \"%s\"!"
+
+#~ msgid "Bye bye!"
+#~ msgstr "Hej då!"
+
+#~ msgid "The language to parse the db for"
+#~ msgstr "Språket som ska sökas i databasen för"
+
+#~ msgid "language_code"
+#~ msgstr "språkkod"
 
 #~ msgid "_File/Recen_t files/"
 #~ msgstr "_Arkiv/Senas_te filer/"
@@ -1161,9 +1248,6 @@ msgstr "Överföringen avbröts!"
 
 #~ msgid "Check the spelling of translation"
 #~ msgstr "Kontrollera stavningen på översättningen"
-
-#~ msgid "Couldn't open mo-file `%s'!"
-#~ msgstr "Kunde inte öppna mo-filen \"%s\"!"
 
 #~ msgid "Number of maximal shown entries in the recent files list:"
 #~ msgstr "Maximala antalet visade poster i listan över senaste filer:"
@@ -1303,9 +1387,6 @@ msgstr "Överföringen avbröts!"
 #~ msgid "No path defined to get the gfloat value from!"
 #~ msgstr "Ingen sökväg angiven där jag kan hämta gfloat-värdet ifrån!"
 
-#~ msgid "Update po-file"
-#~ msgstr "Uppdatera po-fil"
-
 #~ msgid "The message db file is empty!"
 #~ msgstr "Meddelandedatabasfilen är tom!"
 
@@ -1321,9 +1402,6 @@ msgstr "Överföringen avbröts!"
 
 #~ msgid "No document present to add the node `%s'\n"
 #~ msgstr "Inget dokument finns tillgängligt för att lägga till noden \"%s\"\n"
-
-#~ msgid "Couldn't get the nodes!"
-#~ msgstr "Kunde inte hämta noderna!"
 
 #~ msgid "No language/team code defined to register!"
 #~ msgstr "Inget språk-/gruppnamn angivet för registrering!"
@@ -1349,15 +1427,6 @@ msgstr "Överföringen avbröts!"
 #~ msgid "Couldn't init the GConf library!"
 #~ msgstr "Kunde inte initiera GConf-biblioteket!"
 
-#~ msgid ""
-#~ "\n"
-#~ "The file stream is lost!\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\n"
-#~ "Filströmmen försvunnen!\n"
-#~ "%s"
-
 #~ msgid "GoTo"
 #~ msgstr "Gå till"
 
@@ -1366,9 +1435,6 @@ msgstr "Överföringen avbröts!"
 
 #~ msgid "Add the current message to the message db"
 #~ msgstr "Lägg till det aktuella meddelandet i meddelandedatabasen"
-
-#~ msgid "_Query for a message..."
-#~ msgstr "_Fråga efter meddelande..."
 
 #~ msgid "Query the message db for the current msgid"
 #~ msgstr "Fråga meddelandedatabasen efter aktuell msgid"
@@ -1412,9 +1478,6 @@ msgstr "Överföringen avbröts!"
 #~ msgid "Sets the minimum match for query"
 #~ msgstr "Ställer in minsta träff för fråga"
 
-#~ msgid "The messages db to use"
-#~ msgstr "Meddelandedatabasen som ska användas"
-
 #~ msgid "Query the messages db & exit"
 #~ msgstr "Sök i meddelandedatabasen och avsluta"
 
@@ -1424,26 +1487,11 @@ msgstr "Överföringen avbröts!"
 #~ msgid "No message db found! Creating one in `%s'."
 #~ msgstr "Ingen meddelandedatabas hittades! Skapar en i \"%s\"."
 
-#~ msgid "gtranslator lost the list of translations!\n"
-#~ msgstr "gtranslator tappade bort listan med översättningar!\n"
-
 #~ msgid "The message db `%s' hasn't been initted yet!\n"
 #~ msgstr "Meddelandedatabasen \"%s\" har inte initierats ännu!\n"
 
-#~ msgid "Got no message entry!\n"
-#~ msgstr "Fick ingen meddelandepost!\n"
-
-#~ msgid "The message db seems not to be initted!\n"
-#~ msgstr "Meddelandedatabasen verkar inte ha initierats!\n"
-
-#~ msgid "No message db available!"
-#~ msgstr "Ingen meddelandedatabas tillgänglig!"
-
 #~ msgid "The message db is empty!"
 #~ msgstr "Meddelandedatabasen är tom!"
-
-#~ msgid "No entry found"
-#~ msgstr "Ingen post hittad"
 
 #~ msgid "Trying to set an irregular challange length!"
 #~ msgstr "Försöker sätta en ovanlig tävlingslängd!"
