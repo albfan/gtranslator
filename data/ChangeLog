@@ -1,5 +1,8 @@
 2001-02-05  Fatih Demir	<kabalak@gmx.net>
 
+	* gnome-config/gtranslatorConf.sh.in & pkg-config/gtranslator.pc.in:
+		We do not use any GtkHTML in stable.
+
 	* scripts/my-update.sh: Use the xml-i18n-update tool if present.
 
 2001-02-03  Gediminas Paulauskas <menesis@delfi.lt>
