@@ -62,11 +62,6 @@
 #include <libgnomeui/gnome-messagebox.h>
 #include <libgnomeui/gnome-uidefs.h>
 
-#include <gettext-0.0/config.h>
-#include <gettext-0.0/message.h>
-#include <gettext-0.0/read-po.h>
-#include <gettext-0.0/write-po.h>
-
 /* Global variables */
 GtrPo *po;
 gboolean file_opened;
@@ -160,6 +155,37 @@ gboolean add_to_obsolete(GtrPo *po, gchar *comment)
 }
 
 /*
+ * Callback to receive an error message from the gettext parser
+ */
+void gtranslator_parser_report_error(abstract_po_reader_ty *pop, lex_pos_ty *pos, char *errstr)
+{
+	fprintf(stderr, "GTR-ERR-HNDLR-CB: %s:%d: %s\n", &pos->file_name,
+		&pos->line_number, errstr);
+}
+
+static default_po_reader_class_ty gtr_parser_methods =
+{
+  {
+    sizeof (default_po_reader_ty),
+    default_constructor,
+    default_destructor,
+    default_parse_brief,
+    default_parse_debrief,
+    default_directive_domain,
+    default_directive_message,
+    default_comment,
+    default_comment_dot,
+    default_comment_filepos,
+    default_comment_special,
+    gtranslator_parser_report_error
+  },
+  default_set_domain, /* set_domain */
+  default_add_message, /* add_message */
+  NULL /* frob_new_message */
+};
+
+
+/*
  * The core parsing function for the given po file.
  */ 
 GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
@@ -169,6 +195,10 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	gchar *base;
 	int i;
 	char *errptr = NULL;
+	char *real_filename;
+	FILE *fp;
+	default_po_reader_ty *pop;
+	int err_msg_count = 0;
 
 	g_return_val_if_fail(filename!=NULL, NULL);
 
@@ -193,17 +223,44 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	}
 	
 	/*
-	 * Grab a list-of-messages gettext style. TODO: Should warn if
-	 * opening a PO file with multiple domains.
+	 * Open the PO file, using gettext's utility function
 	 */
-	po->mdlp = read_po_file(po->filename, &errptr);
-	if(errptr != NULL) {
+	fp = open_po_file (po->filename, &real_filename, false);
+	if(fp == NULL) {
 		g_set_error(error,
 			GTR_PARSER_ERROR,
 			GTR_PARSER_ERROR_GETTEXT,
-			_("Gettext returned an error parsing '%s': %s"),
-			po->filename, errptr);
-		free(errptr);
+			_("Failed opening file '%s': %s"),
+			po->filename, strerror(errno));
+		gtranslator_po_free(po);
+		return NULL;
+	}
+
+	/*
+	 * Create an instance of the default gettext po parser with
+	 * but the 'report_error' callback set to our own error handler.
+	 */
+	pop = default_po_reader_alloc (&gtr_parser_methods);
+	pop->handle_comments = true;
+	pop->handle_filepos_comments = true;
+	pop->allow_domain_directives = true;
+	pop->allow_duplicates = true;
+	pop->allow_duplicates_if_same_msgstr = true;
+	pop->mdlp = msgdomain_list_alloc (!pop->allow_duplicates);
+	pop->mlp = msgdomain_list_sublist (pop->mdlp, pop->domain, true);
+	po_lex_pass_obsolete_entries (true);
+	err_msg_count = po_scan ((abstract_po_reader_ty *) pop, fp,
+		real_filename, filename, input_syntax);
+	po->mdlp = pop->mdlp;
+	po_reader_free ((abstract_po_reader_ty *) pop);
+	if(err_msg_count > 0) {
+		g_set_error(error,
+			GTR_PARSER_ERROR,
+			GTR_PARSER_ERROR_GETTEXT,
+			ngettext ("Found %d error while parsing '%s'",
+				  "Found %d errors while parsing '%s'",
+		                  err_msg_count),
+			err_msg_count, po->filename);
 		gtranslator_po_free(po);
 		return NULL;
 	}

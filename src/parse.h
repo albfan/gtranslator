@@ -28,6 +28,7 @@
 
 #include <gettext-0.0/config.h>
 #include <gettext-0.0/message.h>
+#include <gettext-0.0/read-po.h>
 
 #include "messages.h"
 #include "header_stuff.h"
@@ -179,5 +180,10 @@ void update(GtkWidget *widget, gpointer useless);
  */
 void gtranslator_set_progress_bar(void);
 void gtranslator_get_translated_count(void);
+
+/*
+ * Callback to receive an error message from the gettext parser
+ */
+void gtranslator_parser_report_error(abstract_po_reader_ty *pop, lex_pos_ty *pos, char *errstr);
 
 #endif

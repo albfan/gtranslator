@@ -1,3 +1,9 @@
+2004-08-12  Ross Golder  <ross@golder.org>
+
+	* src/parse.[ch]: Implement 'gtranslator_parser_report_error'
+	callback, and replace 'read_po_file' call with a more OO
+	approach to using the gettext parser.
+
 2004-08-07  Ross Golder  <ross@golder.org>
 
 	* src/parse.c: Handle extra argument to gettext's 'read_po_file'
