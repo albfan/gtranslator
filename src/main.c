@@ -29,7 +29,6 @@
 #include "prefs.h"
 #include "parse.h"
 #include "open-differently.h"
-#include <libgtranslator/parse-db.h>
 #include <libgtranslator/team-handle.h>
 
 #ifdef GCONF_IS_PRESENT
