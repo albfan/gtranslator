@@ -407,17 +407,19 @@ void gtranslator_learn_statistics(void)
 static void gtranslator_learn_buffer_learn_function(gpointer data, 
 	gpointer useless)
 {
-	GtrMsg 	*message=GTR_MSG(data);
+	GtrMsg 	*msg=GTR_MSG(data);
 	
-	g_return_if_fail(message!=NULL);
-	g_return_if_fail(GTR_MSG(message)->msgid!=NULL);
+	g_return_if_fail(msg!=NULL);
+	g_return_if_fail(msg->message!=NULL);
+	g_return_if_fail(msg->message->msgid!=NULL);
+	g_return_if_fail(msg->message->msgstr!=NULL);
 
 	/*
 	 * Learn only translated messages.
 	 */
-	if(message->msgstr && (message->status & GTR_MSG_STATUS_TRANSLATED))
+	if(msg->message->msgstr[0] != '\0')
 	{
-		gtranslator_learn_string(message->msgid, message->msgstr);
+		gtranslator_learn_string(msg->message->msgid, msg->message->msgstr);
 	}
 }
 
@@ -1018,20 +1020,20 @@ void gtranslator_learn_translate(gpointer gtr_msg_gpointer)
 {
 	GtrMsg *msg=GTR_MSG(gtr_msg_gpointer);
 
-	if(msg && msg->msgid && !msg->msgstr)
+	if(msg && msg->message && msg->message->msgid && !msg->message->msgstr)
 	{
 		gchar	*result;
 		
-		result=gtranslator_learn_get_learned_string(msg->msgid);
+		result=gtranslator_learn_get_learned_string(msg->message->msgid);
 		
 		if(result)
 		{
 			/*
 			 * Set the translation content, status etc. from the learn buffer.
 			 */
-			msg->msgstr=g_strdup(result);
-			msg->status |= GTR_MSG_STATUS_TRANSLATED;
-			po->file_changed=TRUE;
+			msg->message->msgstr=g_strdup(result);
+			msg->message->is_fuzzy |= TRUE;
+			po->file_changed = TRUE;
 			
 			GTR_FREE(result);
 		}
@@ -1041,7 +1043,7 @@ void gtranslator_learn_translate(gpointer gtr_msg_gpointer)
 /*
  * Autotranslate the opened po file.
  */
-void gtranslator_learn_autotranslate(gboolean visual_interface)
+gboolean gtranslator_learn_autotranslate(GtrPo *po, gboolean visual_interface, GError **error)
 {
 	g_return_if_fail(po!=NULL);
 	g_return_if_fail(po->messages!=NULL);

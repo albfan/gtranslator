@@ -1096,6 +1096,7 @@ void gtranslator_open_uri_dialog_clicked(GtkDialog *dialog, gint button,
 	gpointer entrydata)
 {
 	GString *uri=g_string_new("");
+	GError *error;
 
 	if(button==GTK_RESPONSE_OK)
 	{
@@ -1113,18 +1114,9 @@ void gtranslator_open_uri_dialog_clicked(GtkDialog *dialog, gint button,
 		}
 		else
 		{
-			/*
-			 * Open the URI via our beloved function; the else case
-			 *  is very logical .-)
-			 */ 
-			if(gtranslator_utils_uri_supported(uri->str))
-			{
 				gtk_widget_destroy(GTK_WIDGET(dialog));
-				gtranslator_open_file(uri->str);
-			}
-			else
-			{
-				gtranslator_utils_error_dialog(_("No supported URI protocol (like \"ftp://\") given!"));
+			if(!gtranslator_open_file(uri->str, &error)) {
+				gtranslator_utils_error_dialog(error->message);
 			}
 		}
 	}
@@ -1158,6 +1150,7 @@ http://www.DOMAIN.COM/PO-FILE"));
 void gtranslator_rescue_file_dialog(void)
 {
 	GtkWidget *dialog;
+	GError *error;
 	gchar *original_filename;
 	gint reply;
 	
@@ -1205,7 +1198,10 @@ and may contain your hard work!\n"),
 		rename(gtranslator_runtime_config->crash_filename, 
 			original_filename);
 
-		gtranslator_open_file(original_filename);
+		if(!gtranslator_open_file(original_filename, &error)) {
+			gnome_app_warning(GNOME_APP(gtranslator_application),
+				error->message);
+		}
 	}
 	else if(reply==GTK_RESPONSE_REJECT)
 	{
@@ -1293,7 +1289,7 @@ void gtranslator_query_dialog(void)
 		}
 		else
 		{
-			query_text=g_strdup(GTR_MSG(po->current->data)->msgid);
+			query_text=g_strdup(GTR_MSG(po->current->data)->message->msgid);
 		}
 
 		if(!query_text || (strlen(query_text) <= 1))
@@ -1427,6 +1423,7 @@ void gtranslator_auto_translation_dialog(void)
 {
 	static GtkWidget *at_dialog=NULL;
 	gint 		reply;
+	GError		*error;
 
 	if(at_dialog != NULL) {
 		gtk_window_present(GTK_WINDOW(at_dialog));
@@ -1455,7 +1452,11 @@ from your personal learn buffer?"));
 		/*
 		 * Autotranslate the missing entries.
 		 */
-		gtranslator_learn_autotranslate(TRUE);
+		if(!gtranslator_learn_autotranslate(po, TRUE, &error))
+		{
+			gnome_app_warning(GNOME_APP(gtranslator_application),
+				error->message);
+		}
 	}
 
 	gtk_widget_destroy(GTK_WIDGET(at_dialog));

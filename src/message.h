@@ -56,7 +56,7 @@ void gtranslator_message_go_to_no(GtkWidget  * widget, gpointer number);
  */
 void gtranslator_message_update(void);
 void gtranslator_message_show(GtrMsg  * msg);
-void gtranslator_message_change_status(GtkWidget  * widget, gpointer which);
+void gtranslator_message_toggle_fuzzy(GtkWidget  * widget, gpointer useless);
 
 /*
  * Changes message fuzzy status
@@ -66,7 +66,7 @@ void gtranslator_message_status_set_fuzzy(GtrMsg  * msg, gboolean fuzzy);
 /*
  * Copies msgid to msgstr or blanks msgstr 
  */
-void gtranslator_message_status_set_sticky(GtrMsg  *msg, gpointer useless);
+void gtranslator_message_copy_to_translation(GtrMsg  *msg, gpointer useless);
 
 /*
  * Frees a GtrMsg.

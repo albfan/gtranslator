@@ -48,7 +48,7 @@ void gtranslator_config_init(void)
 		client=gconf_client_get_default();
 		/*
 		 * add_dir is useful only for listeners...
-		gconf_client_add_dir(client, "/apps/gtranslator",
+		gconf_client_add_dir(client, CONFIG_PREFIX,
 			GCONF_CLIENT_PRELOAD_NONE, NULL);
 		 */
 	}

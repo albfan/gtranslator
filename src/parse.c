@@ -62,17 +62,20 @@
 #include <libgnomeui/gnome-messagebox.h>
 #include <libgnomeui/gnome-uidefs.h>
 
+#include <gettext-0.0/config.h>
+#include <gettext-0.0/message.h>
+#include <gettext-0.0/read-po.h>
+#include <gettext-0.0/write-po.h>
+
 /* Global variables */
 GtrPo *po;
 gboolean file_opened;
 gboolean message_changed;
 guint autosave_source_tag=1;
-gboolean open_anyway=FALSE;
 
 /*
  * These are to be used only inside this file
  */
-static void append_line(gchar ** old, const gchar * tail, gboolean continuation);
 static gboolean add_to_obsolete(GtrPo *po, gchar *comment);
 static void write_the_message(gpointer data, gpointer fs);
 static gchar *restore_msg(const gchar * given);
@@ -83,9 +86,10 @@ static void determine_translation_status(gpointer data, gpointer useless_stuff);
  */
 static void remove_translation(gpointer message, gpointer useless);
 
+#ifdef NOW_REDUNDANT
 static void check_msg_status(GtrMsg * msg)
 {
-	if (msg->msgstr)
+	if (msg->message->msgstr)
 		msg->status = GTR_MSG_STATUS_TRANSLATED;
 	if ((msg->comment) && (GTR_COMMENT(msg->comment)->type & FUZZY_COMMENT))
 		msg->status |= GTR_MSG_STATUS_FUZZY;
@@ -126,6 +130,7 @@ static void append_line(gchar ** old, const gchar * tail, gboolean continuation)
 	}
 	*old = result;
 }
+#endif /* NOW_REDUNDANT */
 
 gboolean add_to_obsolete(GtrPo *po, gchar *comment)
 {
@@ -157,11 +162,12 @@ gboolean add_to_obsolete(GtrPo *po, gchar *comment)
 /*
  * The core parsing function for the given po file.
  */ 
-GtrPo *gtranslator_parse(const gchar *filename)
+GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 {
 	GtrPo *po;
 	gboolean first_is_fuzzy;
 	gchar *base;
+	int i;
 
 	g_return_val_if_fail(filename!=NULL, NULL);
 
@@ -186,21 +192,64 @@ GtrPo *gtranslator_parse(const gchar *filename)
 	}
 	
 	/*
-	 * Check the right file access permissions.
+	 * Grab a list-of-messages gettext style. TODO: Should warn if
+	 * opening a PO file with multiple domains.
 	 */
-	if(gtranslator_utils_check_file_permissions(po)==FALSE)
+	if((po->mdlp = read_po_file (po->filename)) == NULL)
 	{
+		g_set_error(error,
+			GTR_PARSER_ERROR,
+			GTR_PARSER_ERROR_GETTEXT,
+			_("Gettext returned a null message domain list."));
+		gtranslator_po_free(po);
+		return NULL;
+	}
+	if(po->mdlp->nitems < 1) {
+		g_set_error(error,
+			GTR_PARSER_ERROR,
+			GTR_PARSER_ERROR_GETTEXT,
+			_("Gettext returned an empty list of message domains."));
+		gtranslator_po_free(po);
 		return NULL;
 	}
 	
-	if (!gtranslator_parse_core(po))
+	/*
+	 * Gather the first message list
+	 */
+	po->messagelist = po->mdlp->item[0]->messages;
+
+	/*
+	 * Post-process these into a linked list of GtrMsgs
+	 */
+	po->messages = NULL;
+	for(i = 0; i < po->messagelist->nitems; i++)
 	{
+		message_ty *message;
+		GtrMsg *msg;
+
+		message = (message_ty *)po->messagelist->item[i];
+
+		/* Unpack into a GtrMsg */		
+		msg = g_new0(GtrMsg, 1);
+		msg->message = message;
+
+		/* Set comment */
+		msg->comment = g_new0(GtrComment, 1);
+
+		/* Build up messages */
+		po->messages = g_list_append(po->messages, msg);
+	}
+	if(po->messages == NULL) {
+		g_set_error(error,
+			GTR_PARSER_ERROR,
+			GTR_PARSER_ERROR_OTHER,
+			_("No messages obtained from parser."));
 		gtranslator_po_free(po);
 		return NULL;
 	}
 
 #define FIRST_MSG GTR_MSG(po->messages->data)
-	first_is_fuzzy=(FIRST_MSG->status & GTR_MSG_STATUS_FUZZY) != 0;
+	first_is_fuzzy = FIRST_MSG->message->is_fuzzy;
 	gtranslator_message_status_set_fuzzy(FIRST_MSG, FALSE);
 	po->fuzzy--;
 	
@@ -263,6 +312,7 @@ GtrPo *gtranslator_parse(const gchar *filename)
 	return po;
 }
 
+#ifdef NOW_REDUNDANT
 gboolean gtranslator_parse_core(GtrPo *po)
 {
 	GtrMsg 	*msg;
@@ -547,11 +597,13 @@ gboolean gtranslator_parse_core(GtrPo *po)
 	po->messages = g_list_reverse(po->messages);
 	return TRUE;
 }
+#endif /* NOW_REDUNDANT */
 
 /*
- * The internally used parse-function
+ * The internally used parse-function. Parses the given po file into the 
+ * global 'po' variable.
  */
-void gtranslator_parse_main(const gchar *filename)
+gboolean gtranslator_parse_main(const gchar *filename, GError **error)
 {
 	/*
 	 * Test if such a file does exist.
@@ -561,16 +613,16 @@ void gtranslator_parse_main(const gchar *filename)
 		gtranslator_utils_error_dialog(
 			_("The file `%s' doesn't exist at all!"),
 				filename);
-		return;
+		return FALSE;
 	}
 
 	/*
-	 * Check if the given is already open within another instance.
+	 * Check if the file is already open within another instance.
 	 */
-	if(gtranslator_utils_check_file_being_open(filename))
+	if(!gtranslator_utils_reopen_if_already_open(filename))
 	{
-		if(!open_anyway)
-			return;
+		/* If already open, will already have popped up a dialog */
+		return TRUE;
 	}
 
 	gtranslator_config_set_string("runtime/filename", 
@@ -579,7 +631,9 @@ void gtranslator_parse_main(const gchar *filename)
 	/*
 	 * Use the new core function.
 	 */
-	po = gtranslator_parse(filename);
+	if((po = gtranslator_po_parse(filename, error)) == NULL) {
+		return FALSE;
+	}
 
 	/*
 	 * Iterate to the main GUI thread -- well, no locks for the GUI should
@@ -590,9 +644,6 @@ void gtranslator_parse_main(const gchar *filename)
 	{
 		gtk_main_iteration();
 	}
-
-	if(po==NULL)
-		return;
 
 	gtranslator_actions_set_up_file_opened();
 
@@ -674,6 +725,7 @@ void gtranslator_parse_main(const gchar *filename)
 		/* But PACKAGE and VERSION should be entered by user */
 		gtranslator_header_edit_dialog(NULL, NULL);
 	}
+	return TRUE;
 }
 
 /*
@@ -746,6 +798,7 @@ void gtranslator_parse_main_extra()
 
 void gtranslator_parse_the_file_from_file_dialog(GtkWidget * widget, gpointer of_dlg)
 {
+	GError *error;
 	gchar *po_file;
 	po_file = g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(of_dlg)));
 
@@ -756,7 +809,10 @@ void gtranslator_parse_the_file_from_file_dialog(GtkWidget * widget, gpointer of
 	/*
 	 * Open the file via our centralized opening function.
 	 */
-	gtranslator_open_file(po_file);
+	if(!gtranslator_open_file(po_file, &error)) {
+		gnome_app_warning(GNOME_APP(gtranslator_application),
+			error->message);
+	}
 
 	/*
 	 * Destroy the dialog 
@@ -797,120 +853,6 @@ static gchar *restore_msg(const gchar * given)
 	return result;
 }
 
-/*
- * Writes one message to a file stream 
- */
-static void write_the_message(gpointer data, gpointer fs)
-{
-	GtrMsg 	*msg;
-	GString *string;
-	gchar 	*id;
-	gchar	*str;
-	gchar   *line;
-	GError  *errv;
-
-	msg=GTR_MSG(data);
-
-	g_return_if_fail(fs!=NULL);
-	g_return_if_fail(msg!=NULL);
-
-	/*
-	 * Initialize the used GString with the comment of the message -- 
-	 *  if there's any comment for it of course.
-	 */
-	if(msg->comment)
-	{
-		string=g_string_new(GTR_COMMENT(msg->comment)->comment);
-	}
-	else
-	{
-		string=g_string_new("");
-	}
-
-	/*
-	 * Preface for the msgid -- the content follows below.
-	 */
-	string=g_string_append(string,"msgid \"");
-	
-	/*
-	 * Restore the msgid, append it and free it.
-	 */
-	id=restore_msg(msg->msgid);
-	string=g_string_append(string, id);
-	GTR_FREE(id);
-
-	/*
-	 * Check if we've got a pluram forms message.
-	 */
-	if(po->header->plural_forms && msg->msgid_plural && msg->msgstr)
-	{
-		string=g_string_append(string, "\"\nmsgid_plural \"");
-
-		id=restore_msg(msg->msgid_plural);
-		string=g_string_append(string, id);
-		GTR_FREE(id);
-
-		id=restore_msg(msg->msgstr);
-
-		string=g_string_append(string, "\"\nmsgstr[0] \"");
-		string=g_string_append(string, id);
-		GTR_FREE(id);
-
-		if(msg->msgstr_1)
-		{
-			id=restore_msg(msg->msgstr_1);
-
-			string=g_string_append(string, "\"\nmsgstr[1] \"");
-			string=g_string_append(string, id);
-			GTR_FREE(id);
-		}
-
-		if(msg->msgstr_2)
-		{
-			id=restore_msg(msg->msgstr_2);
-
-			string=g_string_append(string, "\"\nmsgstr[2] \"");
-			string=g_string_append(string, id);
-			GTR_FREE(id);
-		}
-	}
-	else
-	{
-		/*
-		 * Preface for the msgstr -- the content comes below.
-		 */
-		string=g_string_append(string, "\"\nmsgstr \"");
-	
-		str=restore_msg(msg->msgstr);
-		string=g_string_append(string, str);
-		GTR_FREE(str);
-	}
-	
-	/*
-	 * Convert lines from charset specified in header
-	 */
-	if (po->header && po->header->charset) {
-		/*
-		 * Convert from header charset to UTF-8
-		 */
-		line = g_convert(string->str, strlen(string->str), po->header->charset, "utf-8", NULL, NULL, &errv);
-		if(!line) {
-			g_warning("could not convert message number '%d' from UTF-8 to '%s' to UTF-8: %s", msg->pos, po->header->charset, errv->message);
-			line = string->str;
-		}
-	}
-	else {
-		line = string->str;
-	}
-	
-	/*
-	 * Write the string content and the newlines to our write stream.
-	 */
-	fprintf((FILE *) fs, "%s\"\n\n", line);
-	
-	g_string_free(string, TRUE);
-}
-
 gboolean gtranslator_save_file(const gchar *name)
 {
 	GtrMsg 	*header;
@@ -928,12 +870,13 @@ Your file should likely be named '%s.po'."),
 		GTR_FREE(warn);
 		return FALSE;
 	}
-	else if(gtranslator_save_po_file(name))
-	{
+	else {
+		msgdomain_list_print (po->mdlp, name, true, false);
 		return TRUE;
 	}
 	
-	if(!nautilus_strcmp(name, gtranslator_runtime_config->temp_filename))
+#ifdef NOT_NEEDED
+	if(!nautilus_strcmp(name, gtranslator_runtime_config->temp_fimakelename))
 	{
 		/*
 		 * Create a new filename to use instead of the temporarily
@@ -989,7 +932,7 @@ Your file should likely be named '%s.po'."),
 
 	gtranslator_header_update(po->header);
 	header = gtranslator_header_put(po->header);
-	write_the_message(header, (gpointer) fs);
+	/* write_the_message(header, (gpointer) fs); */
 	gtranslator_message_free(header, NULL);
 
 	gtranslator_message_update();
@@ -1040,6 +983,7 @@ Your file should likely be named '%s.po'."),
 	}
 
 	return TRUE;
+#endif /* NOT_NEEDED */
 }
 
 /*
@@ -1159,6 +1103,7 @@ void gtranslator_file_close(GtkWidget * widget, gpointer useless)
 
 void gtranslator_file_revert(GtkWidget * widget, gpointer useless)
 {
+	GError *error;
 	gchar *save_this;
 	if (po->file_changed) {
 		guint reply;
@@ -1167,12 +1112,17 @@ void gtranslator_file_revert(GtkWidget * widget, gpointer useless)
 			return;
 	}
 	save_this = g_strdup(po->filename);
+
 	/*
 	 * Let gtranslator_file_close know it doesn't matter if file was changed
 	 */
 	po->file_changed = FALSE;
 	gtranslator_file_close(NULL, NULL);
-	gtranslator_parse_main(save_this);
+	if(!gtranslator_parse_main(save_this, &error))
+	{
+		gnome_app_warning(GNOME_APP(gtranslator_application),
+			error->message);
+	}
 	gtranslator_parse_main_extra();
 	GTR_FREE(save_this);
 }
@@ -1186,34 +1136,27 @@ static void remove_translation(gpointer message, gpointer useless)
 	gboolean internal_change=FALSE;
 	
 	g_return_if_fail(msg!=NULL);
-	g_return_if_fail(msg->msgid!=NULL);
+	g_return_if_fail(msg->message!=NULL);
+	g_return_if_fail(msg->message->msgid!=NULL);
 
 	/*
 	 * Free any translation which is left over.
 	 */
-	if(msg->msgstr)
+	if(msg->message->msgstr)
 	{
-		GTR_FREE(msg->msgstr);
+		g_free((gpointer *)msg->message->msgstr);
 		internal_change=TRUE;
 	}
 
 	/*
-	 * Remove the "translated" status bits and set the untranslated bit.
+	 * Unfuzzy the message too
 	 */
-	if(msg->status & GTR_MSG_STATUS_TRANSLATED)
-	{
-		msg->status &= ~GTR_MSG_STATUS_TRANSLATED;
-		internal_change=TRUE;
-	}
-	
-	if(msg->status & GTR_MSG_STATUS_FUZZY)
+	if(msg->message->is_fuzzy)
 	{
 		gtranslator_message_status_set_fuzzy(msg, FALSE);
 		po->fuzzy--;
 		internal_change=TRUE;
 	}
-
-	msg->status |= GTR_MSG_STATUS_UNKNOWN;
 
 	/*
 	 * If we did perform any internal change, activate the Save/Revert
@@ -1358,10 +1301,10 @@ void compile(GtkWidget * widget, gpointer useless)
  */
 static void determine_translation_status(gpointer data, gpointer useless_stuff)
 {
-	GtrMsg *message = GTR_MSG(data);
-	if(message->status & GTR_MSG_STATUS_TRANSLATED)
+	GtrMsg *msg = GTR_MSG(data);
+	if(msg->message->msgstr[0] != '\0')
 		po->translated++;
-	if(message->status & GTR_MSG_STATUS_FUZZY)
+	if(msg->message->is_fuzzy)
 		po->fuzzy++;
 }
 
@@ -1402,4 +1345,14 @@ void gtranslator_set_progress_bar(void)
 			GNOME_APPBAR(gtranslator_application_bar),
 			percentage);
 	}
+}
+
+GQuark
+gtranslator_parser_error_quark (void)
+{
+  static GQuark quark = 0;
+  if (!quark)
+    quark = g_quark_from_static_string ("gtranslator_parser_error");
+
+  return quark;
 }

@@ -26,9 +26,18 @@
  * The general file opening action starts from here!
  */
 
+typedef enum 
+{
+  GTR_OPEN_FILE_ERROR_MISSING_PROGRAM,
+  GTR_OPEN_FILE_ERROR_OTHER
+} GtrOpenFileError;
+
+#define GTR_OPEN_FILE_ERROR gtranslator_open_file_error_quark()
+GQuark gtranslator_open_file_error_quark (void);
+
 /*
  * Open the given filename string via all of our supported, available methods.
  */
-void gtranslator_open_file(gchar *filename);
+gboolean gtranslator_open_file(gchar *filename, GError **error);
 
 #endif

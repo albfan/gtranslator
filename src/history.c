@@ -269,11 +269,16 @@ void free_userdata(GtkWidget *widget, gpointer userdata)
 
 void gtranslator_open_file_dialog_from_history(GtkWidget *widget, gchar *filename)
 {
+	GError *error = NULL;
+
 	if (!gtranslator_should_the_file_be_saved_dialog())
 		return;
 	gtranslator_file_close(NULL, NULL);
 
-	gtranslator_open_file(filename);
+	if(!gtranslator_open_file(filename, &error)) {
+		gnome_app_warning(gtranslator_application,
+			error->message);
+	}
 }
 
 void gtranslator_history_save(GList *list)

@@ -307,13 +307,31 @@ int main(int argc, char *argv[])
 	 */
 	if(auto_translate_file)
 	{
+		GtrPo *learnbuffer = NULL;
+
 		/*
 		 * Initialize learn buffer, open file and auto translate all
 		 *  possible strings.
 		 */
+
 		gtranslator_learn_init();
-		gtranslator_open_file(auto_translate_file);
-		gtranslator_learn_autotranslate(FALSE);
+		if((learnbuffer = gtranslator_po_parse(auto_translate_file, &error)) == NULL)
+		{
+			g_assert(error!=NULL);
+			fprintf(stderr, _("Error parsing '%s': %s"),
+				auto_translate_file, error->message);
+			g_clear_error(&error);
+			return;
+		}
+
+		if(!gtranslator_learn_autotranslate(learnbuffer, FALSE, &error))
+		{
+			g_assert(error!=NULL);
+			fprintf(stderr, _("Autotranslate failed: %s"),
+				error->message);
+			g_clear_error(&error);
+			return;
+		}
 		
 		/*
 		 * If any change has been made to the po file: save it.
@@ -365,7 +383,14 @@ int main(int argc, char *argv[])
 		/*
 		 * Try to open up the supported "special" gettext file types.
 		 */ 
-		gtranslator_open_file((gchar *)args[0]);
+		if(!gtranslator_open_file((gchar *)args[0], &error))
+		{
+			g_assert(error!=NULL);
+			fprintf(stderr, _("Couldn't open '%s': %s\n"),
+				(gchar *)args[0], error->message);
+			g_clear_error(&error);
+			return;
+		}
 	}
 	
 	//	poptFreeContext(context);
@@ -421,16 +446,24 @@ int main(int argc, char *argv[])
 	 */
 	if(learn_file)
 	{
+		GtrPo *learnfile = NULL;
+
 		/*
 		 * First parse the file completely.
 		 */
-		gtranslator_open_file(learn_file);
+		if((learnfile = gtranslator_po_parse(learn_file, &error)) == NULL)
+		{
+			g_assert(error!=NULL);
+			fprintf(stderr, _("Could not parse learn file '%s': %s\n"),
+				learn_file, error->message);
+			g_clear_error(&error);
+		}
 
 		/*
 		 * Now learn the file completely and then shut the
 		 *  learn system down.
 		 */
-		gtranslator_learn_po_file(po);
+		gtranslator_learn_po_file(learnfile);
 		gtranslator_learn_shutdown();
 
 		/*

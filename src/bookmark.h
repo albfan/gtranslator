@@ -70,7 +70,7 @@ gchar *gtranslator_bookmark_string_from_bookmark(GtrBookmark *bookmark);
  * Open the bookmark -- file & position => version and date should be only some
  *  kind of aside-factors.
  */
-void gtranslator_bookmark_open(GtrBookmark *bookmark);
+gboolean gtranslator_bookmark_open(GtrBookmark *bookmark, GError **error);
 
 /*
  * Change the comment of a given bookmark to the given new comment "newcomment"

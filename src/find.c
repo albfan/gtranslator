@@ -123,7 +123,7 @@ static GList *get_find_pos(gchar *str)
 #define SEARCH(str)                                                \
 {                                                                  \
 	g_list_free(poslist);                                      \
-	poslist = get_find_pos(GTR_MSG(msg->data)->str);           \
+	poslist = get_find_pos((gchar *)GTR_MSG(msg->data)->message->str);  \
 	hits = g_list_length(poslist);                             \
 }
 

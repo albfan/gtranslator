@@ -59,7 +59,7 @@ void gtranslator_utils_show_home_page(GtkWidget *widget, gpointer useless)
  * Go through the characters and search for free spaces
  * and replace them with '·''s.
  */
-gchar *gtranslator_utils_invert_dot(gchar *str)
+gchar *gtranslator_utils_invert_dot(const char *str)
 {
 	GString *newstr;
 	gunichar middot;
@@ -341,90 +341,11 @@ GtkWidget *gtranslator_utils_attach_color_with_label(GtkWidget *table,
 }
 
 /*
- * Checks the given file for read permissions first and then
- *  for the right write permissions.
- */
-gboolean gtranslator_utils_check_file_permissions(GtrPo *po_file)
-{
-	FILE *file;
-	gchar *error_message;
-
-	g_return_val_if_fail(po_file != NULL, FALSE);
-	/*
-	 * Open the file first for reading.
-	 */
-	file=fopen(po_file->filename, "r");
-	if(file == NULL)
-	{
-		gtranslator_utils_error_dialog(
-			_("You are not permitted to access file '%s'."),
-				po_file->filename);
-
-		return FALSE;
-	}
-	else
-	{
-		/*
-		 * Open the same file also for a write-permission check.
-		 */ 
-		file=fopen(po_file->filename, "r+");
-		if(file == NULL)
-		{
-			/*
-			 * Show a warning box to the user and warn him about
-			 *  the fact of lacking write permissions.
-			 */  
-			error_message=g_strdup_printf(
-				_("You do not have permission to modify file '%s'.\n\
-Please save a new copy of it to a place of your choice and get write\n\
-permission for it."),
-				po_file->filename);
-			gnome_app_warning(GNOME_APP(gtranslator_application), error_message);
-
-			po_file->no_write_perms=TRUE;
-		
-			return TRUE;
-		}
-		else
-		{
-			po_file->no_write_perms=FALSE;
-		}
-	}
-
-	fclose(file);
-
-	return TRUE;
-}
-
-void open_it_anyway_callback( gint, gpointer );
-
-void open_it_anyway_callback( gint reply, gpointer filename )
-{
-	extern gboolean open_anyway;
-	
-	switch( reply ){
-		case 0: /* YES */
-			open_anyway = TRUE;
-			break;
-		case 1: /* NO */
-			break;
-	}
-	g_free( filename );
-}
-
-/*
  * Check if the given file is already opened by gtranslator.
  */
-gboolean gtranslator_utils_check_file_being_open(const gchar *filename)
+gboolean gtranslator_utils_reopen_if_already_open(const gchar *filename)
 {
 	gchar *resultfilename;
-
-	extern gboolean open_anyway;
-
-	if( open_anyway ){
-		open_anyway = FALSE;
-		return( FALSE );
-	}
 
 	g_return_val_if_fail(filename!=NULL, FALSE);
 
@@ -439,14 +360,14 @@ gboolean gtranslator_utils_check_file_being_open(const gchar *filename)
 	{
 		gint reply;
 		reply = gtranslator_already_open_dialog(NULL, (gpointer)filename);
-		if(reply == GTK_RESPONSE_YES)
-			open_anyway = TRUE;
-		return TRUE;
-	}
-	else
-	{
+		if(reply == GTK_RESPONSE_NO)
 		return FALSE;
 	}
+
+	/*
+	 * Assume we want to open it
+	 */
+	return TRUE;
 }
 
 /*

@@ -486,7 +486,7 @@ void gtranslator_application_bar_update(gint pos)
 	/*
 	 * And append according to the message status the status name.
 	 */
-	if(msg->status & GTR_MSG_STATUS_FUZZY)
+	if(msg->message->is_fuzzy)
 	{
 		if(po->fuzzy>0)
 		{
@@ -501,9 +501,8 @@ void gtranslator_application_bar_update(gint pos)
 			 */
 			gtranslator_actions_disable(ACT_NEXT_FUZZY);
 		}
-	} else if(msg->status & GTR_MSG_STATUS_STICK) {
-		status=g_strdup(_("Sticky (Message & translation are the same)"));
-	} else if(msg->status & GTR_MSG_STATUS_TRANSLATED) {
+
+	} else if(msg->message->msgstr[0] != '\0') {
 		status=g_strdup(_("Translated"));
 	} else {
 		/*
@@ -532,7 +531,7 @@ void gtranslator_application_bar_update(gint pos)
 	 *  longer message there indicating a plural forms message.
 	 *
 	 */
-	if(msg->msgid_plural)
+	if(msg->message->msgid_plural)
 	{
 		str=g_strdup_printf(_("Message %d / %d / Status: %s (Message contains plural forms)"), pos + 1, po->length, status);
 	}
@@ -732,7 +731,7 @@ void gtranslator_translation_changed(GtkWidget  *buffer, gpointer useless)
 		message_changed = TRUE;
 		gtranslator_actions_enable(ACT_UNDO);
 		if ((GtrPreferences.unmark_fuzzy) 
-		     && (msg->status & GTR_MSG_STATUS_FUZZY))
+		     && (msg->message->is_fuzzy))
 		{
 		     	gtranslator_message_status_set_fuzzy(msg, FALSE);
 			po->fuzzy--;

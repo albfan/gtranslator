@@ -92,10 +92,11 @@ GtrHeader * gtranslator_header_get(GtrMsg * msg)
 	gint i = 0;
 
 	g_return_val_if_fail(msg != NULL, NULL);
-	g_return_val_if_fail(msg->msgstr != NULL, NULL);
+	g_return_val_if_fail(msg->message != NULL, NULL);
+	g_return_val_if_fail(msg->message->msgstr != NULL, NULL);
 	
 	ph = g_new0(GtrHeader, 1);
-	lines = g_strsplit(msg->msgstr, "\n", 0);
+	lines = g_strsplit(msg->message->msgstr, "\n", 0);
 	for (i = 0; lines[i] != NULL; i++) {
 		pair = g_strsplit(lines[i], ": ", 2);
 		if(!pair[0] || !pair[1]) continue;
@@ -210,7 +211,7 @@ GtrMsg * gtranslator_header_put(GtrHeader * h)
 
 	if(h->plural_forms)
 	{
-		msg->msgstr = g_strdup_printf("\n"\
+		msg->message->msgstr = g_strdup_printf("\n"\
 "Project-Id-Version: %s\\n\n"\
 "Report-Msgid-Bugs-To: %s\\n\n"\
 "POT-Creation-Date: %s\\n\n"\
@@ -234,7 +235,7 @@ GtrMsg * gtranslator_header_put(GtrHeader * h)
 	}
 	else
 	{
-		msg->msgstr = g_strdup_printf("\n"\
+		msg->message->msgstr = g_strdup_printf("\n"\
 "Project-Id-Version: %s\\n\n"\
 "Report-Msgid-Bugs-To: %s\\n\n"\
 "POT-Creation-Date: %s\\n\n"\

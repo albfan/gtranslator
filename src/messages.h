@@ -26,6 +26,10 @@
 #include <gtk/gtktreemodel.h>
 #include "comment.h"
 
+#include <gettext-0.0/config.h>
+#include <gettext-0.0/message.h>
+
+#ifdef NOW_REDUNDANT
 /*
  * The different stati of the messages.
  */
@@ -50,32 +54,24 @@ typedef enum {
 	 */
 	GTR_MSG_STATUS_REVIEW		= 1 << 3
 } GtrMsgStatus;
+#endif
 
 /*
  * The generally used message structure in gtranslator.
  */ 
 typedef struct {
-	GtrComment 	*comment;
+	message_ty	*message;
 
-	gchar 		*msgid;
-	gchar 		*msgstr;
+	GtrComment 	*comment;
 	
 	gint		no;
-	gint 		pos;
 
 	/* Cursor position in translation text box*/
 	gint		cursor_offset;
 	
-	gchar		*msgid_plural;
-
-	/*
-	 * The plural forms msgstrs - the first "msgstr[0]" is stored in the
-	 *  1st message translation equivalent "msgstr" as it should be logical.
-	 */
-	gchar		*msgstr_1;
-	gchar		*msgstr_2;
-	
+#ifdef NOW_REDUNDANT
 	GtrMsgStatus 	status;
+#endif
 
 	/*
 	 * GtkTreeIter for when using the messages table

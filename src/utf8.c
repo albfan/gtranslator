@@ -56,16 +56,16 @@ void gtranslator_utf8_convert_message_to_utf8(GtrMsg *msg, const gchar *orig_enc
 
 	g_return_if_fail(msg!=NULL);
 
-	if (msg->msgstr) {
-		msgstr=msg->msgstr;
-		msg->msgstr=g_convert(msgstr, -1, 
+	if (msg->message->msgstr) {
+		msgstr=msg->message->msgstr;
+		msg->message->msgstr=g_convert(msgstr, -1, 
 	                	      "UTF-8", orig_enc, 
 	        	              NULL, NULL, NULL);
 		g_free(msgstr);
 	}
 
-	msgid=msg->msgid;
-	msg->msgid=g_convert(msgid, -1, 
+	msgid=msg->message->msgid;
+	msg->message->msgid=g_convert(msgid, -1, 
 	                      "UTF-8", orig_enc, 
 	                      NULL, NULL, NULL);
 	g_free(msgid);
@@ -81,8 +81,8 @@ void gtranslator_utf8_convert_message_from_utf8(GtrMsg *msg, const gchar *orig_e
 
 	g_return_if_fail(msg!=NULL);
 
-	msgstr=msg->msgstr;
-	msg->msgstr=g_convert(msgstr, -1, 
+	msgstr=msg->message->msgstr;
+	msg->message->msgstr=g_convert(msgstr, -1, 
 	                      orig_enc, "UTF-8",
 	                      NULL, NULL, NULL);
 	g_free(msgstr);

@@ -176,7 +176,7 @@ GnomeUIInfo the_edit_menu[] = {
 	{
 		GNOME_APP_UI_ITEM, N_("Copy _message -> translation"),
 		N_("Copy the original message contents and paste them as translation"),
-		gtranslator_message_status_set_sticky, NULL, NULL,
+		gtranslator_message_copy_to_translation, NULL, NULL,
 		GNOME_APP_PIXMAP_DATA, copy_msgid2msgstr_xpm,
 		GDK_F11, 0, NULL
 	},
@@ -184,9 +184,8 @@ GnomeUIInfo the_edit_menu[] = {
 	{
 		GNOME_APP_UI_TOGGLEITEM, N_("Fu_zzy"),
 		N_("Toggle fuzzy status of a message"),
-		gtranslator_message_change_status,
-		GINT_TO_POINTER(GTR_MSG_STATUS_FUZZY),
-		NULL,
+		gtranslator_message_toggle_fuzzy,
+		NULL, NULL,
 		GNOME_APP_PIXMAP_FILENAME, "gtranslator/fuzzy_small.png",
 		GDK_2, GDK_MOD1_MASK, NULL
 	},

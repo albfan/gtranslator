@@ -217,15 +217,17 @@ gchar *gtranslator_bookmark_new_bookmark_string()
 /*
  * Open the given bookmark.
  */
-void gtranslator_bookmark_open(GtrBookmark *bookmark)
+gboolean gtranslator_bookmark_open(GtrBookmark *bookmark, GError **error)
 {
-	g_return_if_fail(bookmark!=NULL);
-	g_return_if_fail(bookmark->file!=NULL);
+	g_return_val_if_fail(bookmark!=NULL,FALSE);
+	g_return_val_if_fail(bookmark->file!=NULL,FALSE);
 
 	/*
-	 * Open the po file.
+	 * Open the po file. Handle error.
 	 */
-	gtranslator_open_file(bookmark->file);
+	if(!gtranslator_open_file(bookmark->file, error)) {
+		return FALSE;
+	}
 
 	/*
 	 * Only re-setup the bookmark if the po file could be opened.
@@ -236,6 +238,8 @@ void gtranslator_bookmark_open(GtrBookmark *bookmark)
 		gtranslator_message_go_to_no(NULL, 
 			GINT_TO_POINTER(bookmark->position));
 	}
+
+	return TRUE;
 }
 
 /*
@@ -244,7 +248,9 @@ void gtranslator_bookmark_open(GtrBookmark *bookmark)
  */
 gboolean gtranslator_bookmark_resolvable(GtrBookmark *bookmark)
 {
-	GtrPo *current_po;
+	GError *error;
+	GtrPo *bookmark_po;
+	gint potcom=0;
 	
 	g_return_val_if_fail(bookmark!=NULL, FALSE);
 
@@ -255,54 +261,48 @@ gboolean gtranslator_bookmark_resolvable(GtrBookmark *bookmark)
 	{
 		return FALSE;
 	}
-	else
-	{
-		gint potcom=0;
 		
-		current_po=po;
-		
-		#define CHECK_HEADER_PART(x); \
-			if(!nautilus_strcmp(GTR_HEADER(po->header)->x, \
-				GTR_HEADER(current_po->header)->x)) \
-				{ \
-					potcom++; \
+	/*
+	 * Open the bookmark file
+	 */
+	bookmark_po = gtranslator_po_parse(bookmark->file, error);
+	if(!bookmark_po) {
+		return FALSE;
 				}
 				
-		gtranslator_parse_main(bookmark->file);
-
 		/*
-		 * Check the header parts for equality.
+	 * If the project version matches the current po file, increment
+	 * the potcom counter (?!) 
 		 */
-		CHECK_HEADER_PART(prj_version);
-		
-		#undef CHECK_HEADER_PART
+	if(!nautilus_strcmp(GTR_HEADER(bookmark_po->header)->prj_version,
+		GTR_HEADER(po->header)->prj_version))
+	{
+		potcom++;
+	}
 
 		/*
 		 * Are the filenames (somehow) equal?
 		 */
 		if(!nautilus_strcmp(
-			gtranslator_utils_get_raw_file_name(po->filename),
-			gtranslator_utils_get_raw_file_name(current_po->filename)))
+		gtranslator_utils_get_raw_file_name(bookmark_po->filename),
+		gtranslator_utils_get_raw_file_name(po->filename)))
 		{
 			potcom++;
 		}
 		
 		/*
+	 * Finished with our bookmark file
+	 */
+	gtranslator_po_free(bookmark_po);
+
+	/*
 		 * At least 2 equalities must have been occured to let the
 		 *  GtrBookmark be resolvable.
 		 */
 		if(potcom >= 2)
 		{
-			/*
-			 * Free the "new-old" po and reassign the saved
-			 *  original po variable.
-			 */
-			gtranslator_po_free(po);
-			po=current_po;
-
 			return TRUE;
 		}
-	}
 
 	return FALSE;
 }
@@ -661,11 +661,17 @@ void free_userdata_bookmark(GtkWidget *widget, gpointer userdata)
 
 void gtranslator_open_file_dialog_from_bookmark(GtkWidget *widget, gchar *filename)
 {
+	GError *error;
+
 	if (!gtranslator_should_the_file_be_saved_dialog())
 		return;
 	gtranslator_file_close(NULL, NULL);
 
-	gtranslator_open_file(filename);
+	if(!gtranslator_open_file(filename, &error))
+	{
+		gnome_app_warning(GNOME_APP(gtranslator_application),
+			error->message);
+	}
 }
 
 /*

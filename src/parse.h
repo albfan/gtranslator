@@ -22,10 +22,24 @@
 #define GTR_PARSE_H 1
 
 #include <stdio.h>
+
+#include <glib.h>
 #include <gtk/gtkwidget.h>
+
+#include <gettext-0.0/config.h>
+#include <gettext-0.0/message.h>
 
 #include "messages.h"
 #include "header_stuff.h"
+
+typedef enum 
+{
+  GTR_PARSER_ERROR_GETTEXT,
+  GTR_PARSER_ERROR_OTHER,
+} GtrParserError;
+
+#define GTR_PARSER_ERROR gtranslator_parser_error_quark()
+GQuark gtranslator_parser_error_quark (void);
 
 /*
  * The general po-file structure
@@ -42,20 +56,31 @@ typedef struct {
 	GtrHeader *header;
 	
 	/*
-	 * All the po->messages are stored here 
+	 * The whole gettext multi-domain list-of-messages pointer (uses
+	 * libgettextpo directly)
 	 */
-	GList *messages;
+	msgdomain_list_ty *mdlp;
 	
 	/*
-	 * The length of messages list 
+	 * A gettext list-of-messages pointer (uses libgettextpo directly)
 	 */
-	guint length;
+	message_list_ty *messagelist;
+
+ 	/*
+ 	 * All the po->messages are stored here
+	 */
+	GList *messages;
 	
 	/*
 	 * A pointer to the currently displayed message 
 	 */
 	GList *current;
 	
+	/*
+	 * The length of messages list (can use 'messagelist->nitems')
+	 */
+	guint length;
+
 	/*
 	 * The obsolete messages are stored within this gchar.
 	 */
@@ -115,27 +140,15 @@ extern gboolean file_opened;
 extern gboolean message_changed;
 
 /*
- * Core backend functions for parsing a po file.
+ * Functions for parsing a po file into a GtrPo and freeing it.
  */ 
-gboolean gtranslator_parse_core(GtrPo *po);
+GtrPo *gtranslator_po_parse(const gchar *filename, GError **error);
 void gtranslator_po_free(GtrPo *po);
-GtrPo *gtranslator_parse(const gchar *po);
 
 /*
  * Save the file with the given filename.
  */
 gboolean gtranslator_save_file(const gchar *name);
-
-/*
- * The main granslator parse function which does use the backend
- *  calls from above.
- */
-void gtranslator_parse_main(const gchar *po);
-
-/*
- * The parts that sets up the GUI after it's been parsed
- */
-void gtranslator_parse_main_extra();
 
 /*
  * Callbacks for the widgets

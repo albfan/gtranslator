@@ -336,43 +336,38 @@ void gtranslator_messages_table_create (void)
 		      -1);
 
   while (list) {
-    GtrMsg *message=list->data;
+    GtrMsg *msg = GTR_MSG(list->data);
 
-    switch (message->status){
-    case GTR_MSG_STATUS_UNKNOWN:
-      gtk_tree_store_append(model, &message->iter, &messages_table->unknown_node);
-      gtk_tree_store_set(model, &message->iter,
-			 ORIGINAL_COLUMN, message->msgid,
-			 TRANSLATION_COLUMN, message->msgstr,
-			 MSG_PTR_COLUMN, message,
-			 COLOR_COLUMN, &messages_table_colors->untranslated_color,
-			 -1);
-      i++;
-      break;
-    case GTR_MSG_STATUS_TRANSLATED:
-      gtk_tree_store_append(model, &message->iter, &messages_table->translated_node);
-      gtk_tree_store_set(model, &message->iter,
-			 ORIGINAL_COLUMN, message->msgid,
-			 TRANSLATION_COLUMN, message->msgstr,
-			 MSG_PTR_COLUMN, message,
-			 COLOR_COLUMN, &messages_table_colors->translated_color,
-			 -1);
-      j++;
-      break;
-    case GTR_MSG_STATUS_STICK:
-      /*      node=NULL;*/
-      break;
-    case GTR_MSG_STATUS_FUZZY:
-    default:
-      gtk_tree_store_append(model, &message->iter, &messages_table->fuzzy_node);
-      gtk_tree_store_set(model, &message->iter,
-			 ORIGINAL_COLUMN, message->msgid,
-			 TRANSLATION_COLUMN, message->msgstr,
-			 MSG_PTR_COLUMN, message,
+    if(msg->message->is_fuzzy) {
+      gtk_tree_store_append(model, &msg->iter, &messages_table->fuzzy_node);
+      gtk_tree_store_set(model, &msg->iter,
+			 ORIGINAL_COLUMN, msg->message->msgid,
+			 TRANSLATION_COLUMN, msg->message->msgstr,
+			 MSG_PTR_COLUMN, msg,
 			 COLOR_COLUMN, &messages_table_colors->fuzzy_color,
 			 -1);
       k++;
     }
+    else if(msg->message->msgstr[0] != '\0') {
+      gtk_tree_store_append(model, &msg->iter, &messages_table->translated_node);
+      gtk_tree_store_set(model, &msg->iter,
+			 ORIGINAL_COLUMN, msg->message->msgid,
+			 TRANSLATION_COLUMN, msg->message->msgstr,
+			 MSG_PTR_COLUMN, msg,
+			 COLOR_COLUMN, &messages_table_colors->translated_color,
+			 -1);
+      j++;
+    }
+    else {
+      gtk_tree_store_set(model, &msg->iter,
+			 ORIGINAL_COLUMN, msg->message->msgid,
+			 TRANSLATION_COLUMN, msg->message->msgstr,
+			 MSG_PTR_COLUMN, msg,
+			 COLOR_COLUMN, &messages_table_colors->untranslated_color,
+			 -1);
+      i++;
+    }
+
       list = g_list_next(list);
   }
 
@@ -391,7 +386,7 @@ void gtranslator_messages_table_create (void)
 /*
  * Update the data in a single row
  */
-void gtranslator_messages_table_update_row(GtrMsg *message)
+void gtranslator_messages_table_update_row(GtrMsg *msg)
 {
   GtkTreeStore *model;
   if(!file_opened)
@@ -399,40 +394,35 @@ void gtranslator_messages_table_update_row(GtrMsg *message)
 
   model = GTK_TREE_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(tree)));
 
-  if(!gtk_tree_store_remove(model, &message->iter)) {
+  if(!gtk_tree_store_remove(model, &msg->iter)) {
 	  /* Iter is no longer valid */
   }
 
-    switch (message->status){
-    case GTR_MSG_STATUS_UNKNOWN:
-      gtk_tree_store_append(model, &message->iter, &messages_table->unknown_node);
-      gtk_tree_store_set(model, &message->iter,
-			 ORIGINAL_COLUMN, message->msgid,
-			 TRANSLATION_COLUMN, message->msgstr,
-			 MSG_PTR_COLUMN, message,
-			 COLOR_COLUMN, messages_table_colors->untranslated,
+  if(msg->message->is_fuzzy) {
+      gtk_tree_store_append(model, &msg->iter, &messages_table->fuzzy_node);
+      gtk_tree_store_set(model, &msg->iter,
+			 ORIGINAL_COLUMN, msg->message->msgid,
+			 TRANSLATION_COLUMN, msg->message->msgstr,
+			 MSG_PTR_COLUMN, msg,
+			 COLOR_COLUMN, messages_table_colors->fuzzy,
 			 -1);
-      break;
-    case GTR_MSG_STATUS_TRANSLATED:
-      gtk_tree_store_append(model, &message->iter, &messages_table->translated_node);
-      gtk_tree_store_set(model, &message->iter,
-			 ORIGINAL_COLUMN, message->msgid,
-			 TRANSLATION_COLUMN, message->msgstr,
-			 MSG_PTR_COLUMN, message,
+  }
+  else if(msg->message->msgstr[0] != '\0') {
+      gtk_tree_store_append(model, &msg->iter, &messages_table->translated_node);
+      gtk_tree_store_set(model, &msg->iter,
+			 ORIGINAL_COLUMN, msg->message->msgid,
+			 TRANSLATION_COLUMN, msg->message->msgstr,
+			 MSG_PTR_COLUMN, msg,
 			 COLOR_COLUMN, messages_table_colors->translated,
 			 -1);
-      break;
-    case GTR_MSG_STATUS_STICK:
-      /*      node=NULL;*/
-      break;
-    case GTR_MSG_STATUS_FUZZY:
-    default:
-      gtk_tree_store_append(model, &message->iter, &messages_table->fuzzy_node);
-      gtk_tree_store_set(model, &message->iter,
-			 ORIGINAL_COLUMN, message->msgid,
-			 TRANSLATION_COLUMN, message->msgstr,
-			 MSG_PTR_COLUMN, message,
-			 COLOR_COLUMN, messages_table_colors->fuzzy,
+  }
+  else {
+      gtk_tree_store_append(model, &msg->iter, &messages_table->unknown_node);
+      gtk_tree_store_set(model, &msg->iter,
+			 ORIGINAL_COLUMN, msg->message->msgid,
+			 TRANSLATION_COLUMN, msg->message->msgstr,
+			 MSG_PTR_COLUMN, msg,
+			 COLOR_COLUMN, messages_table_colors->untranslated,
 			 -1);
     }  
 }
@@ -440,7 +430,7 @@ void gtranslator_messages_table_update_row(GtrMsg *message)
 /*
  * Select given message
  */
-void gtranslator_messages_table_select_row(GtrMsg *message)
+void gtranslator_messages_table_select_row(GtrMsg *msg)
 {
 	GtkTreeSelection	*selection=NULL;
 
@@ -450,7 +440,7 @@ void gtranslator_messages_table_select_row(GtrMsg *message)
 	}
 
 	selection=gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-	gtk_tree_selection_select_iter(selection, &message->iter);
+	gtk_tree_selection_select_iter(selection, &msg->iter);
 }
 
 static void 
@@ -459,12 +449,12 @@ gtranslator_messages_table_selection_changed(GtkTreeSelection *selection,
 {
   GtkTreeIter iter;
   GtkTreeModel* model;
-  GtrMsg* message;
+  GtrMsg* msg;
 
   if (gtk_tree_selection_get_selected(selection, &model, &iter) == TRUE) {
-    gtk_tree_model_get(model, &iter, MSG_PTR_COLUMN, &message, -1);
-    if (message != NULL)
-      gtranslator_message_go_to(g_list_find(po->messages, message));
+    gtk_tree_model_get(model, &iter, MSG_PTR_COLUMN, &msg, -1);
+    if (msg != NULL)
+      gtranslator_message_go_to(g_list_find(po->messages, msg));
   }
 
 }

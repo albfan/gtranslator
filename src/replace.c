@@ -185,6 +185,7 @@ static void replace_msg(gpointer data, gpointer replace)
 	GtrReplace *l_replace=GTR_REPLACE(replace);
 
 	g_return_if_fail(msg!=NULL);
+	g_return_if_fail(msg->message!=NULL);
 	g_return_if_fail(l_replace!=NULL);
 
 	/*
@@ -197,12 +198,12 @@ static void replace_msg(gpointer data, gpointer replace)
 
 	if(l_replace->replace_in_english)
 	{
-		replace_core(&msg->msgid, l_replace);
+		replace_core(&msg->message->msgid, l_replace);
 	}
 
 	if(l_replace->replace_in_translation)
 	{
-		replace_core(&msg->msgstr, l_replace);
+		replace_core(&msg->message->msgstr, l_replace);
 	}
 
 }
@@ -210,7 +211,7 @@ static void replace_msg(gpointer data, gpointer replace)
 /*
  * Core kabalak land -- crazy method I know.
  */
-static void replace_core(gchar **string, GtrReplace *rstuff)
+static void replace_core(char **string, GtrReplace *rstuff)
 {
 	/*
 	 * If any important data is missing, exit from here and don't perform

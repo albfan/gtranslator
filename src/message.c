@@ -49,6 +49,9 @@
 #include <libgnomeui/gnome-app.h>
 #include <libgnomeui/gnome-app-util.h>
 
+#include <gettext-0.0/config.h>
+#include <gettext-0.0/message.h>
+
 static gboolean is_fuzzy(GList *msg, gpointer useless);
 static gboolean is_untranslated(GList *msg, gpointer useless);
 
@@ -95,7 +98,7 @@ static gboolean is_fuzzy(GList *msg, gpointer useless)
 		g_warning(_("Couldn't get the message!"));
 		return FALSE;
 	}
-	if (GTR_MSG(msg->data)->status & GTR_MSG_STATUS_FUZZY) {
+	if (GTR_MSG(msg->data)->message->is_fuzzy) {
 		gtranslator_message_go_to(msg);
 		return TRUE;
 	} else
@@ -120,7 +123,8 @@ void gtranslator_message_go_to_next_fuzzy(GtkWidget * widget, gpointer useless)
 
 static gboolean is_untranslated(GList *msg, gpointer useless)
 {
-	if (GTR_MSG(msg->data)->status & GTR_MSG_STATUS_TRANSLATED)
+	message_ty *message = GTR_MSG(msg)->message;
+	if (message->msgstr && message->msgstr[0] != '\0')
 		return FALSE;
 	gtranslator_message_go_to(msg);
 	return TRUE;
@@ -145,12 +149,20 @@ void gtranslator_message_go_to_next_untranslated(GtkWidget * widget, gpointer us
 /*
  * The used callback if the user edits a plural form in the plural forms dialog
  */
-static void plural_forms_edited(GtkCellRendererText *crtext, gchar *path, gchar *str, gpointer message)
+static void plural_forms_edited(GtkCellRendererText *crtext, gchar *path, gchar *str, gpointer msg)
 {
 	GtkTreeIter	iter;
 	GtkTreePath	*pathie;
+	message_ty	*message;
+	char		*msgstr[16];
+	char		*newmsgstr;
+	char		*nextmsg;
+	char		*ptr;
+	int		index;
+	int		newmsgstrlen;
+	int		msgstrlen;
 
-	g_return_if_fail(message!=NULL);
+	g_return_if_fail(msg!=NULL);
 	g_return_if_fail(path!=NULL);
 
 	/*
@@ -162,36 +174,66 @@ static void plural_forms_edited(GtkCellRendererText *crtext, gchar *path, gchar 
 	gtk_tree_path_free(pathie);
 
 	/*
+	 * Unpack the plurals from the message_ty
+	 */
+	message = GTR_MSG(msg)->message;
+	if (message->msgid_plural != NULL)
+	{
+		unsigned int i;
+		const char *p;
+
+		for (p = message->msgstr, i = 0;
+			p < message->msgstr + message->msgstr_len;
+			p += strlen (p) + 1, i++)
+		{
+			*msgstr[i] = (char *)p;
+		}
+	}
+
+	/*
 	 * According to the path which was given to us (as we're using a fixed tree structure we can
 	 *  do the handling via the old and easy way via an if/else if/else tree here :-)
-	 *
-	 * We're freeing the previous string and getting the string from the cell renderer, assigning
-	 *  it and also updating the tree store/view with the new data.
 	 */
 	if(!strcmp(path, "0:1"))
 	{
-		GTR_FREE((GTR_MSG(message)->msgstr_2));
-		GTR_MSG(message)->msgstr_2=g_strdup(str);
-
-		gtk_tree_store_set(GTK_TREE_STORE(plural_forms_store), &iter,
-			1, GTR_MSG(message)->msgstr_2, -1);
+		index = 2;
 	}
 	else if(!strcmp(path, "0:0"))
 	{
-		GTR_FREE((GTR_MSG(message)->msgstr_1));
-		GTR_MSG(message)->msgstr_1=g_strdup(str);
-
-		gtk_tree_store_set(GTK_TREE_STORE(plural_forms_store), &iter,
-			1, GTR_MSG(message)->msgstr_1, -1);
+		index = 1;
 	}
 	else
 	{
-		GTR_FREE((GTR_MSG(message)->msgstr));
-		GTR_MSG(message)->msgstr=g_strdup(str);
-
-		gtk_tree_store_set(GTK_TREE_STORE(plural_forms_store), &iter,
-			1, GTR_MSG(message)->msgstr, -1);
+		index = 0;
 	}
+
+	/*
+	 * We're freeing the previous string and getting the string from the cell renderer, assigning
+	 *  it and also updating the tree store/view with the new data.
+	 */
+	GTR_FREE(msgstr[index]);
+	msgstr[index] = g_strdup(str);
+		gtk_tree_store_set(GTK_TREE_STORE(plural_forms_store), &iter,
+		1, msgstr[index], -1);
+
+	/*
+	 * Pack the plurals back into the message_ty
+	 */
+	index = newmsgstrlen = 0;
+	while((nextmsg = msgstr[index]) != NULL)
+	{
+		newmsgstrlen += strlen(nextmsg) + 1;
+	}
+	ptr = newmsgstr = g_malloc0(newmsgstrlen);
+	index = msgstrlen = 0;
+	while((nextmsg = msgstr[index]) != NULL) {
+		msgstrlen = strlen(nextmsg);
+		strcpy(ptr, nextmsg);
+		ptr += msgstrlen + 1;
+	}
+	g_free((gpointer *)message->msgstr);
+	message->msgstr = newmsgstr;
+	message->msgstr_len = newmsgstrlen;
 
 	/*
 	 * Update the translation specs, statistics etc.
@@ -233,23 +275,24 @@ void gtranslator_message_show(GtrMsg *msg)
 		gchar *temp;
 
 		g_return_if_fail(msg!=NULL);
-		g_return_if_fail(msg->msgid!=NULL);
+		g_return_if_fail(msg->message!=NULL);
+		g_return_if_fail(msg->message->msgid!=NULL);
 		
-		temp = gtranslator_utils_invert_dot(msg->msgid);
+		temp = gtranslator_utils_invert_dot(msg->message->msgid);
 		gtranslator_insert_text(text_box, temp);
 		
 		GTR_FREE(temp);
 
-		if (msg->msgstr) {
-			temp = gtranslator_utils_invert_dot(msg->msgstr);
+		if (msg->message->msgstr) {
+			temp = gtranslator_utils_invert_dot(msg->message->msgstr);
 			
 			gtranslator_insert_text(trans_box, temp);
 			
 			GTR_FREE(temp);
 		}
 	} else {
-		gtranslator_insert_text(text_box, msg->msgid);
-		gtranslator_insert_text(trans_box, msg->msgstr);
+		gtranslator_insert_text(text_box, msg->message->msgid);
+		gtranslator_insert_text(trans_box, msg->message->msgstr);
 	}
 
 	/*
@@ -281,7 +324,7 @@ void gtranslator_message_show(GtrMsg *msg)
 
 	gtk_check_menu_item_set_active(
 		GTK_CHECK_MENU_ITEM(the_edit_menu[19].widget),
-		msg->status & GTR_MSG_STATUS_FUZZY
+		msg->message->is_fuzzy
 	);
 
 	nothing_changes = FALSE;
@@ -290,7 +333,7 @@ void gtranslator_message_show(GtrMsg *msg)
 	/*
 	 * Form an informative plural forms displaying dialog if the user desires it.
 	 */
-	if(po->header->plural_forms && msg->msgid_plural && GtrPreferences.show_plural_forms)
+	if(po->header->plural_forms && msg->message->msgid_plural && GtrPreferences.show_plural_forms)
 	{
 		enum
 		{ 
@@ -307,6 +350,26 @@ void gtranslator_message_show(GtrMsg *msg)
 		GtkTreeViewColumn	*col;
 		GtkCellRenderer		*render;
 
+		message_ty	*message;
+		char	*msgstr[16];
+
+		/*
+		 * Unpack the plurals from the message_ty
+		 */
+		message = GTR_MSG(msg)->message;
+		if (message->msgid_plural != NULL)
+		{
+			unsigned int i;
+			const char *p;
+
+			for (p = message->msgstr, i = 0;
+				p < message->msgstr + message->msgstr_len;
+				p += strlen (p) + 1, i++)
+			{
+				*msgstr[i] = (char *)p;
+			}
+		}
+	
 		dialog=gtk_dialog_new_with_buttons(
 			_("gtranslator -- edit plural forms of message translation"),
 			GTK_WINDOW(gtranslator_application),
@@ -318,22 +381,22 @@ void gtranslator_message_show(GtrMsg *msg)
 		gtk_tree_store_append(plural_forms_store, &iter_par, NULL);
 
 		gtk_tree_store_set(plural_forms_store, &iter_par,
-			MSG_COL, msg->msgid,
-			TRANS_COL, msg->msgstr,
+			MSG_COL, msg->message->msgid,
+			TRANS_COL, msgstr[0],
 			-1);
 
 		gtk_tree_store_append(plural_forms_store, &iter_ch, &iter_par);
 		gtk_tree_store_set(plural_forms_store, &iter_ch,
-			MSG_COL, msg->msgid_plural,
-			TRANS_COL, msg->msgstr_1,
+			MSG_COL, msg->message->msgid_plural,
+			TRANS_COL, msgstr[1],
 			-1);
 
-		if(msg->msgstr_2)
+		if(msgstr[2])
 		{
 			gtk_tree_store_append(plural_forms_store, &iter_ch, &iter_par);
 			gtk_tree_store_set(plural_forms_store, &iter_ch,
 				MSG_COL, "",
-				TRANS_COL, msg->msgstr_2,
+				TRANS_COL, msgstr[2],
 				-1);
 		}
 
@@ -387,7 +450,7 @@ void gtranslator_message_update(void)
 		/* Make both strings end with or without endline */
 		// XXX fix it
 		/*
-		if (msg->msgid[strlen(msg->msgid) - 1] == '\n') {
+		if (msg->message->msgid[strlen(msg->message->msgid) - 1] == '\n') {
 			if (GTK_TEXT_INDEX(trans_box), len - 1)
 			    != '\n')
 				gtk_editable_insert_text(
@@ -402,16 +465,16 @@ void gtranslator_message_update(void)
 		}
 		*/
 
-		GTR_FREE(msg->msgstr);
+		g_free((gpointer *)msg->message->msgstr);
 
 #ifdef UTF8_CODE
 		if(po->utf8)
 		{
-			msg->msgstr=gtranslator_utf8_get_gtk_text_as_utf8_string(GTK_WIDGET(trans_box));
+			msg->message->msgstr=gtranslator_utf8_get_gtk_text_as_utf8_string(GTK_WIDGET(trans_box));
 		}
 		else
 		{
-			msg->msgstr=gtk_editable_get_chars(
+			msg->message->msgstr=gtk_editable_get_chars(
 				GTK_EDITABLE(trans_box), 0, len);
 		}
 		*/
@@ -422,19 +485,18 @@ void gtranslator_message_update(void)
 		//     users).
 #endif
 
-		msg->msgstr = gtk_text_buffer_get_text(gtk_text_view_get_buffer(trans_box), &start, &end, FALSE);
+		msg->message->msgstr = gtk_text_buffer_get_text(gtk_text_view_get_buffer(trans_box), &start, &end, FALSE);
 		
 		/*
 		 * If spaces were substituted with dots, replace them back
 		 */
 		if(GtrPreferences.dot_char) {
-			gchar *old;
-			old = msg->msgstr;
-			msg->msgstr = gtranslator_utils_invert_dot(old);
-			g_free(old);
+			char *old;
+			old = msg->message->msgstr;
+			msg->message->msgstr = gtranslator_utils_invert_dot(old);
+			g_free((gpointer *)old);
 		}
-		if (!(msg->status & GTR_MSG_STATUS_TRANSLATED)) {
-			msg->status |= GTR_MSG_STATUS_TRANSLATED;
+		if (msg->message->msgstr[0] != '\0') {
 			po->translated++;
 		}
 
@@ -443,12 +505,11 @@ void gtranslator_message_update(void)
 		 */
 		if(GtrPreferences.auto_learn)
 		{
-			gtranslator_learn_string(msg->msgid, msg->msgstr);
+			gtranslator_learn_string(msg->message->msgid, msg->message->msgstr);
 		}
 		
 	} else {
-		msg->msgstr = NULL;
-		msg->status &= ~GTR_MSG_STATUS_TRANSLATED;
+		msg->message->msgstr = NULL;
 		po->translated--;
 	}
 	
@@ -480,20 +541,18 @@ void gtranslator_message_update(void)
 	//	gtk_editable_set_position( GTK_EDITABLE(trans_box), pos );
 }
 
-void gtranslator_message_change_status(GtkWidget  * item, gpointer which)
+void gtranslator_message_toggle_fuzzy(GtkWidget  * item, gpointer data)
 {
-	gint flag = GPOINTER_TO_INT(which);
 	if (nothing_changes)
 		return;
 	gtranslator_translation_changed(NULL, NULL);
-	if (flag == GTR_MSG_STATUS_FUZZY) {
+
 		gtranslator_message_status_set_fuzzy(GTR_MSG(po->current->data),
 			       GTK_CHECK_MENU_ITEM(item)->active);
 		if(GTK_CHECK_MENU_ITEM(item)->active)
 			po->fuzzy++;
 		else
 			po->fuzzy--;
-	}
 	
 	gtranslator_message_update();
 	if(GtrPreferences.show_messages_table)
@@ -627,12 +686,12 @@ void gtranslator_message_status_set_fuzzy(GtrMsg * msg, gboolean fuzzy)
 	/* 
 	 * If fuzzy status is already correct
 	 */
-	if (((msg->status & GTR_MSG_STATUS_FUZZY) != 0) == fuzzy)
+	if (msg->message->is_fuzzy)
 		return;
 	if (fuzzy) {
 		gchar *comchar;
 		
-		msg->status |= GTR_MSG_STATUS_FUZZY;
+		msg->message->is_fuzzy = TRUE;
 
 		if (!regexec(&rexf, comment, 3, pos, 0)) {
 			comment[pos[1].rm_so] = '\0';
@@ -649,7 +708,7 @@ void gtranslator_message_status_set_fuzzy(GtrMsg * msg, gboolean fuzzy)
 		
 		GTR_FREE(comchar);
 	} else {
-		msg->status &= ~GTR_MSG_STATUS_FUZZY;
+		msg->message->is_fuzzy = FALSE;
 		if (!regexec(&rexc, comment, 3, pos, 0)) {
 			gint i = (pos[1].rm_so == -1) ? 2 : 1;
 			strcpy(comment+pos[i].rm_so, comment+pos[i].rm_eo+1);
@@ -658,25 +717,23 @@ void gtranslator_message_status_set_fuzzy(GtrMsg * msg, gboolean fuzzy)
 }
 
 /*
- * Set Sticky status.
+ * Copy msgid to msgstr, or blank msgstr
  */
-void gtranslator_message_status_set_sticky (GtrMsg * msg, gpointer useless)
+void gtranslator_message_copy_to_translation (GtrMsg * msg, gpointer useless)
 {
 	g_return_if_fail(file_opened==TRUE);
 
 	msg=GTR_MSG(GTR_PO(po)->current->data);
 	g_return_if_fail(msg!=NULL);
 
-	GTR_FREE(msg->msgstr);
-	msg->msgstr = g_strdup(msg->msgid);
+	g_free((gpointer *)msg->message->msgstr);
+	msg->message->msgstr = g_strdup(msg->message->msgid);
 	
 	/*
 	 * It is no longer fuzzy.
 	 */
 	gtranslator_message_status_set_fuzzy(msg, FALSE);
 	po->fuzzy--;
-	msg->status |= GTR_MSG_STATUS_STICK;
-	msg->status |= GTR_MSG_STATUS_TRANSLATED;
 
 	message_changed = TRUE;
 	gtranslator_message_show(po->current->data);
@@ -692,12 +749,13 @@ void gtranslator_message_free(gpointer data, gpointer useless)
 {
 	g_return_if_fail(data!=NULL);
 	gtranslator_comment_free(&GTR_MSG(data)->comment);
+#ifdef REDUNDANT_NOW
 	GTR_FREE(GTR_MSG(data)->msgid);
 	GTR_FREE(GTR_MSG(data)->msgstr);
 
 	GTR_FREE(GTR_MSG(data)->msgid_plural);
 	GTR_FREE(GTR_MSG(data)->msgstr_1);
 	GTR_FREE(GTR_MSG(data)->msgstr_2);
-
+#endif
 	GTR_FREE(data);
 }

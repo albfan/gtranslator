@@ -73,7 +73,8 @@ void gtranslator_learn_translate(gpointer gtr_msg_gpointer);
  * Autotranslate the opened po file -- the gboolean arg defines some plays
  *  for the then visible GUI.
  */
-void gtranslator_learn_autotranslate(gboolean visual_interface);
+gboolean gtranslator_learn_autotranslate(GtrPo *po, gboolean visual_interface,
+	GError **error);
 
 /*
  * Shutdown our learn process.
