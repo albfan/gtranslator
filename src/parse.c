@@ -68,6 +68,10 @@ gboolean file_opened;
 gboolean message_changed;
 guint autosave_source_tag=1;
 
+/* Parser dialog components */
+GtkWidget *parser_dialog;
+GtkTextBuffer *buffer;
+
 /*
  * These are to be used only inside this file
  */
@@ -155,12 +159,53 @@ gboolean add_to_obsolete(GtrPo *po, gchar *comment)
 }
 
 /*
+ * Function to clear down the parser dialog
+ */
+void gtranslator_parser_dialog_destroy(GtkWidget *widget)
+{
+	gtk_widget_destroy(widget);
+	parser_dialog = NULL;
+}
+
+/*
  * Callback to receive an error message from the gettext parser
  */
 void gtranslator_parser_report_error(abstract_po_reader_ty *pop, lex_pos_ty *pos, char *errstr)
 {
-	fprintf(stderr, "GTR-ERR-HNDLR-CB: %s:%d: %s\n", &pos->file_name,
-		&pos->line_number, errstr);
+	GtkTextIter iter;
+	char *buf = NULL;
+
+	if(parser_dialog == NULL) {
+		GtkWidget *view;
+
+		/*
+		 * Prepare a graphical tail :) (the notorious GTK+ FAQ)
+		 */
+		view = gtk_text_view_new ();
+		gtk_window_set_default_size(GTK_WINDOW(view), 320, 200);
+		g_object_set(view, "editable", false, NULL);
+		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+		parser_dialog = gtk_dialog_new_with_buttons (_("Parser output"),
+                                         gtranslator_application,
+                                         GTK_DIALOG_DESTROY_WITH_PARENT,
+                                         GTK_STOCK_OK,
+                                         GTK_RESPONSE_NONE,
+                                         NULL);
+		g_signal_connect_swapped (parser_dialog,
+                             "response", 
+                             G_CALLBACK (gtranslator_parser_dialog_destroy),
+                             parser_dialog);
+
+		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(parser_dialog)->vbox),
+                                   view);
+		gtk_widget_show_all (parser_dialog);
+	}
+
+	buf = g_strdup_printf("%s:%d: %s\n", pos->file_name,
+		pos->line_number, errstr);
+	gtk_text_buffer_get_iter_at_offset (buffer, &iter, -1);
+	gtk_text_buffer_insert (buffer, &iter, buf, -1);
+	g_free(buf);
 }
 
 static default_po_reader_class_ty gtr_parser_methods =
@@ -288,7 +333,9 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	po->messagelist = po->mdlp->item[0]->messages;
 
 	/*
-	 * Post-process these into a linked list of GtrMsgs
+	 * Post-process these into a linked list of GtrMsgs. Could
+	 * be better handled by overloading the parser 'add_message'
+	 * callback, and add a progress bar.
 	 */
 	po->messages = NULL;
 	for(i = 0; i < po->messagelist->nitems; i++)
