@@ -1,0 +1,5618 @@
+2001-06-23  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Plug in the new sources.
+
+	* formats.c/.h: Added formats handler.
+
+2001-06-22  Fatih Demir <kabalak@gtranslator.org>
+
+	* main.c: Added some signals handled by the signal handler
+		and removed the double enumeration of SIGSEGV.
+	
+	* sighandler.c: Don't print anything out on an unknown
+		signals -- don't differentialize any signal, simply
+		 backup the file if it's been changed.
+
+2001-06-21  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* languages.h: fixed typo
+
+2001-06-19  Fatih Demir <kabalak@gtranslator.org>
+
+	* languages.h: Added Esparanto & Malay, updated/corrected 
+		mailing list addresses for Japanese & Slovak.
+
+2001-06-18  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* gtkspell.c, gtkspell.h: update GtkSpell to CVS version from
+	sourceforge. it should fix #55662.
+	But obviously syntax handling of gtranslator is bad, and does not play
+	well with gtkspell.
+
+2001-06-18  Ole Laursen  <olau@hardworking.dk>
+
+	* languages.h: Fixed Danish team address.
+
+2001-06-18  Fatih Demir <kabalak@gtranslator.org>
+
+	* open/save-differently.c & utils_gui.c/.h: Changed the programatic
+		"gtranslator_utils_check_program" to be more i18n-friendly --
+		  use 2 different messages for the decompression/compression
+		   message -- fixes #56347.
+
+	* languages.h: Changed the copyright notice to include the GNOME I18N
+		mailing list; also re-added examples for the structure fields
+		 and integrated all corrections, suggestions, updates for
+		  Chinese, Dutch, Maltese and Slovak from others and for 
+		   Turkish, Hungarian and Korean according to the po files
+		    for gtranslator by me.
+
+	* color-schemes.c/.h, gui.c & prefs.c: Renamed the "free_color_scheme_*"
+		functions to "gtranslator_color_scheme_free*" -- more logical.
+
+	* actions.c: Renamed the macro from "SWAP_ACTIONS" to
+		"gtranslator_actions_swap" to make it's function more clear.
+
+	* prefs.c: Free up the old used "theme" before applying the new
+		colorscheme from the preferences box -- should've been a big
+		 memory leak as there are *many* informations in "theme".
+
+	* gui.c: Added "delete_text_handler" to catch text deletions -- undo is
+		coming nearer -- though a working "kill_word" would've been
+		 much nicer for us.
+
+	* main.c: Remove a debug g_print -- the warning message is enough;
+		disabled the possibility to define a runtime colorscheme per
+		 command line, removed all connected stuff.
+
+	* stylistics.c: Don't be too loud about a non-existing widget -- simply
+		return.
+
+2001-06-17  Fatih Demir <kabalak@gtranslator.org>
+
+	* gui.c & main.c: Call the "gtranslator_set_style" functions on window
+		creation and not in the main() function.
+
+	* id.c/.h: Added "gtranslator_id_load/save_list" functions for loading/
+		saving a plain string encoded list of GtrIDs -- the maximum
+		 length is currently hard coded to 10.
+
+	* sidebar.c/.h: Added "gtranslator_sidebar_show/hide" functions, moved
+		private variables to the source file and added the one any only
+		 "gtranslator_sidebar_toggle" function for toggling the sidebar
+		   -- content changes and menu sensitiveness should also be
+		    reviewed later on.
+
+	* prefs.c/.h, stylistics.c: Use the "use_own_colors/fonts" fields instead
+		of a single "use_own_specs" field -- fonts and colors are now
+		 appliable independently.
+
+	* main.c: Fix a small fallible colorscheme appliance, don't store the
+		command-line supplied colorscheme data --  a cmd-line colorscheme
+		 should be only applied for the current gtranslator session.
+
+	* stylistics.c: Get the font name from the new locations depending on
+		the widget name; "trans_box" stands for our translation area
+		 and therefore we'd use the "Translation Font" there -- also
+		  corrected a small craziness about applying the fonts also
+		   where the user didn't want this.
+
+	* prefs.c/.h: Move some stuff 'round and use the new utility functions
+		for adding the color/font pickers to the preferences dialog;
+		 use 2 different fonts for the msgid and msgstr parts and also
+		  present 2 font pickers to the user -- should be nice for
+		   Big5 users of gtranslator -- also show the colorschemes in
+		    a GtkComboBox and let the user select the colorscheme from
+		     there.
+
+	* utils_gui.c/.h: Added GnomeColorPicker and GnomeFontPicker adding
+		convenience functions for the preferences tables.
+
+2001-06-16  Fatih Demir <kabalak@gtranslator.org>
+
+	* parse.h, parse_core.c & utf8.c: Honor the new "locale_charset" field
+		for the GtrPo structure which holds now the locale charset name
+		 name returned by the "gtranslator_utils_get_locale_name"
+		  function -- no need to let the function work x times in the
+		    sources.
+
+	* open-differently.c: Added "about:" to the URI detection routines --
+		hm, finally, the about: URIs should work now.
+
+	* convert.c: Disabled an assertion which made the conversion function
+		moan on non-translated msgstrs -- NULL msgstrs are ok, as
+		 as untranslated messages are "normal".
+
+	* utf8.c: Corrected a really wrong typo _to_utf8 to _from_utf8 to make
+		the function work right and corrected a wrong call of the
+		 conversion functions to finally fix the UTF-8 support.
+
+	* parse.c: Honor the new function and set up/clean up the
+		"runtime/filename" preferences key used for the instances
+		 detection/recognition.
+
+	* utils_gui.c/.h: Added "gtranslator_utils_check_file_being_open"
+		function for instances detection to avoid multiple openings
+		 of the same po file.
+
+	* translation-memories.c/.h: Swept out the old sources and made
+		empty foo sources out of them -- we've got to wait for
+		 Semerkent to get this working..
+
+	* id.c/.h: Added copy, addition, removal and search functions
+		for the GtrIDs and made the functions be more "normal"
+		 and use now mostly "GtrID *id" like arguments, no
+		  "address argumentation" more needed -- saving, reading
+		    will be done soon.
+
+2001-06-14  Fatih Demir <kabalak@gtranslator.org>
+
+	* backend.c: Don't run on NULL backends list -- we won't forget
+		the "-n"/"--no-modules" option, right..
+
+2001-06-13  Fatih Demir <kabalak@gtranslator.org>
+
+	* utf8.c: Added some more assertions to avoid crashes in the
+		"gtranslator_utf8_po_file_is_utf8" function.
+
+	* utils.c: Include <config.h> only if HAVE_CONFIG_H is defined.
+
+	* actions.c, sidebar.c, undo.c, utf8.c & views.c: Include <config.h>
+		if needed; this is a prevention issue currently .-)
+
+2001-06-11  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* header_stuff.c: translate Language field.
+	* utils.c: include config.h
+
+2001-06-08  Fatih Demir <kabalak@gtranslator.org>
+
+	* gui.c & main.c: Also change the calls to be now
+		"gtranslator_utils_remove_temp_files" as the function was
+		  renamed and "reworked".
+
+	* utils.c/.h: Make the "gtranslator_utils_remove_temp_file" function
+		be "gtranslator_utils_remove_temp_files" and clean up the
+		 used temporary files eventually lying around in ~/.gtranslator;
+		  also added a "gtranslator_utils_get_save_differently_file_name"
+		   to get the correcponding filename for the save-diffently.c/h
+		    functions.
+
+	* Makefile.am: Added new sources to our sources list and removed the
+		undo-core.c/.h source files.
+	
+	* undo-core.c/.h & undo.h: Removed undo-core sources.
+
+	* open-differently.c/.h: Also moved all "subclass" open calls to the
+		source file so that only the general "gtranslator_open_po_file"
+		 function is left over in the header.
+
+	* parse.c: Integrate the differently saving routines into the standard
+		file saving routine "gtranslator_save_file".
+
+	* save-differently.c/.h: Added differently saving sources/functions;
+		quite similar to the differently opening sources.
+
+2001-06-07  Fatih Demir <kabalak@gtranslator.org>
+
+	* parse.h, actions.c, header_stuff.c, parse_core.c & message.c: Use
+		the "gtranslator_utf8_po_file_is_utf8" function only once at
+		 parse time and set the new GtrPo field "utf8"; no need to
+		  call the same function >= 7 times in the sources.
+
+	* open-differently.c: Use the new function for checking for the
+		needed uncompression programs -- removed the internally used
+		 old "check_for_prog" function.
+
+	* utils_gui.c/.h: Added "gtranslator_utils_check_program" function
+		for checking if a defined kind of program is in $PATH --
+		 gives out a warning if the program is missing.
+
+	* id.c/.h: Small changes and enhancements for the GtrID stuff.
+
+	* stylistics.h: The defines are now correctly named "GTR_STYLISTICS_H"
+		and no longer "LIBGTRANSLATOR_STYLISTICS_H".
+
+	* header_stuff.c/.h: Added "generator" field to the GtrHeader structure;
+		it's parsed in, but we don't save it/add it to new po files; we
+		 just parse it.
+
+	* syntax-elements.h: Added some prefixes to the syntax highlighted
+		prefixes list (mostly EMail protocol prefixes like "pop3:").
+
+	* sidebar.c: Don't use a "GetLocalString" macro -- call the function
+		named "e_utf8_from_locale_string" -- no need to call up macro.
+
+	* header_stuff.c & message.c: Use the new methods from utf8.c/.h and
+		don't use the gal methods -- they're not good for us.
+
+	* utf8.c/.h: New gal-alike convenience function for getting/setting
+		GtkEntry/GtkText contents from/to UTF-8.
+
+	* parse.c: Use the new routines to get safe and sane filenames for the
+		compile process -- don't save the file unasked and unneededly;
+		 also test on every save if the file should be saved under it's
+		  original name -- if not, don't disable the save entries.
+
+	* utils.c/.h: New "gtranslator_utils_get_compile_file_names" function
+		for getting and assigning the compile file names and the new
+		 "gtranslator_utils_remove_compile_files" function for cleaning
+		   up and freeing the stuff afterwards.
+
+	* actions.c, gui.c: Remove any old undo code usage.
+
+	* undo-core.c/.h, undo.c/.h: Starting of a redesign of the undo code.
+
+	* learn.c: Fix the empty lines recognition -- should fix the long and
+		empty learned-strings files.
+
+	* prefs.c: Use the new utils methods for attaching the spin buttons.
+
+	* utils_gui.c/.h: Added "gtranslator_utils_attach_spin_with_label"
+		function for adding/attaching spin buttons easier.
+
+2001-06-06  Fatih Demir <kabalak@gtranslator.org>
+
+	* menus.c: Don't include use the xpm icons, we've moved over to png
+		icons and they're now installed into $(sharedir)/pixmaps/gtranslator.
+
+	* Makefile.am & pixmaps/*: Removed the pixmaps directory from here.
+
+	* \*.c: Changed all includes accordingly for the outsourcing.
+
+	* Makefile.am: Added utils_gui.c/.h to the sources list.
+
+	* utils.c/.h & utils_gui.c/.h: Outsources GUI related utility functions
+		into separate "utils_gui.c/.h" source files.
+
+2001-06-05  Fatih Demir <kabalak@gtranslator.org>
+
+	* learn.c: Added new "gtranslator_learn_get_learned_string" function
+		for returning the matching string from the learned strings
+		 buffer; use internally a GCompletion and do all the init. and
+		  shutdown/clean up for all parts.
+
+	* actions.c: Removed the "id==0" case -- I never had this and it
+		should never occure.
+
+	* history.c: Respect the new setting from the preferences for the
+		maximum recent files count.
+
+	* prefs.c/h, prefs_init.c: Include another option for the maximum
+		count of the recent files list -- per default set to 10.
+
+2001-06-03  Fatih Demir <kabalak@gtranslator.org>
+
+	* dialogs.c, open-differently.c: Use the new function to determine
+		the URI prefixes support state.
+
+	* utils.c/.h: New "gtranslator_utils_uri_supported" function to
+		simply determine if the given file_uri includes a supported
+		 prefix/URI.
+
+	* message.c: While updating the message contents also learn the
+		string by inserting it into the learn buffer.
+
+	* gui.c & main.c: Added learn buffer initialization/shutdown.
+
+	* learn.c: Don't create the "~/.gtranslator" directory -- it's done
+		now by the main function; also cleaned up some unneeded stuff
+		 and corrected an importanty typo ("gtransator_learn_init");
+		  changed the read/write logic to be "normal" file stream
+		   operations and set the learned strings limit to 2048.
+
+	* vfs-handle.c: Reduce the includes to include 4 GnomeVFS headers
+		instead of all through <libgnomevfs/gnome-vfs.h>; use the
+		 e_mkdir_hier function for creating the directories and check
+		  some values before operating on them via g_return_val_if_fail.
+
+	* sighandling.c: Save the file directly per "gtransator_save_file" and
+		do not call any dialogs.
+
+	* main.c: Initialize GnomeVFS if needed and create ~/.gtranslator per
+		"gtranslator_utils_create_gtranslator_directory".
+
+	* utils.c/.h: Added "gtranslator_utils_create_gtranslator_directory"
+		function which should create ~/.gtranslator per GnomeVFS;
+		 include all the necessary GnomeVFS headers for this.
+
+	* dialogs.c, parse.c, main.c & sighandling.c: Use the new
+		"gtranslator_utils_get_crash_file_name" function to get the
+		  crash file's filename.
+
+	* dialogs.c, parse.c & utils.c: Use the new temp. file name getting
+		"gtranslator_utils_get_temp_file_name" function instead of own
+		  g_strdup_printf dump.
+
+	* utils.c/.h: Added "gtranslator_utils_get_temp_file_name" function
+		which returns the newly temporary filename, which is now:
+		 "~/.gtranslator/gtranslator-temp-po-file"; also added
+		  a corresponding "gtranslator_utils_get_crash_file_name"
+		   function.
+
+	* parse.c: Reordered includes and use once a nautilus_strcmp instead
+		off strcmp.
+
+	* dialogs.c, gui.c & vfs-handle.c: Made the remote->local corresponding
+		directory to be "~/.gtranslator/hostname" instead of the old
+		 "~/.gtranslator-hostname".
+
+	* header_stuff.c: Check if the regex could be compiled at all before
+		acting on it -- if not, try to determine the elements via very
+		 strange nautilus_str & g_strreverse games; should fix the
+		  strange crash on hu_HU locale.
+
+	* dialogs.c: No need to duplicate the "about:" URI detection in the
+		URI dialogs callback and in the "gtranslator_open_po_file"
+		 function; removed the dialog callback detection lines and
+		  require real prefixes like "http://" instead of just "http:".
+
+2001-06-02  Fatih Demir <kabalak@gtranslator.org>
+
+	* open-differently.c: Added "about:" URI support also for the command
+		line .-)
+
+	* comment.c/.h: Added "utf8_comment" field and included it in new/
+		copy/free methods.
+
+2001-06-01  Fatih Demir <kabalak@gtranslator.org>
+
+	* comment.c/.h: Added convenience "gtranslator_comment_copy"
+		function and "gtranslator_comment_append" function for
+		 real use in gtranslator later on.
+
+	* learn.c/.h: Extended the learn buffer to be something like a
+		completion buffer and to not depend on TM.
+
+2001-05-31  Fatih Demir <kabalak@gtranslator.org>
+
+	* comment.c/.h: Added extended comment types recognition/enum values.
+
+	* utf8.c: Made it use the new "gtranslator_convert_" functions
+		instead of hard-to-handle and crazy gal sources; also
+		 removed any locale-setting/getting calls; needs a
+		  review though as it produces sometimes, somehow garbage.
+
+	* utils.c: Use "nautilus_strcasecmp" instead of "g_strcasecmp".
+
+	* Makefile.am: Added convert.c/.h to the build sources.
+
+	* convert.c/.h: Added conversion sources.
+
+	* parse.c: Fix the autosave-checking routines while save-time.
+
+2001-05-30  Fatih Demir <kabalak@gtranslator.org>
+
+	* utils.c: Made the "gtranslator_utils_get_locale_name" function
+		operate a bit better via using "g_strcasecmp" instead of
+		 "strcmp".
+
+	* translation-memories.c/.h: Removed any own cruft; these files
+		will handle Semerkent later on.
+
+	* parse.c: Hook up the autosave routine and handle with the source
+		tag on file closure; moved the disabling of the ACT_SAVE
+		 action into "gtranslator_save_file".
+
+	* prefs_init.c: Added sane autosave values to the preferences
+		initializing function.
+
+	* prefs.c: Added option saving/restoring and the autosave corresponding
+		widgets/preferences page to the prefs-box.
+
+	* utils.c/.h: Added "gtranslator_utils_autosave" function for handling
+		the periodic autosaving future.
+
+	* \*.*: Renamed "wants" to "GtrPreferences" -- wants would be
+		too easy to mix up.
+
+	* prefs.h: Added several GtrPreferences parts for autosave option:
+		"autosave", "autosave_timeout", "autosave_with_suffix"
+		  and "autosave_suffix".
+
+2001-05-30  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* dialogs.c: pressing 'enter' in find entry hits find button.
+
+2001-05-28  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am, defines.config, main.c: Removed all TM backends
+		references.
+
+	* gui.c, sidebar.c: Removed any current gtranslator_undo_add calls.
+
+	* sidebar.c: Re-mark the sidebar strings for translation.
+
+	* gui.c: Also remove the temp. file exit; removed the undo/redo
+		debug messages from the code.
+
+	* main.c: Use the new function to clean up the temp file on startup.
+
+	* utils.c/.h: New util function "gtranslator_utils_remove_temp_file"
+		which cleans up the gtranslator-generated temp. file in the
+		 user's home dir; also include <libgnome/gnome-util.h> for
+		  g_file_exists function.
+
+2001-05-27  Fatih Demir <kabalak@gtranslator.org>
+
+	* parse.c/.h: Renamed "actual_write" to "gtranslator_save_file" and
+		made it be declared publically.
+
+	* menus.c & prefs.c: Use "po file" stringently everywhere instead of
+		"po-file" in strings.
+
+	* parse.c/.h: Call up "gtranslator_file_dialogs_store_directory" from
+		the "actual_write" function to store the directory name.
+
+	* parse.c/.h & dialogs.c: Renamed "parse_the_file" to the better name
+		"gtranslator_parse_the_file_from_file_dialog".
+
+	* dialogs.c/.h: Added gtranslator_file_dialogs_set/store_directory
+		for handling the file dialogs completions more convenient.
+
+	* dialogs.c/.h & menus.c: Added import/export dialogs for UTF-8/plain
+		text encoding handling.
+
+2001-05-25  Fatih Demir <kabalak@gtranslator.org>
+
+	* languages.h: By request of Vasif -- changed to Azerbaijani Turkish
+		(from Azeri).
+
+2001-05-24  Fatih Demir <kabalak@gtranslator.org>
+
+	* comment.c: Use nautilus_strlen for the string length calculation.
+
+	* backend.c: Changes in the gtranslator_backend_open function to
+		operate logically on the backends list, don't use the copies
+		 of the filenames/extensions lists and don't copy a NULL list
+		  (hehe, damned typos).
+
+	* main.c: Small string changes to be more readable (though it doesn't
+		still "look" very good).
+
+2001-05-18  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* dialogs.c: typing a number and pressing enter now really goes to
+	desired message. Added stock pixmaps to Go and Find buttons.
+
+	* gui.c: fixed printing of fuzzy and translated counts.
+
+2001-05-15  Fatih Demir <kabalak@gtranslator.org>
+
+	* menus.c: Added import, export from/o UTF-8 menu entries and added
+		the hotkey for Autoaccomplish: it's 'o'.
+
+	* actions.c: Implemented enabling/disabling of the import, export
+		entries.
+
+2001-05-14  Fatih Demir <kabalak@gtranslator.org>
+
+	* actions.h: Added ACT_IMPORT_UTF8 and ACT_EXPORT_UTF8 enum values.
+
+	* utils.c: Use nautilus_strcasecmp instead of g_strcasecmp in one
+		place.
+
+	* backend.c: Operate on local copies and not on the lists themselves
+		and free the local copies after our operations.
+
+	* header_stuff.c: Also tactile with UTF-8 based translator names and
+		comments.
+
+	* query.c, utils.c/.h: Moved the setup_language routine to utils.c/.h,
+		renamed it to gtranslator_utils_get_full_language_name and
+		 changed some parts of it to use a GString to be more robust.
+
+	* message.c: Added UTF-8 support, displaying, editing and saving is
+		working now.
+
+	* utf8.c: Made the environment rescueing/restoring/setting go through
+		functions; also added functions for use within gtranslator to
+		 handle UTF-8 support (gal isn't clever enough for us .-).
+
+2001-05-13  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Changed the TM backends location to be
+		$(libdir)/gtranslator/translation-memories.
+
+	* open-differently.c: Added the gtranslator_backend_open function to
+		the list of "special" file opening functions.
+
+	* backend.c/.h: Set the "modulename" field to the full filename for the
+		backend and make the modulename be non-const; implemented all
+		 of the module loading -- backends core is ready now.
+
+2001-05-12  Fatih Demir <kabalak@gtranslator.org>
+
+	* backend.c: Implemented the informations getting routine for the
+		backends.
+
+	* query.c & backend.c: Changed the calls of the
+		gtranslator_utils_file_names_from_directory function to please
+		 the new format.
+
+	* utils.c/.h: Changed the gtranslator_utils_file_names_from_directory
+		funtion to also take a "with_full_path" argument and to take
+		 care of prepending the full path if the argument if TRUE --
+		  also corrected a stupid typo g_list_append instead of
+		   g_list_sort -- vim's autocompletion is sometimes making
+		    hell .-)
+
+2001-05-10  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* Makefile.am: backends should be compiled before .
+
+	* gui.c/h, parse.c/h: made global variables extern.
+
+	* header_stuff.c (substitute): it is OK to get NULL *item. Just set
+	good value.
+
+	* utils.c/h (gtranslator_utils_getline): new function to read a line
+	from file.
+
+	* parse.c (gtranslator_parse_core): removed line length limit, use above
+	function for reading lines from file.
+
+	* utf8.c (convert_all_messages): removed. g_list_foreach does the same!
+
+2001-05-10  Fatih Demir <kabalak@gtranslator.org>
+
+	* utf8.c: Made the environment/language set/get-ting routines work
+		more intelligently and made the processes not start
+		 independently whether we're successful or not.
+
+	* Makefile.am: Corrected a stupid error in the "defines.include" rule:
+		of course the backends directory is in $(libdir)/gtranslator.
+
+	* main.c: Added the "--no-modules/-n" option for inhibiting any module
+		usage -- also added bits of backends stuff.
+
+	* utils.c: Use the nautilus_strcmp function for sorting the file list.
+
+	* learn.c: Use the new GtrID routines to get a TM id.
+
+	* id.c/.h: New "gtranslator_id_new_id_string" function for encapsulating
+		the GtrID->string conversion in the learn code.
+
+2001-05-06  Fatih Demir <kabalak@gtranslator.org>
+	
+	* utf8.c & utils.c: Don't free the "old_env" variables and take
+		over the convert_all_messages function from utils.c.
+
+	* main.c: Also show up the build versions of Glib/Gtk+/Gnome libs
+		and make it easier for translators by separating the formats
+		 and the plain text fragments.
+
+	* Makefile.am, defines.config: Added Glib/Gtk+/Gnome libs building/
+		compiling versions to the defines.
+
+	* about.c/.h & \*.*: Small re-rename to gtranslator_about_dialog.
+
+	* dialogs.c: Also use the nautilus-string functions here; added
+		about: URI support .-)
+
+	* open-differently.c, vfs-handle.c/.h: Arg, made the function again
+		be named logically "gtranslator_vfs_handle_open", was a rename
+		 error; also use nautilus_str_has_prefix in prefix getting
+		  functions.
+
+	* Makefile.am: Added the id.c/.h sources.
+
+	* id.c/.h: Added new GtrID sources, almost everything is already
+		implemented there.
+
+	* translation-memory.h: Removed the GtrID stuff from here.
+
+2001-05-05  Fatih Demir <kabalak@gtranslator.org>
+
+	* parse.c/utils.c: Use nautilus_istr_has_suffix instead of
+		nautilus_str_has_suffix -- ergo, ignore the case.
+
+	* Makefile.am: Added comment.c/.h to the sources.
+
+	* comment.c/.h: Added sources for "enhanced" comments handling --
+		including an own "GtrComment" structure.
+
+	* views.h: Corrected a small typo.
+
+2001-05-04  Fatih Demir <kabalak@gtranslator.org>
+
+	* translation-memory.c/h: More ideas/skeleton implementations.
+
+	* Makefile.am: Added utf8.c/.h to the sources.
+
+	* utils.c/.h & utf8.c/.h: Outsourced the UTF-8 functions to separate
+		files and renamed them to "gtranslator_utf8_*".
+
+2001-05-04  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* gui.c (selection_get_handler): new function. Changes dots back to
+	spaces when pasting anywwhere.
+	
+	* backend.c, history.c, message.c, prefs_init.c, sighandling.c:
+	fix warnings.
+	
+	* translation-memory.c (gtranslator_tm_add): add fake definition.
+
+2001-05-04  Fatih Demir <kabalak@gtranslator.org>
+
+	* learn.c: Use the translation-memory functions to perform "learning".
+
+	* translation-memory.h: First structures/implementation ideas.
+
+2001-05-03  Fatih Demir <kabalak@gtranslator.org>
+
+	* parse.c: Made a comment more verbose; flushing fs doesn't help
+		either -- the g_free's had to rest uncommented.
+
+	* utils.c/.h: Added "gtranslator_utils_get_locale_name/_charset"
+		functions to get the language code/charset for the language
+		 of the header; added from/to UTF-8 converting functions.
+
+2001-05-01  Fatih Demir <kabalak@gtranslator.org>
+
+	* backends.c/.h: More implementation done.
+
+	* query.c: Changed accordingly for the new structure of the
+		"gtranslator_utils_file_names_from_directory" function.
+
+	* utils.h/.c: Corrected errors, and extended the util function
+		"gtranslator_utils_file_names_from_directory" a bit.
+
+2001-04-30  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Made the defines.include file react on source changes.
+
+	* gui.c: Added first undo/redo stuff to here.
+	
+	* undo.c: Removed the nested undo/redo calls for every redo/undo step.
+
+2001-04-29  Fatih Demir <kabalak@gtranslator.org>
+
+	* parse.c: Fixed #53829 (crash on editing of dpkg's de.po): added
+		a sanity check while writing -- fixes the crash.
+
+	* actions.c, gui.c & sidebar.c: Added first undo/redo steps in code.
+
+	* actions.c/.h: Added ACT_REDO, it's foo'sh skeleton function and
+		made ACT_UNDO and ACT_REDO react sensitive on our actions.
+
+	* menus.c: Adding Redo/Undo entries for the toolbar/menus.
+
+2001-04-28  Fatih Demir <kabalak@gtranslator.org>
+
+	* main.c: Added a -b/--build-informations option to get a view on
+		all the build informations.
+
+	* defines.config: Small changes in the define names.
+
+	* Makefile.am: Improved comment a small bit.
+
+	* backend.c/.h: More cleanup, starting implementation; switching
+		over to extension based backend use -- no mime types anymore.
+
+	* query.c: Use the new util-function instead of the own parsing of
+		the localedirectory.
+
+	* utils.c/.h: Added a function to return an appropiate list of
+		filenames matching a given extension -- and if wanted:
+		 also a sorted list of filenames; another function peforms
+		  stringlist_strcasecmp actions .-)
+
+2001-04-27  Fatih Demir <kabalak@gtranslator.org>
+
+	* dialogs.c: Corrected a malformed prefs location and added also
+		storage of the last queried filename itself.
+
+	* syntax-elements: Added more syntax highlighted words.
+
+	* backend.h: Added all the prototypes -- will be implemented soon.
+
+	* .cvsignore: Ignore the generated defines.include file.
+
+	* main.c, prefs.c & update.c: Include the produces "defines.include"
+		file for the includes.
+
+	* defines.config & Makefile.am: Added Makefile.am stuff around
+		this file which holds now the overlong defines -- better
+		 then defining them directly via -D... -- removed these
+		  direct command line defines and added dist/clean commands
+		   for the defines.include/config files.
+
+2001-04-24  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Added new source files to the build and added
+		BACKENDS_TMDIR define.
+
+	* backend.c/.h, learn.c/.h & translation-memory.c/.h: New source
+		files for backends handling, learning and translation
+		 memory support.
+
+2001-04-21  Fatih Demir <kabalak@gtranslator.org>
+
+	* header_stuff.c: Corrected a small thinking error, substitute the
+		right value ("mime" instead of "lc").
+
+	* main.c: Don't include <popt-gnome.h>, it's not needed and added
+		another option to define another localesdir where to search
+		 for query domains.
+
+2001-04-19  Fatih Demir <kabalak@gtranslator.org>
+
+	* main.c: Mark the argument explanation names for translation.
+
+	* parse_core.c: Include "utils.h" for the moved
+		"gtranslator_utils_check_file_permissions" function.
+
+	* parse.c/h & utils.c/.h: Moved "gtranslator_check_file_perms"
+		to "gtranslator_utils_check_file_permissions"; include
+		 "dialogs.h" in "utils.c".
+
+	* gtkspell.c: Removed the FIXME in front of the color assignments
+		-- it's the way  gtranslator handles the colors and this is
+		 definitely Ok.
+
+2001-04-19  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* dialogs.* (gtranslator_error): new function. Use it everywhere.
+	
+	* gui.h (status): removed this global variable.
+
+	* parse.c (add_to_obsolete): new function.
+	(gtranslator_parse_core): don't check for file perms. open read-only.
+	Use add_to_obsolete() to add one obsolete entry when appriopriate. So
+	obsolete messages can be mixed with normal ones.
+	
+	Use nautilus-string functions to make code a bit cleaner, update to
+	error and status changes above.
+
+	* menus*: move everything into menus.c, leave only menus.h which
+	contains only extern declarations. header files should not have any
+	variables, because this can cause problems.
+
+	* Makefile.am, actions.c. gui.c, message.c, session.c:
+	update to above changes.
+
+2001-04-14  Fatih Demir <kabalak@gtranslator.org>
+
+	* header_stuff.c: Fixed a crash cause in case of fallible header
+		fields -- check the strings for substitution on emptyness
+		 before doing anything.
+
+2001-04-10  Fatih Demir <kabalak@gtranslator.org>
+
+	* open-differently.c/.h: Added opening function for zip'ed po
+		files and made the extension "parser" use the nautilus-string
+		 methods; also check for the used uncompression programs
+		  before using them simply and use eventually a warning dialog
+		   to inform the user.
+
+2001-04-09  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Added BACKENDSDIR define to the CFLAGS.
+
+	* header_stuff.c: Applied a patch from Maxim Sobolev
+		<sobomax@FreeBSD.org> to avoid a crash when no language
+		 is set in the preferences; also fixed two stupid errors in
+		  the other code.
+
+2001-04-08  Fatih Demir <kabalak@gtranslator.org>
+
+	* backends/*: Added backends files and Makefile/CVS stuff around it
+		-- these backend files aren't finished ever, they've just
+		 got started.
+
+	* Makefile.am: Added "backends" to the SUBDIRS.
+
+	* about.c: Added some more informational widget into the about box;
+		now there is the current colorscheme displayed with version,
+		 author and author email via a GnomeHREF widget, so that you
+		  can directly contact the current colorscheme's author.
+
+	* Makefile.am: Include the new menu files.
+
+	* menus_main.h, menus_message_status.h & menus_misc.h: Put the
+		corresponding parts of the menus into these new files.
+
+	* menus.h: Outsourced some menu parts to gain -Werror enabled build.
+
+	* htmlizer.c: Also print out a small footprint about gtranslator.
+
+	* prefs.h, prefs_init.c & utils.c/.h: Moved the old -> new color
+		location converting function to the util. functions and
+		 named it "gtranslator_utils_old_colors_to_new_location".
+
+	* languages.h: Cosmetic rename "lang" -> "GtrLanguage" and indent
+		changes; I love vim ,-)
+
+	* header_stuff.c: Changed the includes to also include "utils.h"
+		for the GUI util. functions.
+
+	* prefs.c/.h & utils.c/.h: Moved the attach_* functions to
+		gtranslator_utils_attach_* and the gtranslator_create/free_lists
+		 functions to gtranslator_utils_language_lists_create/free
+		  and outsourced them into utils.c/.h.
+
+2001-04-07  Fatih Demir <kabalak@gtranslator.org>
+
+	* utils.c/.h & prefs.c/.h: Moved the gtranslator_geometry_save/restore
+		functions to gtranslator_utils_geometry_save/restore.
+
+	* *.c: Fully corrected includes and reodered all includes to be
+		alphabetical.
+	
+	* actions.c/.h & gui.c: As we can't directly operate on the
+		acts[] array anymore use the new utility
+		 "gtranslator_actions_disable_fuzzy_menu_item" function.
+
+	* *.c/.h: Include the new headers where needed and
+		reorder almost all includes to be alphabetically -- currently
+		 it doesn't build with -Werror enabled.
+
+	* Makefile.am: Include the new source files.
+
+	* actions.c/.h, message.c/.h & utils.c/.h: Outsourced
+		common stuff from *.* to these new files -- the
+		 consequence of the renaming.
+
+2001-04-06  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Added new sources to the build.
+
+	* undo-core.c/.h & undo.c/.h: Added new Undo sources -- needs much
+		working left over.
+
+	* dialogs.c: Corrected the ifdef pair to be "GTR_DIALOGS_H".
+
+	* *.*: Tons of renaming -- almost all function names are changed
+		and more valuable for a future outsourcing.
+	
+	* gui.c/.h: Renamed some variables:
+	
+		app1 	-> gtranslator_application,
+		appbar1	-> gtranslator_application_bar,
+		text1 	-> text_box.
+
+	* sidebar.c: Changed the "application-x-gmo.png" references to be now
+		"application-x-po.png".
+	
+	* views.c: Added Gediminas to the author(s) of this file.
+
+2001-04-05  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* dialogs.c: use raise_and_return_if_exists() for dialogs which should
+	be unique. Use stock buttons for cancel/close.
+	(open_uri_dialog): set default button to Open and pressing Enter in
+	entry presses that button.
+	* gui.c: include fixes related to CVS gal cleanup. Move Views menu after
+	Edit and rename to View -- as sugegstions.txt says.
+	(create_app1): disable actions because no files is opened. Moved
+	set_style to prefs.c.
+	(display_msg, goto_given_msg): fail if message == NULL, not crash.
+	* gui.h: made update_appbar public.
+	* header_stuff.c (get_header): better detect non-existing header.
+	(gtranslator_header_fill_up): return if anything has beend changed or
+	not.
+	(create_header_from_prefs): new function.
+	* header_stuff.h: reflect above changes.
+	* parse.c: fix includes.
+	(parse): Check for file existance before calling parse_core.
+	removed "Successfully parsed" status message -- it is obvious :)
+	Do not set winow title to temporary name. If header does not exist --
+	create one! Always fill missing values in header. Cleanup disable stuff.
+	(close_file): set default window title.
+	(compile): compile real file, not a copy.
+
+2001-04-04  Fatih Demir <kabalak@gtranslator.org>
+
+	* main.c: Corrected a define bug -- it's WINDOW_ICON for which we
+		should check -- brings back the window-icon.
+
+	* parse.c: Removed a FIXME -- it works perfectly already with gchar's.
+
+	* update.c: Changed the update command call accordingly to the new
+		my-update.sh syntax -- should be much less errorful.
+
+	* syntax.c, syntax-elements.h & Makefile.am: Outsourced syntax
+		patterns into the new "syntax-elements.h" file and added
+		 it to the sources.
+
+2001-04-03  Fatih Demir <kabalak@gtranslator.org>
+
+	* syntax.c: Added more words to the syntax highlighted words'
+		list.
+
+	* views.c: Check the range always before setting the position.
+
+	* dialogs.c & replace.c: Only allow replaces in translation and
+		comment fields -- also free up the 2 used gchars.
+
+2001-04-02  Fatih Demir <kabalak@gtranslator.org>
+
+	* gui.c: Reverted my change from yesterday dealing with '·' insertions,
+		they're now again inverted.
+
+2001-04-01  Fatih Demir <kabalak@gtranslator.org>
+
+	* replace.c: Redisplay the current message to show replaces in the
+		current message immediately.
+
+	* gui.c: Count the syntax updates we do perform -- avoid updating
+		the syntax 3x or twice just because of a change and the
+		 syntax functions -- should be less flickering now; also
+		  don't invert the '·' character (or it's translated
+		   equivalent) while inserting.
+
+2001-03-31  Fatih Demir <kabalak@gtranslator.org>
+
+	* main.c: Also connect the SIGSEGV signal to the own
+		"gtranslator_signal_handler" signal handling function
+		  and free the "sp_file" variable meanwhile (+184).
+
+	* syntax.c: Added some more keywords and prefixes to highlight.
+
+2001-03-30  Fatih Demir <kabalak@gtranslator.org>
+
+	* gui.c: Fixed the overwriting bug with a selection pos
+		saving/restoring step before/after the syntax update.
+
+	* sidebar.c: Added Gediminas to the authors.
+
+2001-03-29  Gediminas Paulauskas <menesis@delfi.lt>
+
+	Hopefully fixed all crashes and position problems.
+	
+	* gui.c: use update_msg() instead of removed
+	views_prepare_for_navigation().
+	(paste_clipboard): do not call syntax_update.
+	(text_has_got_changed): same.
+	* sidebar.c: (select_icon): do not switch {}, simply jump to item
+	number.
+	* syntax.c: (syntax_update_text): set position only after thaw. This
+	was the cause of crash.
+	* views.c: (gtranslator_views_set): changed view check to
+	g_return_if_fail to see warnings. Do not change views if not needed.
+	Call update_msg before leaving message view. Set editable flag in
+	this function, also change nothing_changes.
+	(gtranslator_views_prepare_for_navigation): removed.
+	* views.h: sort enum by view order, not alphabet :)
+
+2001-03-29  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* Makefile.am: GCONF_IS_PRESENT is added to GCONF_CFLAGS in configure
+	now. Always define WINDOW_ICON.
+	* main.c: revert back to checking USE_WINDOW_ICON.
+	use GNOMELOCALEDIR instead of additional variable.
+	* dialog.c: no need to include gnome-window-icon anymore.
+
+2001-03-28  Fatih Demir <kabalak@gtranslator.org>
+
+	* views.c: Rewrite the C format routines according to the "new"
+		syntax highlight code for C formats.
+
+	* syntax.c & views.c: Put the gtk_editable_get/set_position to their
+		right positions -- corrects the view changing bug.
+
+	* header_stuff.c: Corrected the year getting/substituting and
+		also update the comment if the user changed the package
+		 name; check if there's a language set in the prefs ever
+		  before using it in the comment -- otherwise use a non-
+		   specific comment.
+
+	* syntax.c: Added Gediminas as an author, fixed C format error which
+		got into the sources; made the used special character appear
+		 translated or pure -- depending on the user preference --
+		  and did extend the C format recognizing a bit.
+
+2001-03-28  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* gui.c: (insert_text_handler): new function. Moved simplified dot char
+	conversion here from text_has_got_changed. So one position set-get pair
+	not needed and works faster as it analyses only inserted text.
+	Pass view type to switch_view and do not switch {}.
+	* header_stuff.c: (language_in_english): new function.
+	(substitute), (replace_substring): new simple functions.
+	(gtranslator_header_fill_up): simplify. Do not query config, use
+	variables from prefs.h. Substitute values only if they are standard
+	ones. Fix lots of memleaks.
+	* main.c: wrap set_style with config_init/close.
+	* parse_core.c: replaced translated warnings with g_return_if_fail.
+	Take fuzzy status off the first message, if it is the header.
+	* syntax.c: (gtranslator_syntax_insert_text): initialize variables.
+	Move clear_string from every case to the top. Removed set_position from
+	this func.
+	(gtranslator_syntax_update_text): use simple char * instead of GString.
+
+2001-03-25  Fatih Demir <kabalak@gtranslator.org>
+
+	* about.c: Removed Thomas from the authors' list.
+
+2001-03-23  Fatih Demir <kabalak@gtranslator.org>
+
+	* dialogs.c: If the user didn't enter any string to query for,
+		present him/her an warning dialog (the conditional is
+		 right now), store the last query change in the prefs
+		  and do only use GtrQuery's as the GtrQueryResult stuff
+		   got removed now.
+	
+	* query.c/.h: Removed GtrQueryResult's and made all functions work
+		with GtrQuery's -- the results are also queries now.
+
+	* Makefile.am & main.c: We don't need to also define
+		"USE_WINDOW_ICON" as we can also use the "WINDOW_ICON"
+		  directive to determine if we can use the window-icon
+		   feature of gnome-libs; removed "USE_WINDOW_ICON" define
+		    from the CFLAGS.
+
+2001-03-22  Fatih Demir <kabalak@gtranslator.org>
+
+	* header_stuff.c/.h: Added "gtranslator_header_fill_up" function
+		which inserts/fills up all informations needed for the
+		 header and the ehader comment from the preferences and
+		  substitutes the "variables" from the default header comment
+		   like "YEAR" etc.
+
+	* parse.c: Use the new function to fill up the header if possible.
+
+2001-03-21  Fatih Demir <kabalak@gtranslator.org>
+
+	* sidebar.c: Get the localized names for the icon entries and
+		the sidebar title, also perform a UTF-8'ification of the
+		 localized title/entries so that this problem should be
+		  solved now.
+
+	* sidebar.c & gui.c: Switched over to small sidebar icons and
+		enlarged the default pane position to 85.
+
+	* sidebar.c: Added hotkey view icon, callbacks and integrated
+		it into the "framework"; the "new" icons should be now
+		 easily integrable into the switch for the internally
+		  used "URI" types "comment:", "hotkey:" etc.
+
+	* gui.c: Added hotkey view to the views menu and to the
+		"switch_view" function, added ACT_VIEW_HOTKEY enum value
+		  and added it to the standard switches for the menus.
+
+	* views.h: Added an explanatory comment.
+
+	* views.c: Included <ctype.h> and reworked the number and
+		C format views to work; use new helper functions for
+		 the named view types and easify work with the new
+		  "insert_space" and "setup_text" functions -- also
+		    added hotkey view to our circles.
+
+2001-03-20  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Added nautilus-string.c/.h to the sources.
+
+	* nautilus-string.c/.h: Copied over from the nautilus sources --
+		a good piece of useful code.
+
+	* replace.c: Use the "new" nautilus-string sources and functions
+		and activate the changed and save routines -- it works
+		 now as wished.
+
+	* htmlizer.c: Set the document title to a more comprehensive
+		"PROJECT -- VERSION" form.
+
+2001-03-18  Fatih Demir	<kabalak@gtranslator.org>
+
+	* replace.c: Use pos[f] for the position replacements -- avoids an
+		endless loop but it doesn't still work.
+
+	* gui.c & syntax.c: Small shuffle for the gtk_text_thaw calls.
+
+	* views.c: Made the routines all respect the "special char"
+		selection of the user.
+
+	* syntax.c: Set "aInserted" to FALSE in the loops, corrects
+		the stupid errors introduced with the keywords table
+		 based highlight method; also added some more keywords
+		  and URI prefixes to the tables.
+
+	* color-schemes.c/.h: Removed the list getting function.
+
+	* views.c/.h: Added "gtranslator_views_prepare_for_navigation"
+		function for preparation of navigation, added 2 get
+		 methods for the internal used view name variables
+		  and also added a number view; made the number and C
+		   format view use regex.
+
+	* gui.c/.h: Added ACT_VIEW_NUMBER action and menu item, also
+		made the "goto_given_msg" function use the new
+		 "gtranslator_views_prepare_for_navigation" from
+		   views.c/.h; also chanegd the paned position from 75
+		    to 80.
+
+	* sidebar.c: Added number view "icon" and integrated it into the
+		creation/deletion methods of the sidebar.
+
+2001-03-17  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c/.h: Added views menu from which you can now also switch
+		the views of the current message; also added all the
+		 backend work in ACT_VIEW_* "classes".
+
+	* Makefile.am: Added views.c/.h to the sources.
+
+	* find.c & sidebar.c: Switched over to the new sources view
+		via "gtranslator_views_set" and the GTR_COMMENT_VIEW
+		 argument and removed some old cruft which was used
+		  here to rescue position+contents -- this is now already
+		   done by the views methods.
+
+	* sidebar.c/.h: Removed "show_comment" function from here and added
+		3rd icon for the new C format view.
+
+	* views.c/.h: General views structure and functions are here; added
+		a C format view.
+
+2001-03-16  Fatih Demir <kabalak@gtranslator.org>
+
+	* syntax.c: Added a new and quite useful "back_match" function
+		and corresponding macro to make the keyword and URL matching
+		 readable -- it's now quite easy to do and working; also
+		  removed the "eq" and "beq" macros.
+
+	* header_stuff.c, prefs.c: Messages politure.
+
+	* dialogs.c: Give the current message position to the used
+		"gtranslator_replace_new" call.
+
+	* replace.c/.h: Added a "start_offset" field for the GtrReplace
+		structure -- needed for the replace single task which
+		 should now also be more ready; regex based replace is
+		  on the way.
+	
+2001-03-15  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* header-stuff.c, prefs.c: changed " :" to ":" a English
+	  doesn't use a space before the colon
+	* gui.c: added a comment to explain the meaning of the middle
+	  dot.
+
+2001-03-15  Fatih Demir <kabalak@gtranslator.org>
+
+	* sidebar.c: Show the comment without any syntax highlighting.
+
+	* replace.c: More output -- still not written yet.
+
+	* syntax.c: Also highlight the special character '·' (not
+		possible with the gettexted translations as it seems for
+		 now to me).
+
+	* parse.c: Check the string before calling strstr on it -- avoids
+		a crash -- and made the default header comment look nicer.
+
+2001-03-14  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Disable the "Save" entries if the file is opened from the
+		command line (as the file is just being opened there can't be
+		 any changes which could be saved).
+
+	* parse.c: Also keep the obsolete messages in right and nice form
+		with newlines between the messages -- more readability of
+		 the po files and also free up the new "obsolete" field of
+		  the GtrPo structure in "free_po".
+
+	* dialogs.c: Hm, keep up the Replace button as we do now again
+		support a single replace.
+
+	* replace.c/.h: Restore the old method types and functions and
+		made the routines sensitive for the "replace_all" field
+		 of a GtrReplace -- a single replace is now also possible;
+		  the methods are written now.
+
+2001-03-13  Fatih Demir <kabalak@gtranslator.org>
+
+	* replace.c/.h: Removed the "replace_all" field and the
+		corresponding argument to the "gtranslator_replace_new"
+		 function; made some more parts for the replace function.
+
+	* dialogs.c: Only allow general full replacement in all messages
+		-- no single replace available for now; also removed the
+		 possibility to change stuff in the comments. Replace should
+		  only work on msgid and msgstr parts.
+
+		Also removed the option to replace case (in-)sensitive;
+		 replaces should always be case sensitive.
+
+	* prefs.h: Do not have a "noreplace" field.
+
+2001-03-12  Fatih Demir	<kabalak@gtranslator.org>
+
+	* .cvsignore: Added po and pot files to the ignores.
+
+2001-03-11  Fatih Demir	<kabalak@gtranslator.org>
+
+	* prefs.h: Added "noreplace" field -- possible useful in the
+		future.
+
+	* Makefile.am: Added new replace.c/.h sources.
+
+	* replace.c/.h: Added GtrReplace and co. stuff -- very preliminary
+		and not written yet.
+
+	* dialogs.c/.h: Added Replace dialog, callbacks and integration
+		with replace.c/.h.
+
+	* gui.c/.h: Added Replace menu/toolbar items and actions.
+
+2001-03-10  Fatih Demir	<kabalak@gtranslator.org>
+
+	* syntax.c: Also highlight some keywords; the keywords are for now:
+		CVS, FIXME, GNU, GNOME, GPL and KDE.
+
+2001-03-09  Fatih Demir	<kabalak@gtranslator.org>
+
+	* find.c: Made one comment be a C comment, not a C++ comment.
+
+	* stylistics.c: Parse all informations from the color schemes into the
+		colors.
+
+	* syntax.c: Use a macro for the char-conditions ("eq(1, 'M')" is nicer
+		then "msg[cp+1] && msg[cp+1]=='M'").
+
+	* prefs_init.c: Turn off keeping of obsolete messages per default.
+
+2001-03-08  Fatih Demir	<kabalak@gtranslator.org>
+
+	* test.po & .cvsignore: Ignore the test po file .-)
+
+	* query.c: Free up the used gchar's in "gtranslator_query_simple" --
+		also update the GUI when a string was inserted -- activate Save
+		 menu entry/toolbar item and setup the "file_changed" flag for
+		  the po file; also corrected setlocale calls to not mix up
+		   the language environment of the user.
+
+	* sidebar.c: When the comment "view" is selected only view the
+		comment and not the #'s -- call "prepare_comment_for_view"
+		 for this.
+
+	* parse.c: Also keep the obsolete messages if wished -- the formatting
+		is somehow bad but it works.
+
+2001-03-07  Fatih Demir	<kabalak@gtranslator.org>
+
+	* dialogs.c: Made the dialog a bit nicer and added labels in front of
+		the entries.
+
+	* parse.c/.h: Moved the old "get_translated_count" function's own
+		declaeation to the header and renamed it to for cleanse to
+		 "gtranslator_get_translated_count"; also renamed the
+		  "update_msg" function to "gtranslator_update_msg"; maybe
+		    a complete namespace cleaning action should be really
+		     performed soon.
+
+	* query.c/.h: Added a new "gtranslator_new_query_result" function
+		which does what the function's name is like .-) -- use this
+		 new function and also use "g_new0" instead of simple "g_new".
+	
+		Call up and renew the translation count after the internal auto
+		 accomplishment and update the progress bar/status message
+		  according to the new status bit.
+
+	* header_stuff.c: Check the given comment variable before splitting it
+		up for view/save and return an empty default comment to make the
+		 po file syntactically right -- avoids another nasty crash.
+
+	* prefs_init.c: Commentix.
+
+2001-03-06  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Arg, keybindings: Reassigned Ctrl+Up for back and Ctrl+Down
+		for next -- hopefully this will be the last fix for the
+		 keybindings.
+
+	* query.c, dialogs.c & syntax.c: Do not free up the segments of our
+		GStrings.
+
+	* dialogs.c: Call the "text_has_got_changed" function if we could
+		insert a text into the translation box and do also call only
+		 the new wrapper function "gtranslator_query_accomplish".
+
+	* query.c/.h: Renamed "gtranslator_query_all" to be more logical:
+		"gtranslator_query_gtr_msg" is the new function name and
+		  implemented a toplevel wrapper function named
+		   "gtranslator_query_accomplish" which performs the
+		     complete accomplishment actions for every empty msgstr.
+
+	* gui.c/.h: Move the "text_has_got_changed" declaration to the header
+		and made the function non-static.
+
+2001-03-05  Fatih Demir	<kabalak@gtranslator.org>
+
+	* dialogs.c/.h: Added "accomplish_dialog" which asks if gtranslator
+		should accomplish missing translations from the default domain
+		 and does this with the help of the new function from query.c.
+
+	* gui.c/.h: Added accomplishment menu entry and integrated it into the
+		existing actions model -- also changed the keybindings to now:
+		 Ctrl+Left  or Ctrl+Down -> Back
+		 Ctrl+Right or Ctrl+Up   -> Next
+		 Ctrl+Page Up            -> First
+		 Ctrl+Page Down          -> Last
+
+	* query.c/.h: Added the new "gtranslator_query_all" function which will
+		be useful for the autoinsertion of found translations in the
+		 default domain for a msgid (only applied if the msgstr is empty
+		  of course).
+
+	* prefs.c/.h: Added a combo box for setting up the default domain and
+		added a corresponding structure entry in wants.
+
+	* dialogs.c: Fixed the 2 FIXME's, put the gtranslator_free_query call to
+		the right place, manually free'd the GtrQueryResult and also made
+		 the dialog set up the stored default query domain at startup.
+
+2001-03-04  Fatih Demir	<kabalak@gtranslator.org>
+
+	* sidebar.c: Cosmetical change -- the define is now named GTR_SIDEBAR_H
+		and not any longer GTR_SHORTCUT_BAR_H .-)
+
+	* dialogs.c: Added successor dialog after the query has succeeded
+		-- it's now possible to let it be pasted into the translation
+		 and check if the string to paste into the translation is
+		  already there -- why insert e.g. "Open" 12x into the
+		   translation box?
+
+	* main.c: Set up the domains list at startup.
+
+	* gui.c: Use the "free_color_scheme" function to free up the used
+		color scheme at quit time, added ACT_QUERY and related stuff
+		 and renamed the_searchbar to the_navibar.
+
+	* color-schemes.c/.h: Declare "free_color_scheme" in the header to
+		make it generally available.
+
+	* gtkspell.c: Don't free up the pointed GdkColor from the color
+		scheme.
+
+	* prefs.c, prefs.h & prefs_init.c: Added a toggle option for
+		keeping the obsolete messages and also changed the prefs_init
+		 function for this.
+
+	* dialogs.c & query.c: Use the new free'ing functions for the own
+		GtrQuery(Result) structures; added gtranslator_new_query
+		 function for creating a GtrQuery and made the setlocale
+		  call reasonable and working (only rescue LC_MESSAGES and
+		   reset it).
+
+	* dialogs.c/.h: Added a query dialog which does even work now and
+		free the variables a little bit up.
+
+	* query.c: Corrected stupid error, do use strcmp for sorting the
+		domains list and don't simply check it via !=; use strcmp
+		 for this -- why would've strcmp be invented in C if it would
+		  be as easy as in C++ via str!=query->message...
+	
+		Rescue and reset up the current locale settings after the
+		 query, added free'ing functions for the structures aka.
+		  "gtranslator_free_query(_result)".
+
+	* syntax.c: Do also insert syntax highlighted text if only one char
+		is left over.
+	
+	* stylistics.c: Take the right locations for the GnomeColorPicker
+		values always -- convert depending if we can get values from
+		 the new location.
+
+2001-03-04  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* color-schemes.c, query.c, stylistics.c: fixed some warnings... but
+	first two files are something insane.
+
+2001-03-03  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* parse.c: Fixed bug in mark_msg_sticky which caused complete hang of
+		gtranslator
+
+2001-03-03  Fatih Demir	<kabalak@gtranslator.org>
+
+	* dialogs.c & main.c: Added crash recovery dialog which recovers the
+		state when the crash-recovery file was created if wished or
+		 deletes the recovery file.
+
+	* sighandling.c: Save the po file to a special filename before going
+		to the everglades -- the special filename is for now
+		 ~/.crash-gtranslator.po -- a dialog around this will be added
+		   quite soon.
+
+	* gtkspell.c, color-schemes.c/.h, stylistics.c/.h: Made the gtkspell
+		widget use the color scheme address/spell check error colors,
+		 added a COLOR_SPELL_ERROR enumeration item and integrated it
+		  into the parse/apply processes.
+
+	* query.c/.h: Added a list capable query function, a domains parsing
+		function and an utility function "gtranslator_strip_out" which
+		 gives you a "pure" and clean name back from a given filename.
+	
+	* stylistics.c: Hm, don't free up the now simply given color value
+		paths and call the new convert fucntion while getting value
+		 from the preferences.
+
+	* prefs.h & prefs_init.c: Changed the initial color values according to
+		the new color value path and also implemented a new temporary
+		 "prefs_convert_colors" function which converts the previous
+		   fg/bg values to the moved places.
+
+	* gui.c & stylistics.c: Split up the color setting locations to "fg/bg"
+		for color schemes and "own_fg/own_bg" for the GnomeColorPickers
+		 to avoid very nice and immenant black color values.
+
+	* gui.c: Insert a separator between the toolbar icons/menu items
+		for navigating to first/back and next/last message and also
+		 implemented an own keyhandler which now receives the Ctrl+
+		  Left/Right and Ctrl+Up/Down keys which are the new keyboard
+		   shortcuts for the navigation.
+	
+	* prefs.c: Added scheme definition GnomeFileEntry and the stuff around
+		in the preferences box and entries; reinit the colors after
+		 a color scheme change on the fly.
+
+2001-03-02  Fatih Demir <kabalak@gtranslator.org>
+
+	* gui.c: Hmm, check status before freeing it -- it could also not be
+		used by the update_appbar function, so that we free up a
+		 not used gchar -- another crash less.
+
+	* color-schemes.c: Only add the GtrColorSchemeInformations structure
+		if the structure is complete and non-NULL and sort the list
+		 via strcmp before returning it - hmm, leak hunting: changed
+		  much stuff to NOT cause memleaks.
+
+	* prefs_init.c: Arg, blue is nicer then navy for hotkeys, reverted my
+		change from yesterday.
+
+	* main.c: If a color scheme/theme is given on the comman line take it
+		as our syntax color scheme -- at least we do try it .-)
+
+	* stylistics.c: Use the new color scheme based color selection.
+
+	* color-schemes.c/.h: Implemented the new
+		"gtranslator_color_scheme_load_from_prefs" function which
+		  restores the stored GtrColorScheme from the preferences
+		   "back" as the current theme; also allow spaces around the
+		     color names in the color schemes as we do now strip out
+		      the spaces.
+
+	* sidebar.c: Check if there's any msgstr data before using strcmp
+		-- avoids a nasty crash.
+
+2001-03-01  Fatih Demir	<kabalak@gtranslator.org>
+
+	* sighandling.c: Initialize the gint outside the signal handler.
+
+	* color-schemes.c/.h: Added own free_color_scheme(_info) functions
+		which do free the used structures and implemented all
+		 functions for now.
+
+	* Makefile.am: Define SCHEMESDIR on compiletime to be
+		$(datadir)/gtranslator/colorschemes.
+
+	* stylistics.c/.h: Extended the copyright header line and
+		renamed the VALUE_DOT_CHAR etc. all to VALUE_SPECIAL_CHAR
+		 like in the preferences.
+
+	* color-schemes.c: Got it working and parsing the given
+		color schemes -- also check the given file if it's a gtranslator
+		 color scheme at all.
+
+	* prefs.h & prefs_init.c: Set up default syntax colors via the new
+		prefs_init_syntax_colors function and also declare this
+		 new function in the header.
+
+	* query.c: Fiddling around in language names & co.
+
+	* parse.c, parse.h & parse_core.c: Outsourced the real parse routine
+		into parse_core.c and named it parse_core -- this makes the
+		 nautilus-gtranslator-view work again.
+
+	* htmlizer.c: Also recognize newlines and convert them to <br>
+		tags.
+
+	* query.c/.h: Extended the function to take also a language
+		parameter.
+
+2001-02-28  Fatih Demir	<kabalak@gtranslator.org>
+
+	* color-schemes.c/h & sighandling.c/h: Corrected header copyright
+		email address of mine.
+
+	* query.c/.h: Added new query sources -- quite simple for now.
+
+	* sighandling.c: Wrote a command line based part which will ask the
+		the user now on the command line if we've got to save the file
+		 and to do the save task before exiting.
+
+	* Makefile.am: Include the new signal handling and query sources.
+
+	* main.c: Bind the main signals to the new sources.
+
+	* sighandling.c/h: Added preliminary signal handling sources
+		which do only print out some messages .-)
+
+	* open-differently.c: Added a comment to clarify the printf
+		statement for the translators.
+
+2001-02-27  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Added scheme option to define a color scheme at startup.
+
+	* Makefile.am: Added the new files to the sources.
+
+	* color-schemes.c/.h: Added these color scheme source files.
+
+	* header_stuff.c/.h: Moved the prototype declarations for
+		prepare_comment_for_view/save into the header.
+	
+2001-02-26  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gnome-regex.c & parse.c: Include config.h only if HAVE_CONFIG_H
+		is defined.
+
+2001-02-25  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* *.[ch]: #include shuffle to include only what's really needed.
+	* gui.c: fix warning with translation of dot char.
+	* open-differently.c, parse.c, sidebar.c: fix that stupid thing
+	-- *never* initialize char * variables!
+	* parse.h: remove percentage, and condition about regex, and
+	get_translated_count.
+	* pref*, stylistics*, syntax*:: save colors as "#00AA88" instead of
+	three values. Use gdk_color_parse and color names. I have had the same
+	as gtranslator_syntax_get_section_name, but in stylistics.c and with
+	name get_path_from_type... left this one. Use array of GdkColors, not
+	allocate them every time. In syntax use COLOR_ enums, not direct
+	colors. and s/COLOR_VALUE_/COLOR_/ ...
+
+2001-02-25  Fatih Demir	<kabalak@gtranslator.org>
+
+	* stylistics.c: Use the new function to determine the section names
+		and prepare the customization of the highlight colors.
+
+	* syntax.c/.h: Added a "gtranslator_syntax_get_section_name" function
+		which returns the section name for the given ColorValueType.
+	
+	* dialogs.c: Removed the window-icon setting function really now.
+
+2001-02-24  Fatih Demir <kabalak@gtranslator.org>
+
+	* main.c: Call the window icon setting function at the _right_ time
+		just after having called gnome_init_with_popt_table.
+
+	* Makefile.am: Properly define the USE_WINDOW_ICON define and flags
+		to get the global window-icon set up.
+
+	* prefs.c: Show up font informations on the preferences page rather
+		then simply showing the font button.
+
+	* stylistics.c: Removed the COLOR_VALUE_END_CHAR parts of the switch
+		tree as it isn't used anymore/will not be used in the future.
+
+	* stylistics.h: Added the new types which are also used as "classes"
+		in the syntax highlighting code to easify the later
+		 customization of the syntax highlight colors and removed the
+		  COLOR_VALUE_END_CHAR enum item as it'll never be used
+		   (gtranslator automatically makes the end chars correctly).
+
+	* parse.c: Check if there's any header before using any simple header
+		comment while saving specially opened gettext po file; also
+		 count the sticky messages as translated messages and renew the
+		  status counts to avoid mess in the status -- a FIXME less.
+
+	* gui.c: Changed the keybindings a bit; the header edit dialog is
+		 also available via a F8 now and the message stati are also
+		  toggleable via Alt+1/2/3 for Translated/Fuzzy/Stick.
+	
+		 Also removed an commented statement which would be useless
+		  if it would be used -- why leave it there...
+
+	* dialogs.c & main.c: Set the default window icon from the main loop
+		and don't do this again and again -- simply use a call of
+		 gnome_window_icon_set_default_from_file.
+
+	* open-differently.c/.h: Added functions for opening up bzip2'ed
+		and compress'ed gettext po files and made the functions
+		 known to the "detection" function "gtranslator_open_po_file".
+
+	* dialogs.c & open-differently.c: Also recognize "hidden" ftp
+		and https URI's.
+
+2001-02-24  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* find.c: now find find's all occurences of a string in a message.
+		Bug #51189
+
+2001-02-23  Fatih Demir	<kabalak@gtranslator.org>
+
+	* .cvsignore: Added some newly files to the cvsignores (these
+		are to be honest files related to build up a semi-static
+		 gtranslator which does only need gnome-libs and gnome-print
+		  and no gal etc. anymore).
+
+	* dialogs.c: Initialize findMenu with 0 to avoid an error.
+
+	* preferences.c/h, stylistics.c/h & vfs-handle.c/h: There's no
+		libgtranslator anylonger, change accordingly all the
+		 copyright headers and comments.
+
+2001-02-21  Fatih Demir	<kabalak@gtranslator.org>
+
+	* history.c: Extended the copyright line as Gediminas did much
+		work there.
+
+2001-02-20  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* find.c: fixed bug #51172, where you can reach an endlessloop
+
+2001-02-20  Fatih Demir	<kabalak@gtranslator.org>
+
+	* sidebar.c/.h: Changed the gtranslator_sidebar_add_po
+		to gtranslator_sidebar_activate_views as there's no po
+		 file data used directly in the sidebar.
+
+	* syntax.c/.h & parse.c: Free up some variables and optimize some
+		kind for memory leaks.
+	
+	* parse.c: Also enable the different views for a "non-saveable"
+		file.
+
+	* update.c: Also added the "no good" case to the results matching
+		-- or we are getting always successful updates.
+
+	* header_stuff.c: Also convert the header comment back in case of
+		no edit of the header edit dialog.
+
+	* gui.c: Made a dot/special char also gettexted for solving some
+		problems on "more special" characters sets and implemented
+		 more checks for the text position.
+
+	* syntax.c: Used a macro instead tons of the g_string_append_c
+		call, makes the source better to read and put the Gtk+
+		 position routines calls into the right order, so that the
+		  syntax update now works as wished.
+
+	* about.c, find.c: Fixed only cosmetical aspects.
+
+	* vfs-handle.c: Made the routines use a GString, handling of
+		relative filenames/filepaths is also done now and the
+		 useless switch at the end is now also removed.
+
+2001-02-20  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* find.c,find.h: Enhanced the find function.
+
+2001-02-20  Fatih Demir	<kabalak@gtranslator.org>
+
+	* about.c: Added Thomas .-)
+
+2001-02-19  Fatih Demir	<kabalak@gtranslator.org>
+
+	* vfs-handle.c: Fixed the local access routine, it should work
+		now -- it does also work with relative paths.
+
+	* gui.c: Hm, don't set the position not without testing the real
+		index relations to the text widget.
+
+	* syntax.c: Freeze/thaw up the text widgets before doing a complete
+		syntax update.
+
+	* dialogs.c: Reimplemented the Open from URI dialog and made it
+		more simple this time -- the protocol checks are still
+		 present though and a nice and small label is now also
+		  there.
+
+2001-02-18  Fatih Demir	<kabalak@gtranslator.org>
+
+	* header_stuff.c: Made the comments box bigger and implemented 2
+		functions which do prepare the header comment for view/edit
+		 and save -- the header edit dialog displays now only the
+		  comment without any # or free spaces.
+
+	* gui.c: Hm, removed the "textlen" variable and connected stuff and
+		reverted to old mechanism with gtranslator_syntax_update_text.
+
+	* syntax.c: Added "@" to the syntax highlighted characters.
+
+	* gui.c: The syntax highlighting does now work instantly without
+		the gtranslator_syntax_update_text function so it doesn't
+		 flicker any more.
+
+	* dialogs.c, dialogs.h & gui.c: Added open from URI menu entry
+		and added the logic around it -- it works.
+
+	* ChangeLog: Changed Thomas' email address also here ,-)
+
+2001-02-17  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* dialogs.c, find.h, find.c: strings are now found in the right
+		categorie.
+
+2001-02-17  Fatih Demir	<kabalak@gtranslator.org>
+
+	* prefs_init.c & Makefile.am: Added this source file which does the
+		1st time initialization for the most important preferences
+		 items.
+
+	* sidebar.c: Fixed #51000, the text gets now stored if the user
+		changes the view.
+
+	* gui.c: Rehighlight the complete widget after pasting something
+		into the translation box.
+
+2001-02-17  Thomas Ziehmer	<thomas@gtranslator.org>
+
+	* syntax.c: refactoring of the code
+
+2001-02-17  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c & syntax.c/.h: Added a "gtranslator_syntax_update_text"
+		function which updates the given text widgets highlighting
+		 and made it work immediately as you type.
+
+	* syntax.c/htmlizer.c: Don't show assertion errors on untranslated
+		messages as the msgstr is in this case empty -- avoid this
+		 with conditionals.
+
+	* dnd.c: Also use the new syntax enhanced text insertion method.
+
+	* sidebar.c: Use the new "gtranslator_syntax_insert_text" method to
+		also highlight comments.
+
+	* syntax.c: Implemented color routine and made the syntax highlighting
+		task -- it works great ,-)
+	
+	* gui.c: Use the new syntax routines to insert text instead of the old
+		"gtk_text_insert" calls.
+
+	* Makefile.am: Added syntax.c/.h to the sources.
+
+	* syntax.c/.h: Added these syntax sources which will hold the
+		syntax highlighting for gtranslator.
+
+	* dialogs.c: Added search possibility for comments.
+
+	* find.c: Also search for comments if wished via the find dialog.
+
+	* \*.c: Changed also all the includes according to the move.
+
+	* Makefile.am, shortcutbar.c/.h & sidebar.c/.h: Moved the sidebar
+		sources to a more logical filename (sidebar.c/.h).
+
+	* .cvsignore: Added the .sources backup dir of my own.
+
+2001-02-16  Fatih Demir	<kabalak@gtranslator.org>
+
+	* shortcutbar.c: Added a function which shows an existing
+		comment or displays an information message to the user
+		 and removed all editable comments stuff -- why should
+		  comments be editable on a per-message base?!
+
+	* htmlizer.c: Corrected a small output error (do not also mark
+		the brackets as links).
+
+2001-02-15  Fatih Demir	<kabalak@gtranslator.org>
+
+	* header_stuff.c: Make the header edit dialog resizable in growth
+		direction -- no shrink allowed.
+
+	* open-differently.c/.h: Moved the includes into the source file.
+
+	* messages.h: Removed unused GList msgstr_list.
+
+	* parse.c: Clear the sidebar via the new function if we do close
+		a file.
+
+	* shortcutbar.c/.h: Added the "gtranslator_sidebar_clean" function
+		which clears the sidebar and corrected the comments showing
+		 routine which does now really show you the message written
+		  down in the source, if there's no comment for the current
+		   message.
+
+2001-02-14  Fatih Demir	<kabalak@gtranslator.org>
+
+	* preferences.h, vfs-handle.h & messages.h: Changed the include
+		directives to use the gtranslator prefix "GTR" instead of
+		 the old "LIBGTRANSLATOR" prefix.
+
+	* main.c: Added an option to use the htmlizer functions and
+		it works, works and works..
+
+	* htmlizer.h/.c: Some reorganization, added recognition of %lx format
+		arguments and added file output stuf around it.
+
+	* gui.c: Do not include htmlizer.h -- we don't use it ever in
+		gui.c.
+
+	* history.c: Set the maximal number of history entries to
+		10 for now.
+
+	* shortcutbar.c: Remove the temporary header call & icon;
+		implemented some kinds of views with the help of the
+		 current GUI. Comments can get displayed now instead of
+		  the msgid.
+
+2001-02-13  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Made all conditional inclusion of GnomeVFS sources
+		and functions normal used sources. Less ifdef/endifs.
+
+	* Makefile.am: Added vfs sources generally, deleted not
+		needed checks and XML flags.
+
+	* open-differently.c: Also pass the local "file:/" URIs to
+		GnomeVFS methods and use strcmp instead of g_strncasecmp.
+
+2001-02-12  Fatih Demir	<kabalak@gtranslator.org>
+
+	* shortcutbar.c: Do not intend that we do have a MDI with "Files:";
+		use "Views:" instead.
+
+	* parse.c: Corrected a typo; successfull->successful.
+
+2001-02-11  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am & gui.c: Removed any gtkhtml routines; we do not use
+		gtkhtml anylonger.
+
+	* about.c: Added the Free Software Foundation copyright; when did
+		this disappear?!
+
+2001-02-10  Fatih Demir	<kabalak@gtranslator.org>
+
+	* shortcutbar.c: Check for the filename before doing anything.
+
+2001-02-09  Fatih Demir	<kabalak@gtranslator.org>
+
+	* htmlizer.c: Added string.h as an include as suggested by
+		Josh Jackson, moved the "'" char to the quotation char
+		 group again and added two new word classes for GNU and
+		  GNOME words.
+
+	* about.c: Changed the about messages as we don't have got any
+		libgtranslator/gtranslatord anylonger.
+
+	* *.c/.h: Moved the preferences.h header to prefs.h and all the files
+		needing it include it from there already.
+
+	* vfs-handle.c/.h & messages.h: Moved these files from libgtranslator
+		to here.
+
+	* Makefile.am: Don't link against libgtranslator because it isn't
+	 	existent any longer -- removed the cflags and flags for it
+		 and added the vfs handle sources and the message.h file to
+		  the sources.
+
+	* session.c, prefs.c, gui.c, history.c, dialogs.c & main.c:
+		Changed the include dirs to be local as libgtranslator
+		 is dead now.
+
+	* parse.c, gui.c, prefs.c & history.c: Applied the
+		changes from Gediminas for stable also to HEAD.
+
+	* Makefile.am: Do link against the new static library in
+		libgtranslator, add all the new sources.
+	
+	* preferences.c/.h: Moved from libgtranslator to here.
+
+	* stylistics.c/.h: Moved also to here and included the
+		gnome-i18n.h header for problemless build.
+
+2001-02-08  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Made GAL & GtkHTML flags used by default.
+
+	* parse.c & gui.c: Made all conditional uses of GAL & GtkHTML
+		use the enhanced GAL & GtkHTML actions by default as they're
+		 now requirements for HEAD.
+
+2001-02-06  Fatih Demir	<kabalak@gtranslator.org>
+
+	* shortcutbar.c: Don't show the full filename in the shortcut bar;
+		just show the project name and the base filename.
+
+2001-02-05  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c: open working dir in save as dialog also.
+	* header_stuff.c: if no project version is set do not write space after
+	name ;). Fixed stupid error with \n in comment.
+	* history.c: implement "Check if the file exists" option. Save only
+	8 entries.
+	* parse.c: in file open callback, close old file before opening new.
+	Implement "warn user about fuzzy mesages left" option.
+	* prefs.c: do not free internal font name.
+
+2001-02-04  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c: Open dialog shows the same dir as current file.
+	* parse.c: avoid crash in free_po() if po=NULL.
+	
+2001-02-04  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* header_stuff.c: get not-localized language only from language
+	name, not from other fields. Fix a crash. Ensure comment ends with \n.
+	* history.c: show nice menu items: 1. project 3.14 -- lt.po. Install
+	menu hints into appbar.
+
+2001-02-04  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c, gui.h, parse.c: Removed the locally defined
+		shortcut bar stuff as we do now have general
+		 handles for it in shortcutbar.c/.h.
+
+	* Makefile.am: Integrate the new sources conditionally.
+
+	* shortcutbar.c/.h: New sources for shortcut bar stuff.
+
+2001-02-03  Fatih Demir	<kabalak@gtranslator.org>
+
+	* open-differently.c: Corrected the opening of the "special"
+		po files -- don't forget the GnomeVFS case.
+
+	* gui.c: Added crusty shortcut bar stuff and added a default
+		"Files" group which should always be present.
+
+	* parse.c: Also create a shortcut bar entry for the po file
+		-- just cosmetic for now.
+
+	* gui.h: Define the globally used EShortcutModel and include
+		the corresponding gal header already there.
+
+	* htmlizer.c: Changed the color of quote characters also
+		to red.
+
+	* gui.c: Added some gal parts like an e-vpaned and a
+		shortcut bar which is empty for now -- all is
+		 conditionally defined -- no gal, no e-vpaned etc.
+
+	* Makefile.am: Added gal cflags/libs conditionals.
+
+	* gui.c: Also disable editing of the GtkHTML msgid display.
+
+	* history.c/.h: Added Gediminas to the authors line .-)
+
+	* history.c: Removed a g_print.
+
+2001-02-03  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* history.c: renamed "history_length" to "history/length" for
+	gnome-config. When reading, append to list, so newest entries are
+	always at top. History works with gnome-config now. Not yet with
+	gconf...
+
+2001-02-03  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	Almost fixed history stuff.
+	* gui.c, parse.*, history.*: renamed gtranslator_display_recent() to
+	gtranslator_history_show() and moved from parse* to history*. the same
+	with parse_the_file_from_the_recent_files_list() ->
+	open_file_from_history().
+	* history.c: removed lots of fake variable initializers and leaks ;).
+	Replaced gtranslator_history_assort with remove_duplicate_entries, which
+	removes duplicates of one entry, used only on history_add.
+	* Makefile.am: build ./ before pixmaps/.
+
+2001-02-03  Fatih Demir	<kabalak@gtranslator.org>
+
+	* pixmaps/.cvsignore: Added cvs ignore again for HEAD.
+
+	* gui.c: Use the new htmlizer code and gtkhtml for the msgid
+		part if we're working with gtkhtml -- this is like a
+		 preview for the further work for the msgstr part.
+
+2001-02-02  Fatih Demir	<kabalak@gtranslator.org>
+
+	* htmlizer.c/.h: Added html making helper sources; very
+		simple though.
+
+	* Makefile.am: Added GtkHTML flags for building linking and
+		the new htmlizer.c/.h sources to the build.
+
+	* main.c: Changed the <libgtranslator/parse-db.h> include to
+		<libgtranslator/libgtranslator.h>.
+
+	* gui.c: Changed the webaddress to http://www.gtranslator.org
+
+2001-02-01  Fatih Demir	<kabalak@gtranslator.org>
+
+	* dialogs.c: Perhaps the Save as dialog will also detect
+		a previously remote po file and will offer a direct
+		 save as filename.
+
+	* gui.c & parse.c: Also disable the Save button for the
+		"remotely" copied po files.
+
+	* open-differently.c: Made the remote stuff finally really
+		work for all supported kinds of po files; take the
+		 local copy of the remote file as the 'local' file.
+
+2001-01-31  Fatih Demir	<kabalak@gtranslator.org>
+
+	* open-differently.c: Also use the VFS methods to open
+		a remote po file via GnomeVFS -- if present.
+	
+	* parse.c: Moved the check for file existence before the check
+		for read/write permissions.
+
+2001-01-30  Simos Xenitellis  <simos@hellug.gr>
+
+	* languages.h: Added entry for the Greek language.
+
+2001-01-30  Thomas Ziehmer <thomas@gtranslator.org>
+
+	* history.c, parse.c: fixed list bugs, which generated segv.
+
+2001-01-29  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Use the new history functions <damn-it/>.
+
+	* .cvsignore: Add ".gdbinit" to the ignores.
+
+	* Makefile.am: Added the new history sources and reordered the
+		source files alphabetically.
+
+	* parse.c: Removed all core stuff for the recent files/history.
+
+	* history.c/.h: New history sources.
+
+2001-01-28  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Changed a hotkey to work (it's the "Message status"
+		menu entry).
+
+2001-01-27  Fatih Demir	<kabalak@gtranslator.org>
+
+	* header_stuff.c: Get the language name from the languages
+		list and don't write localized language names to the
+		 po files.
+
+	* parse.c: If the po file header does still have got the
+		default values, on startup the "Edit Header" dialog
+		 will now pop up to make it possible to change the
+		  header fields to the corresponding values.
+
+	* parse.c & parse.h: New history/recent files stuff which
+		is now gtranslator_config_* based; could work in
+		 the next time.
+
+	* gui.c & parse.c: Don't enable the save buttons if the
+		user doesn't have got direct write permissions.
+
+	* dialogs.c: More write protection detection; save file
+		as dialog is now more enhanced for perms.
+
+	* parse.c/.h: Don't write immediately if the user
+		doesn't have got write permissions on the
+		 po file -- detect this permission while
+		  parsing the po file.
+	
+
+	* gui.c, prefs.h & prefs.c: Removed all multiple dot
+		char stuff and reverted to the old dot char
+		 stuff -- but the "dot char" is now also
+		  "gettexted", so that it should also be usable
+		    with Japanese/Ukrainian charsets.
+
+2001-01-24  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Fiddling with the new multiple dot char stuff.
+
+	* prefs.c/.h: Added multiple dot char selection.
+
+	* pixmaps/.cvsignore: Added this delirium for pixmaps .-)
+
+	* Makefile.am, pixmaps/Makefile.am: Outsourced the
+		pixmaps Makefile targets.
+
+	* \*.\*: Set the years of development also to
+		2001.
+	
+	* parse.c/.h: Added a function to check the access perms
+		for the po files.
+	
+	* about.c: Changed the copyright years.
+
+2001-01-21  Fatih Demir	<kabalak@gtranslator.org>
+
+	* languages.h: Updated and corrected the Turkish
+		mailing list address.
+
+2001-01-14  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Removed the open-po-file-*.c/.h
+		sources.
+	
+	* open-po-file-*.c/.h: Removed these source files.
+
+2001-01-14  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* prefs.c: use strcoll instead of strcmp for sorting of languages, and
+	simple strcmp instead of g_strcasecmp for other fields.
+
+2001-01-12  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Removed the recent-files.h inclusion.
+
+2001-01-11  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Check if an old "gtranslator-temp-po-file" is
+		lungering around in the users home directory and
+		 in this case delete the file.
+
+2001-01-07  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c: focus entry when find dialog is opened.
+
+2001-01-07  Fatih Demir	<kabalak@gtranslator.org>
+
+	* .cvsignore: Added pixmaps/.xvpics.
+
+	* Makefile.am: Also include pixmaps/untrans.xpm in a dist.
+
+	* gui.c: Changed the hotkeys for message navigation
+		to F9, F10, F11, F12 -- now they do work.
+
+2001-01-06  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* pixmaps/untrans.xpm: added this dir and one pixmap for untranslated
+		toolbar button.
+	* gui.c: use it. Fixed ispell command constructing.
+	* header_stuff.c: reformatted *'s
+	* parse.c: removed some checks and leaks. Rewritten
+		gtranslator_display_recent completely, now works.
+	* prefs.c: load/save dictionary entry. Made it simple entry, because it
+	does not need to be a file, just name.
+	* prefs.h: whitespace.
+
+2001-01-05  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Added code which determines if a special dictionary
+		is desired and then calls the gtkspell ispell process
+		 with the corresponding options (or not).
+
+	* prefs.c/.h: Added the dictionary holding entry for the
+		ispell process of gtkspell.
+
+	* prefs.h, parse.c: Removed the recent files entries from the
+		preferences and from the code.
+
+	* gtkspell.c: Check the position of the text to
+		delete; avoids a crash when instant spell checking
+		 is activated.
+
+	* parse.c: Stop the gtkspell process if it's running &
+		the corresponding preference is set, corrected
+		 the check for the temporary file name to use
+		  strcmp and work right.
+
+	* open-differently: Allocate the gchars newly before freeing
+		them.
+
+2001-01-04  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	Ran gtranslator in memprof. Several memleaks found.
+
+	* gui.c: free msgstr before getting new text in update_msg
+	* parse.c: s/  \*/ */
+	(append_line) simplify making result string.
+	(gtranslator_display_recent) "name" was not neccesarry. do not strdup
+	static strings. Free menu->hint.
+
+2001-01-04  Fatih Demir	<kabalak@gtranslator.org>
+
+	* open-differently.c: Applied the change of the temporary file name
+		to "gtranslator-temp-po-file".
+
+	* update.c: Changed the script name also in the comments.
+
+	* parse.c: Delete the temporary file after saving the messages to
+		a new file, build the right name for the files, changed
+		 the name of the temporary file to "gtranslator-temp-po-file"
+		  and made it also possible to open gzip'ed and compiled
+		   gettext po files from the GUI via the open dialog and the
+		    recent files list; don't take the temporary files into
+		     the recent files list.
+	
+	* parse.c/.h, languages.h, header-stuff.c/.h, gui.c/.h: Reformatted
+		these files simply.
+
+2001-01-03  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gtkspell.c: (popup_menu) removed orig_mouse parameter.
+	(button_press_intercept_cb) changed declaration to match prototype. Do
+	not remember orig_mouse.
+	* gui.c/.h: moved create_popup_menu declaration from .h to .c. Moved
+	check if popup menu is enabled to top -- create a menu only i needed,
+	always destroy it. Changed type of function to match prototype, return
+	FALSE/TRUE.
+
+2001-01-03  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gtkspell.c: (popup menu) fixed tests for which button is pressed and
+	when to popup spelling menu. Now works with/without popup menu. Merged
+	duplicated blocks.
+	removed extra whitespace and replaced some spaces with tabs.
+
+2001-01-03  Fatih Demir	<kabalak@gtranslator.org>
+
+	* open-differently.c/.h: Added a method which detects
+		and returns TRUE if the "special" methods of
+		 gtranslator can open the detected suffixes.
+
+	* parse.c: Filter the new temporary file's name
+		and try to save the file under a different
+		 filename.
+
+	* main.c: Call the new detection method to re-allow
+		opening of compiled and gzip'ed gettext files.
+
+	* open-differently.c: Changed the temporary file
+		directory from "/tmp" to the home directory.
+
+	* ChangeLog: Applied a aspell spell check run
+		on this file.
+
+	* about.c/.h, find.c/.h, dialogs.c/.h & dnd.c/.h:
+	        Reformatted these files.
+
+	* gtkspell.c: Changed the mouse button on which
+		the gtkspell suggestion list reacts from
+		 the right one (which is already used by the
+		  eventually enabled pop up menu) to the
+		   middle one (this is only conditional; if the
+		    po-pup menu is disabled, it's still on the
+		     right mouse button).
+
+	* session.c/.h: Reformatted the comments.
+
+	* gtkspell.h: Change the #ifndef/define pair for the
+		header.
+
+	* prefs.h, prefs.c: Reformatted the files and added
+		the necessary parts for the spell checking page.
+
+	* gui.c/.h: Removed all spell-checking menu entry
+		related stuff, include the gtkspell.h
+		 header and added the gtkspell calls conditionally
+		  according to the preferences.
+
+	* spell.c/.h: Removed these old some files.
+
+	* Makefile.am: Removed spell.c/.h from the sources.
+
+	* prefs.c: Show the notebook tabs on the
+		right instead of the top -- makes it more
+		 readable.
+
+2001-01-02  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Reformatted and removed any URI/GnomeVFS
+		elements and includes.
+
+2001-01-01  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Added an out commented call to the new
+		recent files' methods of libgtranslator.
+
+2000-12-31  Fatih Demir	<kabalak@gtranslator.org>
+
+	* beginners-druid-*.c/.h & preferences-*.c/.h:
+		Removed these glade-based files.
+
+	* main.c: Removed the beginners-druid-interface.h include.
+
+	* Makefile.am: Removed the beginners' druid & glade-based
+		preferences dialog sources.
+
+	* open-differently.c/.h: Changed the comment style,
+		reformatted the code and changed the function
+		 names.
+
+	* update.c: Adapted the script name change, also adapted
+		the new differing return values of the script.
+
+	* gui.c: Commented out the stat GtrMsgStatus variable as it's
+		not used for now.
+
+	* main.c: Removed all this gmo/po.gz opening stuff from the
+		main part of the argument parsing.
+
+	* Makefile.am: Added the new source files to the gtranslator
+		sources list.
+
+	* open-differently.c/.h: Outsourced these "special" open file
+		functions into these new files.
+	
+	* update.c & parse.c: Outsourced the update functions to it's
+		own source file.
+
+2000-12-30  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Define the necessary USE_VFS_STUFF and
+		GCONF_IS_PRESENT defines also in "src", also in
+		 this directory.
+
+	* main.c: Removed the druid call for now.
+
+2000-12-30  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: implemented sticky message status on menu item toggle.
+	* parse.c,parse.h: new mark_msg_sticky function.
+	* gui.c: Fix memory leak in update_appbar (str was not freed).
+	change status logic a bit, to make it simpler.
+	* prefs.c: fix size of sixth page table. check if font is saved in
+	preferences, only then set it.
+	
+2000-12-29  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Include the new files altogether in a build,
+		removed the "SophInterfaceFiles" from the EXTRA_DIST
+		 and it's targetism.
+
+2000-12-28  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Include also the open-po-file-dialog sources.
+
+	* \*-functions/interface.h: Removed the inclusion of "support.h".
+
+	* beginners-druid-functions.h: Added <libgtranslator/preferences.h>
+		to the includes.
+
+	* beginners-druid-functions.c: Added the finish method which
+		is just a config-row for now.
+
+	* main.c: Try to set up a beginners' druid if there hasn't
+		been any stored configuration yet.
+
+	* Makefile.am: Define the "SophInterfaceFiles" which
+		are the new files, removed the LIBGLADE stuff
+		 in the cflags and libs and included the
+		  beginners' druid in the build.
+	
+	* beginners-druid-*.c/h, open-po-file-dialog-*.c/.h,
+		preferences-dialog-*.c/.h: Added the C sources for
+		 the previous glade files -- need tuning and coding
+		  here -- they'ren't included in the build for now.
+
+2000-12-17  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Disable the Spell checking menu entries on startup.
+
+2000-12-15  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* parse.c: if there were no comments, do not print (null).
+	* gui.c: do not replace dots with spaces, exchange them! So now dots are
+	not lost, they just look like spaces. (in show-centered-dot mode).
+
+2000-12-09  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Hmm, stupid error... Forgot to write the else
+		part of the condition if the filename if "temp_po_file";
+		 now the save part should again work...
+
+2000-12-08  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c/.h: Added a gtranslator_open_gzipped_po_file function
+		which does work like gtranslator_open_mo_file but it does
+		 it's job for a gzip'ed po-file.
+
+	* main.c: Also open up gmo-files as they're the same as
+		mo-files and do use the same plain stuff for gzip'ed
+		 po-files as for mo-files .. without using GnomeVFS.
+
+	* parse.c: Also allow opening mo/gmo-files from the open file
+		dialog.
+
+2000-12-07  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: (str_replace) added function which quickly replaces dots with
+	spaces.
+	Moved NONE declaration into function to avoid misuse.
+	(display_msg, update_msg) substitute spaces with dots in temp variable,
+	leave msg clean. msgid is never altered. Removed unneeded check if
+	string is blank.
+	(update_appbar) do NOT put anything else than ACT_... in call to
+	disable_actions!
+	(text_has_got_changed) optimize a lot drawing with dots. Redraw not
+	all the text, only spaces :) set nothing_changes = TRUE when changing
+	anything. Do NOT initialize variables with empty values! Free newstr (a
+	GREAT leak).
+	* parse.c: (parse) fix disable_actions. Do not activate trans_box.
+	(restore_msg) removed dot char stuff, it is handled elsewhere.
+	(write_the_message) ditto.
+	(determine_translation_status) ditto.
+	(undotchar) removed function.
+	(update) do not initialize empty string. Always close file before
+	updating and restore it later. Free strings.
+	(gtranslator_open_mo_file) ditto.
+	Removed not useful comments and checks for existence of surely allocated
+	strings.
+	* parse.h: removed undotchar declaration.
+
+2000-12-06  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Determine if the given file has got
+		the suffix ".mo" and open it with the
+		 new function.
+
+	* parse.c/.h: Added the a new function
+		( gtranslator_open_mo_file ), which opens up
+		   a mo-file ( the compiled gettext files )
+		    by calling msgunfmt and teeing it's output
+		     to a temporary file...
+		Changed the arguments of a file from being
+		 "const char *" to "const gchar *", added a
+		  saving part for the mo-file function which
+		   gets it's informations from the "temp_po_file"
+		    name which should only be used temporarily.
+
+2000-12-05  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Added more VFS stuff, so it
+		tries to get the file via GnomeVFS
+		 interface...
+
+2000-12-03  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Added the conditional close-down of
+		GnomeVFS if USE_VFS_STUFF is defined and
+		 already running.
+	
+	* main.c: Added some kind of magic to use the new
+		GnomeVFS based function from libgtranslator.
+
+	* gtkspell.h: Made the ispell_cmd non-static,
+		avoids a warning.
+	
+	* Makefile.am: Added the VFS cflags and libs
+		stuff.
+
+2000-12-02  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Enable the spell-checking menu entry.
+
+	* Makefile.am: Added the new gtkspell.c/.h files.
+
+	* gtkspell.c/.h: Copied these files from gnomeicu ,-)
+
+2000-12-01  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Corrected a typo :-)
+
+2000-11-27  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* parse.c: do not free the result of g_basename(); do not crash.
+	* gui.*: added ACT_NULL, a FIXME and warning. It is disabled somehow!
+
+2000-11-18  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: grouped toolbar operations into file/po-specific/app groups.
+	* parse.c: (parse) do not crash even if filename is a dir, NULL or "".
+
+2000-11-13 Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c, find.c: implement "Find in", now you can search in English
+	and/or translated entries.
+
+2000-11-13 Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c, gui.c, header_stuff.c, prefs.c, session.c: call
+	gtranslator_config_init/close (no more called inside of
+	gtranslator_config_*).
+
+2000-11-12  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Prevent gtranslator from crashing
+		if there aren't any previous files.
+
+	* Makefile.am: Added the LIBGLADE_LIBS to the
+		libraries and changed the SCRIPTSDIR to
+		 <gtranslator data>/scritps to fit the
+		  data Makefiles.
+
+2000-10-30  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Removed the include-dir ../libgtranslator as
+		all libgtranslator headers are now globally declared
+		 and the $top_srcdir include-dir is enough for this.
+	
+	* main.c: Also made it include only the <libgtranslator/...>
+		headers instead of simply doing "...".
+
+2000-10-30 Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: moved Update menu item just after Compile. Enable Status/Fuzzy
+		menu entry after Open. Focus translation box during startup.
+		Fixed some initialization of variables.
+	* gui.c, parse.c: fixed various places where messages were counted.
+		Removed extra update_appbar calls. Use po->length instead of
+		g_list_length(po->messages).
+	* parse.c: made	determine_translation_status static.  Create menu path
+		only once in gtranslator_display_recent. Initialize counts to 0
+		in get_translated_count. Simplified percentage count, now shows
+		correctly. Removed onepercent variable.
+
+2000-10-29  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Change the corresponding calls to the gtranslator_set_style
+		function, as it does only take one argument now; call the
+		 function twice, one time for the text box and one time
+		  for the translation box.
+
+2000-10-25  Fatih Demir	<kabalak@gtranslator.org>
+
+	* header_stuff.h, parse.h & spell.c: Changed the includes
+		to <libgtranslator/messages.h> due to the move.
+	
+	* messages.h: Removed it from here. Moved it to libgtranslator.
+
+2000-10-23  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Also added here the "/usr/X11R6/lib" to the
+		$LDFLAGS for gtranslator; the source packages should
+		 now again build without problems.
+
+2000-10-20  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Also disable the corresponding buttons if no fuzzy/
+		untranslated messages seem to have been residential
+		 in the po-file.
+
+	* parse.c: Corrected the place of the decrementing statement
+		for the translated count.
+
+2000-10-18  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c/h: Added another function which sets up the progress bar
+		status ( gtranslator_set_progress_bar() ).
+	
+	* parse.c: Use this new function for the progress bar setting routines
+		now, disable the "Fuzzy", "Untranslated" buttons on the parse
+		 start and enable them only if there's a fuzzy, untranslated
+		  message. Another bug has been removed :-)
+
+2000-10-17  Fatih Demir <kabalak@gtranslator.org>
+
+	* gui.c: Set the left fuzzy/untranslated messages inside the status
+		text and set the progress bar corresponding to the current
+		 status and hopefully update the fuzzy count in the status
+		  messages and the untranslated messages count is now
+		   updated somehow working =?
+
+	* parse.c: Get the count at the startup and set the progress bar
+		corresponding to the values ( also get the fuzzy count );
+		 on closure of the file set the progress bar value to 0.
+
+	* parse.h: do use "fuzzy" and "translated" fields for the determi-
+		nition of the message status. Include two new functions
+		 which should build the progress bar total and other sources
+		  for status informations ( these are "get_translated_count"
+		   for the list of messages and "determine_translation_status"
+		    for the determination of the status itself ).
+		Moved the two gfloat values to the header as they're globally
+		 used now.
+
+	* gui.c: Also have a progress bar in the GNOME appbar.
+
+2000-10-15  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Set the font and the colors on startup via the new
+		gtranslator_set_style() function which should do more
+		 work but it's enough for now; include the new
+		  "libgtranslator/stylistics.h" header for the function
+		   gtranslator_set_style().
+
+	* parse.c: Activate the translation box on the successful of a
+		po-file.
+
+	* prefs.h: Added the "font" gchar as part of the wants structure and
+		added a function to set the style.
+
+	* prefs.c: Use the new color getting/setting routines from
+		libgtranslator, get/set the font name in the preferences and
+		 the function to set the style.
+
+2000-10-13  Fatih Demir <kabalak@gtranslator.org>
+
+	* prefs.c: Removed the corresponding check button for the removed
+		option and added a sixth page with the font and color
+		 settings; added the widgets and labels for this, connected
+		  the signals with the widgets and began to write the stuff
+		   around this.
+
+	* prefs.h: Removed the option to delete obsolete entries from the
+		recent file menus and added the option to use own specs
+		 for font and colors.
+
+        * TODO.src: Removed it and added some points of it to the top level
+                TODO file.
+ 
+        * Makefile.am: Also removed the TODO.src file here.
+
+2000-10-12  Fatih Demir	<kabalak@gtranslator.org>
+
+	* prefs.c: Changed the description text for the option to delete
+		obsolete recent file menu entries as it does only remove
+		 double entries following each other.
+
+	* parse.c: Don't re-parse the file if no change would be applied
+		to the po-file, inform the user about the not-existing
+		 change; reverse the list of recent files as we're parsing
+		  it reversely in our routine.
+
+	* gui.c: Thaw up the translation text at the end of the process,
+		get/set the pointer index by the gtk_editable_(g|s)et_position
+		 functions, handle the translation text box as a GtkEditable;
+		  now the dot char mode works as wished :-)
+
+2000-10-11  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Call the gtranslator_display_recent() function every
+		time a new file is opened; this function should now really
+		 remove somehow all previous recent files entries from the
+		  menus and insert the new ones and implemented the first
+		   lines in direction to deleting obsolete multiple commons
+		    of the same file.
+
+	* gui.c: Also update the status bar information on changing the
+		status from "Untranslated" to "Translated".
+
+	* Makefile.am: Include the necessary GConf cflags for compiling
+		and linking gtranslator.
+
+	* gui.c: Solved the FIXME and "removed" the reverse writing
+		"feature" of gtranslator :-)
+		Wrong places for the freeze/thaw up calls of the GtkText,
+		 this has been corrected and it works now again also in
+		  dot char mode.
+
+2000-10-07  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Removed the error warning about GConf as it works
+		now again.
+
+	* Makefile.am: Compiling and added the SCRIPTSDIR define to the
+		 compile defines.
+
+	* parse.c: Clean up the appbar when closing a file, wrote the
+		update function which uses the "changed" update.sh script
+		 from here to work; close the file before updating it and
+		  open it then again.
+
+	* gui.c: Freeze and thaw the translation box during updating
+		the contents and delete all the characters in the
+		 translation box forwardly, added a FIXME as it goes
+		  to the index 0 though I want it to go somewhere else.
+		Store the date via gtranslator_config_set_last_run_date()
+		 on exit.
+
+	* prefs.c: Changed the update policy of the GtkSpinButton to
+		GTK_UPDATE_ALWAYS, added the toggle button for the new
+		 toggle button and added another toggle button to switch
+		  off these nice dialogs within the update function.
+	
+	* prefs.h: Added the delete_obsolete_rfentries value and the
+		uzi_dialogs values to the wants structure.
+
+2000-10-06  Fatih Demir	<kabalak@gtranslator.org>
+
+	* languages.h: Corrected the German mailing list address.
+
+	* parse.c: Added an undotchar function which undotchars
+		the texts _with_ regarding special cases like
+		 quoting or special use with the ",',´ etc. chars.
+
+	* parse.h: Added the prototype for the new parse_the_file
+		function which is used from the "Recent files" menu.
+
+	* parse.c: Use the new option to determine how many entries
+		should go into this nice "Recent files" menu; added
+		 hotkeys in front of the numbers, check for existence
+		  of the file and call the corresponding new function
+		   which is only intended to be used from this point
+		    ( ->parse_the_file_from_recent_files_list ).
+
+	* prefs.c: Added a fifth page with a GtkSpinButton with
+		which you can define now how many recent files should
+		 be in the "Recent files" menu and added an option
+		  with which you can let gtranslator check every file
+		   in the "Recent files" list for existence and if
+		    it doesn't exist, then it isn't shown up in the
+		     list.
+		Perform two checks for the value of the recent files
+		 number, if it's below 2 set it to 2 ( or it wouldn't
+		  be named "Recent file_s_" :)).
+
+	* prefs.h: Added the recent_files guint variable for the
+		number of files wished to be in the Recent files
+		 menu.
+
+	* gui.c: Changed the pop up menu to show only the useful
+		parts of itself, it's useful enough for now; the
+		 "Recent" files menu is improved now for a better
+		  style, no useless label widget and separator there
+		   now.
+	
+	* parse.c: Changed the routines a bit, and added the option to
+		set the number of entries hold in the Recent files menu
+		( minimum 1, maximum 10 ).
+
+2000-10-05  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Added "Recent files" sub menu into the File tree and
+		put some dope stuff around it.
+
+	* parse.c/h: Added Recent file menus on top of the libgnome's
+		gnome_history interface. It works! Still needs
+		 preferences merging...
+
+	* parse.c/h: Added the update function's skeleton -- nothing
+		real has been written yet.
+
+	* prefs.c: Added another option to disable the update function
+		as you need the original package sources for this
+		 ( gtranslator will use the update.pl scripts in the
+		    ./po-dir for this ) and as you need the sources.
+
+	* gui.c: Added an "Update" button to the toolbar and to the
+		menus; till now this hasn't got any use as the function
+		 isn't written yet but that will happen soon....
+		Enable/Disable this entry & button accordingly to the
+		 option set in the preferences and to the case if a
+		  file is opened or not.
+
+2000-10-04  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Added more "live" status bar update for the status
+		information on change of a fuzzy message, removed
+		 the now obsolete FIXME entries and corrected some
+		  wrong enable/disable actions.
+
+	* parse.c: Check if msgfmt is installed in $PATH, and show up
+		and gnome_app_error if it can't be found by the
+		 gnome_is_program_in_path routine from libgnome.
+		Don't free a string variable ( "frees" a crash ) and
+		 check if we'd used the new dot char feature and if so
+		  replace the dot chars again with free spaces. This does
+		   solve all FIXME's. Hurray.
+
+	* \*.c: Added 3 FIXME's which are the three places where
+		gtranslator crashes regularly; these are FIXME's :)
+
+2000-10-03  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Added some more conditionals in hope of avoiding more
+		crashes, changed the descriptions of the new page's
+		 toggle buttons a bit and removed a g_free as I can't
+		  see any reason why to free a variable which is again
+		   filled 10 lines after the free-ing process.
+		Only react if the option is set in the preferences.
+
+	* prefs.c: Added a 4th page with the options to use the dot char
+		feature and to enable/disable the pop up menu. Both of them
+		 are working in real-time, you can also immediately see the
+		  changes in the preferences on the next screen; also moved
+		   the save geometry option to the "Miscellaneous" page.
+
+	* parse.c: Add a new GNOME history entry if the file should be parsed,
+		so we can later use it in a "Recent files" menu or a favorites
+		 or something-alike menu.
+
+2000-10-02  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Put the main.c file at the start of the
+		compilation process.
+
+	* main.c: Added an #error define to "avoid" GConf compilations
+		for now.
+
+	* gui.c: Changed the pop up menu a bit and integrated some
+		 kind of more intelligent menu ( though it's too
+		  big and doesn't have got intelligence like the
+		   tool bar till now ... ).
+		Added a beta-alpha version of the dot char-stuff
+		 which does cause more crashs... grrrr...
+
+2000-10-01  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Only activate the pop up-menu for the two
+		text boxes.
+
+	* \*.*: Removed all gtranslator_config_init &
+		gtranslator_config_close calls as libgtranslator's
+		 functions are doing this now on their own.
+
+2000-09-30  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Added the pop up-menu for gtranslator; it
+		reacts only on right click on the text-boxes
+		 and should be more expanded later on; also
+		  added another menu which some entries.
+
+	* gui.h: Added the prototype for the popup-menu.
+
+	* parse.c: Also free the segments of the GString.
+
+	* main.c: Removed the error message stuff.
+
+	* session.c: Removed some unneeded stuff.
+
+2000-09-29  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: More informations on a GConf error.
+
+2000-09-24  Fatih Demir	<kabalak@gtranslator.org>
+
+	* dialogs.c, header_stuff.c, session.c & prefs.c:
+		Adapted the settings variables to GConf-style.
+
+	* dnd.h: Moved the D'n'D types and enumeration to the
+		right places.
+	
+	* gui.c: The GtkTargetEntries are now settled in here.
+
+	* dnd.h: The enumeration of the D'n'D types is now here.
+
+	* dialogs.c, header_stuff.c & session.c : Include the
+		libgtranslator/preferences.h header for the
+		 preferences routines of libgtranslator.
+
+	* main.c: Include the GConf header if necessary and
+		take the right argument style to the
+		 gconf_init function :)
+
+2000-09-23  Fatih Demir	<kabalak@gtranslator.org>
+
+	* main.c: Init the GConf library if it's present.
+
+	* find.c: Check if we did get any message before operating
+		on it.
+
+2000-09-21  Fatih Demir	<kabalak@gtranslator.org>
+
+	* prefs.c: Include the "libgtranslator/preferences.h" header.
+
+	* header_stuff.c & dialogs.c: Use only relative paths as this
+		would cause a mess in libgtranslator.
+
+	* \*.c: Merged all gnome_config routines to use the libgtranslator
+		routines.
+
+	* prefs.c: Use "Do not..." for "Don't..." in the preferences
+		settings.
+
+2000-09-20  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Don't let me say that this correction has got also
+		something to do with the icons in the search bar ...
+
+2000-09-17  Fatih Demir	<kabalak@gtranslator.org>
+
+	* \*.c/h: Reformatted my mail appearance from '[ kabalak@gtranslator.org ]'
+		to '<kabalak@gtranslator.org>'.
+
+	* gui.c: Integrated the status information into the status bar and made
+		some corrections to these weird search bar stuff; it should
+		 now get disabled/enabled the right way.
+
+2000-09-16  Fatih Demir	<kabalak@gtranslator.org>
+
+	* parse.c: Made some more messages translatable and removed the
+		check_file function; we're now using the libgnome-function
+		 g_file_exists for that. If there's no such file, it does
+		  now use a gnome_app_error to display the error, doesn't
+		   parse anything and the app is still there ( hehe,
+		    no crash ).
+	
+		Also disabled the Save button if the file has been saved
+		 and haven't been changed since then.
+
+	* parse.h: Removed the check_file prototype as the function
+		isn't used/included anymore.
+
+	* gui.c: Corrected another wrong addiction (icon number was wrong),
+		added also a fuzzy icon to the search bar and made the Fuzzy
+		 icon react with the same intelligence like the Missing
+		   icon.
+
+2000-09-15  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: The file is now named TODO.src and not only
+		TODO.
+
+	* gui.c: Enable the Goto button if a file has been opened and
+		disable the menu entry for "Undo" if no file hasn't
+		 been opened; also corrected the wrong menu entry
+		  behavior.
+
+2000-09-13  Jesus Bravo Alvarez  <jba@pobox.com>
+
+	* languages.h: Modified Galician team's e-mail address.
+
+2000-09-13  Robert Brady  <rbrady@suse.de>
+
+	* header-stuff.c: (split_name_email) Don't crash if
+	str == NULL.
+
+	(get_header) Deal with Project-Id-Version: lines with
+	missing version numbers.
+
+	* gui.c: Disable the translation string box if
+	no .po is loaded.
+	
+2000-09-13  Fatih Demir	<kabalak@gtranslator.org>
+
+	* gui.c: Changed the hotkey for the next fuzzy translation
+		to Alt + Z ( slightens the menus a bit ) and changed
+		 the icon-caption to "Missing" as this doesn't break
+		  the look of the tool bar.
+
+2000-09-12  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gnome-regex.*: reverted to original files from gnome-libs,
+		just added 'flags' field to GnomeRegexCache, and check for it
+		before comparing patterns. Start search from 0th item
+		(was 1st).
+	* find.c: for_each_msg -- fail if start item == NULL; iterate on any
+		list, not messages. In other functions, added check to pass not
+		NULL to this function.
+	* dialogs.c: made find dialog option fit in one line.
+
+2000-09-11  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Removed msg_db.* as they'ren't any longer in
+		our sources.
+
+	* msg_db.*: Removed these files as we'll give the duty for this
+		to gtranslatord.
+
+	* prefs.c/h: Removed all message db parts.
+
+	* gui.c: Removed all message db concerning menus & icons.
+
+	* dialogs.c/h: Removed the query dialog & the query results
+		dialogs for now ( including all widgets and variables.)
+
+	* main.c: Removed all msg_db stuff and also cleansed the options
+		and message db inits.
+
+2000-09-10  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Added the gnome-regex sources to the build sources
+		without any conditional tests ( libgnome doesn't have got
+		 the gnome_regex_cache_new_with_size ).
+	
+2000-08-23  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* main.c, parse.c: now absolute file name is got in parse(), wherever
+		it was called from. Added some newline, removed some comments,
+		to ease the reading of huge parse() and main() functions.
+		Ensured file_opened is always in sane state and is checked
+		before doing anything with po structure (this avoids
+		segfaults).
+	* ChangeLog: why lose so much space on this file -- reformatted
+		Fatih's	entries to be like mine. So there's half lines, but
+		size reduced only by 3k...
+	* gui.c: destroy regex cache on quit.
+	* parse.c: created actual_parse function, and moved to it the real
+		parsing from parse() to make it more clean. Change the title
+		of window to contain the filename. In actual_write, check if
+		the file has *.pot extension; if so, warn and do nothing.
+	* spell.h, spell.c, gui.c: moved spelling code from gui.c to new
+		separate files.
+	* Makefile.am: added those two files to sources.
+	* find.c: in for_each_msg, reverted to jump to po->messages when NULL
+		reached, because of problem when passing first == NULL.
+	* dialogs.c: added fake option menu to select where to find in.
+
+2000-08-22  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: in update_msg, make both msgid and msgstr end with or without
+		'\n'.
+	* session.*, main.c: added restore_session(), if client is restored. So
+		now goes to the same file and message number.
+	* dialog.c: renamed variables in goto_dlg to shorter ones; added policy
+		set on spin; changed dialog and label titles.
+
+2000-08-21  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* Makefile.am: some cosmetic changes, use variables instead of simple
+		../. Added -DGNOMELOCALEDIR. Added check for
+		HAVE_MY_REGEX_CACHE, if to compile and link gnome-regex.
+	* main.c: use realpath for getting absolute path.
+	* session.c: gtranslator now opens the same file on session restore.
+		Removed non-interesting comments.
+	
+2000-08-21  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* header_stuff.c: yeah, at last this works perfectly. Too much changes
+		to list, anyway it's almost complete rewrite. Changed only
+		get_header, put_header and edit_header. Use regexps to parse
+		fields. A VERY enhanced edit dialog.
+
+2000-08-20  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* parse.*, messages.h, dialogs.c, gui.c, find.c, session.c: at last
+		moved all file-specific stuff to GtrPo structure, in that
+		inserted new field -- messages list 'length'.
+	* header_stuff.*: in GtrHeader, splitted language_team into two fields:
+		language and lg_email; also, replaced 'mime_type' with
+		'charset'.
+	
+2000-08-20  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gnome-regex.h, gnome-regex.c: copied these files here from
+		gnome-libs/libgnome, because I needed to change the cache
+		object so that it stored compilation flags along with pattern
+		and regex. Added new type GnomeRegexCacheSlot, for saving all
+		info about one regex. Also, changed everything else to reflect
+		this change. Function API did not change, just added new
+		function: gnome_regex_cache_new_with_size. However, types HAVE
+		changed, although they should be used only internally.
+	* Makefile.am: added above new files, although should be checked if
+		they are needed.
+	* parse.h: added check for gnome library version, which I will
+		commit my above changes to. Use local file, if not found.
+	* msg_db.*: Cleaned up a lot, fixed much errors, got no warnings.
+		Though not needed...
+	* find.c: in for_each_msg, get first element of given list, not
+		messages.
+
+2000-08-17  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* Again big changes. Read below: prefs.h, almost all .c: Instead of
+		many if_* variables for preferences, created one structure
+		'wants.*', which uses only one bit for toggles.
+	* prefs.c: new option: if message was fuzzy, when changed, it could be
+		marked non-fuzzy. Changed order of options in dialog. Moved all
+		#defines to where they are used, and inserted #undefs
+		immediately after. Authors name & e-mail are now GtkEntry's,
+		not GnomeEntry's.
+	* parse.c, gui.c: made check_msg_status internal, used only for
+		parsing. Other functions (update_msg and mark_msg_fuzzy) change
+		the status themselves. Rewritten update_msg,
+		toggle_msg_status. Now all the job with fuzzy entries does
+		mark_msg_fuzzy function. After toggling status, message is
+		updated. In text_has_got_changed, added call to unmark fuzzy,
+		if wanted.
+	* messages.h: moved all typedefs to struct/enum, so we don't need _Type
+		hacks. Rewritten GtrPo type, to contain entries we actually
+		use.
+	* And, while changed much, executable has got only 700 bytes, so it was
+		worth work.
+
+2000-08-17  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* parse.*: added mark_msg_fuzzy function, which does actual change to
+		message comment. Renamed get_msg_status to update_msg_status
+		and changed return type to void. Added rxc -- a regexp cache.
+	* gui.*: added a simple 'Undo' menuitem, ACT_UNDO action,
+		undo_changes function. When toggled fuzzy status, call
+		mark_msg_fuzzy.
+	* find.c: use regexps to find. Added update_flags for match case
+		updating.
+	* main.c: create rxc and change it's size.
+	
+2000-08-16  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dnd.*, find.*, parse.*: just another rearrangement of #include's.
+	* dnd.*: removed gtr_dnd_type -- use guint instead. Removed a_counter
+		variable, cleaned up lots of comments.
+	* .cvsignore: added tags & .libs
+
+2000-08-15  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* prefs.*, header_stuff.c: Lots of changes: moved all language lists to
+		prefs.h, introduced lang_ref reference counting variable,
+		create_lists() and destroy_lists(). All attach_*_with_label()
+		are now in prefs.h, i.e. can be used with any other dialog.
+		That was done because edit_header now creates GnomePropertyBox,
+		not just dialog, and lets change language properties in header.
+
+2000-08-14  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* main.c: simplified main() function, by moving geometry stuff to
+		prefs.*. Query now only prints the result, no sick messages.
+	* prefs.*: created save_geometry() and restore_geometry(), removed
+		gtranslator_geometry_* variables, so that other files do not
+		have anything to do with geometry. Geometry is loaded only if
+		wanted. Added GTR_CONFIG_PREFIX.
+	* gui.c: simplified gtranslator_quit.
+	
+2000-08-10  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: initial spell checking support. It does not work well,
+		but works! I was impressed when I found gnome-spell.h!
+	
+2000-08-10  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* find.*, gui.*: renamed search_do to find_do. Created new
+		for_each_msg function, which works the same as g_list_foreach,
+		except that it starts from specified position, and jumps to
+		first when end reached. All functions in find.h now uses it.
+		Added goto_next_untranslated function, action and callback.
+	* gui.c: fixed toggle_msg_status (rewrite). Created new
+		function enable_actions_just_opened, which is just a statement,
+		for convenience moved from parse.c. ACT_END is now initialized
+		to NULL, I think it introduced a crash before.
+		update_msg now marks message as untranslated if the
+		translation was removed.
+
+2000-08-09  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* header_stuff.[ch]: added update_header function, which
+		PO-Revision_Date field.
+	* parse.c: called above from actual_write().
+	* find.[ch], gui.[ch]: added new menu item -- "Next fuzzy", callback
+		for it, ACT_NEXT_FUZZY action (which is disabled when there are
+		no more fuzzy messages).
+
+2000-08-08  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* header_stuff.[ch]: added put_header (what a bad name...) function.
+		Also, enriched GtrHeader structure with comment field, filled
+		it in get_header and freed in free_header.
+	* parse.c: because of above change, removed header_li variable. Now the
+		header list item is completely destroyed, and created a new
+		message when writing the file. Also, give a warning if file has
+		no header. In parse(), prepend a message to messages, and then
+		reverse - optimization for speed. Removed some comments, where
+		the code was self-explanatory. Added a check if any line was
+		read, if none -- give an error (and do not crash :)). In
+		compile() -- write the po-file to temporary one, and compile
+		this -- so you don't need to save before compile.
+
+2000-08-08  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gui.c: added update_appbar function and call to it. This shows
+		current message in the status bar. Also connected
+		clear_selection callback.
+	* parse.c: when compiling, show two dialogs, depending on success:
+		a message with message counts, or an error message.
+	* dialogs.c: added compile_error_dialog function, which shows error
+		text, which occurred during compiling.
+
+2000-08-07  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* *.*: reformatted everything with "indent -i8 -kr -l78 -fca -fc1".
+		From now I will use Linux kernel coding style
+		(/usr/src/linux/Documentation/CodingStyle).
+	* gui.[ch]: complete rewrite of "actions" code. Hash table was replaced
+		by a static array, and string identifiers -- by integer IDs.
+		This prevents typos, and saves a lot of memory and time. Also
+		done some reformatting of code and comments (removed some of
+		them).
+	* find.c: optimized search functions, implemented case insensitive
+		search.
+	
+2000-08-06  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* *.*: got the CVS 2000-08-04 version, today merged them all. I see
+		now, that almost none changes made here by Fatih, only by me.
+		That's good. gui.c, dialogs.c, prefs.c were totally rewritten
+		by me, diff was confused :).
+	* main.c: removed free(langs) because we do not own system environment.
+		init the msg_db and parse-db only if if_use_msg_db is TRUE.
+		Removed pointless pushing - and popping of prefix. Moved query
+		handle to front, because then we do not need anything more.
+		Also, moved parsing of file after creating the app (if there
+		are problems with gui, don't bother with parsing). Because
+		filename setting is done in parse(), removed
+		gtranslator_set_filename from here.
+	* prefs.c: made not use msg db by default, as I could not make program
+		not to crash myself.
+	* header_stuff.c: fixed that mime_type was not read. Also made new
+		header to be filled with zeroes, in case some header field was
+		not available.
+	* gui.h and so on: moved some #includes to gui.c, this caused
+		more #includes to change in another files. Hope now compiles
+		faster.
+	* find.*: removed crazy stuff (everything :)) and moved search_do
+		function to here.
+	* gui.c: because goto_given_msg(GList *) already existed, simplified
+		all other goto_* to one line with call to it.
+
+2000-08-05  Fatih Demir	<kabalak@gtranslator.org>
+
+	* TODO.src: Added some thoughts.
+	
+	* ChangeLog: Reformatted my entries partly.
+
+2000-08-04  Fatih Demir <kabalak@gtranslator.org>
+
+	* about.c: Updated the about-message.
+
+        * ChangeLog: Merged with menesis' ChangeLog.
+
+	* main.c: Added the gettext-init of the poptTable.
+
+	* session.c: disabled the filename storage for now.
+
+2000-08-04  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.*: done the SAME :) with find dialog. That is, made gnome
+		dialog with icon/parent/wmclass...
+	* prefs.[ch],dialogs.c,header_stuff.c: two new preferences:
+		if_match_case (for find dialog) and if_fill_header (for edit
+		header dialog). Save them to config.
+	* gui.c: written the search_do function and connected it where needed!
+		Added a function goto_given_msg, which accepts list item as
+		user_data.
+	
+2000-08-03  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* prefs.c: ended cleanup. Instead of defines, made some functions to
+		simplify creating of many similar entries. Will use soon in
+		edit_header, maybe...
+	* parse.c: fixed the bug with ~ and ! :) now should get correct status.
+
+2000-08-02  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* prefs.c: a major cleanup. Moved all widgets from .h to .c and made
+		them static, removed unused ones. Added free_prefs(), which
+		cleans memory, allocated with read_prefs; also, prefs_box_close
+		callback, which destroys the lists when box closes. Moved the
+		code, which initializes the lists, _before_ settting the entries
+		with saved values. Added lots of #defines, so that code was more
+		readable, because there were lots of very similar lines. Made
+		apply callback react only to page_num==-1.
+	* main.c,...: moved some variables used only here from various .h.
+		There's almost no warnings now...
+
+2000-08-01  Fatih Demir <kabalak@gtranslator.org>
+
+	* Makefile.am: Added the libgtranslator dir to the includes
+		and to the LDFLAFS/LDADD variables.
+
+2000-08-01  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* prefs.c: Simplified widget creation and initialization, perhaps just
+		removed lots of whitespace... Sorted items in the lists, and
+		left only unique ones.
+
+2000-07-31  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c: made a new modal ask_to_save_file dialog, It is more
+		simple and works perfect! Even in open_file, I used this
+		to ask if to save current file before opening new one.
+	* gui.[ch]: do not declare gtranslator_quit in gui.h. Changed the
+		type of this callback to such as it should be. Applied the
+		above change, so modified files are always saved, if the user
+		wants to. Added close callback and "action".
+	* parse.c: changed the argument of parse(const char*). Made a simplier
+		dialog to ask if saving unchanged files. The same to reverting
+		a file. Also, used the nice ask_to_save_file, now saving,
+		opening, closing and reverting is simple, consistent and safe.
+
+2000-07-30  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* main.c: removed -f option from popt table, instead used context for
+		getting files to load from command line. Now a file can be
+		loaded simply by 'gtranslator lt.po'. Removed duplicating
+		testing if file is valid, and a bunch of non-interesting
+		comments and braces {}.
+	* prefs.c: minor changes -- added some default values, removed
+		gnome_config_drop_all() call, because this is done
+		automatically.
+
+2000-07-28  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c: added ask_to_save function, to be used when closing
+		application, and file is unsaved. It works now.
+	* gui.*: added disable_actions_no_file, because it is used
+		in main.c and when closing file. Added nothing_changes
+		variable, it was needed in text_has_got_changed to determine if
+		the user or program changes the textbox. Added the callback for
+		revert. gtranslator_quit now checks if file was changed. Also,
+		closes it (frees the memory). Moved setting of status in front
+		of file, because only then it could be seen. Message status in
+		menus now reflects to real state of message (display_msg).
+	* parse.*: added revert_file and close_file callbacks. Also,
+		free_messages function.
+
+2000-07-24  Gediminas Paulauskas <menesis@gtranslator.org>
+	
+	* Everywhere: renamed type names to conform with Glib ones:
+		gtr_msg now is GtrMsg, type cast is GTR_MSG(), the same for
+		status, header, action, po.
+	* header_stuff.c,parse.c: at last header parsing is complete!
+		get_header works fine. Edit header dialog also works, though
+		there's not much... (maybe shouldn't be).
+	* dialogs.c,prefs.c,about.c: added check GNOME_IS_DIALOG(*dlg) to
+		show_nice_dialog, so if *dlg is a GnomeDialog, this function
+		sets parent of it to be the main app.
+	* gui.c: in Message status menu, merged Untranslated and Translated
+		into one toggle item :) Still no callbacks.
+	* messages.h,parse.c: revised GtrMsgStatus. Now there are only three
+		possible stati: translated, fuzzy, and stick, and they are
+		flags, so message can be translated AND fuzzy.
+
+2000-07-23  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* Too much changes to list. After all, I see no point in writing this
+		file. Anyway, I have changed EVERYTHING here. Almost. Major
+		changes and achievements follows:
+	* gui.c: major revision. Moved all tool bar creation stuff to
+		GnomeUIInfo structure, rearranged all menus and tool bars,
+		simplified them, made them standard (stock), removed the
+		duplicated find/search entries, changed message status menu to
+		toggles/radio items. Created new "actions" framework for
+		enabling/disabling of menu/tool bar entries. Works very well.
+		Before you load a file you can't do much :) Removed lots of
+		stuff from create_app1(), so it looks nice. Of course,
+		goto_*_msg got changed *much*, now they change actions only
+		if needed.
+	* gui.h: respectively, changed this file. Removed all global variables,
+		except app1, appbar1, text1, trans_box, and
+		gtranslator_geometry. Added actions stuff.
+	* header_stuff.[ch]: finally, made the edit_header dialog like others.
+	* main.c: minor clean up, related to changes in gui.*. Removed the
+		duplicated app1 variable.
+	* parse.c: moved compile() function to here. Made Save button actually
+		react to settings, so -- ask if to save unchanged files, or do
+		not save at all. file_changed should be always in correct
+		state now.
+
+2000-07-23  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.c: Removed no_changes_dialog. Instead added to
+	* parse.c: Added save_current_file (a callback for save), actual_write,
+		no_reply_callback functions.
+	* gui.c: added callbacks for Save.
+	
+2000-07-22  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* dialogs.*,../po/POTFILES.in,Makefile.am: renamed from gtr_dialogs.*
+	* gui.c: moved get_*_msg, display_msg, update_msg, reached_*_msg,
+		do_seach from parse.c to here, because they have nothing to do
+		with parsing... renamed get_*_msg to goto_*_msg. removed the
+		setting status in compile() when no file is opened. It should be
+		disabled anyways. In clean_text_boxes() replaced everything with
+		just two gtk_editable_delete_text(...) calls. Replaced
+		gtk_text_get_length with -1 :)
+		Removed View menu as it has no point.
+	* dialogs.[ch]: added convenience functions raise_and_return_if_exists,
+		which checks, whether a dialog exist, and if so, shows, raises
+		it and returns. The variable should be global or static. At the
+		end of dialog another function should be called:
+		show_nice_dialog. Why nice? First, it shows the dialog. Next, it
+		sets wmclass for it, and finally, an icon.
+	* dialogs.c,about.c,prefs.c: according to above improvement, made almost
+		all dialogs to use this. So, lots of code was removed and it
+		looks nicer. Of course, all dialogs have icons, class, parents;
+		may be created only once at a time, after closing they are
+		destroyed, and raised if were just obscured.
+	* prefs.*: moved widgets from prefs.h to prefs.c as they are not useful
+		for anything outside this file. Replaced (gpointer)1 with
+			GINT_TO_POINTER.
+	* about.[ch]: left only one callback declared here -- about_box. Added
+		myself to authors, I think I deserve it ;) Removed the "Now you
+		can't see much..." from description, because it works quite
+		well. well...
+	* parse.c: removed the code which calls usleep. What the hell needs it.
+		Instead I changed the status message so that we need only one.
+		However, left it in configure.in...
+	* *.h: removed lots of unused #include's.
+	* TODO: added lots of ideas.
+
+2000-07-21  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* gtr_dialogs.[ch]: further gnomefying of dialogs: goto. Related to
+		this removal of all g_dlg* global variables and functions,
+		leaving only one: goto_dlg, and a callback for it --
+		goto_dlg_clicked. Also removed msg_pair_count variable.  GoTo
+		dialog now displays current message number when shown.  Made
+		*dialog widgets in these three functions static, connected
+		signals to make them NULL when destroyed, and first check, if
+		the dialog is already created -- then just show it.
+	* gui.c: added some ...'s for menu entries, added goto menu entry,
+		and callbacks for it, back and next, also changed
+		disable/enable_buttons for this.
+
+2000-07-21  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* parse.[ch]: added functions: update_message, save_the_file,
+		write_the_message, restore_msg, the latter being quite long.
+		They implement writing messages to a file. update_message
+		writes the text, if it was changed (a new variable
+		message_changed), from trans_box to msgstr. This made
+		gtranslator a real and useful application.
+	* gtr_dialogs.[ch]: removed the unneeded global variables and lots of
+		functions, related to save/open dialogs. There was crap...
+		No made to function properly, save as now works. A "save as"
+		copy of unchanged file is identically to the original.
+
+2000-07-20  Gediminas Paulauskas <menesis@gtranslator.org>
+
+	* Today I consider parsing to be finished. It works!
+	* gtr_dialogs.c: replaced a bunch of gtk_widget_show with one
+		gtk_widget_show_all, also made the dialog transient
+		(g_dlg_create). Still need to do the same for other dialogs.
+	* gtr_dialogs.c: corrected the Cancel button to destroy the goto dialog,
+		and Go! button to actually work.
+	* parse.c: added get_nth_msg for use in goto dialog and convenience
+		function reached_middle_msg for enabling buttons. Also:
+		added get_msg_status(gtr_msg *) for updating the message status
+		with a very simple check. append_line(gchar **, gchar *),
+		which formats the message enclosed in "'s and adds it to the
+		first string. So messages are displayed nice... Almost.
+		Fixed cleaning the boxes when text inside was edited.
+		Completely rewrote the parse function, now I do not remember
+		what was there before...
+	* parse.h: according to parse.c, changed and reformatted the header...
+	* gui.c: moved options button just before Exit, wrapped moving buttons
+		with separators. Made text1 not editable (really in parse.c).
+
+2000-07-18  Gediminas Paulauskas <menesis@gtranslator.org>
+	
+	* parse.[ch]: totally rewritten the parse() function -- now reads
+		messages almost correctly (additional characters, something
+		wrong with the line buffer). the header now is got as the first
+		message pair, but ignored. Written reached_first_msg and
+		reached_last_msg functions for changing the button status.
+		Moved the stuff for displaying a message to display_msg
+		function. Cleaned up get_****_msg due to above changes.
+		Completely removed msg_pair variable, instead added cur_msg --
+		a pointer to current message. Added get_msg_status function
+		for getting and adjusting the translating status.
+	* After all of these changes messages got displayed and
+		first/prev/next/last buttons started to work! (What was a goal
+		for 0.20, eh?)
+	* Have read 64% of this file (till 200-05-24)... Uh...
+
+2000-07-17  Gediminas Paulauskas <menesis@gtranslator.org>
+	
+	* changed all sprintf calls to GLib ones.
+	* header_stuff.[ch]: written the get_header and free_header functions
+	* parse.c: beginning to change parse() function to work properly
+	* messages.h: some comments about places which need change
+	* msg_db.c: free the msg_db string (close_msg_db)
+	* gui.c: Replaced those crazy gtk_widget_show() with one call at the
+		end... Also added a free_header(ph); call in gtranslator_quit
+
+2000-07-17  Fatih Demir	<kabalak@gtranslator.org>
+	
+	* parse.c: Removed the one debug message and the
+		corresponding ifdefs.
+	
+	* main.c: Call the intl-domain of POPT before showing
+		the options.
+		[ So we're now getting internationalized help
+		   messages :) ]
+
+2000-07-12  Fatih Demir	<kabalak@gtranslator.org>
+
+	* msg_db.c: Return a `0' not `NULL' if the challenge
+		length cannot be send.
+	
+	* Makefile.am: Added these two files to the sources.
+	
+	* find.c & find.h: Added the files for the find routines.
+	
+	* main.c: Reformatted the comments and some blocks.
+	
+	* \*.c: Removed the last rests of these `//' C++
+		comments in these C source files.
+
+2000-07-07  Fatih Demir	<kabalak@gtranslator.org>
+
+	* Makefile.am: Added the G_LOG_DOMAIN define for the build
+		of gtranslator.
+
+2000-07-06  Fatih Demir	 <kabalak@gtranslator.org>
+
+	* header_stuff.c: Use the existing static gtr_header and don't
+		allocate, assign etc. the values and structures; don't
+		 use these long if-trees.
+
+	* gui.c: Bloat this menu with stock pixmaps.
+
+	* gui.c: Extended the menus with a real messages status
+		menu tree which represents the possible stati of
+		 a message entry.
+	
+	* gui.c: Adding another menu-subtree from where you can
+		define the msg_status field of every message.
+		[ Only foo'ish for now .... ]
+	
+	* gtr_dialogs.c: Get the challenge-length from the Spinbutton
+		for querying the messages db.
+	
+	* main.c: Corrected a typo at the `--challenge-length'
+		option.
+
+2000-07-04  Fatih Demir  <kabalak@gtranslator.org>
+
+	* gui.c: Disable the corresponding menu entries
+		also if no file is open.
+	
+	* main.c: Added another option to specify the
+		desired minimum match length ( aka.
+ 	 	 challenge length); perform a little
+		  check before applying the default
+		   challenge length;
+		    set the default challenge length to 2.
+	
+	* msg_db.c: Two new routines which are setting the
+		challenge length ( the length of the
+		 strncasecmp-calls while retrieving the
+ 		  results for the query. ).
+	
+	* msg_db.h: Added the variable and the two prototypes for
+		the new functions and the new variable.
+
+2000-06-30  Fatih Demir  <kabalak@gtranslator.org>
+
+	* header_stuff.c: Disabled the crashy assignment.
+	
+	* messages.h: Removed the abnormal status of a message;
+		 added two pointers to the first and the
+		  last message to the general po-file structure.
+
+2000-06-27  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* msg_db.c: Added the size returning function for
+		the messages db handling.
+	
+	* header_stuff.c: Removed the free/malloc stuff from the
+		header routines.
+
+2000-06-14  Fatih Demir  <kabalak@gtranslator.org>
+
+	* .cvsignore: Removed dummy.po from the repo and from
+		the .cvsignore.
+	
+	* header_stuff.c: Do the same again like weeks before,
+		fill up the structure.
+
+2000-06-12  Fatih Demir  <kabalak@gtranslator.org>
+
+	* header_stuff.c: Removed the ifdef for the header routines.
+		started to work on `real'( TM ;) ) header routines.
+		 get the message only then to the list if it's a
+		  msg-block.
+		   [ I love this font-shadowing from Eterm,
+		     my CPU doesn't but that's another point.]
+	
+	* parse.c: Hmm, do some more widget work.
+
+2000-06-11  Fatih Demir  <kabalak@gtranslator.org>
+
+	* parse.c: Take the string length of the temp_char
+		as array length; ise two gchar's for the
+		 operations (removed the "zamane" gchar.).
+
+2000-06-10  Fatih Demir  <kabalak@gtranslator.org>
+ 
+	* parse.c: Use a generally fresh allocated gchar for
+		the parsing routines; corrected a typo.
+
+        * main.c: Make the output of '-q' on the cmd-line
+		look a bit better.
+
+2000-06-10  Valek Filippov  <frob@df.ru>
+
+	* gtr_dialogs.c:454  typo fixed.
+
+2000-06-10  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* EURO 2000 >)>)>)>)>)>)>)>)>)>)>)>)>)>)>)
+
+	* Set the gtr_msg_status field according to
+	
+		the msgid; that's not the most perfect way
+	
+		to do it, but it seemed possible to me.
+
+	* Use some voodoo to do the strip-off.
+
+	* Rip the msgid and the msgstr clearly from
+	
+		the gchar.
+	
+		-> parse.c
+
+	* Don't free the gchar as it's still used.
+	
+	* Made the mentioned gchar not allocated.
+	
+		-> gtr_dialogs.c
+
+2000-06-09  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Highlight the main window during a drop.
+	
+		-> gui.c
+
+	* Set the window properties and again use
+	
+		the window-icon if possible.
+	
+	* Adding the query dialog, the widgets
+	
+		and the according routines.
+	
+		-> gtr_dialogs.c/h
+
+	* Yeah! The message db works now !
+	
+		[ forgot to remove the unneeded char-
+	
+		   length minorification. ]
+
+		-> msg_db.c
+
+	* Reverted the fake-signal to "activate".
+	
+		-> prefs.c
+
+	* Moved main.c to the last place.
+	
+		-> Makefile.am
+
+2000-06-08  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Also change the ifdef check to a check
+	
+		for GTR_GUI_H.
+	
+		-> gui.h
+
+	* Moved interface.c/h to gui.c/h.
+	
+	* ------------------------------------
+
+	* Changed all msg_db print age to message db
+	
+		as it should be from the beginning on.
+	
+		-> *.c
+	
+	* Changed the includes from all the files.
+	
+		-> *.h
+
+	* Changed interface.c/h to gui.c/h.
+	
+	* Removed support.* really. They'ren't
+	
+		used by neither gtranslator nor from
+	
+		a function of gtranslator.
+	
+		-> Makefile.am
+	
+		-> support.*
+
+	* Connect the signals, buttons and menu
+	
+		entries with each other.
+	
+		-> interface,c
+
+	* Changed the field separator from
+	
+		';;;' to ';;'.
+	
+		-> msg_db.c
+
+	* Use another gint to set the maximal
+	
+		message goto value.
+	
+		-> gtr_dialogs.c/h
+	
+	* Doing the two additional routines.
+	
+	* Fizzling with the msgid/str catching
+	
+		routines.
+	
+		-> parse.c
+
+2000-06-06  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added the forgotten ifdefs for the
+	
+		window-icon stuff.
+	
+		-> *.c
+
+	* Made the comments to an ifdef.
+	
+	* Commented out all header stuff.
+	
+		-> header_stuff.c
+
+	* Made the find dialog a little bit
+	
+		smaller.
+	
+		-> gtr_dialogs.c
+
+	* Use g_strconcat rather than strcat.
+
+	* Implemented the ( hopefully ) good
+	
+		methods for multi-line translations.
+
+	* Removed the final gboolean; it has been
+	
+		replaced by three other gboolean which
+	
+		are also useful for the recognition of
+	
+		multi-line translations.
+
+	* Do the same foo for the jump to the
+	
+		first string.
+	
+		-> parse.c
+
+2000-06-05  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Removed an also unnecessary gchar.
+	
+		-> header_stuff.c
+
+	* Do a little bit better checks while
+	
+		adding entries to the msg_db.
+
+	* Removed an unneeded integer,
+	
+		-> msg_db.c
+
+2000-06-04  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a msg-db menu with some entries.
+
+	* Added a separator to the file menu.
+
+	* Added some more menu entries to be in
+	
+		sync with the tool bar.
+
+	* Connected the menu entries also with the
+	
+		new functions.
+	
+		-> interface.c
+
+	* Include "gnome-window-icon.h" only if
+	
+		it's available on the system.
+	
+		-> interface.h
+	
+	* Removed all // GTR_* comments from the
+	
+		ifdefs as they'ren't ANSI-C conform.
+	
+		-> *.h
+
+	* Hey, do only get (g_list_length-1)nth
+	
+		data.
+	
+	* Disable the corresponding button if we're
+	
+		at the first/last entry.
+
+	* Implementing the button-callbacks as
+	
+		functions.
+
+	* Reverted the recognition of the error-
+	
+		case.
+	
+	* Removed the ifdef, so we can now again
+	
+		watch gtranslator crashing...
+	
+		-> parse.c
+	
+	* Reverted to the old mechanism.
+	
+		-> header_stuff.c
+
+	* Adjust the dialog size.
+
+	* Create a table holding the widgets for the
+	
+		Find-dialog.
+	
+	* You can only "goto" till the last entry of
+	
+		the list, so carry it as an argument to the
+	
+		core-function.
+	
+	* Fill out the find dialogs.
+	
+		-> gtr_dialogs.c
+
+	* Made some text-output non-translatable, e.g. the '\n''s.
+	
+		They'll be printed with another g_print, just to avoid
+	
+		more work for the translators.. ;)
+
+	* Made the option working and restructured the init a
+	
+		bit.
+	
+	* Quit after the query before any GUI-element is loaded.
+	
+	* Print the query & the result.
+
+	* Added a for-the-moment dummy option '-q' / '--query'
+	
+		which will be used to query the msg_db for entries
+	
+		without starting the whole GUI. Possibly ...
+	
+		-> main.c
+
+2000-06-03  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Make first a check if it exists yet, and
+	
+		it it doesn't exist, print a message and open
+	
+		it with creation flags.
+
+	* Create the msg_db, if necessary.
+	
+		-> msg_db.c
+
+	* Set the window-icon in every popup-dialog.
+	
+		-> gtr_dialogs.c
+	
+		-> prefs.c
+
+	* Don't free/alloc a temporary char.
+	
+		[ Avoids another crash. ]
+
+	* Set the first element to '\0' in inp.
+	
+		-> header_stuff.c
+	
+	* Define and use the WINDOW_ICON defines.
+	
+		-> Makefile.am
+	
+	* Set the default window-icon.
+	
+		-> interface.c
+
+	* Disable the msg-parsing for today.
+	
+	* Cat the strings, don't copy them.
+	
+		-> parse.c
+	
+2000-06-01  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* The same for the header-routines.
+	
+		-> header_stuff.c
+
+	* Recognized the most stupid error in
+
+		the parse code.
+	
+	* Copy the strings, don't assign them!
+	
+		-> parse.c
+
+2000-05-30  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Use a temporary gchar* as a bridging
+	
+		variable for the msg_db location.
+
+	* Removed the "hard-coded" msg_db stuff.
+	
+		-> msg_db.c/h
+
+	* Removed the MSG_DB definition as it's
+	
+		now made more practically with an option
+	
+		or in the user's dir.
+	
+		-> Makefile.am
+
+	* Print out a string-based error message
+	
+		and not only the error number which isn't
+	
+		quite useful.
+	
+		-> parse.c
+
+	* Set the widget sizes to be more nice, as we
+	
+		surely want to be able to read the mini-window
+	
+		titles without resizing.
+
+	* Added a basic search dialog which is really
+	
+		poor in this state.
+	
+		-> gtr_dialogs.c/h
+
+	* Show a little message before doing the quit.
+
+	* Connected the additional signals for the
+	
+		find dialog.
+
+	* Added another button to the search-bar; an
+	
+		`Add'-button which adds the current message
+	
+		pair to the msg_db.
+
+	* Connect the corresponding function with the
+	
+		button.
+
+	* Free the freshly allocated gchar's.
+
+	* Added another function which is a callback
+	
+		function in between adding the entries to
+	
+		the msg_db and the corresponding button.
+	
+	* Close the msg_db on quit, if the msg_db has
+	
+		been inited/opened.
+	
+		-> interface.c
+
+	* Check for the msg_db option and do some checks.
+
+        +       Init the crappy-but-self-written
+ 
+                msg_db-routines on startup.
+ 
+                -> main.c
+
+2000-05-28  Fatih Demir  <kabalak@gtranslator.org>
+
+        +       Freed the filenames list and added
+ 
+                some comments.
+ 
+                -> dnd.c
+
+	* Hooked an accelerator to the web site
+	
+		menu-entry.
+	
+		-> interface.c
+
+	* Made the edit_header_create()-function
+	
+		call a reference to the existing structure.
+
+        +       Moved the check-button outside the table
+ 
+                and into the vbox.
+
+        +       Added a check-button which lets you use
+ 
+                your personal options defined in the Preferences
+ 
+                section to fill out the header.
+
+	* Moved some variable declarations around.
+	
+	* Trying to get the header_stuff working.
+	
+	* Allocate the structure freshly via a
+	
+		new function.
+
+		-> header_stuff.c/h
+
+2000-05-26  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added some other gint's which are
+	
+		holding the stored geometry definitions,
+	
+		if this is wished.
+	
+	* Read & write the geometry definitions.
+	
+		-> prefs.c/h
+
+	* Set the geometry  from the prefs &
+	
+		the stored place.
+	
+	* Read the stored geometry devotions.
+
+		-> main.c
+	
+	* Made the Gtk+ entry-boxes to GNOME
+	
+		entry-boxes and added a table holding
+	
+		all the nice entry-boxes and the labels.
+
+	* Adding the first entry-boxes which
+	
+		are holding the parsed informations.
+	
+		-> header_stuff.c
+	
+	* Removed another crash reason; the check
+	
+		for the filename is now only done by an
+	
+		assertion (!=NULL), nothing more.
+
+	* Make the Goto button also sensitive;
+	
+		disable it if no po-file is opened.
+	
+		-> interface.c
+
+2000-05-25  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added the header-button to the list
+	
+		of the widgets which are disabled if
+	
+		no file is open.
+
+	* Connected the buttons & menu entry
+	
+		with the new functions.
+	
+		-> interface.c
+
+	* Playing around with some widgets in order
+	
+		to get a dialog in this week.
+	
+	* Do a little check before starting to produce
+	
+		dozens of widgets and the dialog.
+
+	* Let the buttons be stock buttons.
+
+	* Created the dialog and inserted some
+	
+		parts of it.
+
+	* Adding some widgets and the routines
+	
+		for the Header edit dialog.
+	
+	* Made the header structure again to
+	
+		a non-pointer.
+	
+		-> header_stuff.c/h
+
+2000-05-24  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Again a crash!
+
+	* -----------------------------------
+	
+	* Moved the static gtr_header to the header.
+	
+		-> header_stuff.c/h
+
+	* Assign the strings via g_strdup().
+
+	* Make the structure be a structure-pointer.
+	
+	* Added some g_prints just for my infor-
+	
+		mation what's going on.
+	
+		-> header_stuff.c
+
+	* Removed the yazoo-test option and
+	
+		the corresponding variable.
+	
+		-> main.c
+
+	* Added the `Header' entry to the edit-menu.
+	
+	* Added a help-menu entry for the home page.
+	
+	* No crashing anymore!
+	
+	* Added an ion for the `Clear' entry in the
+	
+		edit-menu.
+	
+	* Added Ctrl-K shortcut to the Clear-item.
+	
+		-> interface.c
+
+	* Allocate the structure via g_new.
+
+	* Again reverted to NOT produce dozens
+	
+		of structures.
+	
+		-> parse.c
+
+	* Make a check before executing msgfmt;
+	
+		should avoid a crash.
+	
+		-> interface.c
+	
+	* Insert the current filename to the static
+	
+		gchar variable `i_love_this_file'.
+	
+		-> main.c/parse.c
+
+2000-05-23  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Removed the X-Generator header information
+	
+		field from the structure and the header-
+	
+		parsing routine.
+	
+		-> header_stuff.c/h
+
+	* Ha, another crash again...
+
+	* Thinking about the removal of some seem-
+	
+		to-be unnecessary includes.
+	
+		-> *.h
+
+	* Removed the pf-structure as it seems to
+	
+		be useless.
+	
+	* Introduced another static gchar -- the
+	
+		filename.
+	
+	* Making the parse-routine again produce
+	
+		dozens of structure's.
+	
+		-> parse.c
+	
+2000-05-21  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Doing all the if's and cut's for the
+	
+		header and filled the informations into
+	
+		the header_structure.
+
+	* Create a structure which holds all
+	
+		these informations.
+	
+	* Added some debug-g_print's.
+
+	* Put the header-cutting routine(s) in
+	
+		the header_stuff and while parsing the
+	
+		file, gtranslator calls only this function.
+
+		-> header_stuff.c/h
+	
+	* Removed the [c]-things and will try
+	
+		it again with GLists.
+
+		-> parse.c
+
+2000-05-20  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Changed the gtk_main_quit()-calls to
+	
+		gtranslator_quit()-calls.
+
+	* A new exit-function: gtranslator_quit.
+	
+		It should ( and does ) save some settings
+	
+		and will make some checks in the future.
+	
+		-> interface.c/h
+
+	* Added the widgets & variables needed for
+	
+		the new option.
+
+	* Making the geometry-string static.
+
+	* Added another option to the prefs if to
+	
+		save the geometry( string ).
+	
+		-> prefs.c/h
+
+	* Added a static gchar holding the current
+	
+		po-files name.
+	
+		-> messages.h
+
+	* Applied the header-functions skeleton
+	
+		to the new structure.
+	
+		-> header_stuff.c
+
+	* Added a new structure for the header
+	
+		informations and added also a typedef.
+	
+		-> header_stuff.h
+
+	* Made the goto-box a little bit more
+	
+		real; change d the Goto-button to a normal
+	
+		Gtk+-button as the GNOME-Stock button isn't
+	
+		available with a search-pixmap.
+	
+		-> gtr_dialogs.c
+
+	* Print a warning if the geometry-string
+	
+		couldn't be parsed.
+
+	* Parse for a geometry-parameter and set
+	
+		the necessary values.
+	
+		-> main.c
+
+	* Get plain-text drop's as a msgstr.
+	
+		[ though I'm thinking about what it
+	
+		brings ... ]
+	
+	* Added plain text as  a D'n'D type.
+	
+		-> dnd.c/h
+
+	* Set the global po-file name.
+	
+	* Removed the geekPrint function.
+	
+		-> parse.c/h
+
+2000-05-18  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Doing some stuff.
+	
+		-> parse.c
+	
+	* Connected the right functions with the
+	
+		buttons. One crash less.
+	
+		-> interface.c
+
+2000-05-17  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Binding the new dialogs to the buttons.
+	
+		-> interface.c
+
+	* Implementing the other dialogs.
+	
+	* Save&load the history of the search-entry.
+	
+		-> gtr_dialogs.c/h
+
+	* Cleaned up D'n'D code and made it working ;-|.
+	
+		Almost working...
+	
+		-> dnd.c
+	
+	* Include the necessary headers and disclude the
+	
+		unneeded things.
+	
+		-> dnd.h
+	
+	* Reverted the zamane-char stuff.
+
+2000-05-16  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added the new files to the Makefile.am.
+	
+		-> Makefile.am
+
+	* Corrected a malformed signal_connect.
+
+	* Adding D'n'D sources.
+	
+		-> dnd.c/h
+
+	* Changed the count variables type to static gint.
+
+	* Restructured the first/back/next/last-msg-calls
+	
+		to represent the "structured"-parsing.
+	
+	* Removed all g_list stuff. It isn't compatible
+	
+		with my brain!
+
+	* Removed some unneeded GList's and changed
+	
+		the head GList to a GSList.
+	
+		-> parse.h
+
+	* Creation and filling into the structure
+	
+		fields ( aka "parsing" ) is theoretically
+	
+		done.
+	
+	* Removed the useless counting-variables.
+	
+	* Free the zamane-char.
+
+	* Removed the g_print's.
+
+		-> parse.c
+	
+2000-05-15  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Changed the cancel-button to a stock-button.
+	
+		-> gtr_dialog.c
+
+	* Try to get the header with some nonsense.
+
+	* Adding some test routines for the list-stuff.
+	
+		-> parse.c
+
+2000-05-14  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Adding the search-box routines & widgets.
+	
+		-> gtr_dialogs.c/h
+
+	* Connected the search-button with the search
+	
+		button.
+
+		-> interface.c
+
+	* Removed some previous list-tries.
+	
+	* Removed the gnome_appbar refreshing method.
+
+	* A stupid typo; now the strings are read,
+	
+		but why does the list only accept the first ?
+	
+	* Starting a rewrite of the parsing-
+	
+		routine;will write it till it works. (?)
+	
+		-> parse.c/h
+
+
+2000-05-13  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Disable the buttons at startup and enable
+	
+		them if a po-file is opened.
+	
+	* Added two functions which do the work for
+	
+		the `idea' above.
+	
+		-> interface.c/h
+
+	* Set also some status bar message while
+	
+		opening dialogs
+	
+		-> gtr_dialogs.cs
+
+	* Moved an include to the header
+	
+		-> msg_db.c/h
+	
+	* Doing some stupid work...
+
+	* Calling a usleep for a better readability
+	
+		of the status message
+	
+	* Having a problem with the list methods...
+
+		-> parse.c
+
+2000-05-12  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a function-`skeleton which will
+	
+		be important for the next time as it puts
+	
+		informations to the opened po-file with the
+	
+		necessary format( hopefully ).( 'last update )
+
+	* A first try to get the time/date and to replace
+	
+		the old entry in the header-list.
+	
+		-> header_stuff.c/h
+
+	* Removed the old msgfmt-execution code
+	
+		as I'll integrate the new messages
+	
+		structures ( they seem to work ).
+	
+		-> interface.c
+
+	* Changed the name of the gtr_msg_status
+	
+		variable I've used status somewhere
+	
+		else ( -> interface.c ).
+	
+	* Adding some more types and future
+	
+		work to be done.
+	
+		-> messages.h
+
+	* Put the header-includes to the header
+	
+		itself
+	
+		-> parse.h
+	
+	* Implementing a very, very rough way to get
+	
+		the structures filled.
+
+	* Corrected an error which caused it
+	
+		to crash on startup.
+	
+		-> parse.c
+	
+	* Also reformatted some forgotten parts
+	
+		of the files.
+	
+		-> *.c/h
+ 
+2000-05-11  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Reformatted for common `assignment-policy'
+	
+		-> *.c/h
+	
+	* Playing around with a new structure.
+	
+		-> messages.h
+
+2000-05-10  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added the compile callback and function
+	
+	* Connected it with the button and the menu-entry
+	
+		-> interface.c/h
+	
+	* Added another option to define the msg_db
+	
+		to use on the command-line with the `-m' /
+	
+		`--msg_db' options.
+	
+		-> main.c
+
+2000-05-09  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a rough method of getting an entry from
+	
+		the msg_db; nothing big but it should work
+	
+	* Added some translatable strings
+	
+		-> msg_db.c
+
+	* Added a forgotten '\' to the help-message for
+	
+		the prefs_box
+	
+		[ while building the gtranslator.pot there
+	
+		aren't any warning messages any more. And the
+	
+		message is now also translatable. ]
+	
+		-> gtr_dialogs.c
+
+	* Connected the --file= & -f options
+	
+		with the parse()-function.
+	
+		[ Now you can start gtranslator with
+	
+		gtranslator -f xy.po and it reads the
+	
+		xy.po at the startup ]
+
+	* Added short-form options
+
+	* Added a popt-table with the options for
+	
+		gtranslator; not quite useful for now but
+	
+		the use will grow later on.
+
+	* Bind them to the main-function
+	
+	* Connect the new Session management-functions
+	
+		-> main.c
+
+	* Added Session management functions & files
+	
+		-> session.c/h
+
+	* Added my dummy.po testfile to the cvsignores
+	
+		-> .cvsignore
+
+	* Added different #ifndef/#define and #endif's
+	
+		-> *.h
+
+	* Corrected the variable names to be correct.
+
+	* Added the missing casts to GtkEditable ...
+
+	* Added the cut/copy/paste/clear callbacks
+	
+	* Connected them with the menu entries
+	
+		-> interface.c/h
+
+	* Made it a dummy file which'll be used when I've
+	
+		got the po-functions working; the header routines
+	
+		will go there, e.g. the automatic update of the
+	
+		translation time etc.
+
+	* Also a complete rewrite
+	
+		-> header_stuff.c/h
+
+	* Put the parse()-routine to an own function because
+	
+		of the cmd-line option -f/--file= which allows
+	
+		you to specify a startup file.
+
+	* Remove the get_header()-call.
+
+	* Implementing the po-functions inside parse.c/h
+
+	* Rewriting the complete parse-methods
+	
+	* Using GList's for the different context-types
+	
+	* Adding different elements etc. ..
+	
+	* Removed the old and unnecessary variables
+	
+		and functions.
+	
+		-> parse.c/h
+	
+	* Added the auto-completion of the bits-count
+	
+		-> prefs.c
+
+2000-05-08  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Changed `due' to Pablo's Email the English
+	
+		encodings and all other encodings to 8bit.
+
+	* Changed and edited some entries like told.
+	
+	* Added the Croatian group's Email address
+	
+		[ `due' to their control-center translation ]
+	
+		-> languages.h
+
+2000-05-08  Karl Eichwalder  <ke@suse.de>
+
+	* interface.c (create_app1): Correct C'n'P typo (s/next/last/).
+
+2000-05-07  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Reformatted all plain-messages to be
+	
+		more friendly and English ( no spaces
+	
+		before punctuation .. ).
+	
+		-> *.c/h
+	
+	* Reformatted it and added another information
+	
+		about a language, the bit encoding
+	
+	* Made almost every entry having a 8bit-encoding
+	
+		as many languages have got a eog translation
+	
+		and in the .po-files there were always 8bit
+	
+		encodings named, but what about Arabic/Farsi ?
+	
+		-> languages.h
+	
+	* Removed the ifdef for IT_WORKS ..
+	
+		[ I'll see how to get messages.h to work .. ]
+	
+	* Began to implement the new routines
+
+		[ in a cmd-line test-program the new
+	
+		header-routines	worked well except that it gets
+	
+		the header in the reverse order ?!? .. Simply wait .. ]
+
+		-> parse.c/h
+
+	* Made a Emacs-lover friendly about-message
+	
+		if wished ....
+	
+	* Added a method to show the about-box
+
+		-> about.c/h
+	
+	* Connected the about-box with the
+	
+		"About" menu entry
+	
+	* Connected the prefs-box showing method
+	
+		with the menu entry and the icon
+	
+	* Call the online help ..
+	
+	* Open/save file as handlers are now connected
+	
+		-> gtr_dialogs.c/h
+	
+	* Include some headers ..
+	
+		-> interface.c
+	
+	* Prefs_box is complete now ..
+
+	* Save & apply of the prefs-box is done
+	
+		now
+	
+	* Auto completion of the language specs ..
+	
+		[ if `Turkish' is selected the other language
+	
+		specs `tr', `iso-8859-9' etc. are set
+	
+		automatically ]
+
+	* The languages' names are now appearing
+	
+		localized ...
+
+	* Writing more and more of it's pieces
+	
+	* Changed the prefs_box-function to a
+	
+		pure creating routine without any
+	
+		arguments ..
+	
+	* Added all gui-elements to it .. callbacks
+	
+		are missing ..
+	
+		-> prefs.c/h
+
+2000-05-06  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Include <glib.h>
+	
+		-> messages.h
+
+2000-05-05  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Use the new structure and forget the
+	
+		old one
+	
+		-> parse.c
+
+	* Include gtr_dialogs.h for the help-box
+	
+		-> prefs.c
+
+	* "Disclude" languages.h
+	
+	* Added typedefs for the structures
+	
+	* Use the gtr_msg_status structure instead
+	
+		of a gboolean to define the translation
+	
+		status ( also changed the variable name )
+	
+		-> messages.h
+	
+	* Go to the beginning of the file when
+	
+		trying to get an entry from the msg_db
+	
+		( SEEK_END -> SEEK_SET )
+	
+	* Removed some FIXMEs ;)
+
+		-> msg_db.c
+
+	* Removing all DEBUG entries
+	
+		-> *.c/h
+
+	* Removed the definition of DEBUG while
+	
+		building .
+	
+		-> Makefile.am
+	
+	* Include <config.h> and <gnome.h>
+	
+		-> interface.h
+
+	* Added a missing comma ( ehem .. )
+
+	* Added some group Email entries
+	
+	* Corrected the English/* entries ..
+	
+	* Changed to the N_() macro as the table
+	
+		has to be const-o-tic .... [ you can
+	
+		change it to _() and see almost 33 ( additional )
+	
+		error messages on the screen ... ]
+	
+		-> languages.h
+	
+2000-05-04  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Added the entries which were told to me ..
+	
+	* `Commonified' the iso-entries
+	
+	* Corrected some wrong entry points
+	
+	* Made the table non-const ( avoiding an error .. )
+	
+		-> languages.h
+
+2000-05-03  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added .*swp files ( vim->my_editor=TRUE )
+	
+		-> .cvsignore
+	
+	* Corrected some really stupid typos
+	
+	* Improved the comments
+	
+		-> languages.h
+	
+	* Added the function-prototypes into the header
+	
+		-> prefs.h
+
+	* Implemented the first page of the prefs-box
+	
+	* Added the basic-signals
+	* Split the prefs-box into four functions like the
+	
+		dialogs in the gtr_dialogs.c/h files ...
+	
+		-> prefs.c
+
+2000-05-02  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Added languages.h
+	
+		-> Makefile.am
+	
+	* Added a new source file for the languages
+	
+		and the structure for this
+
+	* Adding many /*XXX*/ since I've no 'enlightenment'
+	
+		where the different languages have their encoding
+	
+		or group ( possibly all at li.org , but that can't
+	
+		be all, I think .. )
+	
+		-> languages.h
+	
+	* Removed the <glib.h>-include
+	
+		-> messages.h
+
+2000-05-01  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a table with the language names
+	
+		-> prefs.c
+
+	* General reformat of all comments
+	
+		->*.c/h
+
+	* Changed the list-adding to a (gpointer)
+	
+	* Getting from the msg_db will also be working
+	
+		-> msg_db.c
+
+	* Adding labels and entries ..
+	
+		-> prefs.c
+
+	* Added 3 Glist's for the mime_type etc.
+	
+		-> prefs.h
+
+2000-04-30  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Began to write the prefs-box ...
+	
+		-> prefs.c
+
+	* Do another deeply-structured include
+	
+		test for the _() macro definition .
+	
+		-> main.c
+
+	* Added the $(GLIB_CFLAGS) & $(GLIB_LIBS)
+	
+		in the INCLUDES and LDADD variables
+	
+		-> Makefile.am
+	
+	* Check if <glib.h> is included and
+	
+		do it if it isn't included yet ..
+	
+		-> messages.h
+
+	* Include the messages-structure header
+	
+		-> interface.h
+
+2000-04-29  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added the ltrace.log file to .cvsignore's
+	
+		list ( I'm using ltrace very often .. )
+	
+		-> .cvsignore
+
+	* Removed the callbacks.c/h files from
+
+		the SOURCES list .
+	
+		-> Makefile.am
+	
+	* Corrected a typo in the GnomeUIInfo
+	
+		structures ..
+	
+	* Reading the most important callbacks here
+	
+		for the main app
+	
+		-> interface.c
+	
+	* Removing the callbacks.* files
+	
+		-> callbacks.c/h
+	
+	* Changed the widget names for the "Cancel"
+	
+		buttons
+	
+	* Corrected some callback errors ..
+	
+		-> gtr_dialogs.h
+	
+	* Removed all callback-calls from the Preferences-
+	
+		box
+	
+	* Rewriting the preferences-box completely new
+
+		-> prefs.c
+
+	* All callbacks will be handled locally in
+	
+		the files, no extra callbacks file needed
+	
+		-> *.c/h
+
+2000-04-27  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Changing all the interface elements
+	
+		internally .
+	
+		-> interface.c/h
+
+	* Starting a complete rewrite of the callbacks
+	
+		and the bindings ..
+	
+		-> callbacks.c/h
+
+	* Outsourced all dialogs to the new files
+	
+		-> interface.c/h
+
+	* Reorganized all the file_selections
+	
+		-> gtr_dialogs.c/h
+
+	* Changed the callbacks to be more useful
+	
+		and to be in coordination with the reorga-
+	
+		nization .
+	
+		-> callbacks.c/h
+	
+	* Redoing the preferences box on my own
+	
+		-> prefs.c/h
+
+	* Added the new files to the Makefile.am
+	
+		-> Makefile.am
+	
+	* Two new files for the preferences box
+	
+		-> prefs.c/h
+	
+	* Interface.c is very lightened ...
+	
+		-> interface.c
+
+2000-04-19  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Made another messages "gettextable"
+	
+		-> parse.c
+
+	* Changed the variable names for more
+	
+		obviousness ..
+	
+		-> msg_db.c
+	
+	* Call the new about_box() method ...
+
+		-> callbacks.c
+
+	* Added the necessary includes to the new
+	
+		files
+	
+		-> about.c/h gtr_dialogs.c/h
+	
+	* Added the new files to the Makefile.am
+	
+		-> Makefile.am
+	
+	* "Outsourced" the about box ...
+	
+		-> about.c/h
+
+	* Added the functionality for adding
+	
+		entries to the msg_db
+	
+		-> msg_db.c
+	
+	* Corrected another stupido ; most error/
+	
+		warning messages weren't "gettexted" so
+	
+		they didn't appear in the gtranslator.pot
+	
+		file for translations ...
+	
+		-> msg_db.c
+
+	* Add two "new" dialogs :
+	
+		1) Errors occurred while exec. msgfmt
+	
+		2) No changes were made to the .po-file
+	
+		-> gtr_dialogs.c/h
+
+	* Added two new files which will hold
+	
+		the dialogs ( every dialog ! )
+	
+		-> gtr_dialogs.c/h
+
+	* Change the callback-bindings ..
+	
+		-> callbacks.c/h
+
+	* Put away every dialog-box which was
+	
+		produced by GLADE ..
+	
+		-> interface.c/h
+
+2000-04-18  Fatih Demir  <kabalak@gtranslator.org>
+
+	* As the status bar works now rightly
+	
+		we can uncomment the callbacks ...
+	
+		-> callbacks.c
+	
+	* [ <pre> I love ltrace </pre> ]
+	
+		Corrected a simple error which caused
+	
+		gtranslator to crash every time
+	
+	* Added some interface elements
+	
+	* Corrected a typo in the About box
+	
+		-> interface.c
+	
+2000-04-01  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Corrected some return-value mistakes
+	
+		-> parse.c callbacks.c interface.c
+	
+	* Include "parse.h" for check_file()
+	
+		-> msg_db.c
+	
+	* Exit if the file stream is away via
+	
+		g_error() ...
+	
+		-> parse.c
+	
+	* Put DEBUG to 2001 to get some debug
+	
+		informations ..
+	
+		-> Makefile.am
+
+2000-03-31  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Removed the tool bar_style definition
+	
+		from the search bar
+	
+		-> interface.c
+
+2000-03-30  Fatih Demir  <kabalak@gtranslator.org>
+
+	* The check_file(FILE *) function was
+	
+		better than the new one ; reversed
+	
+		this .
+	
+	* Corrected all dependencies .
+	
+		-> msg_db.c parse.c/.h
+
+	* Removed some type of comment .
+	
+		-> interface.c
+
+2000-03-27  Fatih Demir  <kabalak@gtranslator.org>
+
+	* A pointer was set wrongly in the are_we*
+	
+		function ; the cast is now hopefully
+
+		well-formed ....
+	
+	* Added a &-operand to correct another
+	
+		cast error .
+	
+		-> header_stuff.c
+
+	* Made the second arg for gnome_help_goto
+	
+		to a '0' ( previously it was 'NULL' ).
+	
+		-> callbacks.c
+	
+	* Let it produce much less compiling-time
+	
+		warnings ;-))
+	
+		-> *.c
+
+2000-03-21  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Fixed an error ; use now strcat for
+	
+		the +=operator ...
+	
+	* Ooops, no '\n' added in the error
+	
+		messages anymore .
+	
+		-> parse.c
+
+2000-03-19  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Removed the ka_widget_show macro ..
+	
+		-> interface.c/.h
+	
+	* Think , I know why I get NULL-casts,
+	
+		, should now be corrected .
+	
+		-> callbacks.c
+
+2000-03-18  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Some better catch of the msgid/str's
+	
+		-> parse.c
+
+2000-03-15  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Check if the linked lists have been
+	
+		lost .
+	
+		-> msg_db.c
+	
+2000-03-14  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Filled in a missing '*' before
+	
+		"cur_list" .
+	
+		-> msg_db.h
+
+	* Added a copyright notice to all source
+	
+		files ..
+	
+		-> *.c/*.h
+	
+	* Removed the stupido $(GLIB_CFLAGS) and
+	
+		$(GLIB_LIBS) variables ; they're
+	
+		already included in the $(GNOME_CFLAGS)
+	
+		and $(GNOME_LIBS) ...
+	
+		-> Makefile.am
+
+2000-03-14  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added the linked lists and the addition
+	
+		of messages to the linked lists ...
+
+		-> parse.c
+	
+		-> msg_db.h/.c
+
+2000-03-11  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Switching over to pure glib , removed
+	
+		any libdyndata stuff
+	
+		-> *.c/*.h
+
+2000-03-10  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Removed impossible function
+	
+		-> msg_db.c/.h
+
+2000-03-09  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Wrong appbar-type ; CORRECTED .
+	
+		-> interface.c
+
+	* Put the old char-stuff to gchar
+	
+		-> *.c/*.h
+
+	* Get the geometry of the main window
+		at the startup
+
+		-> main.c
+	
+	* A new ´gchar*´ for the geometry
+	
+		-> interface.h
+
+2000-03-08  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a new toolbar with some extra-
+		funcs ( which will be hopefully created
+		in the next time .. )
+	
+		-> interface.c
+
+	* Added an enum for the different stati
+		a translation entry could have
+	
+		-> messages.h
+	
+	* Changed some macros for producing less
+		warnings because of wrong types .
+	
+	* Removed the stupid value= pairs ..
+
+		-> callbacks.c
+	
+	* Corrected a check which caused an
+		compilation warning
+
+		-> msg_db.c
+	
+	* Changed some things :
+	
+		-create_wait_for_help()
+	
+		-search_entry*
+	
+		-> interface.c/.h
+
+		-negative-value check in check_file()
+	
+		-int c
+	
+		-a FIXME ( which wasn't right )
+	
+		-> parse.c
+	
+	* Made a necessary cast to (char)tmp .
+	
+		-> header_stuff.c
+
+2000-03-07  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Adding some new UI-elements ..
+	
+		-> interface.c/.h
+	
+	* Removing the unnecessary GLADE-
+		style widget_ref's ( they seem not
+		to be needed ... )
+
+		-> interface.c
+
+	* Removed the fake progress-bar
+	
+		-> interface.c
+	
+	* Oh, a too deep inclusion ; removed it
+	
+		-> messages.h
+	
+	* A malformed format ; also corrected
+	
+		-> msg_db.c
+
+	* Some other misfired includes which lead
+		to 'multiple definition of ...' ; also
+		corrected ( yes , I compiled it today
+		:-% ; it compiles ! ) .
+	
+		-> msg_db.h messages.h
+
+2000-03-06  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a gnome-entry box for searching
+		some messages in the files ..
+	
+		-> interface.c/.h
+	
+	* Added the a file which includes the
+		pure message structures
+	
+		-> messages.h
+
+	* Rearranged the message searches ...
+
+		-> parse.c
+	
+	* Notified the new widgets ..
+	
+		-> interface.h
+
+	* Reorganized some header-includes
+	
+		-> parse.h msg_db.h header_stuff.h
+
+	* Corrected the error within the struct
+
+		-> parse.h
+
+2000-03-05  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Adding a new dock-band for message
+		searching and catalog-finding ..
+	
+		-> interface.c callbacks.c/.h
+	
+	* Adding some new functions ..
+
+2000-03-04  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Added a (void*)-ified compare function
+		ka_comp(const void *,const void *) ,
+		needed for the dyndata routines ..
+
+		-> parse.c/.h
+
+2000-02-29  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Doing the msg_db stuff ( reading the
+		old ones is now implemented ... )
+	
+		-> msg_db.c/.h
+
+	* Reformatting all comments for Gnome-
+		style comments ..
+	
+		-> *.c/*.h
+
+2000-02-26  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Changed the string-comparing routines
+		to str(n)casecmp for ignoring the
+		case .
+	
+		-> parse.c
+	
+	* Pre-Implemented some more db-func-
+		tionality ...
+	
+		-> msg_db.h/.c
+
+2000-02-25  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Repute the support.h/.c files into
+		CVS , as they appear to be needed
+		for gnome-HEAD ...
+	
+		-> support.h/.c
+
+	* Get the dyndata-variables ..
+
+		-> Makefile.am
+	
+	* Reformatting the comments to be
+		readable ....
+	
+		-> *.c *.h
+
+2000-02-22  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Corrected the errors & forgotten
+		variables .
+	
+		-> parse.h parse.c msg_db.c
+
+	* Reformed the structures
+
+		-> parse.h msg_db.c msg_db.h
+	
+	* Removed the GLADE-produced files since
+		I can't recognize how I could use them
+		....
+	
+		-> support.h/.c
+
+	* Started to switch-over to libdyndata
+	
+		-> msg_db.c msg_db.h parse.c
+
+	
+2000-02-20  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Made two structures for the po-&
+		message-handling .
+	
+		-> parse.h msg_db.h msg_db.c
+
+	* Use the new structures for the
+		message actions ..
+	
+		-> parse.c header_stuff.c header_stuff.h
+
+
+2000-02-17  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Put the location of the msg-db to
+		the defines
+
+		-> Makefile.am
+
+	* Two new routines for getting the next
+		msgid/msgstr .
+
+		-> parse.c parse.h
+
+	* First ideas/steps for db-functionality
+
+		-> msg_db.h
+	
+2000-02-16  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Made some me-supporting output only
+		compile with -DDEBUG ( by default on )
+		, not with -DDEBUGGY .
+	
+		-> Makefile.am header_stuff.c
+	
+	* Removed some old-stuff from the files
+	
+		-> *.c *.h
+
+2000-02-13  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Removed the shell-script calls from
+		the parser .
+	
+	* Made the char-arrays for the msg***
+		only one-dimensional for further
+		parser-progress .
+
+		-> parse.c parse.h
+	
+	* Added header_stuff.c/.h for the header
+		routines in gtranslator .
+	
+	* Try to get the header into the 2-dimen=
+		sional ´header´-array ( are there any
+		headers which have got >=15 lines ? )
+	
+		-> header_stuff.c header_stuff.h
+	
+2000-02-10  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Read the TODO , ehem ....
+
+	* "Modifying" the parser .. ( really
+		started to write a logical one .. )
+	
+	* Changing over to real C-code for the
+		important parts of gtranslator ..
+
+		-> parse.h parse.c
+	
+2000-02-09  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Some progress in text-parsing ..
+
+		-> parse.h parse.c
+
+2000-02-08  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Made a fake-progress bar
+
+		-> parse.c
+	
+	* Added two additional gbooleans for
+		avoiding segfaults when pressing
+		back or next/last
+
+		-> parse.c parse.h callbacks.c
+
+	* Put the extra_flags only to -DDEBUGGY
+
+		-> Makefile.am
+
+	* Give the user many informations on
+		the status bar
+	
+		-> callbacks.c
+	
+2000-02-04  Fatih Demir  <kabalak@gtranslator.org>
+
+	* Make the build always with -DDEBUGGY
+		to make it more obvious if errors
+		occur .
+	
+		-> Makefile.am
+	
+
+2000-02-03  Fatih Demir  <kabalak@gtranslator.org>
+	
+	* Removed the checks temporarily ....
+	
+		-> parse.c
+
+	* Removed the unnecessary const's ...
+	
+		-> callbacks.c
+
+	* Inform the user if there is an error
+		while parsing the files ...
+
+		-> callbacks.c
+
