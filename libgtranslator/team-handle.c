@@ -19,6 +19,10 @@
 
 #include <sys/param.h>
 #include <libgtranslator/team-handle.h>
+#include <gnome-xml/tree.h>
+#include <gnome-xml/parser.h>
+#include <libgnome/gnome-defs.h>
+#include <libgnome/gnome-i18n.h>
 
 /*
  * Returns the list of all translated applications for the given node pointer.

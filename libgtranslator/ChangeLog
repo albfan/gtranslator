@@ -1,3 +1,14 @@
+2001-02-03  Gediminas Paulauskas <menesis@delfi.lt>
+
+	* Makefile.am, libgtranslator.h: removed above from build and includes.
+	* main.c, preferences.c, stylistics.c, team-handle.c: include
+	gnome-i18n.
+	* preferences.c: include libgnome only if not using gconf. Removed
+	error because we do not handle them. Pass NULL's instead. Get
+	gconf client and ad_dir only once, do not suggest_sync nor remove_dir --
+	it just slows down but does nothing.
+	* preferences.h: remove all but glib includes.
+
 2001-01-02  Fatih Demir	<kabalak@gmx.net>
 
 	* vfs-handle.c: Use plain old libgnome g_file_exists function

@@ -110,7 +110,6 @@ else
 	AC_MSG_RESULT(["+++ Will not use the found GConf as \$NO_GCONF is set to _yes_ ..."])
 	else
 	AC_MSG_RESULT(["+++ Will use GConf..."])
-	AC_DEFINE(GCONF_IS_PRESENT)
 	fi
 fi
 AM_CONDITIONAL(GCONF_IS_PRESENT, test x$gconf_is_present = xyes)
@@ -171,7 +170,6 @@ if gnome-config --cflags vfs 2>&1 >/dev/null ; then
 		VFS_LIBS=`gnome-config --libs vfs`
 		AC_SUBST(VFS_CFLAGS)
 		AC_SUBST(VFS_LIBS)
-		AC_DEFINE(USE_VFS_STUFF)
 	fi	
 else
 	dnl -----------------------------------------------------------

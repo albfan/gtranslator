@@ -29,8 +29,6 @@ INCLUDES = \
 libgtranslator_la_SOURCES = \
 	$(GTRANSLATORD_SOURCES) \
 	gtkled.c \
-	handle-db.c \
-	parse-db.c \
 	preferences.c \
 	stylistics.c \
 	team-handle.c \
@@ -61,10 +59,8 @@ libgtranslator_include_dir = $(includedir)/libgtranslator
 libgtranslator_include__DATA = \
 	gtkled.h \
 	gtranslatord.h \
-	handle-db.h \
 	libgtranslator.h \
 	messages.h \
-	parse-db.h \
 	preferences.h \
 	stylistics.h \
 	team-database.h \

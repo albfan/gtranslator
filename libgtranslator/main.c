@@ -22,13 +22,16 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "../config.h"
+#include <config.h>
 #endif
 
 #include <libgtranslator/gtranslatord.h>
 #include <libgtranslator/libgtranslator.h>
 #include <popt-gnome.h>
 #include <liboaf/liboaf.h>
+#include <libgnome/gnome-defs.h>
+#include <libgnome/gnome-i18n.h>
+#include <gconf/gconf.h>
 
 /*
  * The static variable used for the popt argument.
@@ -93,9 +96,9 @@ int main(int argc,char *argv[])
 			/*
 			 * Now parse the requested language's database via the old
 			 *  parse_db interface.
-			 */
 			GtranslatorDatabase *db;
 			db=parse_db_for_lang(lang);
+			 */
 		}
 		
 		/*

@@ -24,13 +24,7 @@
  * libgtranslator's preferences encapsulation of gnome_config or GConf.
  */
 
-#include "parse-db.h"
-#include <time.h>
-
-#ifdef GCONF_IS_PRESENT
-#include <gconf/gconf-client.h>
-#include <gconf/gconf-error.h>
-#endif
+#include <glib.h>
 
 /*
  * gtranslator_config is only available after a initialization; the
