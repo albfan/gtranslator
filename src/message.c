@@ -297,6 +297,7 @@ void gtranslator_message_update()
 	GtkTextIter start, end;
 	GtrMsg *msg;
 
+	/* IMHO, should be checked before being called */
 	if (!message_changed)
 		return;
 
@@ -334,7 +335,7 @@ void gtranslator_message_update()
 	/*
 	 * Pack the msgstrs back into a new msgstr
 	 */
-	newmsgstr = g_malloc(newmsgstrlen);
+	p = newmsgstr = g_malloc(newmsgstrlen);
 	for (i = 0; i < msgcount; i++)
 	{
 		GtkTextBuffer *buf = gtk_text_view_get_buffer(trans_msgstr[i]);
@@ -343,7 +344,7 @@ void gtranslator_message_update()
 
 		/* Remove dots and append msgstr */
 		str = gtranslator_invert_dots(newp);
-		newmsgstr = g_stpcpy(newmsgstr, str) + 1;
+		p = g_stpcpy(p, str) + 1;
 		g_free(str);
 	}
 
@@ -352,6 +353,7 @@ void gtranslator_message_update()
 	 */
 	g_free((gpointer *)msg->message->msgstr);
 	msg->message->msgstr = newmsgstr;
+	msg->message->msgstr_len = newmsgstrlen;
 
 	/*
 	 * Alter message counts

@@ -1,5 +1,11 @@
 2004-08-19  Ross Golder  <ross@golder.org>
 
+	* message.c (gtranslator_message_update): Tidied up to accept
+	alterations to plural msgstrs back into the msg->message.
+	* find.c: Tidied up and fixed a potential memory leak.
+
+2004-08-18  Ross Golder  <ross@golder.org>
+
 	* Makefile.am: Removed redundant 'utf8.[ch]'.
 	* action.[ch], dialogs.c, menus.c: Remove 'query_dialog' stuff. I'm
 	hoping to replace with a gedit-style MDI interface soon.

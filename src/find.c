@@ -84,52 +84,49 @@ gboolean repeat_all(GList * begin, FEFuncRX func, gpointer user_data,
 }
 
 /*
- * Searches for target in msg, and on success, displays that message.
+ * Returns a GList of regmatch_t pointers for matches of a regexp in the
+ * given string.
  */
-
 static GList *get_find_pos(gchar *str)
 {
-  GList      *pl = NULL;
-  regmatch_t *pos;
-  gchar      *strend;
-  int         offset = 0;
-  int         end;
+	GList *pl = NULL;
+	regmatch_t *pos;
+	gchar *strend;
+	int offset = 0;
+	int end;
 
-  if (NULL == str) return NULL;
-  strend = str + strlen(str);
+	g_return_val_if_fail(str != NULL, FALSE);
 
-  pos = (regmatch_t *)g_malloc(sizeof(regmatch_t));
-  while (str < strend && 0 == regexec(&target, str, 1, pos, 0)) {
-    end = pos->rm_eo;
+	strend = str + strlen(str);
+	pos = (regmatch_t *)g_malloc(sizeof(regmatch_t));
+	while (str < strend && regexec(&target, str, 1, pos, 0) == 0) {
+		end = pos->rm_eo;
+		pos->rm_so += offset;
+		pos->rm_eo += offset;
 
-    pos->rm_so += offset;
-    pos->rm_eo += offset;
-    pl = g_list_append(pl, pos);
+		/* Add to the list, and allocate a new pos */
+		pl = g_list_append(pl, pos);
+		pos = (regmatch_t *)g_malloc(sizeof(regmatch_t));
 
-    if (end == 0) {
-      str++;
-      offset++;
-    } else {
-      str += end;
-      offset += end;
-    }
+		if (end == 0) {
+			str++;
+			offset++;
+		} else {
+			str += end;
+			offset += end;
+		}
+	}
 
-    pos = (regmatch_t *)g_malloc(sizeof(regmatch_t));
-  }
+	/* Free the unused pos */
+	g_free(pos);
 
-  return pl;
+	return pl;
 }
 
-#define GTR_SEARCH(field)                                          \
-	g_list_free(poslist);                                      \
-	poslist = get_find_pos((gchar *)field);			   \
-	hits = g_list_length(poslist);
-
 /*
- * while (pos[hits].rm_so != -1 && hits < MAXHITS) hits++;
+ * Searches for target in msg, and on success, displays that message.
+ * Returns: 1 if found, 0 if not found
  */
-
-/* Returns: 1 if found, 0 if not found */
 static gint find_in_msg(GList * msg, gpointer useless, gboolean first,
 	gboolean find_in_comments, gboolean find_in_english, gboolean find_in_translation)
 {
@@ -144,34 +141,25 @@ static gint find_in_msg(GList * msg, gpointer useless, gboolean first,
 	message = GTR_MSG(msg->data)->message;
 	if (first) step = 0;
 
-	if (find_in_english && 0 == step) {
-		if (hits >= actpos) GTR_SEARCH(message->msgid);
-		if (hits > 0 && actpos < hits) {
-			/*
-			 * We found it!
-			 */
-			gtranslator_message_go_to(msg);
-			pos = (regmatch_t *)g_list_nth_data(poslist, actpos);			
-			gtranslator_selection_set(text_msgid,
-						  pos->rm_so, pos->rm_eo);
-			actpos++;
-		
-			return 1;
-		} else actpos = 0;
-		if (message->msgid_plural) {
-			if (hits >= actpos) GTR_SEARCH(message->msgid_plural);
-			if (hits > 0 && actpos < hits) {
-				/*
-				 * We found it!
-				 */
-				gtranslator_message_go_to(msg);
-				pos = (regmatch_t *)g_list_nth_data(poslist, actpos);
-				gtranslator_selection_set(text_msgid_plural,
-							  pos->rm_so, pos->rm_eo);
-				actpos++;
+#define GTR_SEARCH(field, widget)					     \
+	if(hits >= actpos) {						     \
+		g_list_free(poslist);					     \
+		if(field) poslist = get_find_pos((gchar *)field);	     \
+		hits = g_list_length(poslist);				     \
+	}								     \
+	if(hits > 0 && actpos < hits) {					     \
+		gtranslator_message_go_to(msg);				     \
+		pos = (regmatch_t *)g_list_nth_data(poslist, actpos);	     \
+		gtranslator_selection_set(widget, pos->rm_so, pos->rm_eo);   \
+		actpos++;						     \
+		return 1;						     \
+	}								     \
+	else actpos = 0;
 
-				return 1;
-			} else actpos = 0;
+	if (find_in_english && 0 == step) {
+		GTR_SEARCH(message->msgid, text_msgid);
+		if (message->msgid_plural) {
+			GTR_SEARCH(message->msgid_plural, text_msgid_plural);
 		}
 	}
 	if (find_in_translation && 1 == step) {
@@ -179,19 +167,7 @@ static gint find_in_msg(GList * msg, gpointer useless, gboolean first,
 			p < message->msgstr + message->msgstr_len;
 			p += strlen (p) + 1, i++)
 		{
-			if (hits >= actpos) GTR_SEARCH(message->msgstr[i]);
-			if (hits > 0 && actpos < hits) {
-				/*
-				 * We found it!
-				 */
-				gtranslator_message_go_to(msg);
-				pos = (regmatch_t *)g_list_nth_data(poslist, actpos);
-				gtranslator_selection_set(trans_msgstr[i],
-							  pos->rm_so, pos->rm_eo);
-				actpos++;
-
-				return 1;
-			} else actpos = 0;
+			GTR_SEARCH(p, trans_msgstr[i]);
 		}
 	}
 	if(find_in_comments && 2 == step) {
@@ -214,7 +190,7 @@ static gint find_in_msg(GList * msg, gpointer useless, gboolean first,
 	}
 	step++;
 
-	if (3 == step) {
+	if (step > 2) {
 		step = 0;
 		return -1;
 	}
