@@ -1,5 +1,8 @@
 2001-02-08  Fatih Demir	<kabalak@kabalak.net>
 
+	* ja.po: Committed updated Japanese translation
+		by Takeshi. 
+
 	* POTFILES.in: Removed the team-handle.c file from
 		the list.
 
