@@ -4,17 +4,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtranslator 0.17\n"
-"POT-Creation-Date: 2001-01-09 09:58+0200\n"
+"POT-Creation-Date: 2001-01-11 09:18+0200\n"
 "PO-Revision-Date: 2000-05-05 09:45+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <linux@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=koi8-u\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: data/desktop/gtranslator.desktop.in.h:1
-msgid "The Gnome translation program"
-msgstr "Програма перекладу для GNOME"
 
 #: src/about.c:41
 msgid ""
@@ -824,7 +820,9 @@ msgstr "Вмикнути спливн╕ меню"
 #: src/prefs.c:302
 msgid ""
 "Enable the update function of gtranslator (you need the sources for this)"
-msgstr "Вмикнути функц╕ю оновлення Перекладача (для цього вам неох╕дн╕ тексти програми)"
+msgstr ""
+"Вмикнути функц╕ю оновлення Перекладача (для цього вам неох╕дн╕ тексти "
+"програми)"
 
 #: src/prefs.c:305
 msgid "Save geometry on exit & restore it on startup"
@@ -990,7 +988,8 @@ msgstr "Msgid \"%s\" вже ╓ в баз╕ даних."
 #, c-format
 msgid ""
 "Checking if msgstr `%s' is already declared in context for msgid `%s'..."
-msgstr "Перев╕рка чи не оголошено msgstr \"%s\" в контекст╕ для msgid \"%s\"..."
+msgstr ""
+"Перев╕рка чи не оголошено msgstr \"%s\" в контекст╕ для msgid \"%s\"..."
 
 #.
 #. * Print out a warning and exit from the function.
@@ -1173,3 +1172,6 @@ msgstr "Хост \"%s\" не ма╓ адреси!"
 #: libgtranslator/vfs-handle.c:119
 msgid "Transfer interrupted!"
 msgstr "Передавання перервано!"
+
+#~ msgid "The Gnome translation program"
+#~ msgstr "Програма перекладу для GNOME"
