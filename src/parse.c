@@ -244,6 +244,7 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	FILE *fp;
 	default_po_reader_ty *pop;
 	int err_msg_count = 0;
+	message_ty *message;
 
 	g_return_val_if_fail(filename!=NULL, NULL);
 
@@ -333,6 +334,12 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	po->messagelist = po->mdlp->item[0]->messages;
 
 	/*
+	 * Check to see if first message is a header entry
+	 */
+	message = (message_ty *)po->messagelist->item[0];
+	po->header = gtranslator_header_get(message);
+
+	/*
 	 * Post-process these into a linked list of GtrMsgs. Could
 	 * be better handled by overloading the parser 'add_message'
 	 * callback, and add a progress bar.
@@ -340,7 +347,6 @@ GtrPo *gtranslator_po_parse(const gchar *filename, GError **error)
 	po->messages = NULL;
 	for(i = 0; i < po->messagelist->nitems; i++)
 	{
-		message_ty *message;
 		GtrMsg *msg;
 
 		message = (message_ty *)po->messagelist->item[i];

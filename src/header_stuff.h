@@ -57,7 +57,7 @@ typedef struct {
  * These converts header between GtrMsg and GtrHeader.
  */
 GtrMsg  * gtranslator_header_put(GtrHeader  * h);
-GtrHeader  * gtranslator_header_get(GtrMsg  * msg);
+GtrHeader  * gtranslator_header_get(message_ty  * message);
 
 /*
  * Updates PO-Revision-Date and Last-Translator fields 

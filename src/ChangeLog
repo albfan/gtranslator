@@ -1,8 +1,10 @@
 2004-08-12  Ross Golder  <ross@golder.org>
 
-	* src/parse.[ch]: Implement 'gtranslator_parser_report_error'
+	* parse.[ch]: Implement 'gtranslator_parser_report_error'
 	callback, and replace 'read_po_file' call with a more OO
 	approach to using the gettext parser.
+	* header_stuff.[ch]: Work from a message_ty instead of a
+	GtrMsg.
 
 2004-08-07  Ross Golder  <ross@golder.org>
 

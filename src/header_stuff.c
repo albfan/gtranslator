@@ -85,18 +85,17 @@ static void split_name_email(const gchar * str, gchar ** name, gchar ** email)
 	}
 }
 
-GtrHeader * gtranslator_header_get(GtrMsg * msg)
+GtrHeader * gtranslator_header_get(message_ty *message)
 {
 	GtrHeader *ph;
 	gchar **lines, **pair, *pos;
 	gint i = 0;
 
-	g_return_val_if_fail(msg != NULL, NULL);
-	g_return_val_if_fail(msg->message != NULL, NULL);
-	g_return_val_if_fail(msg->message->msgstr != NULL, NULL);
+	g_return_val_if_fail(message != NULL, NULL);
+	g_return_val_if_fail(message->msgstr != NULL, NULL);
 	
 	ph = g_new0(GtrHeader, 1);
-	lines = g_strsplit(msg->message->msgstr, "\n", 0);
+	lines = g_strsplit(message->msgstr, "\n", 0);
 	for (i = 0; lines[i] != NULL; i++) {
 		pair = g_strsplit(lines[i], ": ", 2);
 		if(!pair[0] || !pair[1]) continue;
@@ -168,9 +167,9 @@ GtrHeader * gtranslator_header_get(GtrMsg * msg)
 	
 	g_strfreev(lines);
 
-	if(msg->comment && GTR_COMMENT(msg->comment)->comment)
+	if(message->comment)
 	{
-		ph->comment=g_strdup(GTR_COMMENT(msg->comment)->comment);
+		ph->comment=g_strdup(message->comment);
 	}
 	else
 	{
