@@ -28,8 +28,8 @@ if test -f "POTFILES.in" -a -n "POTFILES.in" ; then
 	#
 	# Now build the updated po-file.
 	#
-	myp=`which xml-i18n-update`
-	if test "z$myp" != "z" ; then
+	my_tool="`which xml-i18n-update`"
+	if test "z$my_tool" != "z" ; then
 		xml-i18n-update --pot
 	else
 		xgettext --default-domain=$PACKAGE --directory=.. \
