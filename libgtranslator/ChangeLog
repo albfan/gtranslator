@@ -1,6 +1,7 @@
 2001-02-04  Gediminas Paulauskas <menesis@delfi.lt>
 
-	* preferences.c: added suggest_sync back. it is required :)
+	* preferences.c: added suggest_sync back. it is required :) but
+	commented add_dir, because we do not want notifies.
 	* main.c: include gconf only when needed.
 
 2001-02-03  Gediminas Paulauskas <menesis@delfi.lt>

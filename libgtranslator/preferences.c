@@ -43,8 +43,11 @@ void gtranslator_config_init(void)
 	if(client==NULL)
 	{
 		client=gconf_client_get_default();
+		/*
+		 * add_dir is useful only for listeners...
 		gconf_client_add_dir(client, "/apps/gtranslator",
 			GCONF_CLIENT_PRELOAD_NONE, NULL);
+		 */
 	}
 	#else
 	gnome_config_push_prefix("/gtranslator/");

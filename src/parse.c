@@ -564,11 +564,9 @@ static void write_the_message(gpointer data, gpointer fs)
 		fprintf((FILE *) fs, "msgid \"%s\"\nmsgstr \"%s\"\n\n",
 			id, str);
 	/*
-	g_print("#a");
+	 * Strange, but these cause SIGSEGV
 	g_free(id);
-	g_print("#b");
 	g_free(msg);
-	g_print("#c");
 	*/
 }
 
