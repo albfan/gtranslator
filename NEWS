@@ -1,6 +1,8 @@
 NEWS from gtranslator R 0.34:
 ----------------------------
 
+- The update function's base script does automatically use
+    xml-i18n-update if found for teh po update function.
 - Implemented all preferences items in "real" application life.
 - Header routines fixed -- no translated language name is written
     into the po file anylonger.
