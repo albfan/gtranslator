@@ -1,7 +1,8 @@
 2001-02-02  Fatih Demir	<kabalak@gmx.net>
 
 	* configure.in: Also enable the build with extended warning
-		flags by default.
+		flags by default and don't try to detect gal as we
+		 won't use it in the 0.3x series.
 
 	* Makefile.am: Also remove the removed files from the po
 		directory as we're now using xml-i18n-tools -- no

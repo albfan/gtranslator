@@ -1,7 +1,0 @@
-application/x-po:
-
-	ext: po pot PO POT
-
-application/x-gmo:
-
-	ext: gmo mo GMO MO
