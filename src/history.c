@@ -85,8 +85,8 @@ GList *gtranslator_history_get(void)
 
 	gtranslator_config_init();
 
-	count=gtranslator_config_get_int("history_length");
-	g_print("history_length=%d\n", count);
+	count=gtranslator_config_get_int("history/length");
+	g_print("history/length=%d\n", count);
 
 	for(c=0;c < count; c++)
 	{
@@ -103,7 +103,7 @@ GList *gtranslator_history_get(void)
 		g_snprintf(path, 32, "%sproject_version", subpath);
 		myentry->project_version=gtranslator_config_get_string(path);
 
-		hl=g_list_prepend(hl, myentry);
+		hl=g_list_append(hl, myentry);
 
 		g_free(subpath);
 	}
@@ -224,7 +224,7 @@ void gtranslator_history_save(GList *list)
 		rlist=g_list_next(rlist);
 	}
 
-	gtranslator_config_set_int("history_length", number);
+	gtranslator_config_set_int("history/length", number);
 	
 	gtranslator_config_close();
 }
