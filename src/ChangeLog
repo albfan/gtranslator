@@ -1,5 +1,10 @@
 2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* gtr-toolbar.xml: This file is neccessary to manage the
+	defaults items in toolbar.
+
+2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* application.ch: Added to manage general app stuffs
 	something like gui.ch.
 	* Makefile.am: Added application.ch.
