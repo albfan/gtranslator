@@ -2,6 +2,8 @@
 # Welcome to the gtranslator-automake-autoconf Wonderland!
 # --------------------------------------------------------
 
+SUBDIRS = toolbareditor
+
 INCLUDES = \
 	-I$(top_srcdir)						\
 	-I$(includedir)						\

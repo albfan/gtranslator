@@ -1,5 +1,11 @@
 2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* toolbareditor/*: Added egg toolbar editor.
+	* Makefile.am: Added toolbareditor folder.
+	* gtranslator-ui.xml: File related to menubar.
+
+2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* window.ch: Window related class. 
 	* notebook.ch: main notebook to manage po files.
 	* tab.ch: Single tab for main notebook.
