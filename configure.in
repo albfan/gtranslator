@@ -24,21 +24,20 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE(GETTEXT_PACKAGE,[gtranslator],[Package name for use by gettext library])
 AM_GLIB_GNU_GETTEXT
 AC_CHECK_FUNC(bind_textdomain_codeset,,[AC_CHECK_LIB(intl,bind_textdomain_codeset)])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
 
 dnl -------------------------------------------------------------------
 dnl Standard bla-bla checks.
 dnl -------------------------------------------------------------------
+AC_PROG_CC
 AC_ISC_POSIX
+AM_PROG_LIBTOOL
+AC_TYPE_SIGNAL
 
 dnl -------------------------------------------------------------------
 dnl The standard checks for the compiler.
 dnl -------------------------------------------------------------------
 AC_HEADER_STDC
-
-dnl -------------------------------------------------------------------
-dnl The RANLIB macro is necessary to get semerkent sources in the dist.
-dnl -------------------------------------------------------------------
-AC_PROG_RANLIB
 
 dnl -------------------------------------------------------------------
 dnl The standard extended GNOME compile warning options ...
@@ -103,6 +102,12 @@ gdict-1.0 >= $GDICT_REQUIRED
 
 AC_SUBST(GTRANSLATOR_CFLAGS)
 AC_SUBST(GTRANSLATOR_LIBS)
+
+GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
+AC_SUBST(GLIB_GENMARSHAL)
+
+GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
+AC_SUBST(GLIB_MKENUMS)
 
 dnl -------------------------------------------------------------------
 dnl Whether we use the broken, unsupported gtk+ functions
@@ -198,6 +203,7 @@ man/Makefile
 man/gtranslator.1
 po/Makefile.in
 src/Makefile
+src/toolbareditor/Makefile
 ])
 
 dnl ------------------------------------------------------------------

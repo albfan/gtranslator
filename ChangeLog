@@ -1,3 +1,7 @@
+2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.in: Added all related to toolbareditor
+
 2007-08-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.in: Added gtksourceview dependencie.
