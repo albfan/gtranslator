@@ -25,6 +25,7 @@
 #endif
 #include <gnome.h>
 
+#include "application.h"
 #include "bookmark.h"
 #include "dialogs.h"
 #include "gui.h"
@@ -187,7 +188,8 @@ int main(int argc, char *argv[])
 	/* 
 	 * Create the main app-window. 
 	 */
-	gtranslator_create_main_window();
+	//gtranslator_create_main_window();
+	gtranslator_application_open_window(GTR_APP);
 
 	/*
 	 * Initialize GnomeVFS right now, if needed.
@@ -208,8 +210,8 @@ int main(int argc, char *argv[])
 	 *  settings - shall make easy access to problematic messages
 	 *   possible and make life faster and easier.
 	 */
-	gtranslator_bookmark_load_list();
-	gtranslator_bookmark_show_list();
+	/*gtranslator_bookmark_load_list();
+	gtranslator_bookmark_show_list();*/
 	
 	/*
 	 * Check the session client flags, and restore state if needed 

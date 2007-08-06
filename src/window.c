@@ -21,6 +21,7 @@
 #endif
 
 #include "about.h"
+#include "application.h"
 #include "compile.h"
 #include "dialogs.h"
 #include "message.h"
@@ -68,7 +69,7 @@ struct _GtranslatorWindowPrivate
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
-	EggToolbarsModel *toolbars_model;
+	
 };
 	
 
@@ -263,7 +264,7 @@ gtranslator_window_restore_geometry(GtranslatorWindow *window,
 	gint x=0, y=0, width=0, height=0;
 
 	/*
-	 * Set the main window's geometry from the preferences.
+	 * Set the main application's geometry from the preferences.
 	 */
 	if (gstr == NULL)
 	{
@@ -304,12 +305,6 @@ gtranslator_window_set_action_sensitive (GtranslatorWindow   *window,
 	GtkAction *action = gtk_action_group_get_action (window->priv->action_group,
 							 name);
 	gtk_action_set_sensitive (action, sensitive);
-}
-
-static void
-gtranslator_window_get_toolbars_model (GtranslatorWindow *window)
-{
-	
 }
 
 static void
@@ -360,29 +355,11 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	/*
 	 * Toolbar
 	 */
-	
-	priv->toolbars_model = egg_toolbars_model_new ();
-
-	/*priv->toolbars_file = g_build_filename
-			(ev_dot_dir (), "evince_toolbar.xml", NULL);*/
-
-	egg_toolbars_model_load_names (priv->toolbars_model,
-				       "gtr-toolbar.xml");
-
-	if (!egg_toolbars_model_load_toolbars (priv->toolbars_model,
-					       "gtr-toolbar.xml")) {
-		egg_toolbars_model_load_toolbars (priv->toolbars_model,
-						  "/evince-toolbar.xml");
-	}
-
-	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
-				      EGG_TB_MODEL_NOT_REMOVABLE); 
-	
 	priv->toolbar = GTK_WIDGET 
 	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
 			 "ui-manager", priv->ui_manager,
 			 //"popup-path", "/ToolbarPopup",
-			 "model", priv->toolbars_model,
+			 "model", gtranslator_application_get_toolbars_model(GTR_APP),
 			 NULL));
 
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (priv->toolbar),
@@ -487,14 +464,7 @@ gtranslator_window_class_init (GtranslatorWindowClass *klass)
 GtkWidget *
 gtranslator_window_new (void)
 {
-	static GtkWidget *window = NULL;
-	
-	if(!window)
-	{
-		window = GTK_WIDGET (g_object_new (GTR_TYPE_WINDOW, NULL));
-		gtk_widget_show_all(window);
-	}
-	return window;
+	return GTK_WIDGET (g_object_new (GTR_TYPE_WINDOW, NULL));
 }
 
 

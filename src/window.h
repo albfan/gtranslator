@@ -35,8 +35,6 @@ G_BEGIN_DECLS
 #define GTR_IS_WINDOW_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_WINDOW))
 #define GTR_WINDOW_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_WINDOW, GtranslatorWindowClass))
 
-#define APP			gtranslator_window_new()
-
 /* Private structure type */
 typedef struct _GtranslatorWindowPrivate	GtranslatorWindowPrivate;
 
@@ -69,7 +67,6 @@ struct _GtranslatorWindowClass
 GType		 gtranslator_window_get_type	   (void) G_GNUC_CONST;
 GType		 gtranslator_window_register_type  (GTypeModule * module);
 GtkWidget	*gtranslator_window_new	           (void);
-//void 		 gtranslator_window_page_new	   (GtrPo *po);
 GtkWidget 	*gtranslator_window_get_notebook   (GtranslatorWindow *window);
 
 G_END_DECLS
