@@ -1,5 +1,9 @@
 2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* window.c, gtranslator-ui.xml: Added Edit toolbar dialog.
+
+2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* gtr-toolbar.xml: This file is neccessary to manage the
 	defaults items in toolbar.
 

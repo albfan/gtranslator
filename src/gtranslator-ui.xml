@@ -33,6 +33,7 @@
       <separator/>
       <menuitem name="EditFuzzyMenu" action="EditFuzzy"/>
       <separator/>
+      <menuitem name="EditToolbarMenu" action="EditToolbar"/>
       <menuitem name="EditPreferencesMenu" action="EditPreferences"/>
     </menu>
 

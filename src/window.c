@@ -48,6 +48,7 @@
 					 GtranslatorWindowPrivate))
 
 static void gtranslator_utils_show_home_page(GtkWidget *widget, gpointer useless);
+static void gtranslator_window_cmd_edit_toolbar (GtkAction *action, GtranslatorWindow *window);
 
 
 G_DEFINE_TYPE(GtranslatorWindow, gtranslator_window, GTK_TYPE_WINDOW)
@@ -148,6 +149,8 @@ static const GtkActionEntry entries[] = {
 	{ "EditFuzzy", NULL, N_("_Fuzzy"), "<control>U",
 	  N_("Toggle fuzzy status of a message"),
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
+	{ "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
+          G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
 	{ "EditPreferences", NULL, N_("_Preferences"), NULL,
 	  N_("Edit gtranslator preferences"),
 	  G_CALLBACK (gtranslator_preferences_dialog_create) },
@@ -305,6 +308,53 @@ gtranslator_window_set_action_sensitive (GtranslatorWindow   *window,
 	GtkAction *action = gtk_action_group_get_action (window->priv->action_group,
 							 name);
 	gtk_action_set_sensitive (action, sensitive);
+}
+
+static void
+gtranslator_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
+					gint response,
+					gpointer data)
+{
+	GtranslatorWindow *window = GTR_WINDOW (data);
+        egg_editable_toolbar_set_edit_mode
+			(EGG_EDITABLE_TOOLBAR (window->priv->toolbar), FALSE);
+	gtranslator_application_save_toolbars_model (GTR_APP);
+        gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+gtranslator_window_cmd_edit_toolbar (GtkAction *action,
+				     GtranslatorWindow *window)
+{
+	GtkWidget *dialog;
+	GtkWidget *editor;
+
+	dialog = gtk_dialog_new_with_buttons (_("Toolbar Editor"),
+					      GTK_WINDOW (window), 
+				              GTK_DIALOG_DESTROY_WITH_PARENT, 
+					      GTK_STOCK_CLOSE,
+					      GTK_RESPONSE_CLOSE, 
+					      NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)), 5);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 2);
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
+	  
+	editor = egg_toolbar_editor_new (window->priv->ui_manager,
+					 gtranslator_application_get_toolbars_model (GTR_APP));
+	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
+	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
+             
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), editor);
+
+	egg_editable_toolbar_set_edit_mode
+		(EGG_EDITABLE_TOOLBAR (window->priv->toolbar), TRUE);
+
+	g_signal_connect (dialog, "response",
+			  G_CALLBACK (gtranslator_window_cmd_edit_toolbar_cb),
+			  window);
+	gtk_widget_show_all (dialog);
 }
 
 static void
