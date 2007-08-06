@@ -52,6 +52,7 @@ gtranslator_SOURCES = \
 	message-area.c message-area.h \
 	messages-table.c messages-table.h \
 	nautilus-string.c nautilus-string.h \
+	notebook.c notebook.h \
 	parse.c parse.h \
 	page.c page.h \
 	preferences.c preferences.h \
@@ -61,12 +62,14 @@ gtranslator_SOURCES = \
 	session.c session.h \
 	sighandling.c sighandling.h \
 	stylistics.c stylistics.h \
+	tab.c tab.h \
 	translator.c translator.h \
 	undo.c undo.h \
 	utils.c utils.h \
 	utils_gui.c utils_gui.h \
 	vfs-handle.c vfs-handle.h \
-	view.c view.h
+	view.c view.h \
+	window.c window.h
 
 gtranslator_LDADD = \
 	$(INTLLIBS) \

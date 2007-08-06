@@ -1,3 +1,12 @@
+2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* window.ch: Window related class. 
+	* notebook.ch: main notebook to manage po files.
+	* tab.ch: Single tab for main notebook.
+	* Makefile.am: Addded window.ch, notebook.ch and tab.ch
+
+###################Initial Rewrite########################
+
 2007-08-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* main_window.glade: Fixed variable name.
