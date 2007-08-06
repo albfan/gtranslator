@@ -31,6 +31,11 @@
 #include "prefs.h"
 #include "window.h"
 
+#include "egg-toolbars-model.h"
+#include "egg-toolbar-editor.h"
+#include "egg-editable-toolbar.h"
+
+
 #include <glib.h>
 #include <glib-object.h>
 #include <glib/gi18n.h>
@@ -63,6 +68,7 @@ struct _GtranslatorWindowPrivate
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
+	EggToolbarsModel *toolbars_model;
 };
 	
 
@@ -194,8 +200,6 @@ static const GtkActionEntry entries[] = {
 	{ "GoPreviousUntranslated", GTK_STOCK_GO_FORWARD, N_("Previ_ous untranslated"),
 	  "<alt>Page_Down", N_("Go to the previous untranslated message"),
           NULL },
-	
-	
 
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
@@ -303,6 +307,12 @@ gtranslator_window_set_action_sensitive (GtranslatorWindow   *window,
 }
 
 static void
+gtranslator_window_get_toolbars_model (GtranslatorWindow *window)
+{
+	
+}
+
+static void
 gtranslator_window_draw (GtranslatorWindow *window)
 {
 	GtkWidget *hbox; //Statusbar and progressbar
@@ -350,11 +360,29 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	/*
 	 * Toolbar
 	 */
-	/*priv->toolbar = GTK_WIDGET 
+	
+	priv->toolbars_model = egg_toolbars_model_new ();
+
+	/*priv->toolbars_file = g_build_filename
+			(ev_dot_dir (), "evince_toolbar.xml", NULL);*/
+
+	egg_toolbars_model_load_names (priv->toolbars_model,
+				       "gtr-toolbar.xml");
+
+	if (!egg_toolbars_model_load_toolbars (priv->toolbars_model,
+					       "gtr-toolbar.xml")) {
+		egg_toolbars_model_load_toolbars (priv->toolbars_model,
+						  "/evince-toolbar.xml");
+	}
+
+	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
+				      EGG_TB_MODEL_NOT_REMOVABLE); 
+	
+	priv->toolbar = GTK_WIDGET 
 	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
 			 "ui-manager", priv->ui_manager,
-			 "popup-path", "/ToolbarPopup",
-			 "model", ev_application_get_toolbars_model (EV_APP),
+			 //"popup-path", "/ToolbarPopup",
+			 "model", priv->toolbars_model,
 			 NULL));
 
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (priv->toolbar),
@@ -362,7 +390,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	gtk_box_pack_start (GTK_BOX (priv->main_box),
 			    priv->toolbar,
 			    FALSE, FALSE, 0);
-	gtk_widget_show (priv->toolbar);*/
+	gtk_widget_show (priv->toolbar);
 	
 	
 	/*

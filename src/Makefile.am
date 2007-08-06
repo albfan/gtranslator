@@ -7,6 +7,7 @@ SUBDIRS = toolbareditor
 INCLUDES = \
 	-I$(top_srcdir)						\
 	-I$(includedir)						\
+	-I$(top_srcdir)/src/toolbareditor			\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
         -DPREFIX=\""$(prefix)"\"                                \
         -DSYSCONFDIR=\""$(sysconfdir)"\"                        \
@@ -74,6 +75,7 @@ gtranslator_SOURCES = \
 	window.c window.h
 
 gtranslator_LDADD = \
+	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la	\
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \
 	$(GTKSPELL_LIBS)
