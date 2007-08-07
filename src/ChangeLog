@@ -1,3 +1,10 @@
+2007-08-07  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* tab.c: Added status widgets.
+	* window.c: Added stock menuitems and sidebar widget.
+	* panel.ch: Based in gedit sidebar widget.
+	* Makefile.am: Added panel.ch
+
 2007-08-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c, gtranslator-ui.xml: Added Edit toolbar dialog.

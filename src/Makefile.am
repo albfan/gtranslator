@@ -59,6 +59,7 @@ gtranslator_SOURCES = \
 	notebook.c notebook.h \
 	parse.c parse.h \
 	page.c page.h \
+	panel.c panel.h \
 	preferences.c preferences.h \
 	prefs.c prefs_init.c prefs.h \
 	replace.c replace.h \
@@ -73,7 +74,7 @@ gtranslator_SOURCES = \
 	utils_gui.c utils_gui.h \
 	vfs-handle.c vfs-handle.h \
 	view.c view.h \
-	window.c window.h 
+	window.c window.h
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la	\

@@ -29,6 +29,7 @@
 #include "find.h"
 #include "header_stuff.h"
 #include "tab.h"
+#include "panel.h"
 #include "prefs.h"
 #include "window.h"
 
@@ -55,7 +56,6 @@ G_DEFINE_TYPE(GtranslatorWindow, gtranslator_window, GTK_TYPE_WINDOW)
 
 struct _GtranslatorWindowPrivate
 {
-	GtkWidget *window;
 	GtkWidget *main_box;
 	GtkWidget *hpaned;
 	
@@ -64,13 +64,12 @@ struct _GtranslatorWindowPrivate
 	GtkActionGroup *action_group;
 	
 	GtkWidget *notebook;
-	GList *pages;
+	GtkWidget *sidebar;
 	
 	GtkWidget *statusbar;
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
-	
 };
 	
 
@@ -131,16 +130,16 @@ static const GtkActionEntry entries[] = {
 	{ "EditFind", GTK_STOCK_FIND, NULL, "<control>F",
 	  N_("   "),
 	  G_CALLBACK (gtranslator_find_dialog) },
-	{ "EditFindNext", GTK_STOCK_FIND, N_("Search ne_xt"), NULL,
+	{ "EditFindNext", NULL, N_("Search ne_xt"), NULL,
 	  N_("   "),
 	  G_CALLBACK (gtranslator_find) },
-	{ "EditReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, "<control>H",
+	{ "EditReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, NULL,
 	  N_("   "),
 	  G_CALLBACK (gtranslator_replace_dialog) },
-	{ "EditHeader", NULL, N_("_Header..."), NULL,
+	{ "EditHeader", GTK_STOCK_PROPERTIES, N_("_Header..."), NULL,
 	  N_("Edit po file header"),
 	  G_CALLBACK (gtranslator_header_edit_dialog) },
-	{ "EditComment", NULL, N_("C_omment..."), NULL,
+	{ "EditComment", GTK_STOCK_INDEX, N_("C_omment..."), NULL,
 	  N_("Edit message comment"),
 	  G_CALLBACK (gtranslator_edit_comment_dialog) },
 	{ "EditMessage2Trans", NULL, N_("Copy _message -> translation"), "<control>space",
@@ -151,7 +150,7 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	{ "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
           G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
-	{ "EditPreferences", NULL, N_("_Preferences"), NULL,
+	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
 	  N_("Edit gtranslator preferences"),
 	  G_CALLBACK (gtranslator_preferences_dialog_create) },
 	
@@ -208,7 +207,7 @@ static const GtkActionEntry entries[] = {
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
 	  NULL },
-	{ "HelpWebSite", NULL, N_("_Website"), NULL,
+	{ "HelpWebSite", GTK_STOCK_HOME, N_("_Website"), NULL,
 	  N_("gtranslator's homepage on the web"),
 	  G_CALLBACK(gtranslator_utils_show_home_page) },
 	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
@@ -408,7 +407,6 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	priv->toolbar = GTK_WIDGET 
 	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
 			 "ui-manager", priv->ui_manager,
-			 //"popup-path", "/ToolbarPopup",
 			 "model", gtranslator_application_get_toolbars_model(GTR_APP),
 			 NULL));
 
@@ -422,6 +420,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	
 	/*
 	 * hpaned
+	 * TODO: Get the pane position
 	 */
 	priv->hpaned = gtk_hpaned_new ();
 	/*g_signal_connect (ev_window->priv->hpaned,
@@ -436,10 +435,18 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	
 	
 	/*
+	 * sidebar
+	 */
+	priv->sidebar = gtranslator_panel_new(GTK_ORIENTATION_VERTICAL);
+	gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
+	gtk_widget_show(priv->sidebar);
+	
+	
+	/*
 	 * notebook
 	 */
 	priv->notebook = GTK_WIDGET(gtranslator_notebook_new());
-	gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
+	gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
 	gtk_widget_show(priv->notebook);
 	
 	

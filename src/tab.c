@@ -72,7 +72,7 @@ struct _GtranslatorTabPrivate
 
 static GtkWidget *
 gtranslator_tab_append_page(const gchar *tab_label,
-			     GtkWidget *notebook)
+			    GtkWidget *notebook)
 {
 	GtkWidget *scroll;
 	GtkWidget *label;
@@ -109,6 +109,8 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	GtkWidget *horizontal_box;
 	GtkWidget *comments_scrolled_window;
 	GtkWidget *comments_viewport;
+	GtkWidget *status_box;
+	GtkWidget *status_label;
 	
 	gchar *label;
 	gint i = 0;
@@ -168,6 +170,26 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(priv->text_msgid_plural), FALSE);
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->text_notebook, TRUE, TRUE, 0);
 
+	/*
+	 * Status widgets
+	 */
+	status_box = gtk_hbox_new(FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vertical_box), status_box, FALSE, FALSE, 0);
+	status_label = gtk_label_new(_("Translation status:"));
+	gtk_box_pack_start(GTK_BOX(status_box), status_label, FALSE, FALSE, 0);
+	
+	priv->translated = gtk_radio_button_new_with_label(NULL, _("Translated"));
+	gtk_widget_set_sensitive(priv->translated, FALSE);
+	gtk_box_pack_start(GTK_BOX(status_box), priv->translated, FALSE, FALSE, 0);
+	priv->fuzzy = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(priv->translated),
+								  _("Fuzzy"));
+	gtk_widget_set_sensitive(priv->fuzzy, FALSE);
+	gtk_box_pack_start(GTK_BOX(status_box), priv->fuzzy, FALSE, FALSE, 0);
+	priv->untranslated = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(priv->translated),
+									 _("Untranslated"));
+	gtk_widget_set_sensitive(priv->untranslated, FALSE);
+	gtk_box_pack_start(GTK_BOX(status_box), priv->untranslated, FALSE, FALSE, 0);
+	
 	/*
 	 * Translation widgets
 	 */
@@ -246,6 +268,7 @@ gtranslator_tab_set_trans_text(GtranslatorTab *tab,
 	GtkTextBuffer *buf;
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[index]));
 	gtk_text_buffer_set_text(buf, (gchar*)text, -1);
+	/*This should connected once*/
 	g_signal_connect(buf, "end-user-action",
 			 G_CALLBACK(func), tab);
 }
