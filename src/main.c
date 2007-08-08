@@ -100,14 +100,14 @@ int main(int argc, char *argv[])
 	/*
 	 * Set up the signal handler.
 	 */
-	signal(SIGSEGV, gtranslator_signal_handler);
+	/*signal(SIGSEGV, gtranslator_signal_handler);
 	signal(SIGKILL, gtranslator_signal_handler);
 	signal(SIGILL, gtranslator_signal_handler);
 	signal(SIGABRT, gtranslator_signal_handler);
 	signal(SIGINT, gtranslator_signal_handler);
 	signal(SIGHUP, gtranslator_signal_handler);
 	signal(SIGQUIT, gtranslator_signal_handler);
-	signal(SIGTERM, gtranslator_signal_handler);
+	signal(SIGTERM, gtranslator_signal_handler);*/
 
 	/*
 	 * Initialize the GConf library.
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 	 * Read all of our "normal" preferences -- translator data is now
 	 *  outsourced into the GtrTranslator structure.
 	 */
-	gtranslator_preferences_read();
+//	gtranslator_preferences_read();
 
 	/*
 	 * Show the application window with icon.
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 	/*
 	 * Create our own .gtranslator directory in the user's home directory.
 	 */
-	gtranslator_utils_create_gtranslator_directory();
+	//gtranslator_utils_create_gtranslator_directory();
 
 	/*
 	 * Read the translator information/data into our generally used 
@@ -174,11 +174,11 @@ int main(int argc, char *argv[])
 	/*
 	 * Connect the signals needed for session management.
 	 */
-	g_signal_connect(G_OBJECT(client), "save_yourself",
+/*	g_signal_connect(G_OBJECT(client), "save_yourself",
 			 G_CALLBACK(gtranslator_session_sleep),
 			   (gpointer) argv[0]);
 	g_signal_connect(G_OBJECT(client), "die",
-			 G_CALLBACK(gtranslator_session_die), NULL);
+			 G_CALLBACK(gtranslator_session_die), NULL);*/
 
 	/*
 	 * Initialize our generally used GtrRuntimeConfig structure.
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
 	/*
 	 * Init the learn buffer and connected stuff.
 	 */
-	gtranslator_learn_init();
+	//gtranslator_learn_init();
 
 
 	/*
@@ -219,21 +219,21 @@ int main(int argc, char *argv[])
 	flags = gnome_client_get_flags(client);
 	if(flags & GNOME_CLIENT_RESTORED)
 	{
-		gtranslator_session_restore(client);
+//		gtranslator_session_restore(client);
 	}
 
 	/*
 	 * Clean up the temporary file in the user's home dir eventually 
 	 *  created by gtranslator.
 	 */
-	gtranslator_utils_remove_temp_files();
+	//gtranslator_utils_remove_temp_files();
 
 	/*
 	 * Test if there's a crash recovery file lying around in ~/.gtranslator.
 	 */
 	if(g_file_test(gtranslator_runtime_config->crash_filename, G_FILE_TEST_EXISTS))
 	{
-		gtranslator_rescue_file_dialog();
+//		gtranslator_rescue_file_dialog();
 	}
 
 	/*
@@ -251,14 +251,15 @@ int main(int argc, char *argv[])
 		/*
 		 * Try to open up the supported "special" gettext file types.
 		 */ 
-		if(!gtranslator_open((gchar *)args[i], &error))
+		//FIXME
+		/*if(!gtranslator_open((gchar *)args[i],NULL, &error))
 		{
 			g_assert(error!=NULL);
 			fprintf(stderr, _("Couldn't open '%s': %s\n"),
 				(gchar *)args[i], error->message);
 			g_clear_error(&error);
 			return 1;
-		}
+		}*/
 	}
 	
 	poptFreeContext(context);

@@ -42,7 +42,8 @@ void gtranslator_dnd(GtkWidget * widget, GdkDragContext * context, int x,
 	if(dnd_type==TARGET_URI_LIST || dnd_type==TARGET_NETSCAPE_URL)
 	{
 		GError *error = NULL;
-		if(!gtranslator_open(file, &error)) {
+		//FIXME
+		if(!gtranslator_open(file, NULL, &error)) {
 			if(error) {
 			    	gtranslator_show_message(error->message, NULL);
 				g_error_free(error);

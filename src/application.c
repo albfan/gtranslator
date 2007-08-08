@@ -70,7 +70,7 @@ gtranslator_application_init (GtranslatorApplication *application)
 	egg_toolbars_model_set_flags (application->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
 	
-	//gtranslator_application_restore_geometry(application, NULL);
+	gtranslator_preferences_read();
 }
 
 

@@ -212,7 +212,8 @@ gchar *gtranslator_bookmark_new_bookmark_string()
 /*
  * Open the given bookmark.
  */
-gboolean gtranslator_bookmark_open(GtrBookmark *bookmark, GError **error)
+gboolean gtranslator_bookmark_open(GtrBookmark *bookmark,
+				   GError **error)
 {
 	GtrPo *po;
 	
@@ -222,8 +223,8 @@ gboolean gtranslator_bookmark_open(GtrBookmark *bookmark, GError **error)
 	/*
 	 * Open the po file. Handle error.
 	 */
-	if(!gtranslator_open(bookmark->file, error)) {
-		return FALSE;
+/*	if(!gtranslator_open(bookmark->file, window, error)) {
+		return FALSE;*/
 	}
 
 	/*
@@ -592,13 +593,13 @@ void gtranslator_open_file_dialog_from_bookmark(GtkWidget *widget, gchar *filena
 {
 	GError *error;
 
-	if(!gtranslator_open(filename, &error)) {
+	/*if(!gtranslator_open(filename, &error)) {
 		if(error)
 		{
 			gtranslator_show_message(error->message, NULL);
 			g_error_free(error);
 		}
-	}
+	}*/
 }
 
 /*

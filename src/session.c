@@ -66,7 +66,7 @@ gtranslator_session_sleep(GnomeClient * client, gint phase,
 	gnome_client_set_discard_command(client, 3, argv);
 
 	argv[0] = (gchar *) data;
-	argv[1] = current_page->po->filename;
+//FIXME	argv[1] = current_page->po->filename;
 
 	gnome_client_set_restart_command(client, 2, argv);
 

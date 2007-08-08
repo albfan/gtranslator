@@ -18,7 +18,6 @@
  */
 
 #include "dialogs.h"
-#include "page.h"
 #include "prefs.h"
 #include "runtime-config.h"
 #include "sighandling.h"
@@ -27,7 +26,7 @@
 
 #include <signal.h>
 #include <stdlib.h>
-#include <libgnome/gnome-i18n.h>
+#include <glib/gi18n.h>
 
 static gint signalscount=0;
 
@@ -47,7 +46,7 @@ void gtranslator_signal_handler(int signal)
 
 	if(current_page && current_page->po->file_changed)
 	{
-		GtrPo *po = current_page->po;
+		GtranslatorPo *po = current_page->po;
 		
 		/*
 		 * Store the original filename into the

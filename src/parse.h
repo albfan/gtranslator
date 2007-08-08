@@ -29,6 +29,8 @@
 
 #include <gtk/gtkwidget.h>
 
+#include "window.h"
+
 typedef enum
 {
 	GTR_PARSER_ERROR_GETTEXT,
@@ -101,7 +103,7 @@ typedef struct {
 
 } GtrPo;
 
-#define GTR_PO(x) ((GtrPo *)x)
+#define GTR2_PO(x) ((GtrPo *)x)
 
 #ifdef REDUNDANT
 /*
@@ -126,7 +128,7 @@ gboolean gtranslator_parse_core(GtrPo *po);
 /*
  * Parse the file, and then trigger the setting up of the GUI.
  */
-gboolean gtranslator_open(const gchar *po, GError **error);
+gboolean gtranslator_open(const gchar *po, GtranslatorWindow *window, GError **error);
 
 /*
  * Save the file with the given filename. Set error on failure.
@@ -136,11 +138,11 @@ gboolean gtranslator_save_file(GtrPo *po, const gchar *name, GError **error);
 /*
  * Callbacks for the widgets
  */
-void gtranslator_parse_the_file_from_file_dialog(GtkWidget  * widget);
-void gtranslator_save_file_dialog(GtkWidget  * widget);
-void gtranslator_save_current_file_dialog(GtkWidget  * widget, gpointer useless);
-void gtranslator_file_revert(GtkWidget  * widget, gpointer useless);
-void gtranslator_file_close(GtkWidget  * widget, gpointer useless);
+void gtranslator_parse_the_file_from_file_dialog(GtkWidget  * widget, GtranslatorWindow *window);
+void gtranslator_save_file_dialog(GtkWidget  * widget, GtranslatorWindow *window);
+void gtranslator_save_current_file_dialog(GtkWidget  * widget, GtranslatorWindow *window);
+void gtranslator_file_revert(GtkWidget  * widget, GtranslatorWindow *window);
+void gtranslator_file_close(GtkWidget  * widget, GtranslatorWindow *window);
 
 /*
  * Remove all translations from the po file.

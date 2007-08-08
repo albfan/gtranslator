@@ -23,9 +23,11 @@
 
 #include <gtk/gtkwidget.h>
 
+#include "window.h"
+
 /*
  * Creates the about box for gtranslator.
  */ 
-void gtranslator_about_dialog(GtkWidget *widget, gpointer useless);
+void gtranslator_about_dialog(GtkWidget *widget, GtranslatorWindow *window);
 
 #endif

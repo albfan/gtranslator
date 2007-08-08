@@ -210,7 +210,7 @@ void gtranslator_find(GtkWidget * widget, gpointer what, gboolean find_in_commen
 	GList *begin;
 	gboolean first = FALSE;
 	po = current_page->po;
-	gtranslator_message_update();
+//	gtranslator_message_update();
 	if (what) {
 		if (strlen(what) == 0) {
 			error = g_strdup_printf(_("Please enter a search string"));

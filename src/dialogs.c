@@ -42,6 +42,7 @@
 #include "translator.h"
 #include "utils.h"
 #include "utils_gui.h"
+#include "window.h"
 
 #include <string.h>
 #include <locale.h>
@@ -80,13 +81,13 @@ typedef enum {
  * The open URI dialog signal function:
  */ 
 void gtranslator_open_uri_dialog_clicked(GtkDialog *dialog, gint button,
-	gpointer entrydata);
+					 gpointer entrydata);
 
-void gtranslator_dialog_show(GtkWidget ** dlg, const gchar * wmname)
+void gtranslator_dialog_show(GtkWidget ** dlg,
+			     const gchar * wmname)
 {
 	if (wmname != NULL)
-		/*Documentation say "don't use this func"*/
-		gtk_window_set_wmclass(GTK_WINDOW(*dlg), wmname, PACKAGE_NAME);
+		gtk_window_set_role(GTK_WINDOW(*dlg), wmname);
 	g_signal_connect(G_OBJECT(*dlg), "destroy",
 			 G_CALLBACK(gtk_widget_destroyed), dlg);
 
@@ -97,7 +98,9 @@ void gtranslator_dialog_show(GtkWidget ** dlg, const gchar * wmname)
 /*
  * Callback func called when warning button is clicked
  */
-void warning_message_button_clicked(GtkWidget *widget, gint response_id, gpointer data)
+void warning_message_button_clicked(GtkWidget *widget,
+				    gint response_id,
+				    gpointer data)
 {
     if(response_id == GTK_RESPONSE_CLOSE){
     	gtk_widget_hide(GTK_WIDGET(data));
@@ -214,9 +217,10 @@ void gtranslator_show_message(const gchar *primary_text,
 /*
  * File chooser dialog
  */
-static GtkWindow *gtranslator_file_chooser_new (GtkWindow *parent,
-						FileselMode mode,
-						gchar *title)
+static GtkWindow *
+gtranslator_file_chooser_new (GtkWindow *parent,
+			      FileselMode mode,
+			      gchar *title)
 {
 	GtkWidget *dialog;
 	GtkFileFilter *filter;
@@ -249,7 +253,7 @@ static GtkWindow *gtranslator_file_chooser_new (GtkWindow *parent,
 //			gtranslator_file_dialogs_set_directory(&dialog);
 		} 
 		
-	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(gtranslator_application));
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	return GTK_WINDOW(dialog);
 }
@@ -257,7 +261,9 @@ static GtkWindow *gtranslator_file_chooser_new (GtkWindow *parent,
 /*
  * Gtkfilechooser response analyser
  */
-void gtranslator_file_chooser_analyse(gpointer dialog, FileselMode mode)
+void gtranslator_file_chooser_analyse(gpointer dialog,
+				      FileselMode mode,
+				      GtranslatorWindow *window)
 {	
 	gint reply;
 
@@ -265,9 +271,9 @@ void gtranslator_file_chooser_analyse(gpointer dialog, FileselMode mode)
 	switch (reply){
 		case GTK_RESPONSE_ACCEPT:
 			if (mode == FILESEL_OPEN){
-				gtranslator_parse_the_file_from_file_dialog(GTK_WIDGET(dialog));
+				gtranslator_parse_the_file_from_file_dialog(GTK_WIDGET(dialog), window);
 			} else {
-				gtranslator_save_file_dialog(GTK_WIDGET(dialog));
+				gtranslator_save_file_dialog(GTK_WIDGET(dialog), window);
 			}
 			break;
 		case GTK_RESPONSE_CANCEL:
@@ -284,22 +290,23 @@ void gtranslator_file_chooser_analyse(gpointer dialog, FileselMode mode)
 /*
  * The "Open file" dialog.
  */
-void gtranslator_open_file_dialog(GtkWidget * widget, gpointer useless)
+void gtranslator_open_file_dialog(GtkWidget * widget,
+				  GtranslatorWindow *window)
 {
 	GtkWindow *dialog = NULL;
-	if (current_page && !gtranslator_should_the_file_be_saved_dialog(current_page)) {
+	/*if (current_page && !gtranslator_should_the_file_be_saved_dialog(current_page)) {
 		if (dialog)
 			gtk_widget_destroy(GTK_WIDGET(dialog));
 		return;
-	}
+	}*/
 	
 	if(dialog != NULL) {
 		gtk_window_present(GTK_WINDOW(dialog));
 		return;
 	}
 	dialog = gtranslator_file_chooser_new (NULL, 
-						FILESEL_OPEN,
-						_("Open file for translation"));	
+					       FILESEL_OPEN,
+					       _("Open file for translation"));	
 
 	/*
 	 * With the gettext parser/writer API, we can't currently read/write
@@ -309,13 +316,14 @@ void gtranslator_open_file_dialog(GtkWidget * widget, gpointer useless)
 	 */
 	gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
 
-	gtranslator_file_chooser_analyse((gpointer) dialog, FILESEL_OPEN);
+	gtranslator_file_chooser_analyse((gpointer) dialog, FILESEL_OPEN, window);
 }
 
 /*
  * "Save as" dialog.
  */
-void gtranslator_save_file_as_dialog(GtkWidget * widget, gpointer useless)
+void gtranslator_save_file_as_dialog(GtkWidget * widget,
+				     GtranslatorWindow *window)
 {
 	/*This need libglade too*/
 	GtkWindow *dialog = NULL;
@@ -351,7 +359,7 @@ void gtranslator_save_file_as_dialog(GtkWidget * widget, gpointer useless)
 	 */
 	gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
 
-	gtranslator_file_chooser_analyse((gpointer) dialog, FILESEL_SAVE);
+	gtranslator_file_chooser_analyse((gpointer) dialog, FILESEL_SAVE, window);
 		
 	//gtranslator_dialog_show(&dialog, "gtranslator -- save");
 }
@@ -372,7 +380,7 @@ gboolean gtranslator_should_the_file_be_saved_dialog(GtrPage *page)
 	if (!page->po->file_changed)
 		return TRUE;
 	dialog=gtk_message_dialog_new(
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_NONE,
@@ -407,7 +415,8 @@ gboolean gtranslator_should_the_file_be_saved_dialog(GtrPage *page)
 /*
  * Display a small text widget with an editable content.
  */
-void gtranslator_edit_comment_dialog(GtkWidget *widget, gpointer useless)
+void gtranslator_edit_comment_dialog(GtkWidget *widget,
+				     GtranslatorWindow *window)
 {
 	/*Libglade missing*/
 	static GtkWidget *dialog=NULL;
@@ -420,7 +429,7 @@ void gtranslator_edit_comment_dialog(GtkWidget *widget, gpointer useless)
 
 	dialog=gtk_dialog_new_with_buttons(
 		_("gtranslator -- edit comment"),
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OK, GTK_RESPONSE_OK,
@@ -546,7 +555,8 @@ void gtranslator_edit_comment_dialog(GtkWidget *widget, gpointer useless)
  * The ultimate dialog -- it should be really idiot-proof to avoid unwanted loss of
  *  work.
  */
-void gtranslator_remove_all_translations_dialog(GtkWidget *widget, gpointer useless)
+void gtranslator_remove_all_translations_dialog(GtkWidget *widget,
+						GtranslatorWindow *window)
 {
 	/*libglade: this comments are utils to looking for funcs*/
 	static GtkWidget *dialog=NULL;
@@ -558,7 +568,7 @@ void gtranslator_remove_all_translations_dialog(GtkWidget *widget, gpointer usel
 	 *  is about to remove ALL translations from the po file!
 	 */
 	dialog=gtk_message_dialog_new(
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_YES_NO,
@@ -618,7 +628,8 @@ static void gtranslator_go_to_dialog_clicked(GtkDialog * dialog, gint button,
 }
 
 void 
-gtranslator_go_to_dialog(GtkWidget * widget, gpointer useless)
+gtranslator_go_to_dialog(GtkWidget * widget, 
+			 GtranslatorWindow *window)
 {
 	
 	/*libglade?*/
@@ -642,7 +653,7 @@ gtranslator_go_to_dialog(GtkWidget * widget, gpointer useless)
 	
 	dialog = gtk_dialog_new_with_buttons(
 		_("gtranslator -- go to"),
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 		GTK_STOCK_JUMP_TO, GTK_RESPONSE_OK,
@@ -693,7 +704,8 @@ static void ih_toggled(GtkWidget *widget, gpointer useless)
 			      GtrPreferences.ignore_hotkeys);
 }
 
-void gtranslator_find_dialog(GtkWidget * widget, gpointer useless)
+void gtranslator_find_dialog(GtkWidget * widget,
+			     GtranslatorWindow *window)
 {
 	/*libglade*/
 	static GtkWidget *dialog = NULL;
@@ -709,7 +721,7 @@ void gtranslator_find_dialog(GtkWidget * widget, gpointer useless)
 	}
 
 	dialog = gtk_dialog_new_with_buttons(_("Find in the po file"),
-					     GTK_WINDOW(gtranslator_application),
+					     GTK_WINDOW(window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     GTK_STOCK_FIND, GTK_RESPONSE_OK,
@@ -829,7 +841,8 @@ void gtranslator_find_dialog(GtkWidget * widget, gpointer useless)
 /*
  * The replace dialog -- based on the find dialog.
  */
-void gtranslator_replace_dialog(GtkWidget *widget, gpointer useless)
+void gtranslator_replace_dialog(GtkWidget *widget,
+				GtranslatorWindow *window)
 {
 	/*libglade: another dialog*/
 	int reply;
@@ -846,7 +859,7 @@ void gtranslator_replace_dialog(GtkWidget *widget, gpointer useless)
 
 	dialog=gtk_dialog_new_with_buttons(
 		_("gtranslator -- replace"),
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 		_("Replace"), GTR_REPLACE_ONCE,
@@ -937,7 +950,7 @@ void gtranslator_replace_dialog(GtkWidget *widget, gpointer useless)
 			GtkWidget *message_dlg;
 			
 			message_dlg = gtk_message_dialog_new (
-				GTK_WINDOW (gtranslator_application),
+				GTK_WINDOW (window),
 				GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_WARNING,
 				GTK_BUTTONS_OK,
@@ -995,7 +1008,7 @@ gint gtranslator_already_open_dialog(GtkWidget *widget, gpointer filename)
 	fname = g_strdup((gchar*)filename);
 
 	dialog=gtk_message_dialog_new(
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_YES_NO,
@@ -1037,7 +1050,7 @@ gint gtranslator_file_revert_dialog(GtkWidget *widget, gpointer filename)
 	fname = g_strdup((gchar*)filename);
 
 	dialog=gtk_message_dialog_new(
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_YES_NO,
@@ -1072,7 +1085,7 @@ void gtranslator_open_uri_dialog(GtkWidget *widget, gpointer useless)
 
 	dialog=gtk_dialog_new_with_buttons(
 		_("gtranslator -- open from URI"),
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -1126,10 +1139,10 @@ void gtranslator_open_uri_dialog_clicked(GtkDialog *dialog, gint button,
 		else
 		{
 			gtk_widget_destroy(GTK_WIDGET(dialog));
-			if(!gtranslator_open(uri->str, &error)) {
+			if(!gtranslator_open(uri->str,NULL, &error)) {
 				if(error) {
 					GtkWidget *warning_dialog;
-					warning_dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+					warning_dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 								GTK_DIALOG_DESTROY_WITH_PARENT,
 								GTK_MESSAGE_WARNING,
 								GTK_BUTTONS_CLOSE,
@@ -1144,7 +1157,7 @@ void gtranslator_open_uri_dialog_clicked(GtkDialog *dialog, gint button,
 	else if(button==2)
 	{
 		GtkWidget *message_dialog;
-		message_dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+		message_dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_MESSAGE_INFO,
 						GTK_BUTTONS_OK,
@@ -1174,7 +1187,7 @@ http://www.DOMAIN.COM/PO-FILE"));
 /*
  * Possibly rescue the given file.
  */
-void gtranslator_rescue_file_dialog(void)
+void gtranslator_rescue_file_dialog(GtranslatorWindow *window)
 {
 	GtkWidget *dialog;
 	GError *error;
@@ -1187,7 +1200,7 @@ void gtranslator_rescue_file_dialog(void)
 	original_filename=gtranslator_config_get_string("crash/filename");
 
 	dialog=gtk_message_dialog_new(
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_NONE,
@@ -1225,10 +1238,11 @@ and may contain your hard work!\n"),
 		rename(gtranslator_runtime_config->crash_filename, 
 			original_filename);
 
-		if(!gtranslator_open(original_filename, &error)) {
+		//FIXME 2TH argument should not be NULL
+		if(!gtranslator_open(original_filename, NULL, &error)) {
 			if(error) {
 				GtkWidget *warning_dialog;
-				warning_dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+				warning_dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 								GTK_DIALOG_DESTROY_WITH_PARENT,
 								GTK_MESSAGE_WARNING,
 								GTK_BUTTONS_CLOSE,
@@ -1265,7 +1279,7 @@ void gtranslator_auto_translation_dialog(void)
 	}
 
 	at_dialog=gtk_message_dialog_new(
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_QUESTION,
 		GTK_BUTTONS_YES_NO,
@@ -1289,7 +1303,7 @@ from your personal learn buffer?"));
 		if(!gtranslator_learn_autotranslate(current_page->po, TRUE, &error))
 		{
 			GtkWidget *warning_dialog;
-			warning_dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+			warning_dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 								GTK_DIALOG_DESTROY_WITH_PARENT,
 								GTK_MESSAGE_WARNING,
 								GTK_BUTTONS_CLOSE,
@@ -1318,7 +1332,7 @@ void gtranslator_bookmark_adding_dialog(GtkWidget *widget, gpointer useless)
 
 	dialog=gtk_dialog_new_with_buttons(
 		_("gtranslator -- add bookmark with comment?"),
-		GTK_WINDOW(gtranslator_application),
+		GTK_WINDOW(window),
 		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OK, GTK_RESPONSE_OK,
@@ -1368,7 +1382,8 @@ void gtranslator_bookmark_adding_dialog(GtkWidget *widget, gpointer useless)
 		comment_dialog_contents = gtk_text_buffer_get_text(buff, &start, &end, FALSE);
 		g_return_if_fail(comment_dialog_contents!=NULL);
 
-		gtranslator_bookmark_add_direct_with_comment(comment_dialog_contents);
+		//FIXME
+//		gtranslator_bookmark_add_direct_with_comment(comment_dialog_contents);
 
 		g_free(comment_dialog_contents);
 		

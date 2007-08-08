@@ -21,8 +21,8 @@
 #endif
 
 #include "draw-spaces.h"
-#include "parse.h"
 #include "tab.h"
+#include "po.h"
 #include "prefs.h"
 #include "view.h"
 
@@ -42,7 +42,7 @@ G_DEFINE_TYPE(GtranslatorTab, gtranslator_tab, GTK_TYPE_VBOX)
 
 struct _GtranslatorTabPrivate
 {
-	GtrPo *po;
+	GtranslatorPo *po;
 	//GtrMessagesTable *message_table;
 	
 	GtkWidget *table_pane;
@@ -234,13 +234,13 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 
 static void
 gtranslator_tab_set_po(GtranslatorTab *tab,
-		       GtrPo *po)
+		       GtranslatorPo *po)
 {
 	tab->priv->po = po;
 }
 
 GtkWidget *
-gtranslator_tab_new (GtrPo *po)
+gtranslator_tab_new (GtranslatorPo *po)
 {
 	GtranslatorTab *tab;
 	
@@ -253,7 +253,7 @@ gtranslator_tab_new (GtrPo *po)
 	return GTK_WIDGET(tab);
 }
 
-GtrPo *
+GtranslatorPo *
 gtranslator_tab_get_po(GtranslatorTab *tab)
 {
 	return tab->priv->po;

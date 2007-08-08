@@ -44,7 +44,7 @@
  */
 static void gtranslator_preferences_dialog_changed(GtkWidget  * widget, gpointer useless);
 static void gtranslator_preferences_dialog_close(GtkWidget  * widget, gint response_id,
-			    gpointer useless);
+			    GtranslatorWindow *window);
 static void toggle_sensitive(GtkWidget *widget, gpointer data);
 #ifdef GTR_ABOUT_ME
 static void toggle_insensitive(GtkWidget *widget, gpointer data);
@@ -576,7 +576,7 @@ void gtranslator_preferences_no_aboutme(gchar *message)
 #endif
 
 void gtranslator_preferences_dialog_create(GtkWidget *widget,
-					   gpointer useless)
+					   GtranslatorWindow *window)
 {
  	GtkAdjustment *adjustment;
 
@@ -793,7 +793,7 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 							      G_CALLBACK(gtranslator_preferences_dialog_changed));
 	text_color_label = glade_xml_get_widget(glade_prefs, GLADE_TEXT_COLOR_LABEL);
 	gtranslator_preferences_pack_set_up_with_label(text_color, text_color_label, own_colors, TRUE);
-	gtranslator_color_values_get(GTK_COLOR_BUTTON(text_color), COLOR_FG);
+//	gtranslator_color_values_get(GTK_COLOR_BUTTON(text_color), COLOR_FG);
 	
 	/* Contents item */
 	gchar *content_str = _("Contents");
@@ -1101,14 +1101,16 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 	/*
 	 * Connect the signals to the preferences box.
 	 */
-	/*g_signal_connect(G_OBJECT(prefs), "response",
-			 G_CALLBACK(gtranslator_preferences_dialog_close), NULL);*/
 	glade_xml_signal_connect_data(glade_prefs, 
-								  "on_preferences_dialog_response",
-								  G_CALLBACK(gtranslator_preferences_dialog_close),
-								  prefs);
+				      "on_preferences_dialog_response",
+				      G_CALLBACK(gtranslator_preferences_dialog_close),
+				      window);
+						   
+	gtk_window_set_role(GTK_WINDOW(prefs), "gtranslator -- prefs");
+	g_signal_connect(G_OBJECT(prefs), "destroy",
+			 G_CALLBACK(gtk_widget_destroyed), NULL);
 
-	gtranslator_dialog_show(&prefs, "gtranslator -- prefs");
+	gtk_widget_show_all(prefs);					
 }
  
 
@@ -1118,7 +1120,7 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 static void
 gtranslator_preferences_dialog_close(GtkWidget * widget,
 				     gint response_id,
-				     gpointer useless)
+				     GtranslatorWindow *window)
 {
 	gchar	*translator_str=NULL;
 	gchar	*translator_email_str=NULL;
@@ -1126,7 +1128,7 @@ gtranslator_preferences_dialog_close(GtkWidget * widget,
 	/*
 	 * Free the languages list
 	 */
-	gtranslator_utils_language_lists_free(widget, useless);
+	gtranslator_utils_language_lists_free(widget, window);
 
 	/*
 	 * If nothing changed, just return
@@ -1157,7 +1159,7 @@ gtranslator_preferences_dialog_close(GtkWidget * widget,
 	if(!translator_str || *translator_str=='\0')
 	{
 		GtkWidget *dialog = gtk_message_dialog_new(
-			GTK_WINDOW(gtranslator_application),
+			GTK_WINDOW(window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_MESSAGE_WARNING,
 			GTK_BUTTONS_OK,
@@ -1186,7 +1188,7 @@ gtranslator_preferences_dialog_close(GtkWidget * widget,
 	if(!translator_email_str || *translator_email_str=='\0')
 	{
 		GtkWidget *dialog = gtk_message_dialog_new(
-			GTK_WINDOW(gtranslator_application),
+			GTK_WINDOW(window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_MESSAGE_WARNING,
 			GTK_BUTTONS_OK,
@@ -1206,7 +1208,7 @@ gtranslator_preferences_dialog_close(GtkWidget * widget,
 			(strlen(translator_email_str) <= 6))
 		{
 			GtkWidget *dialog = gtk_message_dialog_new(
-				GTK_WINDOW(gtranslator_application),
+				GTK_WINDOW(window),
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_WARNING,
 				GTK_BUTTONS_OK,
@@ -1313,18 +1315,18 @@ gtranslator_preferences_dialog_close(GtkWidget * widget,
 		GtrPreferences.msgstr_font);
 	
 	//Colors
-	gtranslator_color_values_set(GTK_COLOR_BUTTON(text_color), COLOR_FG);
+	//gtranslator_color_values_set(GTK_COLOR_BUTTON(text_color), COLOR_FG);
 	
 
 	/*
 	 * Assign custom fonts and colors to GtkTextView
 	 * TODO: Missing plural handling
 	 */
-	if(current_page != NULL)
+	/*if(current_page != NULL)
 	{
 		gtranslator_set_style(current_page->text_msgid, 0);
 		gtranslator_set_style(current_page->trans_msgstr[0], 1);
-	}
+	}*/
 	
 	/*
 	 * Assign our attended hotkey character from the prefs dialog.
@@ -1387,14 +1389,15 @@ gtranslator_preferences_dialog_close(GtkWidget * widget,
 	 */
 	if(!GtrPreferences.show_comment)
 	{
-		gtranslator_comment_hide();
+		//gtranslator_comment_hide();
 	}
 
 	gtk_widget_destroy(GTK_WIDGET(prefs));
 	return;
 }
 
-static void gtranslator_preferences_dialog_changed(GtkWidget  * widget,
+static void
+gtranslator_preferences_dialog_changed(GtkWidget  * widget,
 						   gpointer flag)
 {
 	const gchar *locale;
@@ -1459,7 +1462,8 @@ static void gtranslator_preferences_dialog_changed(GtkWidget  * widget,
 #undef set_text
 }
 
-void toggle_sensitive(GtkWidget *widget, gpointer data)
+void
+toggle_sensitive(GtkWidget *widget, gpointer data)
 {
 	gboolean active;
 	active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -1468,7 +1472,8 @@ void toggle_sensitive(GtkWidget *widget, gpointer data)
 }
 
 #ifdef GTR_ABOUT_ME
-void toggle_insensitive(GtkWidget *widget, gpointer data)
+void
+toggle_insensitive(GtkWidget *widget, gpointer data)
 {
 	gboolean active;
 	active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -1477,7 +1482,8 @@ void toggle_insensitive(GtkWidget *widget, gpointer data)
 }
 #endif
 
-void gtranslator_preferences_read(void)
+void
+gtranslator_preferences_read(void)
 {
 	/*
 	 * Initialize the preferences with default values if this is our first
@@ -1588,7 +1594,7 @@ void gtranslator_preferences_read(void)
 	GtrPreferences.fi_english = gtranslator_config_get_bool("replace/replace_in_english");
 	GtrPreferences.fi_translation = gtranslator_config_get_bool("replace/replace_in_translation");
 
-	gtranslator_update_regex_flags();
+	//FIXME: gtranslator_update_regex_flags();
 
 	GtrPreferences.fill_header = gtranslator_config_get_bool(
 		"toggles/fill_header");
@@ -1604,7 +1610,8 @@ void gtranslator_preferences_read(void)
 /*
  * Free the resting pieces of the configuration.
  */
-void gtranslator_preferences_free()
+void
+gtranslator_preferences_free()
 {
 	g_free(GtrPreferences.autosave_suffix);
 	g_free(GtrPreferences.msgid_font);

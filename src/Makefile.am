@@ -2,11 +2,17 @@
 # Welcome to the gtranslator-automake-autoconf Wonderland!
 # --------------------------------------------------------
 
-SUBDIRS = toolbareditor
+SUBDIRS = toolbareditor \
+	dialogs\
+	charmap\
+	dictionary
 
 INCLUDES = \
 	-I$(top_srcdir)						\
 	-I$(includedir)						\
+	-I$(top_srcdir)/src/charmap				\
+	-I$(top_srcdir)/src/dialogs				\
+	-I$(top_srcdir)/src/dictionary				\
 	-I$(top_srcdir)/src/toolbareditor			\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
         -DPREFIX=\""$(prefix)"\"                                \
@@ -29,55 +35,43 @@ bin_PROGRAMS = \
 
 gtranslator_SOURCES = \
 	about.c about.h \
-	actions.c actions.h \
 	application.c application.h \
-	bookmark.c bookmark.h \
-	charmap-panel.c charmap-panel.h \
-	color-schemes.c color-schemes.h \
-	comment.c comment.h \
-	compile.c compile.h \
-	dialogs.c dialogs.h \
-	dictionary.c dictionary.h \
-	dict-panel.c dict-panel.h \
-	dnd.c dnd.h \
+	compile.h \
+	dnd.h \
 	draw-spaces.c draw-spaces.h \
-	find.c find.h \
-	gdict-sidebar.c gdict-sidebar.h \
-	glossary-panel.c glossary-panel.h \
-	gucharmap.c gucharmap.h \
-	gui.c gui.h \
-	header_stuff.c header_stuff.h \
-	history.c history.h \
+	find.h \
+	header_stuff.h \
+	history.h \
 	languages.c languages.h \
-	learn.c learn.h \
 	main.c \
-	menus.c menus.h \
-	message.c message.h \
 	message-area.c message-area.h \
-	messages-table.c messages-table.h \
+	messages-table.h \
 	nautilus-string.c nautilus-string.h \
 	notebook.c notebook.h \
-	parse.c parse.h \
-	page.c page.h \
 	panel.c panel.h \
 	preferences.c preferences.h \
-	prefs.c prefs_init.c prefs.h \
-	replace.c replace.h \
+	prefs.h \
 	runtime-config.c runtime-config.h \
-	session.c session.h \
-	sighandling.c sighandling.h \
-	stylistics.c stylistics.h \
+	session.h \
 	tab.c tab.h \
-	translator.c translator.h \
-	undo.c undo.h \
-	utils.c utils.h \
-	utils_gui.c utils_gui.h \
-	vfs-handle.c vfs-handle.h \
+	translator.h \
+	vfs-handle.h \
 	view.c view.h \
-	window.c window.h
+	window.c window.h \
+	po.c \
+	po.h \
+	dialogs.h \
+	prefs.c \
+	translator.c \
+	prefs_init.c \
+	utils_gui.c \
+	utils_gui.h \
+	utils.c \
+	utils.h
 
 gtranslator_LDADD = \
-	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la	\
+	$(top_srcdir)/src/dialogs/libdialogs.la \
+	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la \
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \
 	$(GTKSPELL_LIBS)

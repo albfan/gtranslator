@@ -232,7 +232,7 @@ gtranslator_create_main_window(void)
 	/*
 	 * Populate the 'Files/Recent' and coloshemes submenu
 	 */
-	gtranslator_history_show();
+//	gtranslator_history_show();
 	gtranslator_color_scheme_show_list();
 	
 	/*
@@ -382,7 +382,7 @@ gtranslator_quit()
 	/*
 	 * Now save the bookmarks' list before closing/exiting the application.
 	 */
-	gtranslator_bookmark_save_list();
+//	gtranslator_bookmark_save_list();
 
 	/*
 	 * Free the used GtrTranslator structure.

@@ -131,32 +131,6 @@ build_tab_label (GtranslatorNotebook *nb,
 	return hbox;
 }
 
-void
-gtranslator_notebook_add_page(GtranslatorNotebook *notebook,
-			      GtkWidget *tab)
-{
-	GtranslatorNotebookPrivate *priv = notebook->priv;
-	GtkWidget *label;
-
-	g_return_if_fail(GTR_IS_NOTEBOOK(notebook));
-	g_return_if_fail(GTR_IS_TAB(tab));
-	
-	label = build_tab_label(notebook, GTR_TAB(tab));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-				 GTK_WIDGET(tab), label);
-	priv->pages = g_list_append(priv->pages, tab);
-}
-
-GtranslatorTab *
-gtranslator_notebook_get_page(GtranslatorNotebook *notebook)
-{
-	gint num;
-	
-	num = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
-	
-	return GTR_TAB(gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), num));
-}
-
 static void
 gtranslator_notebook_init (GtranslatorNotebook *notebook)
 {
@@ -187,3 +161,31 @@ gtranslator_notebook_new()
 {
 	return GTK_WIDGET(g_object_new(GTR_TYPE_NOTEBOOK, NULL));
 }
+
+void
+gtranslator_notebook_add_page(GtranslatorNotebook *notebook,
+			      GtkWidget *tab)
+{
+	GtranslatorNotebookPrivate *priv = notebook->priv;
+	GtkWidget *label;
+
+	g_return_if_fail(GTR_IS_NOTEBOOK(notebook));
+	g_return_if_fail(GTR_IS_TAB(tab));
+	
+	label = build_tab_label(notebook, GTR_TAB(tab));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+				 GTK_WIDGET(tab), label);
+	priv->pages = g_list_append(priv->pages, tab);
+}
+
+GtranslatorTab *
+gtranslator_notebook_get_page(GtranslatorNotebook *notebook)
+{
+	gint num;
+	
+	num = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
+	
+	return GTR_TAB(gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), num));
+}
+
+

@@ -21,7 +21,6 @@
 #define GTR_BOOKMARK_H 1
 
 #include <glib.h>
-
 /*
  * A gtranslator-specific ID container -- is generated out of the specs for
  *  the po-file and the message.
@@ -70,7 +69,7 @@ gchar *gtranslator_bookmark_string_from_bookmark(GtrBookmark *bookmark);
  * Open the bookmark -- file & position => version and date should be only some
  *  kind of aside-factors.
  */
-gboolean gtranslator_bookmark_open(GtrBookmark *bookmark, GError **error);
+gboolean gtranslator_bookmark_open(GtrBookmark *bookmark,  GError **error);
 
 /*
  * Change the comment of a given bookmark to the given new comment "newcomment"

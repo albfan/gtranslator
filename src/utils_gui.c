@@ -30,64 +30,11 @@
 
 #include <libgnomeui/libgnomeui.h>
 
-/*
- * Show an error message.
- */
-GtkWidget * gtranslator_utils_error_dialog(gchar *format, ...)
-{
-	gchar *error;
-	va_list ap;
-	GtkWidget *w;
-	
-	va_start(ap, format);
-	error = g_strdup_vprintf(format, ap);
-	va_end(ap);
-	w = gnome_app_error(GNOME_APP(gtranslator_application), error);
-	g_free(error);
-	return w;
-}
-
-/*
- * Shows the gtranslator homepage on the web.
- */
-void gtranslator_utils_show_home_page(GtkWidget *widget, gpointer useless)
-{
-	gnome_url_show("http://gtranslator.sourceforge.net", NULL);
-}
-
-/*
- * Go through the characters and search for free spaces
- * and replace them with '·''s.
- */
-gchar *gtranslator_utils_invert_dot(gchar *str)
-{
-	GString *newstr;
-	gunichar middot;
-	const char *p;
-
-	g_return_val_if_fail(str != NULL, NULL);
-	g_return_val_if_fail(strlen(str) >= 0, str);
-	
-	newstr = g_string_sized_new(strlen(str)+10);
-	middot = g_utf8_get_char("Â·");
-	p = str;
-	while(*p) {
-		gunichar c = g_utf8_get_char(p);
-		if (c == middot)
-			g_string_append_c(newstr, ' ');
-		else if (g_unichar_break_type(c) == G_UNICODE_BREAK_SPACE)
-			g_string_append_unichar(newstr, middot);
-		else
-			g_string_append_unichar(newstr, c);
-		p = g_utf8_next_char(p);
-	}
-	return(g_string_free(newstr, FALSE));
-}
 
 /*
  * Save the current application main window's geometry.
  */
-void gtranslator_utils_save_geometry(void)
+void gtranslator_utils_save_geometry(GtranslatorWindow *window)
 {
 	if (GtrPreferences.save_geometry == TRUE) {
 		gint x, y, w, h, d;
@@ -97,7 +44,7 @@ void gtranslator_utils_save_geometry(void)
 		 *  store the data - we're currently stumping the silly "depth"
 		 *   data also, but well...
 		 */
-		gdk_window_get_geometry(GDK_WINDOW(gtranslator_application->window),
+		gdk_window_get_geometry(GDK_WINDOW(GTK_WIDGET(window)->window),
 			&x, &y, &w, &h, &d);
 		
 		gtranslator_config_set_int("geometry/x", x);
@@ -107,46 +54,6 @@ void gtranslator_utils_save_geometry(void)
 	}
 }
 
-/*
- * Restore the geometry.
- */
-void gtranslator_utils_restore_geometry(gchar  * gstr)
-{
-	gint x=0, y=0, width=0, height=0;
-
-	/*
-	 * Set the main window's geometry from the preferences.
-	 */
-	if (gstr == NULL)
-	{
-		if(GtrPreferences.save_geometry == TRUE)
-		{
-			x=gtranslator_config_get_int("geometry/x");
-			y=gtranslator_config_get_int("geometry/y");
-			width=gtranslator_config_get_int("geometry/width");
-			height=gtranslator_config_get_int("geometry/height");
-		}
-		else
-		{
-			return;
-		}
-	}
-	/*
-	 * If a geometry definition had been defined try to parse it.
-	 */
-	else
-	{
-		if(!gtk_window_parse_geometry(GTK_WINDOW(gtranslator_application->window), gstr))
-		{
-			g_warning(_("The geometry string \"%s\" couldn't be parsed!"), gstr);
-			return;
-		}
-	}
-	if (x != -1)
-		gtk_window_move(GTK_WINDOW(gtranslator_application), x, y);
-	if ((width > 0) && (height > 0))
-		gtk_window_resize(GTK_WINDOW(gtranslator_application), width, height);
-}
 
 GtkWidget *gtranslator_utils_attach_combo_with_label(GtkWidget  * table, gint row,
 				   const char *label_text,
@@ -271,46 +178,13 @@ GtkWidget *gtranslator_utils_attach_spin_with_label(GtkWidget *table,
 	return spin_button;
 }
 
-/*
- * Adds a GnomeFontPicker to the given table.
- */
-GtkWidget *gtranslator_utils_attach_font_with_label(GtkWidget *table,
-	gint row, const gchar *label_text, const gchar *title_text,
-	const gchar *fontspec, GCallback callback)
-{
-	GtkWidget *label;
-	GtkWidget *font_selector;
-		
-	label=gtk_label_new(label_text);
-	
-	font_selector=gnome_font_picker_new();
-	
-	gnome_font_picker_set_title(GNOME_FONT_PICKER(font_selector), 
-		title_text);
-	
-	if(fontspec)
-	{
-		gnome_font_picker_set_font_name(GNOME_FONT_PICKER(font_selector),
-			fontspec);
-	}
-	
-	gnome_font_picker_set_mode(GNOME_FONT_PICKER(font_selector),
-		GNOME_FONT_PICKER_MODE_FONT_INFO);
-	
-	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, row, row + 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), font_selector, 1, 2, 
-		row, row + 1);
-	
-	g_signal_connect(G_OBJECT(font_selector), "font_set",
-		G_CALLBACK(callback), NULL);
-	
-	return font_selector;
-}
+
 
 /*
  * Check if the given file is already opened by gtranslator.
  */
-gboolean gtranslator_utils_reopen_if_already_open(const gchar *filename)
+gboolean
+gtranslator_utils_reopen_if_already_open(const gchar *filename)
 {
 	gchar *resultfilename;
 
@@ -326,7 +200,7 @@ gboolean gtranslator_utils_reopen_if_already_open(const gchar *filename)
 		(strlen(resultfilename)==strlen(filename)))
 	{
 		gint reply;
-		reply = gtranslator_already_open_dialog(NULL, (gpointer)filename);
+		//FIXME:  reply = gtranslator_already_open_dialog(NULL, (gpointer)filename);
 		if(reply == GTK_RESPONSE_NO)
 		return FALSE;
 	}
@@ -360,7 +234,7 @@ gboolean gtranslator_utils_check_program(const gchar *program_name,
 				_("The necessary compression program `%s' is not installed!"), program_name);
 		}
 
-		gnome_app_warning(GNOME_APP(gtranslator_application), warning_message);
+		//gnome_app_warning(GNOME_APP(gtranslator_application), warning_message);
 		g_free(warning_message);
 
 		return FALSE;

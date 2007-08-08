@@ -344,7 +344,9 @@ gtranslator_parse(const gchar *filename, GError **error)
  * and if not, opens it in a new tab.
  */
 gboolean 
-gtranslator_open(const gchar *filename, GError **error)
+gtranslator_open(const gchar *filename,
+		 GtranslatorWindow *window,
+		 GError **error)
 {
 	gchar	*base;
 	gchar *title;
@@ -363,7 +365,7 @@ gtranslator_open(const gchar *filename, GError **error)
 	/*
 	 * If not a crash/temporary file, add to the history.
 	 */
-	base = g_path_get_basename(po->filename);
+	/*base = g_path_get_basename(po->filename);
 	if(nautilus_strcasecmp(base, gtranslator_runtime_config->temp_filename) || 
 	   nautilus_strcasecmp(base, gtranslator_runtime_config->crash_filename))
 	{
@@ -381,40 +383,41 @@ gtranslator_open(const gchar *filename, GError **error)
 			gtranslator_history_add(po->filename, _("N/A"));
 		}
 	}
-	g_free(base);
+	g_free(base);*/
 
 	/*
 	 * Create a page to add to our list of open files
 	 */
-	if(current_page != NULL)
+	/*if(current_page != NULL)
 		gtranslator_file_close(NULL, NULL);
-	gtranslator_page_new(po);
+	gtranslator_page_new(po);*/
+	gtranslator_window_new_tab(window, po);
 	
 	/*
 	 * Set window title
 	 */
 	title=g_strdup_printf(_("gtranslator -- %s"), po->filename);
-	gtk_window_set_title(GTK_WINDOW(gtranslator_application), title);
+	gtk_window_set_title(GTK_WINDOW(window), title);
 	g_free(title);
 
 	
 	/*
 	 * Show the current message.
 	 */
-	gtranslator_message_show(po->current->data);
+	//gtranslator_message_show(po->current->data);
 	
 	/*
 	 * Select the current row
 	 */
-	if(current_page->messages_table)
+	/*if(current_page->messages_table)
 	{
 		gtranslator_messages_table_select_row(current_page->messages_table, GTR_MSG(po->current->data));
-	}
+	}*/
 
 	/*
 	 * Enable/disable application bar options
 	 */
-	gtranslator_application_bar_update(0);
+	//gtranslator_application_bar_update(0);
 
 	/*
 	 * Iterate to the main GUI thread -- well, no locks for the GUI should
@@ -429,12 +432,12 @@ gtranslator_open(const gchar *filename, GError **error)
 	/*
 	 * Update the recent files list.
 	 */
-	gtranslator_history_show();
+//	gtranslator_history_show();
 
-	gtranslator_actions_set_up_file_opened();
+	/*gtranslator_actions_set_up_file_opened();
 
 	gtranslator_update_translated_count(po);
-	gtranslator_update_progress_bar();
+	gtranslator_update_progress_bar();*/
 		
 	/*
 	 * Is there any fuzzy message ?
@@ -444,7 +447,7 @@ gtranslator_open(const gchar *filename, GError **error)
 		/*
 		 * Then enable the Fuzzy buttons/entries in the menus
 		 */
-		gtk_widget_set_sensitive(gtranslator_menuitems->next_fuzzy, TRUE);
+		//gtk_widget_set_sensitive(gtranslator_menuitems->next_fuzzy, TRUE);
 
 		/*
 		 * If there is the corresponding pref and a fuzzy message, then
@@ -453,7 +456,7 @@ gtranslator_open(const gchar *filename, GError **error)
 		 */
 		if(GtrPreferences.rambo_function)
 		{
-			gtk_widget_set_sensitive(gtranslator_menuitems->remove_translations, TRUE);
+		//	gtk_widget_set_sensitive(gtranslator_menuitems->remove_translations, TRUE);
 		}
 	}
 	
@@ -465,7 +468,7 @@ gtranslator_open(const gchar *filename, GError **error)
 		/*
 		 * Then enable the Untranslated buttons/entries in the menus
 		 */
-		gtk_widget_set_sensitive(gtranslator_menuitems->next_untranslated, TRUE);
+		//gtk_widget_set_sensitive(gtranslator_menuitems->next_untranslated, TRUE);
 	}
 
 	/*
@@ -474,7 +477,7 @@ gtranslator_open(const gchar *filename, GError **error)
 	 */
 	if((po->translated > 1) && GtrPreferences.rambo_function)
 	{
-		gtk_widget_set_sensitive(gtranslator_menuitems->remove_translations, TRUE);
+		//gtk_widget_set_sensitive(gtranslator_menuitems->remove_translations, TRUE);
 	}
 	
 	/*
@@ -482,24 +485,25 @@ gtranslator_open(const gchar *filename, GError **error)
 	 */
 	if(GtrPreferences.autosave)
 	{
-		po->autosave_timeout = g_timeout_add(
+		/*po->autosave_timeout = g_timeout_add(
 			(GtrPreferences.autosave_timeout * 60000),
-			(GSourceFunc) gtranslator_utils_autosave, po);
+			(GSourceFunc) gtranslator_utils_autosave, po);*/
 	}
 	
 	/*
 	 * Set go back buttons sensitive to FALSE
 	 */
-	gtk_widget_set_sensitive(gtranslator_menuitems->first, FALSE);
+	/*gtk_widget_set_sensitive(gtranslator_menuitems->first, FALSE);
 	gtk_widget_set_sensitive(gtranslator_menuitems->go_back, FALSE);
 	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, FALSE);
-	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, FALSE);
-
+	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, FALSE);*/
+	g_warning("hola");
 	return TRUE;
 }
 
 void 
-gtranslator_parse_the_file_from_file_dialog(GtkWidget * dialog)
+gtranslator_parse_the_file_from_file_dialog(GtkWidget * dialog,
+					    GtranslatorWindow *window)
 {
 	gchar *po_file;
 	GError *error;
@@ -510,7 +514,7 @@ gtranslator_parse_the_file_from_file_dialog(GtkWidget * dialog)
 	/*
 	 * Open the file via our centralized opening function.
 	 */
-	if(!gtranslator_open(po_file, &error)) {
+	if(!gtranslator_open(po_file, window, &error)) {
 		if(error) {
 			gtranslator_show_message(error->message, NULL);
 			g_error_free(error);
@@ -583,64 +587,14 @@ Your file should likely be named '%s.po'."),
 	return TRUE;
 }
 
-/*
- * A callback for Overwrite in Save as
- */
-void
-gtranslator_overwrite_file(GtkWidget * widget, gpointer data)
-{
-	GError *error;
-	gtranslator_save_file(current_page->po,current_page->po->filename, &error);
-	/*
-	 * TODO: Should close the file and open the new saved file
-	 */
-	//gtranslator_open_file(current_page->po->filename);
-	gtranslator_open(current_page->po->filename, &error);
-}
 
-/*
- * A callback for OK in Save as... dialog 
- */
-void 
-gtranslator_save_file_dialog(GtkWidget *widget)
-{
-	gchar *po_file,
-	      *po_file_normalized;
- 	po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget)));
-	po_file_normalized = g_utf8_normalize( po_file, -1, G_NORMALIZE_DEFAULT_COMPOSE);
-	g_free(po_file);
-	po_file = po_file_normalized;
-
-	if (g_file_test(po_file, G_FILE_TEST_EXISTS))
-	{
-		current_page->po->filename = g_strdup(po_file);
-		
-		GtkWidget *dialog, *button, *button1;
-	
-		dialog = gtk_message_dialog_new (NULL,
-						 GTK_DIALOG_MODAL,
-						 GTK_MESSAGE_QUESTION,
-						 GTK_BUTTONS_CANCEL,
-						 _("The file '%s' already exists. Do you want overwrite it?"),
-						 po_file);
-		
-		button = gtk_dialog_add_button (GTK_DIALOG (dialog), "Overwrite", 1);
-		
-		g_signal_connect (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtranslator_overwrite_file), NULL);
-		
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
-	}
-	g_free(po_file);
-	gtk_widget_destroy(GTK_WIDGET(widget));
-}
 
 /*
  * A callback for Save
  */
 void 
-gtranslator_save_current_file_dialog(GtkWidget * widget, gpointer useless)
+gtranslator_save_current_file_dialog(GtkWidget * widget,
+				     GtranslatorWindow *window)
 {
 	GError *error;
 	
@@ -682,7 +636,8 @@ gtranslator_po_free(GtrPo *po)
 }
 
 void 
-gtranslator_file_close(GtkWidget * widget, gpointer useless)
+gtranslator_file_close(GtkWidget * widget,
+		       GtranslatorWindow *window)
 {
 	GtrPo *po;
 	gint i;
@@ -754,7 +709,8 @@ gtranslator_file_close(GtkWidget * widget, gpointer useless)
 }
 
 void 
-gtranslator_file_revert(GtkWidget * widget, gpointer useless)
+gtranslator_file_revert(GtkWidget * widget,
+			GtranslatorWindow *window)
 {
 	GError *error;
 	
@@ -776,7 +732,7 @@ gtranslator_file_revert(GtkWidget * widget, gpointer useless)
 	/*
 	 * Re-open the file
 	 */
-	if(!gtranslator_open(current_page->po->filename, &error))
+	if(!gtranslator_open(current_page->po->filename, window, &error))
 	{
 		if(error) {
 			gtranslator_show_message(error->message, NULL);

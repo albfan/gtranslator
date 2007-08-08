@@ -28,6 +28,8 @@
 
 #include <gettext-po.h>
 
+#include "window.h"
+
 /*
  * The different stati of the messages.
  */
@@ -121,7 +123,7 @@ void gtranslator_message_go_to_no(GtkWidget  * widget, gpointer number);
 /*
  * Various GUI/message handling functions.
  */
-void gtranslator_message_update(void);
+void gtranslator_message_update(GtranslatorWindow *window);
 void gtranslator_message_show(GtrMsg  * msg);
 void gtranslator_message_change_status(GtkWidget  * widget, gpointer which);
 void gtranslator_message_copy_to_translation(void);
@@ -135,7 +137,7 @@ void gtranslator_message_status_toggle_fuzzy(GtkWidget *widget, gpointer useless
 /*
  * Copies msgid to msgstr or blanks msgstr 
  */
-void gtranslator_message_status_set_sticky(GtrMsg  *msg, gpointer useless);
+void gtranslator_message_status_set_sticky(GtrMsg  *msg, GtranslatorWindow *window);
 
 /*
  * Clears the translation (sets msgstr to an empty string)

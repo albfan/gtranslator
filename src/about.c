@@ -25,18 +25,20 @@
 #endif
 
 #include "about.h"
-#include "gui.h"
+#include "window.h"
 
 #include <string.h>
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include <gtk/gtkaboutdialog.h>
 
 /*
  * Creates and shows the about box for gtranslator.
  */ 
-void gtranslator_about_dialog(GtkWidget * widget, gpointer useless)
+void gtranslator_about_dialog(GtkWidget * widget,
+			      GtranslatorWindow *window)
 {
 	gchar *license_trans;
 	
@@ -49,7 +51,7 @@ void gtranslator_about_dialog(GtkWidget * widget, gpointer useless)
 		"Peeter Vois <peeter@kabalak.net>",
 		NULL
 	};	
-	static const char *documenters[] =
+	static const gchar *documenters[] =
 	{
 		"Abel Cheung <deaddog@deaddog.org>",
 		"Emese Kovacs <emese@gnome.hu>",
@@ -57,7 +59,7 @@ void gtranslator_about_dialog(GtkWidget * widget, gpointer useless)
 	};	
 	
 	
-	const char *license[] = {
+	const gchar *license[] = {
 		N_("gtranslator is free software; you can redistribute it and/or modify "
 		"it under the terms of the GNU General Public License as published by "
 		"the Free Software Foundation; either version 2 of the License, or "
@@ -78,7 +80,7 @@ void gtranslator_about_dialog(GtkWidget * widget, gpointer useless)
                 	             NULL);                          
 
 	
-	gtk_show_about_dialog (GTK_WINDOW (gtranslator_application),
+	gtk_show_about_dialog (GTK_WINDOW (window),
                          "comments", _("gtranslator is a po file editing suite with many bells and whistles."),
                          "version", VERSION,
                          "copyright", _("(C) 1999-2007 The Free Software Foundation, Inc."),

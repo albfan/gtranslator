@@ -25,7 +25,7 @@
 #include <sys/types.h>
 #include <libxml/tree.h>
 
-#include "parse.h"
+#include "po.h"
 
 /*
  * Non-GUI utility functions for gtranslator.
@@ -114,8 +114,8 @@ gint gtranslator_utils_stringlist_strcasecmp(GList *list, const gchar *string);
 /*
  * Get the right localename/charset for the language.
  */
-gchar *gtranslator_utils_get_locale_name(GtrPo *po);
-gchar *gtranslator_utils_get_locale_charset(GtrPo *po);
+gchar *gtranslator_utils_get_locale_name(GtranslatorPo *po);
+gchar *gtranslator_utils_get_locale_charset(GtranslatorPo *po);
 
 /*
  * The lists for the language informations -- are all changed 

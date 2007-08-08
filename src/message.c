@@ -32,12 +32,14 @@
 #include "menus.h"
 #include "message.h"
 #include "messages-table.h"
-#include "page.h"
+//#include "page.h"
 #include "prefs.h"
+#include "tab.h"
 #include "translator.h"
 #include "undo.h"
 #include "utils.h"
 #include "utils_gui.h"
+#include "window.h"
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -246,12 +248,15 @@ gtranslator_text_boxes_clean()
 }
 
 void
-gtranslator_message_plural_forms(GtrMsg *msg)
+gtranslator_message_plural_forms(GtrMsg *msg,
+				 GtranslatorWindow *window)
 {
 	GtkTextBuffer *buf;
 	const gchar *msgstr_plural;
 	gint i;
 
+	GtranslatorTab *current_page = gtranslator_window_get_current_tab(window);
+	
 	/*
 	 * Should show the number of plural forms defined in header
 	 */
@@ -259,7 +264,7 @@ gtranslator_message_plural_forms(GtrMsg *msg)
 	{
 		msgstr_plural = po_message_msgstr_plural(msg->message, i);
 
-		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->trans_msgstr[i]));
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->priv->trans_msgstr[i]));
 		gtk_text_buffer_set_text(buf, (gchar*)msgstr_plural, -1);
 		
 		g_signal_connect(buf, "end-user-action",
@@ -272,33 +277,35 @@ gtranslator_message_plural_forms(GtrMsg *msg)
  * Display the message in text boxes
  */
 void 
-gtranslator_message_show(GtrMsg *msg)
+gtranslator_message_show(GtrMsg *msg,
+			 GtranslatorWindow *window)
 {
 	GtkTextBuffer *buf;
 	const gchar *msgid, *msgid_plural;
 	const gchar *msgstr, *msgstr_plural;
 	gint i;
+	GtranslatorTab *current_page = gtranslator_window_get_current_tab(window);
 	
 	g_assert(current_page != NULL);
 	
 	/*
 	 * Update current_page->po->current
 	 */
-	i = g_list_index(current_page->po->messages, msg);
-	current_page->po->current = g_list_nth(current_page->po->messages, i);
+	i = g_list_index(current_page->priv->po->messages, msg);
+	current_page->priv->po->current = g_list_nth(current_page->priv->po->messages, i);
 	
 	/*
 	 * Clear up previous message widgets from the original/translated
 	 * fields
 	 */
-	gtranslator_text_boxes_clean();
+	//gtranslator_text_boxes_clean();
 	
 	/*
 	 * Set up new widgets
 	 */
 	msgid = po_message_msgid(msg->message);
 	if(msgid) {
-		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->text_msgid));
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->priv->text_msgid));
 		gtk_text_buffer_set_text(buf, (gchar*)msgid, -1);
 	}
 	msgid_plural = po_message_msgid_plural(msg->message);
@@ -307,11 +314,11 @@ gtranslator_message_show(GtrMsg *msg)
 		/*
 		 * Disable notebook tabs
 		 */
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->text_notebook), FALSE);
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->trans_notebook), FALSE);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->priv->text_notebook), FALSE);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->priv->trans_notebook), FALSE);
 		if(msgstr) 
 		{
-			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->trans_msgstr[0]));
+			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->priv->trans_msgstr[0]));
 			gtk_text_buffer_set_text(buf, (gchar*)msgstr, -1);
 			g_signal_connect(buf, "end-user-action",
 					 G_CALLBACK(gtranslator_message_translation_update),
@@ -319,11 +326,11 @@ gtranslator_message_show(GtrMsg *msg)
 		}
 	}
 	else {
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->text_notebook), TRUE);
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->trans_notebook), TRUE);
-		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->text_msgid_plural));
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->priv->text_notebook), TRUE);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(current_page->priv->trans_notebook), TRUE);
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(current_page->priv->text_msgid_plural));
 		gtk_text_buffer_set_text(buf, (gchar*)msgid_plural, -1);
-		gtranslator_message_plural_forms(msg);
+		gtranslator_message_plural_forms(msg, window);
 	}
 	
 	/*
@@ -338,7 +345,7 @@ gtranslator_message_show(GtrMsg *msg)
 	/*
 	 * Status widgets and fuzzy menuitem
 	 */
-	if(po_message_is_fuzzy(msg->message))
+	/*if(po_message_is_fuzzy(msg->message))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(current_page->fuzzy), TRUE);
 	
 	else if(po_message_is_translated(msg->message))
@@ -346,20 +353,21 @@ gtranslator_message_show(GtrMsg *msg)
 	
 	else
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(current_page->untranslated), TRUE);
-
+*/
 	nothing_changes = FALSE;
 	msg->changed = FALSE;
 }
 
 void 
-gtranslator_message_update(void)
+gtranslator_message_update(GtranslatorWindow *window)
 {
 	GtrMsg *msg;
 	GtrPo *po;
+	GtranslatorTab *current_page = gtranslator_window_get_current_tab(window);
 	
 	g_assert(current_page != NULL);
 	
-	po = current_page->po;
+	po = current_page->priv->po;
 	if(!(msg = GTR_MSG(po->current->data)))
 		return;
 	
@@ -372,10 +380,10 @@ gtranslator_message_update(void)
 	/*
 	 * Go to the corresponding row in the messages table.
 	 */
-	if(current_page->messages_table)
+	/*if(current_page->messages_table)
 	{
 		gtranslator_messages_table_select_row(current_page->messages_table, msg);
-	}
+	}*/
 
 	/*
 	 * Enable the remove all translations function if wished and if any
@@ -423,18 +431,21 @@ gtranslator_message_change_status(GtkWidget  * item,
  * Updates current msg, and shows to_go msg instead, also adjusts actions
  */
 void 
-gtranslator_message_go_to(GList * to_go)
+gtranslator_message_go_to(GList * to_go,
+			  GtranslatorWindow *window)
 {
 	GtrPo *po;
 	static gint pos = 0;
  
 	g_return_if_fail (to_go!=NULL);
 	
+	GtranslatorTab *current_page = gtranslator_window_get_current_tab(window);
+	
 	po = current_page->po;
 	
 	gtranslator_message_update();
 	
-	if (pos == 0)
+	/*if (pos == 0)
 	{
 		gtk_widget_set_sensitive(gtranslator_menuitems->first, TRUE);
 	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, TRUE);
@@ -447,9 +458,9 @@ gtranslator_message_go_to(GList * to_go)
 	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_forward, TRUE);
 		gtk_widget_set_sensitive(gtranslator_menuitems->goto_last, TRUE);
 	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_goto_last, TRUE);
-	}
+	}*/
 
-	gtranslator_message_show(to_go->data);
+	gtranslator_message_show(to_go->data, window);
 
 	pos = g_list_position(po->messages, po->current);
 	
@@ -518,8 +529,8 @@ void
 gtranslator_message_go_to_no(GtkWidget  * widget,
 			     gpointer number)
 {
-	gtranslator_message_go_to(g_list_nth(current_page->po->messages,
-					     GPOINTER_TO_UINT(number)));
+	/*gtranslator_message_go_to(g_list_nth(current_page->po->messages,
+					     GPOINTER_TO_UINT(number)));*/
 }
 
 /*
@@ -542,29 +553,30 @@ gtranslator_message_status_set_fuzzy(GtrMsg * msg,
  */
 void 
 gtranslator_message_status_set_sticky (GtrMsg * msg,
-				       gpointer useless)
+				       GtranslatorWindow *window)
 {
+	GtranslatorTab *current_page = gtranslator_window_get_current_tab(window);
 	g_assert(current_page != NULL);
 
-	msg=GTR_MSG(GTR_PO(current_page->po)->current->data);
+	msg = gtranslator_po_get_current_msg(current_page->priv->po);
 	g_return_if_fail(msg!=NULL);
 
 	/*
 	 * It is no longer fuzzy.
 	 */
 	gtranslator_message_status_set_fuzzy(msg, FALSE);
-	current_page->po->fuzzy--;
+	current_page->priv->po->fuzzy--;
 	msg->status |= GTR_MSG_STATUS_STICK;
 	msg->status |= GTR_MSG_STATUS_TRANSLATED;
 	msg->changed = TRUE;
-	gtranslator_message_show(current_page->po->current->data);
-	gtranslator_update_translated_count(current_page->po);
+	gtranslator_message_show(current_page->priv->po->current->data, window);
+	//gtranslator_update_translated_count(current_page->priv->po);
 	//Enable revert and save menuitems 
-	gtk_widget_set_sensitive(gtranslator_menuitems->revert, TRUE);
+	/*gtk_widget_set_sensitive(gtranslator_menuitems->revert, TRUE);
 	gtk_widget_set_sensitive(gtranslator_menuitems->save, TRUE);
 	gtk_widget_set_sensitive(gtranslator_menuitems->t_save, TRUE);
 	gtranslator_translation_changed(NULL, NULL);
-	gtranslator_update_progress_bar();
+	gtranslator_update_progress_bar();*/
 }
 
 /*

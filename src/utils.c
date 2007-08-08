@@ -604,7 +604,9 @@ void gtranslator_utils_language_lists_create(void)
 /*
  * Frees the language list.
  */
-gboolean gtranslator_utils_language_lists_free(GtkWidget  * widget, gpointer useless)
+gboolean
+gtranslator_utils_language_lists_free(GtkWidget  * widget,
+				      gpointer useless)
 {
 	list_ref--;
 	
@@ -871,7 +873,7 @@ gtranslator_get_plural_form_string(gchar *lang)
 	 * Check if msginit is available on the system.
 	 */
 	if(!g_find_program_in_path("msginit")) {
-		gtranslator_show_message(_("Sorry, msginit isn't available on your system!"), NULL);
+		//FIXME: gtranslator_show_message(_("Sorry, msginit isn't available on your system!"), NULL);
 		return NULL;
 	}	
 	po_test_file = g_strconcat ("# SOME DESCRIPTIVE TITLE.\n",

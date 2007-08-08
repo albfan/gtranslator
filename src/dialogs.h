@@ -47,8 +47,8 @@ void gtranslator_file_dialogs_store_directory(const gchar *filename);
 /*
  * The file open/save (as) file dialogs.
  */
-void gtranslator_save_file_as_dialog(GtkWidget * widget, gpointer useless);
-void gtranslator_open_file_dialog(GtkWidget * widget, gpointer useless);
+void gtranslator_save_file_as_dialog(GtkWidget * widget, GtranslatorWindow *window);
+void gtranslator_open_file_dialog(GtkWidget * widget, GtranslatorWindow *window);
 gboolean gtranslator_should_the_file_be_saved_dialog(GtrPage *page);
 
 /*

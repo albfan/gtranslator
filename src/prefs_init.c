@@ -18,7 +18,6 @@
  */
 
 #include "nautilus-string.h"
-#include "parse.h"
 #include "prefs.h"
 #include "translator.h"
 #include "utils.h"

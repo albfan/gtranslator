@@ -748,7 +748,7 @@ void gtranslator_learn_shutdown()
 /*
  * Learn the complete GtrPo file's messages.
  */
-void gtranslator_learn_po_file(GtrPo *po_file)
+void gtranslator_learn_po_file(GtranslatorPo *po_file)
 {
 	GtrLearnResource *resource;
 	

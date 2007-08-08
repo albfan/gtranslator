@@ -20,7 +20,7 @@
 #ifndef GTR_UTILS_GUI_H
 #define GTR_UTILS_GUI_H 1
 
-#include "parse.h"
+#include "po.h"
 #include "stylistics.h"
 
 #include <gtk/gtkwidget.h>
@@ -30,26 +30,12 @@
  * GUI related utility functions for gtranslator.
  */
 
-/*
- * Show an error messagebox to the user. 
- */
-GtkWidget *gtranslator_utils_error_dialog(gchar *format, ...);
 
-/*
- * Show the homepage of gtranslator.
- */
-void gtranslator_utils_show_home_page(GtkWidget  *widget, gpointer useless);
-
-/*
- * Invert the dots in the message.
- */
-gchar *gtranslator_utils_invert_dot(gchar *str);
 
 /*
  * Routines for saving/restoring/setting geometry of the main window.
  */
-void gtranslator_utils_save_geometry(void);
-void gtranslator_utils_restore_geometry(gchar *gstr);
+void gtranslator_utils_save_geometry(GtranslatorWindow *window);
 
 /*
  * Convenience functions for adding items 
@@ -82,7 +68,7 @@ GtkWidget *gtranslator_utils_attach_font_with_label(GtkWidget *table,
  * Checks the given file for the right permissions for
  *  open/writing the files.
  */
-gboolean gtranslator_utils_check_file_permissions(GtrPo *po_file);
+gboolean gtranslator_utils_check_file_permissions(GtranslatorPo *po_file);
 
 /*
  * Checks if we've been started with the given file yet.

@@ -22,14 +22,11 @@
 
 #include "about.h"
 #include "application.h"
-#include "compile.h"
-#include "dialogs.h"
-#include "message.h"
+#include "file-dialogs.h"
 #include "notebook.h"
-#include "find.h"
-#include "header_stuff.h"
 #include "tab.h"
 #include "panel.h"
+#include "po.h"
 #include "prefs.h"
 #include "window.h"
 
@@ -48,7 +45,7 @@
 					 GTR_TYPE_WINDOW,     \
 					 GtranslatorWindowPrivate))
 
-static void gtranslator_utils_show_home_page(GtkWidget *widget, gpointer useless);
+static void gtranslator_window_show_home_page(GtkWidget *widget, gpointer useless);
 static void gtranslator_window_cmd_edit_toolbar (GtkAction *action, GtranslatorWindow *window);
 
 
@@ -88,25 +85,25 @@ static const GtkActionEntry entries[] = {
 	  N_("Open a po file"),
 	  G_CALLBACK (gtranslator_open_file_dialog) },
 	{ "FileOpenUri", NULL, N_("Open from _URI..."), NULL,
-	  N_("Open a po file from a given URI"),
-	  G_CALLBACK (gtranslator_open_uri_dialog) },
+	  N_("Open a po file from a given URI"), NULL},
+	//  G_CALLBACK (gtranslator_open_uri_dialog) },
 	{ "FileRecentFiles", NULL, N_("_Recent files"), NULL,
 	  NULL, NULL },
        	{ "FileSave", GTK_STOCK_SAVE, NULL, "<control>S",
-	  N_("Save the file"),
-	  G_CALLBACK (gtranslator_save_current_file_dialog) },
+	  N_("Save the file"), NULL},
+	//  G_CALLBACK (gtranslator_save_current_file_dialog) },
 	{ "FileSaveAs", GTK_STOCK_SAVE_AS, NULL, NULL,
-	  N_("Save the file with another name"),
-	  G_CALLBACK (gtranslator_save_file_as_dialog) },
+	  N_("Save the file with another name"), NULL},
+	//  G_CALLBACK (gtranslator_save_file_as_dialog) },
 	/*{ "FileRevert", GTK_STOCK_REVERT_TO_SAVED, N_("_Revert"), NULL,
 	  N_(),
 	  G_CALLBACK (gtranslator_save_file_as_dialog) },*/
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W", 
-	  N_("Close the current file"),
-	  G_CALLBACK (gtranslator_file_close) },
+	  N_("Close the current file"), NULL},
+	//  G_CALLBACK (gtranslator_file_close) },
 	{ "FileQuitWindow", GTK_STOCK_QUIT, NULL, "<control>Q", 
-	  N_("Quit the program"),
-	  G_CALLBACK (gtranslator_menu_quit_cb) },
+	  N_("Quit the program"), NULL},
+	//  G_CALLBACK (gtranslator_menu_quit_cb) },
 	
         /* Edit menu */
         { "EditUndo", GTK_STOCK_UNDO, NULL, "<control>Z", 
@@ -116,38 +113,38 @@ static const GtkActionEntry entries[] = {
 	  N_("Redo last undo operation"),
 	  NULL },
 	{ "EditCut", GTK_STOCK_CUT, NULL, "<control>X",
-	  N_("Cut the selected text"),
-	  G_CALLBACK (gtranslator_clipboard_cut) },	
+	  N_("Cut the selected text"), NULL},
+	//  G_CALLBACK (gtranslator_clipboard_cut) },	
 	{ "EditCopy", GTK_STOCK_COPY, NULL, "<control>C",
-	  N_("Copy the selected text"),
-	  G_CALLBACK (gtranslator_clipboard_copy) },
+	  N_("Copy the selected text"), NULL},
+	//  G_CALLBACK (gtranslator_clipboard_copy) },
 	{ "EditPaste", GTK_STOCK_PASTE, NULL, "<control>V",
-	  N_("   "),
-	  G_CALLBACK (gtranslator_clipboard_paste) },
+	  N_("   "), NULL},
+	//  G_CALLBACK (gtranslator_clipboard_paste) },
 	{ "EditClear", GTK_STOCK_CLEAR, NULL, NULL,
-	  N_("Clear the translation text box"),
-	  G_CALLBACK (gtranslator_selection_clear) },
+	  N_("Clear the translation text box"), NULL},
+	//  G_CALLBACK (gtranslator_selection_clear) },
 	{ "EditFind", GTK_STOCK_FIND, NULL, "<control>F",
-	  N_("   "),
-	  G_CALLBACK (gtranslator_find_dialog) },
+	  N_("   "), NULL},
+	//  G_CALLBACK (gtranslator_find_dialog) },
 	{ "EditFindNext", NULL, N_("Search ne_xt"), NULL,
-	  N_("   "),
-	  G_CALLBACK (gtranslator_find) },
+	  N_("   "), NULL},
+	 // G_CALLBACK (gtranslator_find) },
 	{ "EditReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, NULL,
-	  N_("   "),
-	  G_CALLBACK (gtranslator_replace_dialog) },
+	  N_("   "), NULL},
+	 // G_CALLBACK (gtranslator_replace_dialog) },
 	{ "EditHeader", GTK_STOCK_PROPERTIES, N_("_Header..."), NULL,
-	  N_("Edit po file header"),
-	  G_CALLBACK (gtranslator_header_edit_dialog) },
+	  N_("Edit po file header"), NULL},
+	  //G_CALLBACK (gtranslator_header_edit_dialog) },
 	{ "EditComment", GTK_STOCK_INDEX, N_("C_omment..."), NULL,
-	  N_("Edit message comment"),
-	  G_CALLBACK (gtranslator_edit_comment_dialog) },
+	  N_("Edit message comment"), NULL},
+	  //G_CALLBACK (gtranslator_edit_comment_dialog) },
 	{ "EditMessage2Trans", NULL, N_("Copy _message -> translation"), "<control>space",
-	  N_("Copy the original message contents and paste them as translation"),
-	  G_CALLBACK (gtranslator_message_copy_to_translation) },
+	  N_("Copy the original message contents and paste them as translation"),NULL},
+	  //G_CALLBACK (gtranslator_message_copy_to_translation) },
 	{ "EditFuzzy", NULL, N_("_Fuzzy"), "<control>U",
-	  N_("Toggle fuzzy status of a message"),
-	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
+	  N_("Toggle fuzzy status of a message"), NULL},
+	  //G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	{ "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
           G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
 	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
@@ -162,44 +159,44 @@ static const GtkActionEntry entries[] = {
 	
 	/* Action menu */
 	{ "ActionsCompile", GTK_STOCK_CONVERT, N_("_Compile"), NULL,
-          N_("Compile the po file"), G_CALLBACK(compile) },
+          N_("Compile the po file"), NULL },
 	{ "ActionsRefresh", GTK_STOCK_REFRESH, NULL, NULL,
           N_("  "), NULL },
 	{ "ActionsAddBookmark", GTK_STOCK_ADD, N_("_Add bookmark"), NULL,
-          N_("Add a bookmark for this message in this po file"),
-	  G_CALLBACK(gtranslator_bookmark_adding_dialog) },
+          N_("Add a bookmark for this message in this po file"), NULL},
+	  //G_CALLBACK(gtranslator_bookmark_adding_dialog) },
 	{ "ActionsAutotranslate", NULL, N_("Aut_otranslate..."), NULL,
-          N_("Autotranslate the file with information from your learn buffer"),
-	  G_CALLBACK(gtranslator_auto_translation_dialog) },
+          N_("Autotranslate the file with information from your learn buffer"), NULL},
+	  //G_CALLBACK(gtranslator_auto_translation_dialog) },
 	{ "ActionsRemoveTranslations", GTK_STOCK_REMOVE, N_("Remo_ve all translations..."), NULL,
-          N_("Remove all existing translations from the po file"),
-	  G_CALLBACK(gtranslator_remove_all_translations_dialog) },
+          N_("Remove all existing translations from the po file"), NULL},
+	  //G_CALLBACK(gtranslator_remove_all_translations_dialog) },
 	
         /* Go menu */
         { "GoFirst", GTK_STOCK_GOTO_FIRST, NULL, NULL,
-          N_("Go to the first message"),
-          G_CALLBACK (gtranslator_message_go_to_first) },
+          N_("Go to the first message"), NULL},
+          //G_CALLBACK (gtranslator_message_go_to_first) },
 	{ "GoPrevious", GTK_STOCK_GO_BACK, NULL, "Page_Down",
-          N_("Move back one message"),
-          G_CALLBACK (gtranslator_message_go_to_previous) },
+          N_("Move back one message"), NULL},
+          //G_CALLBACK (gtranslator_message_go_to_previous) },
 	{ "GoForward", GTK_STOCK_GO_FORWARD, NULL, "Page_Up",
-          N_("Move forward one message"),
-          G_CALLBACK (gtranslator_message_go_to_next) },
+          N_("Move forward one message"), NULL},
+          //G_CALLBACK (gtranslator_message_go_to_next) },
 	{ "GoLast", GTK_STOCK_GOTO_LAST, NULL, NULL,
-          N_("Go to the last message"),
-          G_CALLBACK (gtranslator_message_go_to_last) },
+          N_("Go to the last message"), NULL},
+          //G_CALLBACK (gtranslator_message_go_to_last) },
 	{ "GoJumpTo", GTK_STOCK_JUMP_TO, NULL, NULL,
-          N_("Go to especified message number"),
-          G_CALLBACK (gtranslator_go_to_dialog) },
+          N_("Go to especified message number"), NULL},
+          //G_CALLBACK (gtranslator_go_to_dialog) },
 	{ "GoNextFuzzy", GTK_STOCK_GO_FORWARD, N_("Next fuz_zy"),
-	  "<control>Page_Up", N_("Go to the next fuzzy message"),
-          G_CALLBACK (gtranslator_message_go_to_next_fuzzy) },
+	  "<control>Page_Up", N_("Go to the next fuzzy message"), NULL},
+          //G_CALLBACK (gtranslator_message_go_to_next_fuzzy) },
 	{ "GoPreviousFuzzy", GTK_STOCK_GO_BACK, N_("Previous fuzz_y"),
 	  "<control>Page_Down", N_("Go to the previous fuzzy message"),
           NULL },
 	{ "GoNextUntranslated", GTK_STOCK_GO_FORWARD, N_("Next _untranslated"),
-	  "<alt>Page_Up", N_("Go to the next untranslated message"),
-          G_CALLBACK (gtranslator_message_go_to_next_untranslated) },
+	  "<alt>Page_Up", N_("Go to the next untranslated message"), NULL},
+          //G_CALLBACK (gtranslator_message_go_to_next_untranslated) },
 	{ "GoPreviousUntranslated", GTK_STOCK_GO_FORWARD, N_("Previ_ous untranslated"),
 	  "<alt>Page_Down", N_("Go to the previous untranslated message"),
           NULL },
@@ -209,7 +206,7 @@ static const GtkActionEntry entries[] = {
 	  NULL },
 	{ "HelpWebSite", GTK_STOCK_HOME, N_("_Website"), NULL,
 	  N_("gtranslator's homepage on the web"),
-	  G_CALLBACK(gtranslator_utils_show_home_page) },
+	  G_CALLBACK(gtranslator_window_show_home_page) },
 	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
 	  G_CALLBACK (gtranslator_about_dialog) },
 };
@@ -250,7 +247,7 @@ gtranslator_window_update_progress_bar(GtranslatorWindow *window)
  * Shows the gtranslator homepage on the web.
  */
 static void
-gtranslator_utils_show_home_page(GtkWidget *widget,
+gtranslator_window_show_home_page(GtkWidget *widget,
 				 gpointer useless)
 {
 	gnome_url_show("http://gtranslator.sourceforge.net", NULL);
@@ -419,6 +416,11 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	
 	
 	/*
+	 * TODO: message area box
+	 */
+	
+	
+	/*
 	 * hpaned
 	 * TODO: Get the pane position
 	 */
@@ -480,6 +482,7 @@ gtranslator_window_init (GtranslatorWindow *window)
 	gtranslator_window_draw(window);
 	
 	gtranslator_window_restore_geometry(window, NULL);
+	
 }
 
 static void
@@ -529,4 +532,44 @@ GtkWidget *
 gtranslator_window_get_notebook(GtranslatorWindow *window)
 {
 	return window->priv->notebook;
+}
+
+void
+gtranslator_window_new_tab(GtranslatorWindow *window,
+			   gpointer data)
+{
+	GtkWidget *tab;
+	tab = gtranslator_tab_new(GTR_PO(data));
+	
+	gtranslator_notebook_add_page(GTR_NOTEBOOK(window->priv->notebook),
+				      tab);
+}
+
+GtranslatorTab *
+gtranslator_window_get_current_tab(GtranslatorWindow *window)
+{
+	return gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
+	
+}
+
+GtranslatorPo *
+gtranslator_window_get_current_po(GtranslatorWindow *window)
+{
+	GtranslatorTab *tab;
+	
+	tab = gtranslator_window_get_current_tab(window);
+	
+	return gtranslator_tab_get_po(tab);
+}
+
+GtranslatorPanel *
+gtranslator_window_get_side_panel(GtranslatorWindow *window)
+{
+	return GTR_PANEL(window->priv->sidebar);
+}
+
+GtkStatusbar *
+gtranslator_window_get_statusbar(GtranslatorWindow *window)
+{
+	return GTK_STATUSBAR(window->priv->statusbar);
 }

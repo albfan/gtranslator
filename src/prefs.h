@@ -25,6 +25,7 @@
 #include <gtk/gtkwidget.h>
 
 #include "preferences.h"
+#include "window.h"
 
 /*
  * The preferences structure of gtranslator.
@@ -95,7 +96,7 @@ struct {
 /*
  * Creating the preferences box and the needed backend-functions.
  */
-void gtranslator_preferences_dialog_create(GtkWidget *widget, gpointer useless);
+void gtranslator_preferences_dialog_create(GtkWidget *widget, GtranslatorWindow *window);
 void gtranslator_preferences_read(void);
 void gtranslator_preferences_free(void);
 
