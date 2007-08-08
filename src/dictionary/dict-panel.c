@@ -20,7 +20,7 @@
 #endif
 
 #include "dict-panel.h"
-#include "gdict-sidebar.h"
+#include "dict-sidebar.h"
 #include "dialogs.h" //gtranslator_show_message
 
 #include <glib.h>
@@ -29,6 +29,7 @@
 #include <gtk/gtk.h>
 #include <gdict/gdict.h>
 #include <gconf/gconf-client.h>
+#include <string.h>
 
 #define GTR_DICT_PANEL_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 						 (object),		       \
@@ -284,7 +285,7 @@ strategy_activated_cb (GdictStrategyChooser *chooser,
                        const gchar          *strat_desc,
                        GtranslatorDictPanel *panel)
 {
-	GtranslatorDictPanelPrivate *priv = panel->priv;
+	//GtranslatorDictPanelPrivate *priv = panel->priv;
 	gtranslator_dict_panel_set_strategy (panel, strat_name);
 /*
   if (window->status)
@@ -303,7 +304,7 @@ database_activated_cb (GdictDatabaseChooser *chooser,
 		       const gchar          *db_desc,
 		       GtranslatorDictPanel *panel)
 {
-	GtranslatorDictPanelPrivate *priv = panel->priv;
+	//GtranslatorDictPanelPrivate *priv = panel->priv;
 	gtranslator_dict_panel_set_database (panel, db_name);
 	/*
   if (window->status)
@@ -322,7 +323,7 @@ gtranslator_dict_panel_set_word (GtranslatorDictPanel *panel,
 				 const gchar *database)
 {
 	GtranslatorDictPanelPrivate *priv = panel->priv;
-	gchar *title;
+	//gchar *title;
 	
 	g_free (priv->word);
 	priv->word = NULL;
@@ -539,7 +540,7 @@ gtranslator_dict_panel_gconf_notify_cb (GConfClient *client,
 			      gpointer     user_data)
 {
 	GtranslatorDictPanel *panel = GTR_DICT_PANEL (user_data);
-	GtranslatorDictPanelPrivate *priv = panel->priv;
+	//GtranslatorDictPanelPrivate *priv = panel->priv;
 
 	if (strcmp (entry->key, GDICT_GCONF_SOURCE_KEY) == 0)
 	{

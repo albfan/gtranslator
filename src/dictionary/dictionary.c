@@ -1,6 +1,5 @@
 #include "dictionary.h"
 #include "dict-panel.h"
-#include "gui.h"
 #include <gdict/gdict.h>
 
 #define GLADE_DICTIONARY_BOX "dictionary_box"

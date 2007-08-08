@@ -36,7 +36,7 @@
 #include <gtk/gtkbindings.h>
 #include <glib/gi18n.h>
 
-#include "gdict-sidebar.h"
+#include "dict-sidebar.h"
 
 typedef struct
 {
@@ -82,7 +82,7 @@ sidebar_page_id_quark (void)
   return g_quark_from_static_string ("gdict-sidebar-page-id");
 }
 
-SidebarPage *
+static SidebarPage *
 sidebar_page_new (const gchar *id,
 		  const gchar *name,
 		  GtkWidget   *widget)
@@ -100,7 +100,7 @@ sidebar_page_new (const gchar *id,
   return page;
 }
 
-void
+static void
 sidebar_page_free (SidebarPage *page)
 {
   if (G_LIKELY (page))
@@ -437,7 +437,7 @@ gdict_sidebar_remove_page (GdictSidebar *sidebar,
 {
   GdictSidebarPrivate *priv;
   SidebarPage *page;
-  GtkWidget *menu_item;
+  //GtkWidget *menu_item;
   GList *children, *l;
   
   g_return_if_fail (GDICT_IS_SIDEBAR (sidebar));
