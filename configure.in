@@ -204,6 +204,9 @@ man/gtranslator.1
 po/Makefile.in
 src/Makefile
 src/toolbareditor/Makefile
+src/dialogs/Makefile
+src/dictionary/Makefile
+src/charmap/Makefile
 ])
 
 dnl ------------------------------------------------------------------
