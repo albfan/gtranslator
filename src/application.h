@@ -33,29 +33,42 @@ G_BEGIN_DECLS
 #define GTR_TYPE_APPLICATION		(gtranslator_application_get_type ())
 #define GTR_APPLICATION(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GTR_TYPE_APPLICATION, GtranslatorApplication))
 #define GTR_APPLICATION_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), GTR_TYPE_APPLICATION, GtranslatorApplicationClass))
-#define GTR_IS_APPLICATION(o)	(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_APPLICATION))
+#define GTR_IS_APPLICATION(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_APPLICATION))
 #define GTR_IS_APPLICATION_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_APPLICATION))
 #define GTR_APPLICATION_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_APPLIAPPLICATION, GtranslatorApplicationClass))
 
-#define GTR_APP			(gtranslator_application_get_instance())
+#define GTR_APP			        (gtranslator_application_get_instance())
+
+/* Private structure type */
+typedef struct _GtranslatorApplicationPrivate	GtranslatorApplicationPrivate;
 
 /*
  * Main object structure
  */
 typedef struct _GtranslatorApplication		GtranslatorApplication;
 
+struct _GtranslatorApplication
+{
+	GObject base_instance;
+	
+	/*< private > */
+	GtranslatorApplicationPrivate *priv;
+};
 
 /*
  * Class definition
  */
 typedef struct _GtranslatorApplicationClass	GtranslatorApplicationClass;
 
-
+struct _GtranslatorApplicationClass
+{
+	GObjectClass parent_class;
+};
 
 /*
  * Public methods
  */
-GType		 gtranslator_application_get_type	   (void) G_GNUC_CONST;
+GType		         gtranslator_application_get_type	   (void) G_GNUC_CONST;
 GtranslatorApplication	*gtranslator_application_get_instance	           (void);
 
 

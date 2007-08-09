@@ -26,9 +26,9 @@
 #include <gnome.h>
 
 #include "application.h"
-#include "bookmark.h"
-#include "dialogs.h"
-#include "gui.h"
+//#include "bookmark.h"
+//#include "dialogs.h"
+//#include "gui.h"
 #include "learn.h"
 #include "prefs.h"
 #include "runtime-config.h"
@@ -231,11 +231,11 @@ int main(int argc, char *argv[])
 	/*
 	 * Test if there's a crash recovery file lying around in ~/.gtranslator.
 	 */
-	if(g_file_test(gtranslator_runtime_config->crash_filename, G_FILE_TEST_EXISTS))
+/*	if(g_file_test(gtranslator_runtime_config->crash_filename, G_FILE_TEST_EXISTS))
 	{
-//		gtranslator_rescue_file_dialog();
+		gtranslator_rescue_file_dialog();
 	}
-
+*/
 	/*
 	 * Open up the arguments as files (for now, only the first file is
 	 *  opened).

@@ -20,6 +20,11 @@
 #include <config.h>
 #endif
 
+#include "file-dialogs.h"
+#include "po.h"
+#include "prefs.h"
+#include "msg.h"
+#include "window.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -27,21 +32,16 @@
 #include <gtk/gtk.h>
 #include <gettext-po.h>
 
-#include "po.h"
-#include "prefs.h"
-#include "file-dialogs.c"
-#include "message.h"
-#include "window.h"
-
 #define GTR_PO_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 					 (object),	\
 					 GTR_TYPE_PO,     \
 					 GtranslatorPoPrivate))
 
+
 G_DEFINE_TYPE(GtranslatorPo, gtranslator_po, G_TYPE_OBJECT)
 
 struct _GtranslatorPoPrivate
-{		
+{
 	/*
 	 * Absolute file name
 	 */
@@ -100,12 +100,10 @@ struct _GtranslatorPoPrivate
 
 static gboolean parser_errors;
 
-
-
 static void
 gtranslator_po_init (GtranslatorPo *po)
 {
-	po->priv = GTR_PO_GET_PRIVATE(po);
+	po->priv = GTR_PO_GET_PRIVATE (po);
 }
 
 static void
@@ -124,6 +122,7 @@ gtranslator_po_class_init (GtranslatorPoClass *klass)
 	object_class->finalize = gtranslator_po_finalize;
 }
 
+
 /*
  * The core parsing function for the given po file.
  */ 
@@ -133,7 +132,7 @@ gtranslator_po_new(const gchar *filename,
 {
 	GtranslatorPo *po;
 	GtranslatorPoPrivate *priv;
-	GtrMsg *msg;
+	GtranslatorMsg *msg;
 	gchar *base;
 	int i = 0;
 	po_message_iterator_t iter;
@@ -236,8 +235,8 @@ gtranslator_po_new(const gchar *filename,
 	while((message = po_next_message(iter)))
 	{
 		/* Unpack into a GtrMsg */
-		msg = g_new0(GtrMsg, 1);
-		msg->message = message;
+		msg = gtranslator_msg_new();
+		gtranslator_msg_set_message(msg, message);
   
 		/* Build up messages */
 		priv->messages = g_list_append(priv->messages, msg);

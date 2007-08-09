@@ -67,6 +67,8 @@ struct _GtranslatorWindowPrivate
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
+	
+	GtranslatorTab *active_tab;
 };
 	
 
@@ -521,12 +523,11 @@ gtranslator_window_class_init (GtranslatorWindowClass *klass)
 	object_class->dispose = gtranslator_window_dispose;
 }
 
-GtkWidget *
-gtranslator_window_new (void)
+GtranslatorTab *
+gtranslator_window_get_active_tab(GtranslatorWindow *window)
 {
-	return GTK_WIDGET (g_object_new (GTR_TYPE_WINDOW, NULL));
+	return window->priv->active_tab;
 }
-
 
 GtkWidget *
 gtranslator_window_get_notebook(GtranslatorWindow *window)
@@ -534,33 +535,6 @@ gtranslator_window_get_notebook(GtranslatorWindow *window)
 	return window->priv->notebook;
 }
 
-void
-gtranslator_window_new_tab(GtranslatorWindow *window,
-			   gpointer data)
-{
-	GtkWidget *tab;
-	tab = gtranslator_tab_new(GTR_PO(data));
-	
-	gtranslator_notebook_add_page(GTR_NOTEBOOK(window->priv->notebook),
-				      tab);
-}
-
-GtranslatorTab *
-gtranslator_window_get_current_tab(GtranslatorWindow *window)
-{
-	return gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
-	
-}
-
-GtranslatorPo *
-gtranslator_window_get_current_po(GtranslatorWindow *window)
-{
-	GtranslatorTab *tab;
-	
-	tab = gtranslator_window_get_current_tab(window);
-	
-	return gtranslator_tab_get_po(tab);
-}
 
 GtranslatorPanel *
 gtranslator_window_get_side_panel(GtranslatorWindow *window)
@@ -572,4 +546,10 @@ GtkStatusbar *
 gtranslator_window_get_statusbar(GtranslatorWindow *window)
 {
 	return GTK_STATUSBAR(window->priv->statusbar);
+}
+
+GtkUIManager *
+gtranslator_window_get_ui_manager(GtranslatorWindow *window)
+{
+	return window->priv->ui_manager;
 }

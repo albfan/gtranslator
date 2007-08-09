@@ -26,7 +26,7 @@
 #include <config.h>
 #endif
 
-#include "dialogs.h"
+//#include "dialogs.h"
 #include "find.h"
 #include "gui.h"
 #include "languages.h"

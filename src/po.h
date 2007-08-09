@@ -23,9 +23,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-#include "window.h"
-
-//#include "message.h"
+//#include "window.h"
 
 G_BEGIN_DECLS
 
@@ -38,14 +36,6 @@ G_BEGIN_DECLS
 #define GTR_IS_PO(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_PO))
 #define GTR_IS_PO_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_PO))
 #define GTR_PO_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_PO, GtranslatorPoClass))
-
-#define GTR_PARSER_ERROR gtranslator_parser_error_quark()
-/*typedef enum
-{
-	GTR_PARSER_ERROR_GETTEXT,
-	GTR_PARSER_ERROR_FILENAME,
-	GTR_PARSER_ERROR_OTHER,
-} GtrParserError;*/
 
 /* Private structure type */
 typedef struct _GtranslatorPoPrivate	GtranslatorPoPrivate;
@@ -76,24 +66,22 @@ struct _GtranslatorPoClass
 /*
  * Public methods
  */
-GType		 gtranslator_po_get_type	             (void) G_GNUC_CONST;
+GType		 gtranslator_po_get_type	       (void) G_GNUC_CONST;
 
-GType		 gtranslator_po_register_type	             (GTypeModule * module);
+GType		 gtranslator_po_register_type	       (GTypeModule * module);
 
-GtranslatorPo   *gtranslator_po_new                          (const gchar *filename,
-							      GError **error);
+GtranslatorPo   *gtranslator_po_new                    (const gchar *filename,
+							GError **error);
 
-//GtrMsg *gtranslator_po_get_current_msg(GtranslatorPo *po);
+gchar           *gtranslator_po_get_filename           (GtranslatorPo *po);
 
-gchar           *gtranslator_po_get_filename                 (GtranslatorPo *po);
+void             gtranslator_po_set_filename           (GtranslatorPo *po,
+							gchar *data);
 
-void             gtranslator_po_set_filename                 (GtranslatorPo *po,
-							      gchar *data);
+gboolean         gtranslator_po_get_write_perms        (GtranslatorPo *po);
 
-gboolean         gtranslator_po_get_write_perms              (GtranslatorPo *po);
-
-//void           gtranslator_po_parse_file_from_dialog       (GtkWidget * dialog, GtranslatorWindow *window);
-
+/*void             gtranslator_po_parse_file_from_dialog (GtkWidget * dialog,
+							GtranslatorWindow *window);*/
 
 G_END_DECLS
 

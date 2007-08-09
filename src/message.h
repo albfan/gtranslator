@@ -21,7 +21,7 @@
 #ifndef GTR_MESSAGE_H
 #define GTR_MESSAGE_H 1
 
-#include "comment.h"
+//#include "comment.h"
 
 #include <gtk/gtktreemodel.h>
 #include <gtk/gtkwidget.h>
@@ -59,7 +59,7 @@ typedef enum {
  * The generally used message structure in gtranslator.
  */ 
 typedef struct {
-	GtrComment 	*comment;
+	//GtrComment 	*comment;
 
 	po_message_t message;
 	

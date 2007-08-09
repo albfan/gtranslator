@@ -64,11 +64,11 @@ gtranslator_file_chooser_new (GtkWindow *parent,
 	
 	/*This should change and use libglade*/
 	dialog = gtk_file_chooser_dialog_new(title,
-				      parent,
-				      (mode == FILESEL_SAVE) ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_OPEN,
-				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-				      (mode == FILESEL_SAVE) ? GTK_STOCK_SAVE : GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-				      NULL);
+					     parent,
+					     (mode == FILESEL_SAVE) ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_OPEN,
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					     (mode == FILESEL_SAVE) ? GTK_STOCK_SAVE : GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					     NULL);
 	gtk_dialog_set_default_response(GTK_DIALOG(dialog),GTK_RESPONSE_ACCEPT);
 	if (mode != FILESEL_SAVE)
 		{
@@ -109,8 +109,8 @@ gtranslator_file_chooser_analyse(gpointer dialog,
 	switch (reply){
 		case GTK_RESPONSE_ACCEPT:
 			if (mode == FILESEL_OPEN){
-				//gtranslator_po_parse_file_from_dialog(GTK_WIDGET(dialog),
-				//				      window);
+				gtranslator_po_parse_file_from_dialog(GTK_WIDGET(dialog),
+								      window);
 			} else {
 				gtranslator_save_file_dialog(GTK_WIDGET(dialog), window);
 			}
@@ -198,7 +198,7 @@ gtranslator_open_file_dialog(GtkWidget * widget,
 			gtk_widget_destroy(GTK_WIDGET(dialog));
 		return;
 	}*/
-	
+	g_warning("ei");
 	if(dialog != NULL) {
 		gtk_window_present(GTK_WINDOW(dialog));
 		return;
@@ -206,7 +206,6 @@ gtranslator_open_file_dialog(GtkWidget * widget,
 	dialog = gtranslator_file_chooser_new (GTK_WINDOW(window), 
 					       FILESEL_OPEN,
 					       _("Open file for translation"));	
-
 	/*
 	 * With the gettext parser/writer API, we can't currently read/write
 	 * to remote files with gnome-vfs. Eventually, we should intercept

@@ -32,42 +32,46 @@
 
 
 
+#define GTR_APPLICATION_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
+					 (object),	\
+					 GTR_TYPE_APPLICATION,     \
+					 GtranslatorApplicationPrivate))
 
-struct _GtranslatorApplication
+G_DEFINE_TYPE(GtranslatorApplication, gtranslator_application, G_TYPE_OBJECT)
+
+struct _GtranslatorApplicationPrivate
 {
-	GObject base_instance;
+	GtranslatorWindow *active_window;
 	
 	gchar *toolbars_file;
 	EggToolbarsModel *toolbars_model;
 };
 
 
-struct _GtranslatorApplicationClass
-{
-	GObjectClass parent_class;
-};
-
-G_DEFINE_TYPE(GtranslatorApplication, gtranslator_application, G_TYPE_OBJECT)
-
 
 static void
 gtranslator_application_init (GtranslatorApplication *application)
 {
-	application->toolbars_model = egg_toolbars_model_new ();
+	GtranslatorApplicationPrivate * priv;
+	
+	application->priv = GTR_APPLICATION_GET_PRIVATE (application);
+	priv = application->priv;
+	
+	priv->toolbars_model = egg_toolbars_model_new ();
 
-	application->toolbars_file = g_strdup_printf(
+	priv->toolbars_file = g_strdup_printf(
 				     "%s/.gtranslator/gtr-toolbar.xml", g_get_home_dir());
 	
-	egg_toolbars_model_load_names (application->toolbars_model,
+	egg_toolbars_model_load_names (priv->toolbars_model,
 				       "gtr-toolbar.xml");
 
-	if (!egg_toolbars_model_load_toolbars (application->toolbars_model,
-					       application->toolbars_file)) {
-		egg_toolbars_model_load_toolbars (application->toolbars_model,
+	if (!egg_toolbars_model_load_toolbars (priv->toolbars_model,
+					       priv->toolbars_file)) {
+		egg_toolbars_model_load_toolbars (priv->toolbars_model,
 						  "gtr-toolbar.xml");
 	}
 
-	egg_toolbars_model_set_flags (application->toolbars_model, 0,
+	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
 	
 	gtranslator_preferences_read();
@@ -83,6 +87,11 @@ gtranslator_application_finalize (GObject *object)
 static void
 gtranslator_application_class_init (GtranslatorApplicationClass *klass)
 {
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	g_type_class_add_private (klass, sizeof (GtranslatorApplicationPrivate));
+	
+	object_class->finalize = gtranslator_application_finalize;
 }
 
 GtranslatorApplication *
@@ -100,21 +109,23 @@ gtranslator_application_get_instance (void)
 void
 gtranslator_application_open_window (GtranslatorApplication *app)
 {
-	GtkWidget *window;
-	window = gtranslator_window_new();
-	gtk_widget_show_all(window);
+	GtranslatorWindow *window;
+
+	app->priv->active_window = window = GTR_WINDOW(g_object_new(GTR_TYPE_WINDOW, NULL));
+	
+	gtk_widget_show_all(GTK_WIDGET(window));
 }
 				     
 
 EggToolbarsModel *
 gtranslator_application_get_toolbars_model (GtranslatorApplication *application)
 {
-	return application->toolbars_model;
+	return application->priv->toolbars_model;
 }
 
 void
 gtranslator_application_save_toolbars_model (GtranslatorApplication *application)
 {
-        egg_toolbars_model_save_toolbars (application->toolbars_model,
-			 	          application->toolbars_file, "1.0");
+        egg_toolbars_model_save_toolbars (application->priv->toolbars_model,
+			 	          application->priv->toolbars_file, "1.0");
 }

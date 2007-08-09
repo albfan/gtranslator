@@ -17,7 +17,7 @@
  *
  */
 
-#include "dialogs.h"
+//#include "dialogs.h"
 #include "gui.h"
 #include "nautilus-string.h"
 #include "parse.h"

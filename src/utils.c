@@ -22,7 +22,7 @@
 #include <config.h>
 #endif
 
-#include "dialogs.h"
+//#include "dialogs.h"
 #include "gui.h"
 #include "languages.h"
 #include "nautilus-string.h"
@@ -306,7 +306,7 @@ void gtranslator_utils_create_gtranslator_directory()
 gboolean gtranslator_utils_autosave(gpointer data)
 {
 	GList	*pagelist;
-	GtrPage	*page;
+	//GtrPage	*page;
 
 	/*
 	 * Call autosave on any currently open pages

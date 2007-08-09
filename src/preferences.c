@@ -31,6 +31,7 @@
 #include <gdk/gdk.h>
 
 //#include <libgnome/gnome-defs.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 
 GConfClient	*client=NULL;
