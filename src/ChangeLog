@@ -1,5 +1,10 @@
 2007-08-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* window.c: Added GtkRecentManager to manage the history.
+	  history.ch is not needed anymore with this.
+
+2007-08-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* alternate-language.ch: Added. This is a panel to manage
 	  an alternative language (Bug #365231). This is not finished yet.
 

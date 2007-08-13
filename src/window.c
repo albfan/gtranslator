@@ -67,6 +67,8 @@ struct _GtranslatorWindowPrivate
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
+	GtkRecentManager *recent_manager;
+	GtkWidget *recent_menu;
 	
 	GtranslatorTab *active_tab;
 };
@@ -199,7 +201,7 @@ static const GtkActionEntry entries[] = {
 	{ "GoNextUntranslated", GTK_STOCK_GO_FORWARD, N_("Next _untranslated"),
 	  "<alt>Page_Up", N_("Go to the next untranslated message"), NULL},
           //G_CALLBACK (gtranslator_message_go_to_next_untranslated) },
-	{ "GoPreviousUntranslated", GTK_STOCK_GO_FORWARD, N_("Previ_ous untranslated"),
+	{ "GoPreviousUntranslated", GTK_STOCK_GO_BACK, N_("Previ_ous untranslated"),
 	  "<alt>Page_Down", N_("Go to the previous untranslated message"),
           NULL },
 
@@ -299,9 +301,125 @@ gtranslator_window_restore_geometry(GtranslatorWindow *window,
 }
 
 static void
+gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
+					      GtranslatorWindow *window)
+{
+	gchar *uri, *path;
+	GError *error = NULL;
+
+	uri = gtk_recent_chooser_get_current_uri (chooser);
+
+	path = g_filename_from_uri (uri, NULL, NULL);
+	if (error)
+	{
+		g_warning ("Could not convert uri \"%s\" to a local path: %s",
+			   uri, error->message);
+		g_error_free (error);
+		return;
+	}
+	
+	/*I need to call to gtranslator_open here
+	if (!glade_project_window_open_project (gpw, path))
+	{
+		gpw_recent_remove (gpw, path);
+	}*/
+
+	g_free (uri);
+	g_free (path);
+}
+
+static GtkWidget *
+create_recent_chooser_menu (GtranslatorWindow *window,
+			    GtkRecentManager *manager)
+{
+	GtkWidget *recent_menu;
+	GtkRecentFilter *filter;
+
+	recent_menu = gtk_recent_chooser_menu_new_for_manager (manager);
+
+	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent_menu), TRUE);
+	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent_menu), FALSE);
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent_menu), GTK_RECENT_SORT_MRU);
+	gtk_recent_chooser_menu_set_show_numbers (GTK_RECENT_CHOOSER_MENU (recent_menu), TRUE);
+
+	filter = gtk_recent_filter_new ();
+	gtk_recent_filter_add_application (filter, g_get_application_name());
+	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent_menu), filter);
+
+	return recent_menu;
+}
+
+void
+gtranslator_recent_add (GtranslatorWindow *window,
+			const gchar *path)
+{
+	GtkRecentData *recent_data;
+	gchar *uri;
+	GError *error = NULL;
+
+	uri = g_filename_to_uri (path, NULL, &error);
+	if (error)
+	{	
+		g_warning ("Could not convert uri \"%s\" to a local path: %s",
+			   uri, error->message);
+		g_error_free (error);
+		return;
+	}
+
+	recent_data = g_slice_new (GtkRecentData);
+
+	recent_data->display_name   = NULL;
+	recent_data->description    = NULL;
+	recent_data->mime_type      = "text/x-gettext-translation";
+	recent_data->app_name       = (gchar *) g_get_application_name ();
+	recent_data->app_exec       = g_strjoin (" ", g_get_prgname (), "%u", NULL);
+	recent_data->groups         = NULL;
+	recent_data->is_private     = FALSE;
+
+	if (!gtk_recent_manager_add_full (window->priv->recent_manager,
+				          uri,
+				          recent_data))
+	{
+      		g_warning ("Unable to add '%s' to the list of recently used documents", uri);
+	}
+
+	g_free (uri);
+	g_free (recent_data->app_exec);
+	g_slice_free (GtkRecentData, recent_data);
+
+}
+
+void
+gtranslator_recent_remove (GtranslatorWindow *window,
+			   const gchar *path)
+{
+	gchar *uri;
+	GError *error = NULL;
+
+	uri = g_filename_to_uri (path, NULL, &error);
+	if (error)
+	{	
+		g_warning ("Could not convert uri \"%s\" to a local path: %s",
+			   uri, error->message);
+		g_error_free (error);
+		return;
+	}
+	
+	gtk_recent_manager_remove_item (window->priv->recent_manager, uri, &error);
+	if (error)
+	{
+		g_warning ("Could not remove recent-files uri \"%s\": %s",
+			   uri, error->message);
+		g_error_free (error);
+	}
+	
+	g_free (uri);
+}
+
+static void
 gtranslator_window_set_action_sensitive (GtranslatorWindow   *window,
-					 const char *name,
-					 gboolean    sensitive)
+					 const gchar *name,
+					 gboolean sensitive)
 {
 	GtkAction *action = gtk_action_group_get_action (window->priv->action_group,
 							 name);
@@ -361,6 +479,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	GtkWidget *hbox; //Statusbar and progressbar
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
+	GtkWidget *widget;
 	GError *error = NULL;
 	
 	GtranslatorWindowPrivate *priv = window->priv;
@@ -399,7 +518,21 @@ gtranslator_window_draw (GtranslatorWindow *window)
 			    priv->menubar,
 			    FALSE, FALSE, 0);
 	
+	/* recent files */	
+	priv->recent_manager = gtk_recent_manager_get_for_screen (gtk_widget_get_screen (GTK_WIDGET(window)));
+
+	priv->recent_menu = create_recent_chooser_menu (window, priv->recent_manager);
+
+	g_signal_connect (priv->recent_menu,
+			  "item-activated",
+			  G_CALLBACK (gtranslator_recent_chooser_item_activated_cb),
+			  window);
+			  
+	widget = gtk_ui_manager_get_widget (priv->ui_manager,
+					    "/MainMenu/FileMenu/FileRecentFilesMenu");
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), priv->recent_menu);
 	
+
 	/*
 	 * Toolbar
 	 */
@@ -521,6 +654,21 @@ gtranslator_window_class_init (GtranslatorWindowClass *klass)
 
 	object_class->finalize = gtranslator_window_finalize;
 	object_class->dispose = gtranslator_window_dispose;
+}
+
+/***************************** Public funcs ***********************************/
+
+GtranslatorTab *
+gtranslator_window_create_tab(GtranslatorWindow *window)
+{
+	GtranslatorTab *tab;
+	
+	tab = gtranslator_tab_new(NULL);
+	gtk_widget_show(GTK_WIDGET(tab));
+	
+	gtranslator_notebook_add_page(GTR_NOTEBOOK(window->priv->notebook),
+				      tab);
+	return tab;
 }
 
 GtranslatorTab *
