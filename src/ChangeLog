@@ -1,3 +1,19 @@
+2007-08-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* alternate-language.ch: Added. This is a panel to manage
+	  an alternative language (Bug #365231). This is not finished yet.
+
+2007-08-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* bookmark.c, compile.c, history.c, colorschemes.ch, session.c
+	  vfs-handle.c, message-table.c, message.ch, parse.ch: 
+		Removed from Makefile.am. 
+	* msg.ch: Added to replace message.ch.
+	* po.ch: Added to replace parse.ch.
+	* window.ch: Added some get and set funcs.
+	* application.c: Added create window func.
+	* main.c, prefs.c: Removed some func calls becouse of missing files.
+
 2007-08-07  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* tab.c: Added status widgets.
