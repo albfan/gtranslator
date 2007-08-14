@@ -39,7 +39,7 @@ G_DEFINE_TYPE(GtranslatorMsg, gtranslator_msg, G_TYPE_OBJECT)
 struct _GtranslatorMsgPrivate
 {
 	//Missing comment
-	
+	//Header too??
 	po_message_t message;
 };
 
@@ -66,18 +66,38 @@ gtranslator_msg_class_init (GtranslatorMsgClass *klass)
 	object_class->finalize = gtranslator_msg_finalize;
 }
 
+/***************************** Public funcs ***********************************/
+
+/**
+ * gtranslator_msg_new:
+ * 
+ * Return value: a new #GtranslatorMsg object
+ **/
 GtranslatorMsg *
 gtranslator_msg_new(void)
 {
 	return g_object_new (GTR_TYPE_MSG, NULL);
 }
 
+/**
+ * gtranslator_msg_get_message:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: the message
+ **/
 po_message_t
 gtranslator_msg_get_message(GtranslatorMsg *msg)
 {
 	return msg->priv->message;
 }
 
+/**
+ * gtranslator_msg_set_message:
+ * @msg: a #GtranslatorMsg
+ * @message: the po_message_t to set into the @msg
+ *
+ * Sets the message into the #GtranslatorMsg class.
+ **/
 void
 gtranslator_msg_set_message(GtranslatorMsg *msg,
 			    po_message_t message)
@@ -85,21 +105,24 @@ gtranslator_msg_set_message(GtranslatorMsg *msg,
 	msg->priv->message = message;
 }
 
-/*
- * Returns TRUE if the message is translated
- */
+/**
+ * po_message_is_translated:
+ * @msg: a #GtranslatorMsg
+ * 
+ * Return value: TRUE if the message is translated
+ **/
 gboolean
-po_message_is_translated (po_message_t message)
+gtranslator_msg_is_translated (GtranslatorMsg *msg)
 {
-	if (po_message_msgid_plural(message) == NULL)
-		return po_message_msgstr(message)[0] != '\0';	
+	if (po_message_msgid_plural(msg->priv->message) == NULL)
+		return po_message_msgstr(msg->priv->message)[0] != '\0';	
 	else
 	{
 		gint i;
 
 		for (i = 0; ; i++)
 		{
-			const gchar *str_i = po_message_msgstr_plural(message, i);
+			const gchar *str_i = po_message_msgstr_plural(msg->priv->message, i);
 			if (str_i == NULL)
 				break;
 			if (str_i[0] == '\0')

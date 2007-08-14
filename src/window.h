@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "tab.h"
 #include "panel.h"
 
 G_BEGIN_DECLS
@@ -69,6 +70,9 @@ struct _GtranslatorWindowClass
 GType		  gtranslator_window_get_type	      (void) G_GNUC_CONST;
 
 GType		  gtranslator_window_register_type    (GTypeModule * module);
+
+GtranslatorTab   *gtranslator_window_create_tab       (GtranslatorWindow *window,
+						       GtranslatorPo *po);
 
 GtkWidget 	 *gtranslator_window_get_notebook     (GtranslatorWindow *window);
 

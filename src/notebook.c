@@ -156,6 +156,8 @@ gtranslator_notebook_class_init (GtranslatorNotebookClass *klass)
 	object_class->finalize = gtranslator_notebook_finalize;
 }
 
+/***************************** Public funcs ***********************************/
+
 GtkWidget *
 gtranslator_notebook_new()
 {
@@ -164,7 +166,7 @@ gtranslator_notebook_new()
 
 void
 gtranslator_notebook_add_page(GtranslatorNotebook *notebook,
-			      GtkWidget *tab)
+			      GtranslatorTab *tab)
 {
 	GtranslatorNotebookPrivate *priv = notebook->priv;
 	GtkWidget *label;

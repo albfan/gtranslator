@@ -232,14 +232,9 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 	object_class->finalize = gtranslator_tab_finalize;
 }
 
-static void
-gtranslator_tab_set_po(GtranslatorTab *tab,
-		       GtranslatorPo *po)
-{
-	tab->priv->po = po;
-}
+/***************************** Public funcs ***********************************/
 
-GtkWidget *
+GtranslatorTab *
 gtranslator_tab_new (GtranslatorPo *po)
 {
 	GtranslatorTab *tab;
@@ -247,10 +242,10 @@ gtranslator_tab_new (GtranslatorPo *po)
 	tab = g_object_new (GTR_TYPE_TAB, NULL);
 	
 	if(po)
-		gtranslator_tab_set_po(tab, po);
+		tab->priv->po = po;
 	
 	gtk_widget_show_all(GTK_WIDGET(tab));
-	return GTK_WIDGET(tab);
+	return tab;
 }
 
 GtranslatorPo *
@@ -259,16 +254,3 @@ gtranslator_tab_get_po(GtranslatorTab *tab)
 	return tab->priv->po;
 }
 
-void
-gtranslator_tab_set_trans_text(GtranslatorTab *tab,
-			       gchar *text,
-			       GCallback func,
-			       gint index)
-{
-	GtkTextBuffer *buf;
-	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[index]));
-	gtk_text_buffer_set_text(buf, (gchar*)text, -1);
-	/*This should connected once*/
-	g_signal_connect(buf, "end-user-action",
-			 G_CALLBACK(func), tab);
-}

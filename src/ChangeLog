@@ -1,3 +1,14 @@
+2007-08-14  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* history.ch: Removed from svn repository.
+	* Makefile.am: Removed history.ch
+	* tab.c: Removed gtranslator_tab_set_po func and
+	  gtranslator_tab_set_trans_text func.
+	* window.c: Added gtranslator_open func.
+	* po.c: Added comments, removed gtranslator_open func.
+	* msg.c: Added comments.
+
+
 2007-08-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c: Added GtkRecentManager to manage the history.

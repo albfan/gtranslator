@@ -300,55 +300,6 @@ gtranslator_window_restore_geometry(GtranslatorWindow *window,
 		gtk_window_resize(GTK_WINDOW(window), width, height);
 }
 
-static void
-gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
-					      GtranslatorWindow *window)
-{
-	gchar *uri, *path;
-	GError *error = NULL;
-
-	uri = gtk_recent_chooser_get_current_uri (chooser);
-
-	path = g_filename_from_uri (uri, NULL, NULL);
-	if (error)
-	{
-		g_warning ("Could not convert uri \"%s\" to a local path: %s",
-			   uri, error->message);
-		g_error_free (error);
-		return;
-	}
-	
-	/*I need to call to gtranslator_open here
-	if (!glade_project_window_open_project (gpw, path))
-	{
-		gpw_recent_remove (gpw, path);
-	}*/
-
-	g_free (uri);
-	g_free (path);
-}
-
-static GtkWidget *
-create_recent_chooser_menu (GtranslatorWindow *window,
-			    GtkRecentManager *manager)
-{
-	GtkWidget *recent_menu;
-	GtkRecentFilter *filter;
-
-	recent_menu = gtk_recent_chooser_menu_new_for_manager (manager);
-
-	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent_menu), TRUE);
-	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent_menu), FALSE);
-	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent_menu), GTK_RECENT_SORT_MRU);
-	gtk_recent_chooser_menu_set_show_numbers (GTK_RECENT_CHOOSER_MENU (recent_menu), TRUE);
-
-	filter = gtk_recent_filter_new ();
-	gtk_recent_filter_add_application (filter, g_get_application_name());
-	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent_menu), filter);
-
-	return recent_menu;
-}
-
 void
 gtranslator_recent_add (GtranslatorWindow *window,
 			const gchar *path)
@@ -417,7 +368,57 @@ gtranslator_recent_remove (GtranslatorWindow *window,
 }
 
 static void
-gtranslator_window_set_action_sensitive (GtranslatorWindow   *window,
+gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
+					      GtranslatorWindow *window)
+{
+	gchar *uri, *path;
+	GError *error = NULL;
+
+	uri = gtk_recent_chooser_get_current_uri (chooser);
+
+	path = g_filename_from_uri (uri, NULL, NULL);
+	if (error)
+	{
+		g_warning ("Could not convert uri \"%s\" to a local path: %s",
+			   uri, error->message);
+		g_error_free (error);
+		return;
+	}
+	
+	
+	gtranslator_open (path, window, &error);
+	if(error)
+	{
+		gtranslator_recent_remove (window, path);
+	}
+
+	g_free (uri);
+	g_free (path);
+}
+
+static GtkWidget *
+create_recent_chooser_menu (GtranslatorWindow *window,
+			    GtkRecentManager *manager)
+{
+	GtkWidget *recent_menu;
+	GtkRecentFilter *filter;
+
+	recent_menu = gtk_recent_chooser_menu_new_for_manager (manager);
+
+	gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent_menu), TRUE);
+	gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent_menu), FALSE);
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent_menu), GTK_RECENT_SORT_MRU);
+	gtk_recent_chooser_menu_set_show_numbers (GTK_RECENT_CHOOSER_MENU (recent_menu), TRUE);
+
+	filter = gtk_recent_filter_new ();
+	gtk_recent_filter_add_application (filter, g_get_application_name());
+	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent_menu), filter);
+
+	return recent_menu;
+}
+
+static void
+gtranslator_window_set_action_sensitive (GtranslatorWindow *window,
 					 const gchar *name,
 					 gboolean sensitive)
 {
@@ -659,11 +660,12 @@ gtranslator_window_class_init (GtranslatorWindowClass *klass)
 /***************************** Public funcs ***********************************/
 
 GtranslatorTab *
-gtranslator_window_create_tab(GtranslatorWindow *window)
+gtranslator_window_create_tab(GtranslatorWindow *window,
+			      GtranslatorPo *po)
 {
 	GtranslatorTab *tab;
 	
-	tab = gtranslator_tab_new(NULL);
+	tab = gtranslator_tab_new(po);
 	gtk_widget_show(GTK_WIDGET(tab));
 	
 	gtranslator_notebook_add_page(GTR_NOTEBOOK(window->priv->notebook),
@@ -700,4 +702,42 @@ GtkUIManager *
 gtranslator_window_get_ui_manager(GtranslatorWindow *window)
 {
 	return window->priv->ui_manager;
+}
+
+
+/*
+ * The main file opening function. Checks that the file isn't already open,
+ * and if not, opens it in a new tab.
+ */
+gboolean 
+gtranslator_open(const gchar *filename,
+		 GtranslatorWindow *window,
+		 GError **error)
+{
+	GtranslatorPo	*po;
+	
+	/*
+	 * If the filename can't be opened, pass the error back to the caller
+	 * to handle.
+	 */
+	po = gtranslator_po_new();
+	gtranslator_po_parse(po, filename, error);
+	//missing something like if error return FALSE
+
+	/*
+	 * If not a crash/temporary file, add to the history.
+	 */
+	gtranslator_recent_add(window, filename);
+
+	/*
+	 * Create a page to add to our list of open files
+	 */
+	gtranslator_window_create_tab(window, po);
+	
+	/*
+	 * Show the current message.
+	 */
+	//gtranslator_message_show(po->current->data);
+	
+	return TRUE;
 }

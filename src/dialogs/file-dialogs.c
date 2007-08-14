@@ -95,6 +95,32 @@ gtranslator_file_chooser_new (GtkWindow *parent,
 	return GTK_WINDOW(dialog);
 }
 
+static void 
+gtranslator_po_parse_file_from_dialog(GtkWidget * dialog,
+				      GtranslatorWindow *window)
+{
+	gchar *po_file;
+	GError *error;
+	po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+
+	gtranslator_file_dialogs_store_directory(po_file);
+
+	/*
+	 * Open the file via our centralized opening function.
+	 */
+	if(!gtranslator_open(po_file, window, &error)) {
+		if(error) {
+			//gtranslator_show_message(error->message, NULL);
+			g_error_free(error);
+		}
+	}
+
+	/*
+	 * Destroy the dialog 
+	 */
+	gtk_widget_destroy(dialog);
+}
+
 /*
  * Gtkfilechooser response analyser
  */
@@ -153,7 +179,7 @@ gtranslator_save_file_dialog(GtkWidget *widget,
 	      *po_file_normalized;
 	GtranslatorPo *po;
 	
-	po = gtranslator_window_get_current_po(window);
+	//po = gtranslator_window_get_active_po(window);
 	
  	po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget)));
 	po_file_normalized = g_utf8_normalize( po_file, -1, G_NORMALIZE_DEFAULT_COMPOSE);
@@ -162,7 +188,7 @@ gtranslator_save_file_dialog(GtkWidget *widget,
 
 	if (g_file_test(po_file, G_FILE_TEST_EXISTS))
 	{
-		gtranslator_po_set_filename(po, po_file);
+		//gtranslator_po_set_filename(po, po_file);
 		
 		GtkWidget *dialog, *button;
 	
@@ -198,7 +224,7 @@ gtranslator_open_file_dialog(GtkWidget * widget,
 			gtk_widget_destroy(GTK_WIDGET(dialog));
 		return;
 	}*/
-	g_warning("ei");
+
 	if(dialog != NULL) {
 		gtk_window_present(GTK_WINDOW(dialog));
 		return;
@@ -234,7 +260,7 @@ gtranslator_save_file_as_dialog(GtkWidget * widget,
 		return;
 	}
   
-	current_page = gtranslator_window_get_current_tab(window);
+	current_page = gtranslator_window_get_active_tab(window);
 	po = gtranslator_tab_get_po(current_page);
 	if(gtranslator_po_get_write_perms(po)==FALSE ||
 	   strstr((const char*)gtranslator_po_get_filename, "/.gtranslator/"))

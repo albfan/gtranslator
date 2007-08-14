@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <gettext-po.h>
 
 //#include "window.h"
 
@@ -70,7 +71,10 @@ GType		 gtranslator_po_get_type	       (void) G_GNUC_CONST;
 
 GType		 gtranslator_po_register_type	       (GTypeModule * module);
 
-GtranslatorPo   *gtranslator_po_new                    (const gchar *filename,
+GtranslatorPo   *gtranslator_po_new                    (void);
+
+void             gtranslator_po_parse                  (GtranslatorPo *po,
+							const gchar *filename,
 							GError **error);
 
 gchar           *gtranslator_po_get_filename           (GtranslatorPo *po);
@@ -80,8 +84,12 @@ void             gtranslator_po_set_filename           (GtranslatorPo *po,
 
 gboolean         gtranslator_po_get_write_perms        (GtranslatorPo *po);
 
-/*void             gtranslator_po_parse_file_from_dialog (GtkWidget * dialog,
-							GtranslatorWindow *window);*/
+GList           *gtranslator_po_get_messages           (GtranslatorPo *po);
+
+GList           *gtranslator_po_get_domains            (GtranslatorPo *po);
+
+po_file_t        gtranslator_po_get_po_file            (GtranslatorPo *po);
+
 
 G_END_DECLS
 

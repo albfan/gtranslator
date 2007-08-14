@@ -23,7 +23,6 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-#include "tab.h"
 #include "po.h"
 
 G_BEGIN_DECLS
@@ -67,14 +66,14 @@ struct _GtranslatorTabClass
 /*
  * Public methods
  */
-GType		 gtranslator_tab_get_type	   (void) G_GNUC_CONST;
-GType		 gtranslator_tab_register_type	   (GTypeModule * module);
-GtkWidget	*gtranslator_tab_new	           (GtranslatorPo *po);
-GtranslatorPo   *gtranslator_tab_get_po		   (GtranslatorTab *tab);
-void		 gtranslator_tab_set_trans_text	   (GtranslatorTab *tab,
-						    gchar *text,
-						    GCallback func,
-						    gint index);
+GType		       gtranslator_tab_get_type            (void) G_GNUC_CONST;
+
+GType	               gtranslator_tab_register_type       (GTypeModule * module);
+
+GtranslatorTab        *gtranslator_tab_new	           (GtranslatorPo *po);
+
+GtranslatorPo         *gtranslator_tab_get_po              (GtranslatorTab *tab);
+
 
 G_END_DECLS
 

@@ -67,10 +67,15 @@ struct _GtranslatorNotebookClass
  * Public methods
  */
 GType		 gtranslator_notebook_get_type	   	   (void) G_GNUC_CONST;
+
 GType		 gtranslator_notebook_register_type	   (GTypeModule * module);
-GtkWidget	*gtranslator_notebook_new	           (void);
-void		 gtranslator_notebook_add_page(GtranslatorNotebook *notebook, GtkWidget *pax);
-GtranslatorTab 	*gtranslator_notebook_get_page(GtranslatorNotebook *notebook);
+
+GtkWidget       *gtranslator_notebook_new	           (void);
+
+void             gtranslator_notebook_add_page             (GtranslatorNotebook *notebook,
+							    GtranslatorTab *pax);
+
+GtranslatorTab  *gtranslator_notebook_get_page             (GtranslatorNotebook *notebook);
 
 G_END_DECLS
 

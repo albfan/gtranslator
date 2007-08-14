@@ -76,7 +76,7 @@ po_message_t      gtranslator_msg_get_message          (GtranslatorMsg *msg);
 void              gtranslator_msg_set_message          (GtranslatorMsg *msg,
 							po_message_t message);
 
-gboolean          po_message_is_translated             (po_message_t message);
+gboolean          gtranslator_msg_is_translated        (GtranslatorMsg *msg);
 
 G_END_DECLS
 

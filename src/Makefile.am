@@ -37,7 +37,6 @@ gtranslator_SOURCES = \
 	draw-spaces.c draw-spaces.h \
 	find.h \
 	header_stuff.h \
-	history.h \
 	languages.c languages.h \
 	main.c \
 	message-area.c message-area.h \

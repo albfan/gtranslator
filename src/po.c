@@ -24,7 +24,6 @@
 #include "po.h"
 #include "prefs.h"
 #include "msg.h"
-#include "window.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -122,37 +121,52 @@ gtranslator_po_class_init (GtranslatorPoClass *klass)
 	object_class->finalize = gtranslator_po_finalize;
 }
 
+/***************************** Public funcs ***********************************/
 
-/*
- * The core parsing function for the given po file.
- */ 
+/**
+ * gtranslator_po_new:
+ *
+ * Return value: a new #GtranslatorPo object
+ **/
 GtranslatorPo *
-gtranslator_po_new(const gchar *filename,
-		   GError **error)
+gtranslator_po_new(void)
 {
 	GtranslatorPo *po;
-	GtranslatorPoPrivate *priv;
-	GtranslatorMsg *msg;
-	gchar *base;
-	int i = 0;
-	po_message_iterator_t iter;
-	po_message_t message;
-	const gchar * const *domains;
-	const gchar *msgstr;
-	po_xerror_handler_t gettext_error_handler;
 	
-	g_return_val_if_fail(filename!=NULL, NULL);
+	po = g_object_new(GTR_TYPE_PO, NULL);
+	
+	return po;
+}
+
+/**
+ * gtranslator_po_parse:
+ * @po: a #GtranslatorPo
+ * @filename: the filename path to open
+ * @error: a variable to store the errors
+ *
+ * 
+ **/
+void
+gtranslator_po_parse(GtranslatorPo *po,
+		     const gchar *filename,
+		     GError **error)
+{
+	GtranslatorPoPrivate *priv = po->priv;
+	GtranslatorMsg *msg;
+	po_xerror_handler_t gettext_error_handler;
+	po_message_t message;
+	po_message_iterator_t iter;
+	const gchar *msgstr;
+	const gchar * const *domains;
+	gchar *base;
+	gint i = 0;
+	
+	g_return_if_fail(filename!=NULL);
 
 	base=g_path_get_basename(filename);
-	g_return_val_if_fail(base[0]!='\0', NULL);
+	g_return_if_fail(base[0]!='\0');
 	g_free(base);
-
-	/*
-	 * Start a new PO file record
-	 */
-	po = g_object_new(GTR_TYPE_PO, NULL);
-	priv = po->priv;
-
+	
 	/*
 	 * Get absolute filename.
 	 */
@@ -166,13 +180,9 @@ gtranslator_po_new(const gchar *filename,
 	{
 		priv->filename = g_strdup(filename);
 	}
-		
-	/*
-	 * Open the PO file, using gettext's utility function
-	 */
-	gchar *errno;
-	parser_errors = FALSE;
-	priv->gettext_po_file = po_file_read(priv->filename, gettext_error_handler);
+	
+	po->priv->gettext_po_file = po_file_read(priv->filename,
+						 gettext_error_handler);
 	if(priv->gettext_po_file == NULL) {
 		/*g_set_error(error,
 			GTR_PARSER_ERROR,
@@ -181,9 +191,8 @@ gtranslator_po_new(const gchar *filename,
 			priv->filename, strerror(errno));*/
 		//FIXME
 		//gtranslator_po_free(priv);
-		return NULL;
+		return;
 	}
-	
 	
 	/*
 	 * If there were errors, abandon this page
@@ -191,7 +200,7 @@ gtranslator_po_new(const gchar *filename,
 	if(parser_errors) {
 		//FIXME
 		//gtranslator_po_free(po);
-		return NULL;
+		return;
 	}
 	
 	/*
@@ -205,7 +214,7 @@ gtranslator_po_new(const gchar *filename,
 		
 		//FIXME
 		//gtranslator_po_free(po);
-		return NULL;
+		return;
 	}
 	while(domains[i]) {
 		priv->domains = g_list_append(priv->domains, g_strdup(domains[i]));
@@ -248,7 +257,7 @@ gtranslator_po_new(const gchar *filename,
 			_("No messages obtained from parser."));*/
 		//FIXME: g_object_unref??
 		//gtranslator_po_free(po);
-		return NULL;
+		return;
 	}
 	po_message_iterator_free(iter);
 
@@ -256,20 +265,37 @@ gtranslator_po_new(const gchar *filename,
 	 * Set the current message to the first message.
 	 */
 	priv->current = g_list_first(priv->messages);
-
-	return po;
+	
 }
 
+/**
+ * gtranslator_po_get_filename:
+ * @po: a #GtranslatorPo
+ * 
+ * Return value: the file name string
+ **/
 gchar *
 gtranslator_po_get_filename(GtranslatorPo *po)
 {
 	return po->priv->filename;
 }
 
+/**
+ * gtranslator_po_set_filename:
+ * @po: a #GtranslatorPo
+ * @data: The file name text you want to set
+ *
+ * Sets the text path within the #GtranslatorPo object. It overwrites any text
+ * that was there before.
+ **/
 void
 gtranslator_po_set_filename(GtranslatorPo *po,
 			    gchar *data)
 {
+	g_return_if_fail(GTR_IS_PO(po));
+	
+	if(po->priv->filename)
+		g_free(po->priv->filename);
 	po->priv->filename = g_strdup(data);
 }
 
@@ -279,192 +305,39 @@ gtranslator_po_get_write_perms(GtranslatorPo *po)
 	return po->priv->no_write_perms;
 }
 
-
-/*
- * The main file opening function. Checks that the file isn't already open,
- * and if not, opens it in a new tab.
- */
-gboolean 
-gtranslator_open(const gchar *filename,
-		 GtranslatorWindow *window,
-		 GError **error)
+/**
+ * gtranslator_po_get_messages:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the messages list
+ **/
+GList *
+gtranslator_po_get_messages(GtranslatorPo *po)
 {
-	gchar	*base;
-	gchar *title;
-	GList	*pagelist;
-	//GtrPage	*page;
-	GtranslatorPo	*po;
-	GtkWidget *page_label;
-	
-	/*
-	 * If the filename can't be opened, pass the error back to the caller
-	 * to handle.
-	 */
-	if(!(po = gtranslator_po_new(filename, error)))
-		return FALSE;
-
-	/*
-	 * If not a crash/temporary file, add to the history.
-	 */
-	/*base = g_path_get_basename(po->filename);
-	if(nautilus_strcasecmp(base, gtranslator_runtime_config->temp_filename) || 
-	   nautilus_strcasecmp(base, gtranslator_runtime_config->crash_filename))
-	{
-		const char *header = po_file_domain_header(po->gettext_po_file, NULL);
-		if(header) {
-			const char *project_id = po_header_field(header, "Project-Id-Version");
-			if(project_id) {
-				gtranslator_history_add(po->filename, (gchar *)project_id);
-			}
-			else {
-				gtranslator_history_add(po->filename, _("N/A"));
-			}
-		}
-		else {
-			gtranslator_history_add(po->filename, _("N/A"));
-		}
-	}
-	g_free(base);*/
-
-	/*
-	 * Create a page to add to our list of open files
-	 */
-	/*if(current_page != NULL)
-		gtranslator_file_close(NULL, NULL);
-	gtranslator_page_new(po);*/
-	gtranslator_window_new_tab(window, po);
-	
-	/*
-	 * Set window title
-	 */
-	/*title=g_strdup_printf(_("gtranslator -- %s"), po->filename);
-	gtk_window_set_title(GTK_WINDOW(window), title);
-	g_free(title);*/
-
-	
-	/*
-	 * Show the current message.
-	 */
-	//gtranslator_message_show(po->current->data);
-	
-	/*
-	 * Select the current row
-	 */
-	/*if(current_page->messages_table)
-	{
-		gtranslator_messages_table_select_row(current_page->messages_table, GTR_MSG(po->current->data));
-	}*/
-
-	/*
-	 * Enable/disable application bar options
-	 */
-	//gtranslator_application_bar_update(0);
-
-	/*
-	 * Iterate to the main GUI thread -- well, no locks for the GUI should
-	 *  be visible -- avoids "the clean my gtranslator window with dialog"
-	 *   party game ,-)
-	 */
-	while(gtk_events_pending())
-	{
-		gtk_main_iteration();
-	}
-
-	/*
-	 * Update the recent files list.
-	 */
-//	gtranslator_history_show();
-
-	/*gtranslator_actions_set_up_file_opened();
-
-	gtranslator_update_translated_count(po);
-	gtranslator_update_progress_bar();*/
-		
-	/*
-	 * Is there any fuzzy message ?
-	 */
-	if(po->priv->fuzzy>0)
-	{
-		/*
-		 * Then enable the Fuzzy buttons/entries in the menus
-		 */
-		//gtk_widget_set_sensitive(gtranslator_menuitems->next_fuzzy, TRUE);
-
-		/*
-		 * If there is the corresponding pref and a fuzzy message, then
-		 *  we'd enable the corresponding menu entries for "remove all
-		 *   translations.
-		 */
-		if(GtrPreferences.rambo_function)
-		{
-		//	gtk_widget_set_sensitive(gtranslator_menuitems->remove_translations, TRUE);
-		}
-	}
-	
-	/*
-	 * Is there any untranslated message ?
-	 */
-	if((g_list_length(po->priv->messages) - po->priv->translated) > 0)
-	{
-		/*
-		 * Then enable the Untranslated buttons/entries in the menus
-		 */
-		//gtk_widget_set_sensitive(gtranslator_menuitems->next_untranslated, TRUE);
-	}
-
-	/*
-	 * If there are any translated messages, enable the "remove all
-	 *  translations" functionality if needed.
-	 */
-	if((po->priv->translated > 1) && GtrPreferences.rambo_function)
-	{
-		//gtk_widget_set_sensitive(gtranslator_menuitems->remove_translations, TRUE);
-	}
-	
-	/*
-	 * Hook up the autosaving function if wished.
-	 */
-	if(GtrPreferences.autosave)
-	{
-		/*po->autosave_timeout = g_timeout_add(
-			(GtrPreferences.autosave_timeout * 60000),
-			(GSourceFunc) gtranslator_utils_autosave, po);*/
-	}
-	
-	/*
-	 * Set go back buttons sensitive to FALSE
-	 */
-	/*gtk_widget_set_sensitive(gtranslator_menuitems->first, FALSE);
-	gtk_widget_set_sensitive(gtranslator_menuitems->go_back, FALSE);
-	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, FALSE);
-	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, FALSE);*/
-	g_warning("hola");
-	return TRUE;
+	return po->priv->messages;
 }
 
-
-void 
-gtranslator_po_parse_file_from_dialog(GtkWidget * dialog,
-				      GtranslatorWindow *window)
+/**
+ * gtranslator_po_get_domains:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the domains list
+ **/
+GList *
+gtranslator_po_get_domains(GtranslatorPo *po)
 {
-	gchar *po_file;
-	GError *error;
-	po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
-
-	gtranslator_file_dialogs_store_directory(po_file);
-
-	/*
-	 * Open the file via our centralized opening function.
-	 */
-	if(!gtranslator_open(po_file, window, &error)) {
-		if(error) {
-			//gtranslator_show_message(error->message, NULL);
-			g_error_free(error);
-		}
-	}
-
-	/*
-	 * Destroy the dialog 
-	 */
-	gtk_widget_destroy(dialog);
+	return po->priv->domains;
 }
+
+/**
+ * gtranslator_po_get_po_file:
+ * @po: a #GtranslatorPo
+ * 
+ * Return value: the gettext file
+ **/
+po_file_t
+gtranslator_po_get_po_file(GtranslatorPo *po)
+{
+	return po->priv->gettext_po_file;
+}
+
