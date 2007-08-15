@@ -22,7 +22,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include "parse.h"
 #include "tab.h"
 
 G_BEGIN_DECLS

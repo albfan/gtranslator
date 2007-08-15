@@ -108,6 +108,16 @@ gtranslator_po_init (GtranslatorPo *po)
 static void
 gtranslator_po_finalize (GObject *object)
 {
+	GtranslatorPo *po = GTR_PO(object);
+	
+	if (po->priv->messages) 
+		g_list_free(po->priv->messages);
+	if (po->priv->domains)
+		g_list_free(po->priv->domains);
+	
+	g_free(po->priv->filename);
+	g_free(po->priv->obsolete);
+	
 	G_OBJECT_CLASS (gtranslator_po_parent_class)->finalize (object);
 }
 
@@ -189,8 +199,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			GTR_PARSER_ERROR_GETTEXT,
 			_("Failed opening file '%s': %s"),
 			priv->filename, strerror(errno));*/
-		//FIXME
-		//gtranslator_po_free(priv);
+		g_object_unref(po);
 		return;
 	}
 	
@@ -198,8 +207,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 	 * If there were errors, abandon this page
 	 */
 	if(parser_errors) {
-		//FIXME
-		//gtranslator_po_free(po);
+		g_object_unref(po);
 		return;
 	}
 	
@@ -211,9 +219,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			GTR_PARSER_ERROR,
 			GTR_PARSER_ERROR_GETTEXT,
 			_("Gettext returned a null message domain list."));*/
-		
-		//FIXME
-		//gtranslator_po_free(po);
+		g_object_unref(po);
 		return;
 	}
 	while(domains[i]) {
@@ -255,8 +261,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			GTR_PARSER_ERROR,
 			GTR_PARSER_ERROR_OTHER,
 			_("No messages obtained from parser."));*/
-		//FIXME: g_object_unref??
-		//gtranslator_po_free(po);
+		g_object_unref(po);
 		return;
 	}
 	po_message_iterator_free(iter);
@@ -265,7 +270,6 @@ gtranslator_po_parse(GtranslatorPo *po,
 	 * Set the current message to the first message.
 	 */
 	priv->current = g_list_first(priv->messages);
-	
 }
 
 /**

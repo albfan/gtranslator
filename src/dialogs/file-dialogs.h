@@ -22,16 +22,14 @@
 #include <gtk/gtk.h>
 #include "window.h"
 
-void gtranslator_open_file_dialog(GtkWidget * widget,
-				  GtranslatorWindow *window);
+typedef enum {
+	FILESEL_OPEN,
+	FILESEL_SAVE
+} FileselMode;
 
-void gtranslator_save_file_dialog(GtkWidget *widget,
-				  GtranslatorWindow *window);
-
-void gtranslator_save_file_as_dialog(GtkWidget * widget,
-				     GtranslatorWindow *window);
-
-void gtranslator_file_dialogs_store_directory(const gchar *filename);
+GtkWindow          *gtranslator_file_chooser_new      (GtkWindow *parent,
+						       FileselMode mode,
+						       gchar *title);
 
 
 #endif

@@ -1,3 +1,13 @@
+2007-08-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions.h, actions-file.c: Added to manage the menu
+	 actions callback funcs.
+	* file-dialogs.ch: Removed some funcs.
+	* tab.c: Improved finalize func.
+	* window.c: Added calls to save_as and close menuitems.
+	* po.c: Improved finalize func.
+
+
 2007-08-14  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* history.ch: Removed from svn repository.
@@ -7,7 +17,7 @@
 	* window.c: Added gtranslator_open func.
 	* po.c: Added comments, removed gtranslator_open func.
 	* msg.c: Added comments.
-
+	* Makefile.am: Added actions-file.c and actions.h.
 
 2007-08-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 

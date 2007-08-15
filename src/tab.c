@@ -219,6 +219,12 @@ gtranslator_tab_init (GtranslatorTab *tab)
 static void
 gtranslator_tab_finalize (GObject *object)
 {
+	GtranslatorTab *tab = GTR_TAB(object);
+	gint i;
+	
+	if(tab->priv->po)
+		g_object_unref(tab->priv->po);
+	
 	G_OBJECT_CLASS (gtranslator_tab_parent_class)->finalize (object);
 }
 

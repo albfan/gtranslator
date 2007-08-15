@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "notebook.h"
 #include "tab.h"
 #include "panel.h"
 
@@ -74,7 +75,9 @@ GType		  gtranslator_window_register_type    (GTypeModule * module);
 GtranslatorTab   *gtranslator_window_create_tab       (GtranslatorWindow *window,
 						       GtranslatorPo *po);
 
-GtkWidget 	 *gtranslator_window_get_notebook     (GtranslatorWindow *window);
+GtranslatorTab   *gtranslator_window_get_active_tab   (GtranslatorWindow *window);
+
+GtranslatorNotebook  *gtranslator_window_get_notebook     (GtranslatorWindow *window);
 
 GtranslatorPanel *gtranslator_window_get_side_panel   (GtranslatorWindow *window);
 

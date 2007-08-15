@@ -21,8 +21,8 @@
 #endif
 
 #include "about.h"
+#include "actions.h"
 #include "application.h"
-#include "file-dialogs.h"
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
@@ -69,8 +69,6 @@ struct _GtranslatorWindowPrivate
 	GtkUIManager *ui_manager;
 	GtkRecentManager *recent_manager;
 	GtkWidget *recent_menu;
-	
-	GtranslatorTab *active_tab;
 };
 	
 
@@ -97,14 +95,14 @@ static const GtkActionEntry entries[] = {
 	  N_("Save the file"), NULL},
 	//  G_CALLBACK (gtranslator_save_current_file_dialog) },
 	{ "FileSaveAs", GTK_STOCK_SAVE_AS, NULL, NULL,
-	  N_("Save the file with another name"), NULL},
-	//  G_CALLBACK (gtranslator_save_file_as_dialog) },
+	  N_("Save the file with another name"), 
+	  G_CALLBACK (gtranslator_save_file_as_dialog) },
 	/*{ "FileRevert", GTK_STOCK_REVERT_TO_SAVED, N_("_Revert"), NULL,
 	  N_(),
 	  G_CALLBACK (gtranslator_save_file_as_dialog) },*/
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W", 
-	  N_("Close the current file"), NULL},
-	//  G_CALLBACK (gtranslator_file_close) },
+	  N_("Close the current file"),
+	  G_CALLBACK (gtranslator_file_close) },
 	{ "FileQuitWindow", GTK_STOCK_QUIT, NULL, "<control>Q", 
 	  N_("Quit the program"), NULL},
 	//  G_CALLBACK (gtranslator_menu_quit_cb) },
@@ -224,7 +222,7 @@ gtranslator_window_update_progress_bar(GtranslatorWindow *window)
 {
 	gdouble percentage;
 	GtranslatorTab *current_page;
-	GtrPo *po;
+	GtranslatorPo *po;
 	
 	current_page = gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
 	po = gtranslator_tab_get_po(GTR_TAB(current_page));
@@ -232,7 +230,7 @@ gtranslator_window_update_progress_bar(GtranslatorWindow *window)
 	/*
 	 * Calculate the percentage.
 	 */
-	percentage = (gdouble)(po->translated / (gdouble)g_list_length(po->messages));
+	//percentage = (gdouble)(po->translated / (gdouble)g_list_length(po->messages));
 	
 	/*
 	 * Set the progress only if the values are reasonable.
@@ -676,13 +674,13 @@ gtranslator_window_create_tab(GtranslatorWindow *window,
 GtranslatorTab *
 gtranslator_window_get_active_tab(GtranslatorWindow *window)
 {
-	return window->priv->active_tab;
+	return gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
 }
 
-GtkWidget *
+GtranslatorNotebook *
 gtranslator_window_get_notebook(GtranslatorWindow *window)
 {
-	return window->priv->notebook;
+	return GTR_NOTEBOOK(window->priv->notebook);
 }
 
 
@@ -705,39 +703,4 @@ gtranslator_window_get_ui_manager(GtranslatorWindow *window)
 }
 
 
-/*
- * The main file opening function. Checks that the file isn't already open,
- * and if not, opens it in a new tab.
- */
-gboolean 
-gtranslator_open(const gchar *filename,
-		 GtranslatorWindow *window,
-		 GError **error)
-{
-	GtranslatorPo	*po;
-	
-	/*
-	 * If the filename can't be opened, pass the error back to the caller
-	 * to handle.
-	 */
-	po = gtranslator_po_new();
-	gtranslator_po_parse(po, filename, error);
-	//missing something like if error return FALSE
 
-	/*
-	 * If not a crash/temporary file, add to the history.
-	 */
-	gtranslator_recent_add(window, filename);
-
-	/*
-	 * Create a page to add to our list of open files
-	 */
-	gtranslator_window_create_tab(window, po);
-	
-	/*
-	 * Show the current message.
-	 */
-	//gtranslator_message_show(po->current->data);
-	
-	return TRUE;
-}
