@@ -1,0 +1,307 @@
+/*
+ * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ * 
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANMSGILITY or FITNESS FOR A PARTICULAR PURMSGSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gtk/gtk.h>
+#include <glib/gi18n.h>
+#include <string.h>
+
+#include "actions.h"
+#include "file-dialogs.h"
+#include "notebook.h"
+#include "po.h"
+#include "tab.h"
+#include "window.h"
+
+
+static void gtranslator_save_file_dialog(GtkWidget *widget,
+					 GtranslatorWindow *window);
+
+
+/*
+ * The main file opening function. Checks that the file isn't already open,
+ * and if not, opens it in a new tab.
+ */
+gboolean 
+gtranslator_open(const gchar *filename,
+		 GtranslatorWindow *window,
+		 GError **error)
+{
+	GtranslatorPo	*po;
+	GtranslatorTab *tab;
+	
+	/*
+	 * If the filename can't be opened, pass the error back to the caller
+	 * to handle.
+	 */
+	po = gtranslator_po_new();
+	gtranslator_po_parse(po, filename, error);
+
+	
+	//missing something like if error return FALSE
+
+	/*
+	 * If not a crash/temporary file, add to the history.
+	 */
+	gtranslator_recent_add(window, filename);
+
+	/*
+	 * Create a page to add to our list of open files
+	 */
+	tab = gtranslator_window_create_tab(window, po);
+	
+	/*
+	 * Show the current message.
+	 */
+	//gtranslator_message_show(po->current->data);
+	
+	return TRUE;
+}
+
+
+
+static void 
+gtranslator_po_parse_file_from_dialog(GtkWidget * dialog,
+				      GtranslatorWindow *window)
+{
+	gchar *po_file;
+	GError *error = NULL;
+	po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+
+	gtranslator_file_dialogs_store_directory(po_file);
+
+	/*
+	 * Open the file via our centralized opening function.
+	 */
+	if(!gtranslator_open(po_file, window, &error)) {
+		if(error) {
+			g_printf("%s\n", error->message);
+			//gtranslator_show_message(error->message, NULL);
+			g_error_free(error);
+		}
+	}
+
+	/*
+	 * Destroy the dialog 
+	 */
+	gtk_widget_destroy(dialog);
+}
+
+
+static void
+gtranslator_file_chooser_analyse(gpointer dialog,
+				 FileselMode mode,
+				 GtranslatorWindow *window)
+{	
+	gint reply;
+
+	reply = gtk_dialog_run(GTK_DIALOG (dialog));
+	switch (reply){
+		case GTK_RESPONSE_ACCEPT:
+			if (mode == FILESEL_OPEN){
+				gtranslator_po_parse_file_from_dialog(GTK_WIDGET(dialog),
+								      window);
+			} else {
+				gtranslator_save_file_dialog(GTK_WIDGET(dialog), window);
+			}
+			break;
+		case GTK_RESPONSE_CANCEL:
+			gtk_widget_hide(GTK_WIDGET(dialog));
+			break;
+		case GTK_RESPONSE_DELETE_EVENT:
+			gtk_widget_hide(GTK_WIDGET(dialog));
+			break;
+		default:
+			break;
+	}
+}
+
+
+/*
+ * The "Open file" dialog.
+ */
+void
+gtranslator_open_file_dialog(GtkAction * action,
+			     GtranslatorWindow *window)
+{
+	GtkWindow *dialog = NULL;
+
+	if(dialog != NULL) {
+		gtk_window_present(GTK_WINDOW(dialog));
+		return;
+	}
+	dialog = gtranslator_file_chooser_new (GTK_WINDOW(window), 
+					       FILESEL_OPEN,
+					       _("Open file for translation"));	
+	/*
+	 * With the gettext parser/writer API, we can't currently read/write
+	 * to remote files with gnome-vfs. Eventually, we should intercept
+	 * remote requests and use gnome-vfs to retrieve a temporary file to 
+	 * work on, and transmit it back when saved.
+	 */
+	gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+
+	gtranslator_file_chooser_analyse((gpointer) dialog, FILESEL_OPEN, window);
+}
+
+
+/*
+ * A callback for Overwrite in Save as
+ */
+static void
+gtranslator_overwrite_file(GtkWidget * widget,
+			   GtranslatorWindow *window)
+{
+	GError *error;
+	//gtranslator_save_file(current_page->po,current_page->po->filename, &error);
+	/*
+	 * TODO: Should close the file and open the new saved file
+	 */
+	//gtranslator_open_file(current_page->po->filename);
+	//gtranslator_open(current_page->po->filename, window, &error);
+}
+
+/*
+ * A callback for OK in Save as... dialog 
+ */
+static void 
+gtranslator_save_file_dialog(GtkWidget *widget,
+			     GtranslatorWindow *window)
+{
+	gchar *po_file,
+	      *po_file_normalized;
+	GtranslatorPo *po;
+	
+	//po = gtranslator_window_get_active_po(window);
+	
+ 	po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget)));
+	po_file_normalized = g_utf8_normalize( po_file, -1, G_NORMALIZE_DEFAULT_COMPOSE);
+	g_free(po_file);
+	po_file = po_file_normalized;
+
+	if (g_file_test(po_file, G_FILE_TEST_EXISTS))
+	{
+		//gtranslator_po_set_filename(po, po_file);
+		
+		GtkWidget *dialog, *button;
+	
+		dialog = gtk_message_dialog_new (NULL,
+						 GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_QUESTION,
+						 GTK_BUTTONS_CANCEL,
+						 _("The file '%s' already exists. Do you want overwrite it?"),
+						 po_file);
+		
+		button = gtk_dialog_add_button (GTK_DIALOG (dialog), "Overwrite", 1);
+		
+		g_signal_connect (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtranslator_overwrite_file), window);
+		
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+	}
+	g_free(po_file);
+	gtk_widget_destroy(GTK_WIDGET(widget));
+}
+
+/*
+ * "Save as" dialog.
+ */
+void
+gtranslator_save_file_as_dialog(GtkAction * action,
+				GtranslatorWindow *window)
+{
+	GtkWindow *dialog = NULL;
+	GtranslatorTab *current_page;
+	GtranslatorPo *po;
+	
+	if(dialog != NULL) {
+		gtk_window_present(GTK_WINDOW(dialog));
+		return;
+	}
+
+	current_page = gtranslator_window_get_active_tab(window);
+	po = gtranslator_tab_get_po(current_page);
+	
+	if(gtranslator_po_get_write_perms(po)==FALSE ||
+	   strstr((const char*)gtranslator_po_get_filename, "/.gtranslator/"))
+	{
+		dialog = gtranslator_file_chooser_new(GTK_WINDOW(window),
+						      FILESEL_SAVE,
+						      _("Save file as..."));
+	}
+	else
+	{
+		dialog = gtranslator_file_chooser_new(GTK_WINDOW(window),
+						      FILESEL_SAVE,
+						      _("Save local copy of file as..."));
+		
+		/*
+		 * Set a local filename in the users home directory with the 
+		 *  same filename as the original but with a project prefix
+		 *   (e.g. "gtranslator-tr.po").
+		 */ 
+		gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(dialog),
+						 gtranslator_po_get_filename(po));
+		gtranslator_file_dialogs_store_directory(gtranslator_po_get_filename(po));
+	}
+
+	/*
+	 * With the gettext parser/writer API, we can't currently read/write
+	 * to remote files with gnome-vfs. Eventually, we should intercept
+	 * remote requests and use gnome-vfs to retrieve a temporary file to 
+	 * work on, and transmit it back when saved.
+	 */
+	gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+
+	gtranslator_file_chooser_analyse((gpointer) dialog, FILESEL_SAVE, window);
+	
+	//gtranslator_dialog_show(&dialog, "gtranslator -- save");
+}
+
+void 
+gtranslator_file_close(GtkAction * widget,
+		       GtranslatorWindow *window)
+{
+	GtranslatorNotebook *nb;
+	GtranslatorTab *current_page;
+	gint i;
+	
+	current_page = gtranslator_window_get_active_tab(window);
+	nb = gtranslator_window_get_notebook(window);
+	g_assert(current_page != NULL);
+
+	/*
+	 * If user doesn't know what to do with changed file, return
+	 */
+	/*if (!gtranslator_should_the_file_be_saved_dialog(current_page))
+		return;*/
+
+	/*
+	 * "Remove" the stored "runtime/filename" key.
+	 * Is this really neccessary with tabs?
+	 */
+	//gtranslator_config_set_string("runtime/filename", "--- No file ---");
+	
+	i = gtk_notebook_page_num(GTK_NOTEBOOK(nb), GTK_WIDGET(current_page));
+	if (i != -1)
+		gtk_notebook_remove_page(GTK_NOTEBOOK(nb), i);
+}
