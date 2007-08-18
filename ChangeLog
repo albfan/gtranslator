@@ -1,3 +1,8 @@
+2007-08-18  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.in: Switched to gtk+ >= 2.11.6 becouse
+	of GtkTooltip. Switched to 1.9.2 version.
+
 2007-08-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.in: Now is required gtk+ >= 2.10.0
