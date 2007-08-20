@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS
 
-
+/*File*/
 void       gtranslator_open_file_dialog         (GtkAction * action,
 						 GtranslatorWindow *window);
 
@@ -37,6 +37,39 @@ gboolean   gtranslator_open                     (const gchar *filename,
 
 void       gtranslator_file_close               (GtkAction * widget,
 						 GtranslatorWindow *window);
+
+/*Edit*/
+void       gtranslator_message_status_toggle_fuzzy
+                                                (GtkAction *action,
+						 GtranslatorWindow *window);
+
+/*Go*/
+void       gtranslator_message_go_to_first      (GtkAction  * action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_previous   (GtkAction *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_next       (GtkAction *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_last       (GtkAction *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_next_fuzzy (GtkAction *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_prev_fuzzy (GtkAction *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_next_untranslated
+                                                (GtkAction *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_message_go_to_prev_untranslated
+                                                (GtkAction *action,
+						 GtranslatorWindow *window);
+
 
 G_END_DECLS
 

@@ -83,7 +83,7 @@ gtranslator_msg_new(void)
  * gtranslator_msg_get_message:
  * @msg: a #GtranslatorMsg
  *
- * Return value: the message
+ * Return value: the message in gettext format
  **/
 po_message_t
 gtranslator_msg_get_message(GtranslatorMsg *msg)
@@ -131,4 +131,80 @@ gtranslator_msg_is_translated (GtranslatorMsg *msg)
 		
 		return TRUE;
 	}
+}
+
+/**
+ * gtranslator_msg_is_fuzzy:
+ * @msg: a #GtranslatorMsg
+ * 
+ * Return value: TRUE if the message is fuzzy
+ **/
+gboolean
+gtranslator_msg_is_fuzzy(GtranslatorMsg *msg)
+{
+	return po_message_is_fuzzy(msg->priv->message);
+}
+
+void
+gtranslator_msg_set_fuzzy(GtranslatorMsg *msg,
+			  gboolean fuzzy)
+{
+	po_message_set_fuzzy(msg->priv->message, fuzzy);
+}
+
+
+/**
+ * gtranslator_msg_get_msgid:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: the msgid (untranslated English string) of a message.
+ **/
+const gchar *
+gtranslator_msg_get_msgid(GtranslatorMsg *msg)
+{
+	return po_message_msgid(msg->priv->message);
+}
+
+
+/**
+ * gtranslator_msg_get_msgid_plural:
+ * @msg: a #GtranslatorMsg
+ * 
+ * Return value: the msgid_plural (untranslated English plural string) of a
+ * message, or NULL for a message without plural.
+ **/
+const gchar *
+gtranslator_msg_get_msgid_plural(GtranslatorMsg *msg)
+{
+	return po_message_msgid_plural(msg->priv->message);	
+}
+
+
+/**
+ * gtranslator_msg_get_msgstr:
+ * @msg: a #GtranslatorMsg
+ * 
+ * Return value: the msgstr (translation) of a message.
+ * Return the empty string for an untranslated message.
+ **/
+const gchar *
+gtranslator_msg_get_msgstr(GtranslatorMsg *msg)
+{
+	return po_message_msgstr(msg->priv->message);
+}
+
+
+/**
+ * gtranslator_msg_set_msgstr:
+ * @msg: a #GtranslatorMsg
+ * @msgstr: the string to set in the @msg
+ * 
+ * Change the msgstr (translation) of a message.
+ * Use an empty string to denote an untranslated message.
+ **/
+void
+gtranslator_msg_set_msgstr(GtranslatorMsg *msg,
+			   const gchar *msgstr)
+{
+	po_message_set_msgstr(msg->priv->message, msgstr);
 }

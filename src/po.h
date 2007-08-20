@@ -90,6 +90,14 @@ GList           *gtranslator_po_get_domains            (GtranslatorPo *po);
 
 po_file_t        gtranslator_po_get_po_file            (GtranslatorPo *po);
 
+GList           *gtranslator_po_get_next_fuzzy         (GtranslatorPo *po);
+
+GList           *gtranslator_po_get_prev_fuzzy         (GtranslatorPo *po);
+
+GList           *gtranslator_po_get_next_untrans       (GtranslatorPo *po);
+
+GList           *gtranslator_po_get_prev_untrans       (GtranslatorPo *po);
+
 
 G_END_DECLS
 

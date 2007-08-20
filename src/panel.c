@@ -41,8 +41,6 @@ struct _GtranslatorPanelPrivate
 
 	/* Notebook */
 	GtkWidget *notebook;
-
-	GtkTooltips *tooltips;
 };
 
 typedef struct _GtranslatorPanelItem GtranslatorPanelItem;
@@ -89,8 +87,6 @@ G_DEFINE_TYPE(GtranslatorPanel, gtranslator_panel, GTK_TYPE_VBOX)
 static void
 gtranslator_panel_finalize (GObject *obj)
 {
-	g_object_unref (GTR_PANEL (obj)->priv->tooltips);
-
 	if (G_OBJECT_CLASS (gtranslator_panel_parent_class)->finalize)
 		(*G_OBJECT_CLASS (gtranslator_panel_parent_class)->finalize) (obj);
 }
@@ -405,9 +401,6 @@ gtranslator_panel_init (GtranslatorPanel *panel)
 {
 	panel->priv = GTR_PANEL_GET_PRIVATE (panel);
 	g_return_if_fail (panel->priv != NULL);	
-
-	panel->priv->tooltips = gtk_tooltips_new ();
-	g_object_ref_sink (panel->priv->tooltips);
 }
 
 static void
@@ -512,10 +505,7 @@ build_horizontal_panel (GtranslatorPanel *panel)
 			    FALSE, 
 			    0);
 
-	gtk_tooltips_set_tip (panel->priv->tooltips,
-			      close_button,
-			      _("Hide panel"),
-			      NULL);
+	gtk_widget_set_tooltip_text(close_button, _("Hide panel"));
 
 	g_signal_connect (G_OBJECT (close_button),
 			  "clicked",
@@ -589,10 +579,7 @@ build_vertical_panel (GtranslatorPanel *panel)
 			    FALSE, 
 			    0);
 
-	gtk_tooltips_set_tip (panel->priv->tooltips,
-			      close_button,
-			      _("Hide panel"),
-			      NULL);
+	gtk_widget_set_tooltip_text(close_button, _("Hide panel"));
 
 	g_signal_connect (G_OBJECT (close_button), 
 			  "clicked",
@@ -680,10 +667,7 @@ build_tab_label (GtranslatorPanel  *panel,
         gtk_misc_set_padding (GTK_MISC (label), 0, 0);
 	gtk_box_pack_start (GTK_BOX (label_hbox), label, TRUE, TRUE, 0);
 
-	gtk_tooltips_set_tip (panel->priv->tooltips,
-			      label_ebox,
-			      name,
-			      NULL);
+	gtk_widget_set_tooltip_text(label_ebox, name);
 
 	gtk_widget_show_all (hbox);
 
@@ -797,10 +781,7 @@ gtranslator_panel_remove_item (GtranslatorPanel *panel,
 		           NULL);
 
 	ebox = g_object_get_data (G_OBJECT (item), "label-ebox");
-	gtk_tooltips_set_tip (GTK_TOOLTIPS (panel->priv->tooltips), 
-			      ebox, 
-			      NULL, 
-			      NULL);  
+	gtk_widget_set_tooltip_text(ebox, NULL);
 	
 	/* ref the item to keep it alive during signal emission */
 	g_object_ref (G_OBJECT (item));

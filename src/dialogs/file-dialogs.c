@@ -27,9 +27,6 @@
 #include "window.h"
 
 
-
-
-
 /*
   * Store the given filename's directory for our file dialogs completion-routine.
  */
@@ -89,16 +86,3 @@ gtranslator_file_chooser_new (GtkWindow *parent,
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	return GTK_WINDOW(dialog);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

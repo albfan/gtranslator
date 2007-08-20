@@ -1,3 +1,21 @@
+2007-08-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-go.c:
+	* actions-edit.c: Added to manage go and edit menu actions.
+	* notebook.c: Switched to GtkTooltip.
+	* tab: Added gtk spell and added message show support, and
+	goto message func.
+	* window.c: Added call to menu funcs.
+	* po.ch: Added set and gets funcs.
+	* msg.ch: Added set and get funcs.
+	* Makefile.am: Added actions-go.c and actions-edit.c
+
+2007-08-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* panel.c: Is now using GtkTooltip instead of deprecated
+	  GtkTooltips. (Now is required gtk+ >= 2.11.6)
+	* window.c: Modified recent files implementation.
+
 2007-08-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* actions.h, actions-file.c: Added to manage the menu

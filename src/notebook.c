@@ -81,8 +81,7 @@ build_tab_label (GtranslatorNotebook *nb,
 	gtk_container_add (GTK_CONTAINER (close_button), image);
 	gtk_box_pack_start (GTK_BOX (hbox), close_button, FALSE, FALSE, 0);
 
-	/*gedit_tooltips_set_tip (nb->priv->title_tips, close_button,
-			      _("Close document"), NULL);*/
+	gtk_widget_set_tooltip_text(close_button, _("Close document"));
 
 	/*g_signal_connect (close_button,
 			  "clicked",
@@ -126,7 +125,6 @@ build_tab_label (GtranslatorNotebook *nb,
 	g_object_set_data (G_OBJECT (hbox), "icon", icon);
 	g_object_set_data (G_OBJECT (hbox), "close-button", close_button);
 	g_object_set_data (G_OBJECT (tab), "close-button", close_button);
-	//g_object_set_data (G_OBJECT (hbox), "tooltips", nb->priv->title_tips);
 
 	return hbox;
 }

@@ -65,7 +65,9 @@ gtranslator_SOURCES = \
 	msg.c \
 	msg.h \
 	actions-file.c \
-	actions.h
+	actions.h \
+	actions-go.c \
+	actions-edit.c
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \

@@ -78,6 +78,17 @@ void              gtranslator_msg_set_message          (GtranslatorMsg *msg,
 
 gboolean          gtranslator_msg_is_translated        (GtranslatorMsg *msg);
 
+gboolean          gtranslator_msg_is_fuzzy             (GtranslatorMsg *msg);
+
+const gchar      *gtranslator_msg_get_msgid            (GtranslatorMsg *msg);
+
+const gchar      *gtranslator_msg_get_msgid_plural     (GtranslatorMsg *msg);
+
+const gchar      *gtranslator_msg_get_msgstr           (GtranslatorMsg *msg);
+
+void              gtranslator_msg_set_msgstr           (GtranslatorMsg *msg,
+							const gchar *msgstr);
+
 G_END_DECLS
 
 #endif /* __MSG_H__ */

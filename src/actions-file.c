@@ -47,6 +47,7 @@ gtranslator_open(const gchar *filename,
 {
 	GtranslatorPo	*po;
 	GtranslatorTab *tab;
+	GList *current;
 	
 	/*
 	 * If the filename can't be opened, pass the error back to the caller
@@ -71,7 +72,8 @@ gtranslator_open(const gchar *filename,
 	/*
 	 * Show the current message.
 	 */
-	//gtranslator_message_show(po->current->data);
+	current = gtranslator_po_get_current_message(po);
+	gtranslator_tab_show_message(tab, current->data);
 	
 	return TRUE;
 }

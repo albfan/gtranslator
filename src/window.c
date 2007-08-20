@@ -145,8 +145,8 @@ static const GtkActionEntry entries[] = {
 	  N_("Copy the original message contents and paste them as translation"),NULL},
 	  //G_CALLBACK (gtranslator_message_copy_to_translation) },
 	{ "EditFuzzy", NULL, N_("_Fuzzy"), "<control>U",
-	  N_("Toggle fuzzy status of a message"), NULL},
-	  //G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
+	  N_("Toggle fuzzy status of a message"),
+	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	{ "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
           G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
 	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
@@ -176,32 +176,32 @@ static const GtkActionEntry entries[] = {
 	
         /* Go menu */
         { "GoFirst", GTK_STOCK_GOTO_FIRST, NULL, NULL,
-          N_("Go to the first message"), NULL},
-          //G_CALLBACK (gtranslator_message_go_to_first) },
+          N_("Go to the first message"),
+          G_CALLBACK (gtranslator_message_go_to_first) },
 	{ "GoPrevious", GTK_STOCK_GO_BACK, NULL, "Page_Down",
-          N_("Move back one message"), NULL},
-          //G_CALLBACK (gtranslator_message_go_to_previous) },
+          N_("Move back one message"),
+          G_CALLBACK (gtranslator_message_go_to_previous) },
 	{ "GoForward", GTK_STOCK_GO_FORWARD, NULL, "Page_Up",
-          N_("Move forward one message"), NULL},
-          //G_CALLBACK (gtranslator_message_go_to_next) },
+          N_("Move forward one message"),
+          G_CALLBACK (gtranslator_message_go_to_next) },
 	{ "GoLast", GTK_STOCK_GOTO_LAST, NULL, NULL,
-          N_("Go to the last message"), NULL},
-          //G_CALLBACK (gtranslator_message_go_to_last) },
+          N_("Go to the last message"),
+          G_CALLBACK (gtranslator_message_go_to_last) },
 	{ "GoJumpTo", GTK_STOCK_JUMP_TO, NULL, NULL,
           N_("Go to especified message number"), NULL},
           //G_CALLBACK (gtranslator_go_to_dialog) },
 	{ "GoNextFuzzy", GTK_STOCK_GO_FORWARD, N_("Next fuz_zy"),
-	  "<control>Page_Up", N_("Go to the next fuzzy message"), NULL},
-          //G_CALLBACK (gtranslator_message_go_to_next_fuzzy) },
+	  "<control>Page_Up", N_("Go to the next fuzzy message"),
+          G_CALLBACK (gtranslator_message_go_to_next_fuzzy) },
 	{ "GoPreviousFuzzy", GTK_STOCK_GO_BACK, N_("Previous fuzz_y"),
 	  "<control>Page_Down", N_("Go to the previous fuzzy message"),
-          NULL },
+          G_CALLBACK (gtranslator_message_go_to_prev_fuzzy) },
 	{ "GoNextUntranslated", GTK_STOCK_GO_FORWARD, N_("Next _untranslated"),
-	  "<alt>Page_Up", N_("Go to the next untranslated message"), NULL},
-          //G_CALLBACK (gtranslator_message_go_to_next_untranslated) },
+	  "<alt>Page_Up", N_("Go to the next untranslated message"),
+          G_CALLBACK (gtranslator_message_go_to_next_untranslated) },
 	{ "GoPreviousUntranslated", GTK_STOCK_GO_BACK, N_("Previ_ous untranslated"),
 	  "<alt>Page_Down", N_("Go to the previous untranslated message"),
-          NULL },
+          G_CALLBACK (gtranslator_message_go_to_prev_untranslated) },
 
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
@@ -480,6 +480,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	GtkAccelGroup *accel_group;
 	GtkWidget *widget;
 	GError *error = NULL;
+	gint table_pane_position;
 	
 	GtranslatorWindowPrivate *priv = window->priv;
 	
@@ -518,7 +519,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 			    FALSE, FALSE, 0);
 	
 	/* recent files */	
-	priv->recent_manager = gtk_recent_manager_get_for_screen (gtk_widget_get_screen (GTK_WIDGET(window)));
+	priv->recent_manager = gtk_recent_manager_get_default();
 
 	priv->recent_menu = create_recent_chooser_menu (window, priv->recent_manager);
 
@@ -577,14 +578,21 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
 	gtk_widget_show(priv->sidebar);
 	
-	
 	/*
 	 * notebook
 	 */
 	priv->notebook = GTK_WIDGET(gtranslator_notebook_new());
 	gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
 	gtk_widget_show(priv->notebook);
-	
+
+	/*sidebar position*/
+	/*FIXME: This preferences name should change*/
+	if(GtrPreferences.show_messages_table)
+	{
+		table_pane_position=gtranslator_config_get_int("interface/table_pane_position");
+		gtk_paned_set_position(GTK_PANED(priv->hpaned), table_pane_position);
+	}else
+		gtk_widget_hide(priv->hpaned);
 	
 	/*
 	 * hbox

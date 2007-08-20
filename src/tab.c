@@ -21,6 +21,7 @@
 #endif
 
 #include "draw-spaces.h"
+#include "msg.h"
 #include "tab.h"
 #include "po.h"
 #include "prefs.h"
@@ -30,6 +31,10 @@
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+
+#ifdef HAVE_GTKSPELL
+#include <gtkspell/gtkspell.h>
+#endif
 
 #define GTR_TAB_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 					 (object),	\
@@ -65,10 +70,152 @@ struct _GtranslatorTabPrivate
 	GtkWidget *fuzzy;
 	GtkWidget *untranslated;
 	
+	#ifdef HAVE_GTKSPELL
+	GtkSpell *gtrans_spell[MAX_PLURALS];
+	#endif
 };
 
+static void
+gtranslator_page_dirty(GtkTextBuffer *textbuffer,
+		       GtranslatorTab *tab) 
+{
+	g_assert(tab != NULL);
+	
+	//page->po->file_changed = TRUE;
+	
+	// TODO: make notebook tab go red with an asterisk to mark an unsaved page
+	
+	//Enable save and revert items
+	/*gtk_widget_set_sensitive(gtranslator_menuitems->save, TRUE);
+	gtk_widget_set_sensitive(gtranslator_menuitems->revert, TRUE);
+	gtk_widget_set_sensitive(gtranslator_menuitems->t_save, TRUE);*/
+}
+
+/*
+ * Write the change back to the gettext PO instance in memory and
+ * mark the page dirty
+ */
+static void 
+gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
+				       GtranslatorTab *tab)
+{
+	GtkTextIter start, end;
+	GtkTextBuffer *buf;
+	GList *msg_aux;
+	GtranslatorMsg *msg;
+	const gchar *check;
+	gchar *translation;
+	gint i;
+	
+	/* Work out which message this is associated with */
+	
+	msg_aux = gtranslator_po_get_current_message(tab->priv->po);
+	msg = msg_aux->data;
+	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[0]));
+	if(textbuffer == buf)
+	{
+		/* Get message as UTF-8 buffer */
+		gtk_text_buffer_get_bounds(textbuffer, &start, &end);
+		translation = gtk_text_buffer_get_text(textbuffer, &start, &end, TRUE);
+		
+		/* TODO: convert to file's own encoding if not UTF-8 */
+		
+		/* Write back to PO file in memory */
+		if(!(check = gtranslator_msg_get_msgid_plural(msg))) {
+			gtranslator_msg_set_msgstr(msg, translation);
+		}
+		else {
+			//po_message_set_msgstr_plural(msg->message, 0, translation);
+			//free(check);
+		}
+		g_free(translation);
+		
+		/* Activate 'save', 'revert' etc. */
+		gtranslator_page_dirty(textbuffer, tab);
+		return;
+	}
+	i=1;
+	while(i < (gint)GtrPreferences.nplurals) {
+		/* Know when to break out of the loop */
+		if(!tab->priv->trans_msgstr[i]) {
+			break;
+		}
+		
+		/* Have we reached the one we want yet? */
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[i]));
+		if(textbuffer != buf) {
+			i++;
+			continue;
+		}
+		
+		/* Get message as UTF-8 buffer */
+		gtk_text_buffer_get_bounds(textbuffer, &start, &end);
+		translation = gtk_text_buffer_get_text(textbuffer, &start, &end, TRUE);
+		
+		/* TODO: convert to file's own encoding if not UTF-8 */
+		
+		/* Write back to PO file in memory */
+		//po_message_set_msgstr_plural(msg->message, i, translation);
+
+		/* Activate 'save', 'revert' etc. */
+		gtranslator_page_dirty(textbuffer, tab);
+		return;
+		
+	}
+
+	/* Shouldn't get here */
+	g_return_if_reached();
+}
 
 
+#ifdef HAVE_GTKSPELL
+void
+gtranslator_attach_gskspell(GtranslatorTab *tab)
+{
+	gint i;
+	/*
+	 * Use instant spell checking via gtkspell only if the corresponding
+	 *  setting in the preferences is set.
+	 */
+	if(GtrPreferences.instant_spell_check)
+	{
+		/*
+		 * Start up gtkspell if not already done.
+		 */ 
+		GError *error = NULL;
+		gchar *errortext = NULL;
+		
+		guint i;
+		for(i = 0; i <= (gint)GtrPreferences.nplurals; i++) 
+		{
+			if(tab->priv->gtrans_spell[i] == NULL && tab->priv->trans_msgstr[i] != NULL)
+			{
+				tab->priv->gtrans_spell[i] = NULL;
+				tab->priv->gtrans_spell[i] = 
+					gtkspell_new_attach(GTK_TEXT_VIEW(tab->priv->trans_msgstr[i]),
+							    NULL, &error);
+				if (tab->priv->gtrans_spell[i] == NULL) {
+					g_print(_("gtkspell error: %s\n"), error->message);
+					errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"),
+								    error->message);
+					g_error_free(error);
+		    		}
+			}
+			else
+				break;
+		}
+	} else {
+		i = 0;
+		do{
+			if(tab->priv->gtrans_spell[i] != NULL) {
+				gtkspell_detach(tab->priv->gtrans_spell[i]);
+				tab->priv->gtrans_spell[i] = NULL;
+			}
+			i++;
+		}while(i < (gint)GtrPreferences.nplurals);
+	}
+}
+#endif
 
 static GtkWidget *
 gtranslator_tab_append_page(const gchar *tab_label,
@@ -101,6 +248,23 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), scroll, label);
 	return widget;
 }
+
+static void
+status_widgets(GtkWidget *buffer,
+	       GtranslatorTab *tab)
+{
+	GtranslatorMsg *msg = gtranslator_po_get_current_message(tab->priv->po);
+	
+	if(gtranslator_msg_is_fuzzy(msg))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->fuzzy), TRUE);
+	
+	else if(gtranslator_msg_is_translated(msg))
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->translated), TRUE);
+	
+	else
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->untranslated), TRUE);
+
+}
 	
 static void
 gtranslator_tab_draw (GtranslatorTab *tab)
@@ -111,6 +275,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	GtkWidget *comments_viewport;
 	GtkWidget *status_box;
 	GtkWidget *status_label;
+	GtkTextBuffer *buf;
 	
 	gchar *label;
 	gint i = 0;
@@ -198,9 +363,21 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		label = g_strdup_printf(_("Plural %d"), i+1);
 		priv->trans_msgstr[i] = gtranslator_tab_append_page(label,
 								    priv->trans_notebook);
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[i]));
+		g_signal_connect(buf, "end-user-action",
+				 G_CALLBACK(gtranslator_message_translation_update),
+				 tab);
 		i++;
 		g_free(label);
 	}while(i < (gint)GtrPreferences.nplurals);
+	
+	/*
+	 * Status widgets callback
+	 */
+	/*buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[0]));
+	g_signal_connect(buf, "changed",
+			 G_CALLBACK(status_widgets), tab);*/
+	
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->trans_notebook, TRUE, TRUE, 0);	
 	
 	gtk_paned_pack2(GTK_PANED(priv->table_pane), priv->content_pane, FALSE, FALSE);
@@ -212,6 +389,10 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	tab->priv = GTR_TAB_GET_PRIVATE (tab);
 	
 	gtranslator_tab_draw(tab);
+	
+	#ifdef HAVE_GTKSPELL
+	gtranslator_attach_gskspell(tab);
+	#endif
 	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
 }
@@ -260,3 +441,108 @@ gtranslator_tab_get_po(GtranslatorTab *tab)
 	return tab->priv->po;
 }
 
+
+void
+gtranslator_tab_show_message(GtranslatorTab *tab,
+			     GtranslatorMsg *msg)
+{
+	GtranslatorTabPrivate *priv = tab->priv;
+	GtranslatorPo *po;
+	GtkTextBuffer *buf;
+	const gchar *msgid, *msgid_plural;
+	const gchar *msgstr, *msgstr_plural;
+	g_return_if_fail(GTR_IS_TAB(tab));
+	
+	po = priv->po;
+	
+	gtranslator_po_update_current_message(po, msg);
+	msgid = gtranslator_msg_get_msgid(msg);
+	if(msgid) {
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->text_msgid));
+		gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+		gtk_text_buffer_set_text(buf, (gchar*)msgid, -1);
+		gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+	}
+	msgid_plural = gtranslator_msg_get_msgid_plural(msg);
+	if(!msgid_plural) {
+		msgstr = gtranslator_msg_get_msgstr(msg);
+		/*
+		 * Disable notebook tabs
+		 */
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->text_notebook), FALSE);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->trans_notebook), FALSE);
+		if(msgstr) 
+		{
+			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[0]));
+			gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+			gtk_text_buffer_set_text(buf, (gchar*)msgstr, -1);
+			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+			//This should be in init func
+			/*g_signal_connect(buf, "changed",
+					 G_CALLBACK(status_widgets), tab);*/
+		}
+	}
+}
+
+
+void 
+gtranslator_message_go_to(GtranslatorTab *tab,
+			  GList * to_go)
+{
+	GtranslatorPo *po;
+	static gint pos = 0;
+ 
+	g_return_if_fail (to_go!=NULL);
+		
+	po = tab->priv->po;
+	
+	//gtranslator_message_update();
+	
+	/*if (pos == 0)
+	{
+		gtk_widget_set_sensitive(gtranslator_menuitems->first, TRUE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, TRUE);
+		gtk_widget_set_sensitive(gtranslator_menuitems->go_back, TRUE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, TRUE);
+	}	
+	else if (pos == g_list_length(po->messages) - 1)
+	{
+		gtk_widget_set_sensitive(gtranslator_menuitems->go_forward, TRUE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_forward, TRUE);
+		gtk_widget_set_sensitive(gtranslator_menuitems->goto_last, TRUE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_goto_last, TRUE);
+	}*/
+	
+	gtranslator_tab_show_message(tab, to_go->data);
+
+	//pos = g_list_position(po->messages, po->current);
+	
+	/*if (pos == 0)
+	{
+	    	//First items
+		gtk_widget_set_sensitive(gtranslator_menuitems->first, FALSE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, FALSE);
+	    	//go_back items
+		gtk_widget_set_sensitive(gtranslator_menuitems->go_back, FALSE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, FALSE);
+	    	
+	}	
+	else if (pos == g_list_length(po->messages) - 1)
+	{
+	    	//Go_forward items
+		gtk_widget_set_sensitive(gtranslator_menuitems->go_forward, FALSE);
+	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_forward, FALSE);
+	    	//Goto_last items
+		gtk_widget_set_sensitive(gtranslator_menuitems->goto_last, FALSE);
+	 	gtk_widget_set_sensitive(gtranslator_menuitems->t_goto_last, FALSE);
+	}
+	
+	gtranslator_application_bar_update(pos);*/
+
+	/*
+	 * Clean up any Undo stuff lying 'round.
+	 */
+	/*gtranslator_undo_clean_register();
+	gtk_widget_set_sensitive(gtranslator_menuitems->undo, FALSE);
+    	gtk_widget_set_sensitive(gtranslator_menuitems->t_undo, FALSE);*/
+}

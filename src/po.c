@@ -321,6 +321,44 @@ gtranslator_po_get_messages(GtranslatorPo *po)
 	return po->priv->messages;
 }
 
+
+/**
+ * gtranslator_po_get_current_message:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the current message
+ **/
+GList *
+gtranslator_po_get_current_message(GtranslatorPo *po)
+{
+	return po->priv->current;
+}
+
+/*void
+gtranslator_po_set_current_message(GtranslatorPo *po,
+				   GList *list)
+{
+	po->priv->current = list;
+}*/
+
+
+/**
+ * gtranslator_po_update_current_message:
+ * @po: a #GtranslatorPo
+ * @msg: the message where should point the current message.
+ * 
+ * Sets the new current message to the message that is passed in
+ * the argument.
+ **/
+void
+gtranslator_po_update_current_message(GtranslatorPo *po,
+				      GtranslatorMsg *msg)
+{
+	gint i;
+	i = g_list_index(po->priv->messages, msg);
+	po->priv->current = g_list_nth(po->priv->messages, i);
+}
+
 /**
  * gtranslator_po_get_domains:
  * @po: a #GtranslatorPo
@@ -345,3 +383,97 @@ gtranslator_po_get_po_file(GtranslatorPo *po)
 	return po->priv->gettext_po_file;
 }
 
+/**
+ * gtranslator_po_get_next_fuzzy:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the next fuzzy message
+ **/
+GList *
+gtranslator_po_get_next_fuzzy(GtranslatorPo *po)
+{
+	GList *msg;
+	
+	msg = g_list_next(po->priv->current);
+	
+	do{
+		g_return_val_if_fail(msg != NULL, NULL);
+		if(gtranslator_msg_is_fuzzy(msg->data))
+			return msg;
+		msg = g_list_next(msg);
+	}while(msg != g_list_last(po->priv->current));
+	
+	return NULL;
+}
+
+
+/**
+ * gtranslator_po_get_prev_fuzzy:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the previously fuzzy message
+ **/
+GList *
+gtranslator_po_get_prev_fuzzy(GtranslatorPo *po)
+{
+	GList *msg;
+	
+	msg = g_list_previous(po->priv->current);
+	
+	do{
+		g_return_val_if_fail(msg != NULL, NULL);
+		if(gtranslator_msg_is_fuzzy(msg->data))
+			return msg;
+		msg = g_list_previous(msg);
+	}while(msg != g_list_first(po->priv->current));
+	
+	return NULL;
+}
+
+
+/**
+ * gtranslator_po_get_next_untrans:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the next untranslated message
+ **/
+GList *
+gtranslator_po_get_next_untrans(GtranslatorPo *po)
+{
+	GList *msg;
+	
+	msg = g_list_next(po->priv->current);
+	
+	do{
+		g_return_val_if_fail(msg != NULL, NULL);
+		if(!gtranslator_msg_is_translated(msg->data))
+			return msg;
+		msg = g_list_next(msg);
+	}while(msg != g_list_last(po->priv->current));
+	
+	return NULL;
+}
+
+
+/**
+ * gtranslator_po_get_prev_untrans:
+ * @po: a #GtranslatorPo
+ *
+ * Return value: a pointer to the previously untranslated message
+ **/
+GList *
+gtranslator_po_get_prev_untrans(GtranslatorPo *po)
+{
+	GList *msg;
+	
+	msg = g_list_previous(po->priv->current);
+	
+	do{
+		g_return_val_if_fail(msg != NULL, NULL);
+		if(!gtranslator_msg_is_translated(msg->data))
+			return msg;
+		msg = g_list_previous(msg);
+	}while(msg != g_list_first(po->priv->current));
+	
+	return NULL;
+}
