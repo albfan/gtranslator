@@ -253,12 +253,12 @@ static void
 status_widgets(GtkWidget *buffer,
 	       GtranslatorTab *tab)
 {
-	GtranslatorMsg *msg = gtranslator_po_get_current_message(tab->priv->po);
+	GList *msg = gtranslator_po_get_current_message(tab->priv->po);
 	
-	if(gtranslator_msg_is_fuzzy(msg))
+	if(gtranslator_msg_is_fuzzy(msg->data))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->fuzzy), TRUE);
 	
-	else if(gtranslator_msg_is_translated(msg))
+	else if(gtranslator_msg_is_translated(msg->data))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->translated), TRUE);
 	
 	else
@@ -367,16 +367,14 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		g_signal_connect(buf, "end-user-action",
 				 G_CALLBACK(gtranslator_message_translation_update),
 				 tab);
+		
+		/*I need to create my own signal to manage the status widgets*/
+		if(i == 0)
+		g_signal_connect(buf, "end-user-action",
+			 G_CALLBACK(status_widgets), tab);
 		i++;
 		g_free(label);
 	}while(i < (gint)GtrPreferences.nplurals);
-	
-	/*
-	 * Status widgets callback
-	 */
-	/*buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[0]));
-	g_signal_connect(buf, "changed",
-			 G_CALLBACK(status_widgets), tab);*/
 	
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->trans_notebook, TRUE, TRUE, 0);	
 	
@@ -441,6 +439,18 @@ gtranslator_tab_get_po(GtranslatorTab *tab)
 	return tab->priv->po;
 }
 
+gint
+gtranslator_tab_get_active_text_tab(GtranslatorTab *tab)
+{
+	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->text_notebook));
+}
+
+gint
+gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
+{
+	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->trans_notebook));
+}
+
 
 void
 gtranslator_tab_show_message(GtranslatorTab *tab,
@@ -477,9 +487,6 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 			gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
 			gtk_text_buffer_set_text(buf, (gchar*)msgstr, -1);
 			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
-			//This should be in init func
-			/*g_signal_connect(buf, "changed",
-					 G_CALLBACK(status_widgets), tab);*/
 		}
 	}
 }

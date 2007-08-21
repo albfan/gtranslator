@@ -21,10 +21,6 @@
       <menuitem name="EditPasteMenu" action="EditPaste"/>
       <menuitem name="EditClearMenu" action="EditClear"/>
       <separator/>
-      <menuitem name="EditFindMenu" action="EditFind"/>
-      <menuitem name="EditFindNextMenu" action="EditFindNext"/>
-      <menuitem name="EditReplaceMenu" action="EditReplace"/>
-      <separator/>
       <menuitem name="EditHeaderMenu" action="EditHeader"/>
       <separator/>
       <menuitem name="EditCommentMenu" action="EditComment"/>
@@ -67,6 +63,13 @@
       <separator/>
       <menuitem name="GoNextUntranslatedMenu" action="GoNextUntranslated"/>
       <menuitem name="GoPreviousUntranslatedMenu" action="GoPreviousUntranslated"/>
+    </menu>
+
+    <menu name="SearchMenu" action="Search">
+      <menuitem name="SearchFindMenu" action="SearchFind"/>
+      <menuitem name="SearchFindNextMenu" action="SearchFindNext"/>
+      <menuitem name="SearchReplaceMenu" action="SearchReplace"/>
+      <separator/>
     </menu>
 
     <menu name="HelpMenu" action="Help">

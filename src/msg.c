@@ -208,3 +208,23 @@ gtranslator_msg_set_msgstr(GtranslatorMsg *msg,
 {
 	po_message_set_msgstr(msg->priv->message, msgstr);
 }
+
+
+/**
+ * gtranslator_msg_set_msgstr_plural:
+ * @msg: a #GtranslatorMsg
+ * @index: the index where to set the msgstr
+ * @msgstr: the message to set in the msg
+ *
+ * Change the msgstr[index] for a message with plural handling.
+ * Use a NULL value at the end to reduce the number of plural forms.
+ **/
+void
+gtranslator_msg_set_msgstr_plural(GtranslatorMsg *msg,
+				  gint index,
+				  const gchar *msgstr)
+{
+	po_message_set_msgstr_plural(msg->priv->message,
+				     index,
+				     msgstr);
+}

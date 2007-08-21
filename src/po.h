@@ -86,6 +86,8 @@ gboolean         gtranslator_po_get_write_perms        (GtranslatorPo *po);
 
 GList           *gtranslator_po_get_messages           (GtranslatorPo *po);
 
+GList           *gtranslator_po_get_current_message    (GtranslatorPo *po);
+
 GList           *gtranslator_po_get_domains            (GtranslatorPo *po);
 
 po_file_t        gtranslator_po_get_po_file            (GtranslatorPo *po);

@@ -1,3 +1,14 @@
+2007-08-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* about.c: Added me and switched to GPL v3.
+	* gtranslator-ui.xml: Added search menu.
+	* actions-edit.c: Added message_copy_to_translation func.
+	* compile.c: Modified to work in new gtranslator.
+	* tab.c: Added status_widgets callback func.
+	* window.c: Modified menubar.
+	* gtr-toolbar.xml: Added actions.
+	* msg.ch: Added msg_set_msgstr_plural func.
+
 2007-08-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* actions-go.c:

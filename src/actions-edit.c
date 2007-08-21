@@ -32,6 +32,44 @@
 
 
 /*
+ * Use the untranslated message as the translation.
+ */
+void 
+gtranslator_message_copy_to_translation(GtkAction *action,
+					GtranslatorWindow *window)
+{
+	const gchar *msgid;
+	GtranslatorTab *current;
+	GtranslatorPo *po;
+	GList *msg;
+	gint page_index;
+	
+	current = gtranslator_window_get_active_tab(window);
+	po = gtranslator_tab_get_po(current);
+	msg = gtranslator_po_get_current_message(po);
+	
+	page_index = gtranslator_tab_get_active_text_tab(current);
+	
+	if(page_index == 0)
+		msgid = gtranslator_msg_get_msgid(msg->data);
+	else msgid = gtranslator_msg_get_msgid_plural(msg->data);
+	
+	if(msgid)
+	{
+		page_index = gtranslator_tab_get_active_trans_tab(current);
+		
+		if(page_index == 0)
+			gtranslator_msg_set_msgstr(msg->data, msgid);
+		else
+			gtranslator_msg_set_msgstr_plural(msg->data, page_index, msgid);
+	}
+	
+	/*Is needed to reshow the message unless i make something like emit 
+	  a signal in msg.c when the message is modified*/
+	gtranslator_tab_show_message(current, msg->data);
+}
+
+/*
  * Toggle the sticky status
  */
 void 

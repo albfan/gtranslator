@@ -6,11 +6,12 @@
     <toolitem name="FileSaveAs"/>
     <toolitem name="EditUndo"/>
     <toolitem name="EditRedo"/>
-    <toolitem name="EditFind"/>
     <toolitem name="EditHeader"/>
     <toolitem name="EditComment"/>
     <toolitem name="EditMessage2Trans"/>
     <toolitem name="EditFuzzy"/>
+    <toolitem name="ActionsCompile"/>
+    <toolitem name="ActionsAutotranslate"/>
     <toolitem name="GoFirst"/>
     <toolitem name="GoPrevious"/>
     <toolitem name="GoForward"/>
@@ -19,6 +20,8 @@
     <toolitem name="GoPreviousFuzzy"/>
     <toolitem name="GoNextUntranslated"/>
     <toolitem name="GoPreviousUntranslated"/>
+    <toolitem name="SearchFind"/>
+    <toolitem name="SearchReplace"/>
 
 </available>
  <toolbar name="DefaultToolBar">

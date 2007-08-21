@@ -39,6 +39,10 @@ void       gtranslator_file_close               (GtkAction * widget,
 						 GtranslatorWindow *window);
 
 /*Edit*/
+void       gtranslator_message_copy_to_translation
+                                                (GtkAction *action,
+						 GtranslatorWindow *window);
+
 void       gtranslator_message_status_toggle_fuzzy
                                                 (GtkAction *action,
 						 GtranslatorWindow *window);

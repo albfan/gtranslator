@@ -74,6 +74,10 @@ GtranslatorTab        *gtranslator_tab_new	           (GtranslatorPo *po);
 
 GtranslatorPo         *gtranslator_tab_get_po              (GtranslatorTab *tab);
 
+gint                   gtranslator_tab_get_active_text_tab (GtranslatorTab *tab);
+
+gint                   gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab);
+
 
 G_END_DECLS
 

@@ -27,10 +27,9 @@
 #include <stdio.h>
 
 #include "compile.h"
-#include "dialogs.h"
-#include "page.h"
 #include "prefs.h"
-#include "utils_gui.h"
+#include "window.h"
+
 
 /*
  * Set up our temporary file names for the test compile run.
@@ -49,27 +48,31 @@ void gtranslator_utils_remove_compile_files(gchar **test_file,
 /*
  * Set up and assign the test file names for the compile process.
  */
-void gtranslator_utils_get_compile_file_names(gchar **test_file, 
-	gchar **output_file, gchar **result_file)
+void
+gtranslator_utils_get_compile_file_names(gchar **test_file, 
+					 gchar **output_file,
+					 gchar **result_file)
 {
-	const char *project_name;
+	const gchar *project_name;
 	
 	/* TODO: Determine project name from po_file header */
 	*test_file=g_strdup_printf("%s/.gtranslator/files/gtranslator-temp-compile-file",
-		g_get_home_dir());
+				   g_get_home_dir());
 
 	*result_file=g_strdup_printf("%s/.gtranslator/files/gtranslator-compile-result-file",
-		g_get_home_dir());
+				     g_get_home_dir());
 
 	*output_file=g_strdup_printf("%s/%s.gmo",
-		g_get_current_dir(), project_name);
+				     g_get_current_dir(),
+				     project_name);
 }
 
 /* 
  * TODO: Jump to the message containing first error. Something strange with
  * line/message numbers, maybe we need to convert between them?
  */
-void gtranslator_compile_error_dialog(FILE * fs)
+void
+gtranslator_compile_error_dialog(FILE * fs)
 {
 	gchar buf[2048];
 	gint len;
@@ -92,7 +95,7 @@ void gtranslator_compile_error_dialog(FILE * fs)
 
 	scroll = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
-				       GTK_POLICY_NEVER,
+				       GTK_POLICY_AUTOMATIC,
 				       GTK_POLICY_AUTOMATIC);
 	gtk_container_add(GTK_CONTAINER(scroll), textbox);
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
@@ -103,8 +106,10 @@ void gtranslator_compile_error_dialog(FILE * fs)
 /*
  * Clean up after the test compile run.
  */
-void gtranslator_utils_remove_compile_files(gchar **test_file,
-	gchar **output_file, gchar **result_file)
+void
+gtranslator_utils_remove_compile_files(gchar **test_file,
+				       gchar **output_file,
+				       gchar **result_file)
 {
 	if(*test_file)
 	{
@@ -136,7 +141,9 @@ void gtranslator_utils_remove_compile_files(gchar **test_file,
 /*
  * The compile function
  */
-void compile(GtkWidget * widget, gpointer useless)
+void
+compile(GtkAction *action,
+	GtranslatorWindow window)
 {
 	gchar	*cmd,
 		*status,
@@ -160,17 +167,18 @@ void compile(GtkWidget * widget, gpointer useless)
 	}
 
 	gtranslator_utils_get_compile_file_names(&test_file_name, 
-		&output_file_name, &result_file_name);
+						 &output_file_name,
+						 &result_file_name);
 
-	if (!gtranslator_save_file(current_page->po, test_file_name, &error)) {
+	if (!gtranslator_save_file(current_page->po, test_file_name, &error))
+	{
 		GtkWidget *dialog;
 		g_assert(error != NULL);
-		dialog = gtk_message_dialog_new(
-			GTK_WINDOW(gtranslator_application),
-			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_MESSAGE_WARNING,
-			GTK_BUTTONS_OK,
-			error->message);
+		dialog = gtk_message_dialog_new(GTK_WINDOW(window),
+						GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_WARNING,
+						GTK_BUTTONS_OK,
+						error->message);
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
 		g_clear_error(&error);
@@ -178,7 +186,8 @@ void compile(GtkWidget * widget, gpointer useless)
 	}
 
 	cmd = g_strdup_printf("msgfmt -v -c -o '%s' '%s' > '%s' 2>&1",
-			    output_file_name, test_file_name, result_file_name);
+			      output_file_name, test_file_name,
+			      result_file_name);
 	
 	res = system(cmd);
 	fs=fopen(result_file_name,"r");
@@ -197,7 +206,7 @@ void compile(GtkWidget * widget, gpointer useless)
 		fgets(line, sizeof(line), fs);
 		g_strchomp(line);
 		status=g_strdup_printf(_("Compile successful:\n%s"), line);
-		dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+		dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO,
 						 GTK_BUTTONS_CLOSE,
@@ -211,5 +220,6 @@ void compile(GtkWidget * widget, gpointer useless)
 	g_free(cmd);
 
 	gtranslator_utils_remove_compile_files(&test_file_name, 
-		&output_file_name, &result_file_name);
+					       &output_file_name,
+					       &result_file_name);
 }

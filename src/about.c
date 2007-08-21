@@ -4,19 +4,18 @@
  *			Roy-Magne Mo <rmo@sunnmore.net>
  *			Ignacio Casal <nacho.resa@gmail.com>
  * 
- * gtranslator is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or   
- *    (at your option) any later version.
- *    
- * gtranslator is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- *    GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANMSGILITY or FITNESS FOR A PARTICULAR PURMSGSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,15 +42,21 @@ void gtranslator_about_dialog(GtkWidget * widget,
 	gchar *license_trans;
 	
 	const gchar *authors[] = {
+		"Present Developers",
+		"---------------------------------------------------------",
 		"Ross Golder <ross@golder.org>",
+		"Ignacio Casal <nacho.resa@gmail.com>",
+		"",
+		"Past Developers",
+		"---------------------------------------------------------",
 		"Fatih Demir <kabalak@kabalak.net>",
-		" -- ",
+		"---------------------------------------------------------",
 		"Gediminas Paulauskas <menesis@delfi.lt>",
 		"Thomas Ziehmer <thomas@kabalak.net>",
 		"Peeter Vois <peeter@kabalak.net>",
 		NULL
 	};	
-	static const gchar *documenters[] =
+	const gchar *documenters[] =
 	{
 		"Abel Cheung <deaddog@deaddog.org>",
 		"Emese Kovacs <emese@gnome.hu>",
@@ -60,17 +65,16 @@ void gtranslator_about_dialog(GtkWidget * widget,
 	
 	
 	const gchar *license[] = {
-		N_("gtranslator is free software; you can redistribute it and/or modify "
-		"it under the terms of the GNU General Public License as published by "
-		"the Free Software Foundation; either version 2 of the License, or "
-		"(at your option) any later version."),
-		N_("gtranslator is distributed in the hope that it will be useful, "
-		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		"GNU General Public License for more details."),
-		N_("You should have received a copy of the GNU General Public License "
-		"along with gtranslator; if not, write to the Free Software Foundation,"
-		"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA")
+		N_("This program is free software: you can redistribute it and/or modify"
+		   "it under the terms of the GNU General Public License as published by"
+		   "the Free Software Foundation, either version 3 of the License, or"
+		   "(at your option) any later version."),
+		N_("This program is distributed in the hope that it will be useful,"
+		   "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+		   "MERCHANMSGILITY or FITNESS FOR A PARTICULAR PURMSGSE.  See the"
+		   "GNU General Public License for more details."),
+		N_("You should have received a copy of the GNU General Public License"
+		   "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
 	};
 
 
