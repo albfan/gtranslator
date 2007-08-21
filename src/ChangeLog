@@ -1,5 +1,9 @@
 2007-08-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* session.ch: Removed.
+
+2007-08-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* actions.c:
 	* main_window.glade:
 	* menus.ch:
