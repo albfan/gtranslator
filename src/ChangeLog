@@ -1,5 +1,12 @@
 2007-08-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* actions.c:
+	* main_window.glade:
+	* menus.ch:
+	* page.ch: Removed, is not neccessary anymore.
+
+2007-08-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* about.c: Added me and switched to GPL v3.
 	* gtranslator-ui.xml: Added search menu.
 	* actions-edit.c: Added message_copy_to_translation func.
