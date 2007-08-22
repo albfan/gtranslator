@@ -19,10 +19,7 @@
  */
 
 #include "bookmark.h"
-#include "dialogs.h"
-#include "message.h"
 #include "nautilus-string.h"
-#include "page.h"
 #include "preferences.h"
 #include "utils.h"
 
@@ -30,11 +27,6 @@
  * For the moment 10 bookmarks should be the upper limit.
  */
 #define MAX_BOOKMARKS 10
-
-/*
- * Glade:
- */
-#define GLADE_MENU_ITEM_BOOKMARKS "bookmarks"
 
 /*
  * The used GList for the GtrBookmark's -- a general way to handle with this
@@ -55,7 +47,8 @@ gchar *gtranslator_bookmark_escape(const gchar *str);
  * Create and return a GtrBookmark from the current position & po file -- 
  *  if a file is opened yet.
  */
-GtrBookmark *gtranslator_bookmark_new()
+GtrBookmark *
+gtranslator_bookmark_new()
 {
 	const char *header;
 	GtrPo *po;
@@ -79,7 +72,8 @@ GtrBookmark *gtranslator_bookmark_new()
 /*
  * Return the GtrBookmark with the given comment, yeah!
  */
-GtrBookmark *gtranslator_bookmark_new_with_comment(const gchar *comment)
+GtrBookmark *
+gtranslator_bookmark_new_with_comment(const gchar *comment)
 {
 	GtrBookmark *bookmark;
 
@@ -94,7 +88,8 @@ GtrBookmark *gtranslator_bookmark_new_with_comment(const gchar *comment)
 /*
  * Creates the bookmark from a given gchar-string formatted by gtranslator.
  */
-GtrBookmark *gtranslator_bookmark_new_from_string(const gchar *string)
+GtrBookmark *
+gtranslator_bookmark_new_from_string(const gchar *string)
 {
 	GtrBookmark 	*bookmark=g_new0(GtrBookmark, 1);
 	gchar 		**values;
@@ -178,7 +173,8 @@ GtrBookmark *gtranslator_bookmark_new_from_string(const gchar *string)
 /*
  * The otherway conversion: convert a GtrBookmark into a plain string.
  */
-gchar *gtranslator_bookmark_string_from_bookmark(GtrBookmark *bookmark)
+gchar *
+gtranslator_bookmark_string_from_bookmark(GtrBookmark *bookmark)
 {
 	gchar *string;
 
@@ -193,7 +189,8 @@ gchar *gtranslator_bookmark_string_from_bookmark(GtrBookmark *bookmark)
 /*
  * Encapsulate the calls for creating a new GtrBookmark string.
  */
-gchar *gtranslator_bookmark_new_bookmark_string()
+gchar *
+gtranslator_bookmark_new_bookmark_string()
 {
 	GtrBookmark *bookmark;
 	gchar *bookmark_string;
@@ -212,8 +209,9 @@ gchar *gtranslator_bookmark_new_bookmark_string()
 /*
  * Open the given bookmark.
  */
-gboolean gtranslator_bookmark_open(GtrBookmark *bookmark,
-				   GError **error)
+gboolean
+gtranslator_bookmark_open(GtrBookmark *bookmark,
+			  GError **error)
 {
 	GtrPo *po;
 	
@@ -243,7 +241,8 @@ gboolean gtranslator_bookmark_open(GtrBookmark *bookmark,
 /*
  * Return whether the two GtrBookmark's are equal.
  */
-gboolean gtranslator_bookmark_equal(GtrBookmark *one, GtrBookmark *two)
+gboolean
+gtranslator_bookmark_equal(GtrBookmark *one, GtrBookmark *two)
 {
 	g_return_val_if_fail(one!=NULL, FALSE);
 	g_return_val_if_fail(two!=NULL, FALSE);
@@ -298,7 +297,9 @@ gboolean gtranslator_bookmark_equal(GtrBookmark *one, GtrBookmark *two)
 /*
  * Smally different: compare the GtrBookmark and the bookmark string.
  */
-gboolean gtranslator_bookmark_string_equal(GtrBookmark *bookmark, const gchar *string)
+gboolean
+gtranslator_bookmark_string_equal(GtrBookmark *bookmark,
+				  const gchar *string)
 {
 	GtrBookmark *new=gtranslator_bookmark_new_from_string(string);
 	gboolean equal=gtranslator_bookmark_equal(bookmark, new);
@@ -310,7 +311,8 @@ gboolean gtranslator_bookmark_string_equal(GtrBookmark *bookmark, const gchar *s
  * Add the given GtrBookmark to the list including checking if it's 
  *  already in the list.
  */
-void gtranslator_bookmark_add(GtrBookmark *bookmark)
+void
+gtranslator_bookmark_add(GtrBookmark *bookmark)
 {
 	g_return_if_fail(bookmark!=NULL);
 
@@ -327,7 +329,8 @@ void gtranslator_bookmark_add(GtrBookmark *bookmark)
 /*
  * Adding the bookmark directly without any feedback and such but easyness.
  */
-void gtranslator_bookmark_add_direct()
+void
+gtranslator_bookmark_add_direct()
 {
 	GtrBookmark *bookmark=NULL;
 
@@ -338,7 +341,8 @@ void gtranslator_bookmark_add_direct()
 	gtranslator_bookmark_free(bookmark);
 }
 
-void gtranslator_bookmark_add_direct_with_comment(const gchar *comment)
+void
+gtranslator_bookmark_add_direct_with_comment(const gchar *comment)
 {
 	GtrBookmark *bookmark=NULL;
 
@@ -356,7 +360,8 @@ void gtranslator_bookmark_add_direct_with_comment(const gchar *comment)
  * Remove the given GtrBookmark from our list -- the elements should 
  *  be matching "enough" to apply the removal from the list.
  */
-gboolean gtranslator_bookmark_remove(GtrBookmark *bookmark)
+gboolean
+gtranslator_bookmark_remove(GtrBookmark *bookmark)
 {
 	g_return_val_if_fail(bookmark!=NULL, FALSE);
 
@@ -397,7 +402,8 @@ gboolean gtranslator_bookmark_remove(GtrBookmark *bookmark)
 /*
  * Simply search the given GtrBookmark in our IDs list.
  */
-gboolean gtranslator_bookmark_search(GtrBookmark *bookmark)
+gboolean
+gtranslator_bookmark_search(GtrBookmark *bookmark)
 {
 	GList 	*checklist=NULL;
 	
@@ -438,7 +444,8 @@ gboolean gtranslator_bookmark_search(GtrBookmark *bookmark)
 /*
  * Load our GtrBookmarks encoded in string form from the preferences.
  */
-void gtranslator_bookmark_load_list()
+void
+gtranslator_bookmark_load_list()
 {
 	gchar	*path;
 	gint	count, c;
@@ -477,7 +484,8 @@ void gtranslator_bookmark_load_list()
 /*
  * Save our GtrBookmarks list to the preferences. 
  */
-void gtranslator_bookmark_save_list()
+void
+gtranslator_bookmark_save_list()
 {
 	if(gtranslator_bookmarks)
 	{
@@ -520,7 +528,8 @@ void gtranslator_bookmark_save_list()
 /*
  * Stolen from history.c -> working for the moment but should be reorganised later on.
  */
-void gtranslator_bookmark_show_list(void)
+void
+gtranslator_bookmark_show_list(void)
 {
 	static gint len = 0;
 	gint i;
@@ -584,12 +593,16 @@ void gtranslator_bookmark_show_list(void)
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(bookmark_item), menu);
 }
 
-void free_userdata_bookmark(GtkWidget *widget, gpointer userdata)
+void
+free_userdata_bookmark(GtkWidget *widget,
+		       gpointer userdata)
 {
 	g_free(userdata);
 }
 
-void gtranslator_open_file_dialog_from_bookmark(GtkWidget *widget, gchar *filename)
+void
+gtranslator_open_file_dialog_from_bookmark(GtkWidget *widget,
+					   gchar *filename)
 {
 	GError *error;
 
@@ -605,7 +618,8 @@ void gtranslator_open_file_dialog_from_bookmark(GtkWidget *widget, gchar *filena
 /*
  * Escape the menu display items rightly.
  */
-gchar *gtranslator_bookmark_escape(const gchar *str)
+gchar *
+gtranslator_bookmark_escape(const gchar *str)
 {
 	gchar	*display_str=NULL;
 	
@@ -618,7 +632,8 @@ gchar *gtranslator_bookmark_escape(const gchar *str)
 /*
  * Return a copy of our internally used bookmarks' list -- or NULL.
  */
-GList *gtranslator_bookmark_get_list()
+GList *
+gtranslator_bookmark_get_list()
 {
 	if(!gtranslator_bookmarks || g_list_length(gtranslator_bookmarks) <= 0)
 	{
@@ -633,7 +648,9 @@ GList *gtranslator_bookmark_get_list()
 /*
  * Change the comment of the given GtrBookmark with the given gchar.
  */
-void gtranslator_bookmark_set_comment(GtrBookmark *bookmark, const gchar *newcomment)
+void
+gtranslator_bookmark_set_comment(GtrBookmark *bookmark,
+				 const gchar *newcomment)
 {
 	g_return_if_fail(bookmark!=NULL);
 	g_return_if_fail(newcomment!=NULL);
@@ -649,7 +666,8 @@ void gtranslator_bookmark_set_comment(GtrBookmark *bookmark, const gchar *newcom
 /*
  * A convenience copy function for our GtrBookmarks.
  */
-GtrBookmark *gtranslator_bookmark_copy(GtrBookmark *bookmark)
+GtrBookmark *
+gtranslator_bookmark_copy(GtrBookmark *bookmark)
 {
 	GtrBookmark 	*copy=g_new0(GtrBookmark, 1);
 	
@@ -666,7 +684,8 @@ GtrBookmark *gtranslator_bookmark_copy(GtrBookmark *bookmark)
 /*
  * Free the given GtrBookmark.
  */
-void gtranslator_bookmark_free(GtrBookmark *bookmark)
+void
+gtranslator_bookmark_free(GtrBookmark *bookmark)
 {
 	if(bookmark)
 	{

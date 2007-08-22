@@ -130,7 +130,7 @@ gtranslator_alternate_lang_open_file(GtkWidget *dialog,
 	gtranslator_po_parse(po, filename, NULL);
 	
 	panel->priv->messages = g_list_copy(gtranslator_po_get_messages(po));
-	panel->priv->current = panel->priv->messages;
+	panel->priv->current = g_list_first(panel->priv->messages);
 	
 	panel->priv->nplurals = gtranslator_header_get_nplurals(
 					gtranslator_po_get_po_file(po));
@@ -335,5 +335,28 @@ gtranslator_alternate_lang_show_message(GtranslatorAlternateLang *panel,
 {
 	if(!msg)
 		return;
+}
+
+void
+alternate_lang_activate(GtranslatorAlternateLang *panel,
+			GtranslatorWindow *window)
+{
+	GtranslatorPanel *hor_panel;
+	
+	hor_panel = gtranslator_window_get_horizontal_panel(window);
+	
+	gtranslator_panel_add_item(hor_panel, GTK_WIDGET(panel),
+				   "Alternate language",
+				   NULL);
+}
+
+void
+alternate_lang_deactivate(GtranslatorAlternateLang *panel,
+			  GtranslatorWindow *window)
+{
+	GtranslatorPanel *hor_panel;
+	hor_panel = gtranslator_window_get_horizontal_panel(window);
+	
+	gtranslator_panel_remove_item(hor_panel, panel);
 }
 

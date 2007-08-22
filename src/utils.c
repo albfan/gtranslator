@@ -368,7 +368,7 @@ GList *gtranslator_utils_file_names_from_directory(const gchar *directory,
 		if(entry->d_name &&
 			nautilus_strcmp(entry->d_name, ".") && 
 			nautilus_strcmp(entry->d_name, "..") &&
-			nautilus_istr_has_suffix(entry->d_name, extension))
+			g_str_has_suffix(entry->d_name, extension))
 		{
 			gchar *file;
 			

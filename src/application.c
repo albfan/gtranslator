@@ -29,6 +29,7 @@
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <libgnomeui/gnome-client.h>
 
 
 
@@ -47,6 +48,91 @@ struct _GtranslatorApplicationPrivate
 	EggToolbarsModel *toolbars_model;
 };
 
+/*
+ * Quits via the normal quit.
+ */
+static void
+gtranslator_session_die(GnomeClient * client,
+			GtranslatorApplication *app)
+{
+	gtranslator_application_shutdown(app);
+}
+
+/*
+ * Saves the state of gtranslator before quitting.
+ */
+static gint
+gtranslator_session_sleep(GnomeClient * client, gint phase,
+			  GnomeSaveStyle s_style, gint shutdown,
+			  GnomeInteractStyle i_style, gint fast,
+			  GtranslatorApplication *app)
+{
+	GtranslatorTab *tab = gtranslator_window_get_active_tab(app->priv->active_window);
+	GtranslatorPo *po = gtranslator_tab_get_po(tab);
+	
+	gchar *argv[] = {
+		"rm",
+		"-r",
+		NULL
+	};
+	
+	/*
+	 * The state (for now only the current message number) is stored
+	 *  in the preferences.
+	 */
+	gtranslator_config_set_int("state/message_number", 
+			     g_list_position(gtranslator_po_get_messages(po),
+					     gtranslator_po_get_current_message(po)));
+	
+	argv[2] = NULL;
+
+	gnome_client_set_discard_command(client, 3, argv);
+
+	//argv[0] = (gchar *) data;
+	argv[1] = gtranslator_po_get_filename(po);
+
+	gnome_client_set_restart_command(client, 2, argv);
+
+	return TRUE;
+}
+
+/*
+ * Restores a previously closed session.
+ */ 
+static void
+gtranslator_session_restore(GnomeClient * client,
+			    GtranslatorApplication *app)
+{
+	guint num;
+
+	/*num = gtranslator_config_get_int("state/message_number");
+
+	gtranslator_message_go_to_no(NULL, GUINT_TO_POINTER(num));
+
+	push_statusbar_data(NULL, _("Session restored successfully."));*/
+	
+}
+
+static void
+gtranslator_init_session(GtranslatorApplication *app)
+{
+	GnomeClient *client;
+	GnomeClientFlags flags;
+	
+	client = gnome_master_client();
+	
+	g_signal_connect(G_OBJECT(client), "save_yourself",
+			 G_CALLBACK(gtranslator_session_sleep),
+			 app);
+	g_signal_connect(G_OBJECT(client), "die",
+			 G_CALLBACK(gtranslator_session_die), app);
+	
+	flags = gnome_client_get_flags(client);
+	if(flags & GNOME_CLIENT_RESTORED)
+	{
+//		gtranslator_session_restore(client);
+	}
+}
 
 
 static void
@@ -56,6 +142,8 @@ gtranslator_application_init (GtranslatorApplication *application)
 	
 	application->priv = GTR_APPLICATION_GET_PRIVATE (application);
 	priv = application->priv;
+	
+	gtranslator_init_session(application);
 	
 	priv->toolbars_model = egg_toolbars_model_new ();
 
@@ -74,6 +162,10 @@ gtranslator_application_init (GtranslatorApplication *application)
 	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
 	
+	/*
+	 * Read all of our "normal" preferences -- translator data is now
+	 *  outsourced into the GtrTranslator structure.
+	 */
 	gtranslator_preferences_read();
 }
 
@@ -128,4 +220,20 @@ gtranslator_application_save_toolbars_model (GtranslatorApplication *application
 {
         egg_toolbars_model_save_toolbars (application->priv->toolbars_model,
 			 	          application->priv->toolbars_file, "1.0");
+}
+
+void
+gtranslator_application_shutdown(GtranslatorApplication *app)
+{
+	if(app->priv->toolbars_model)
+	{
+		g_object_unref(app->priv->toolbars_model);
+		g_free(app->priv->toolbars_file);
+		app->priv->toolbars_model = NULL;
+		app->priv->toolbars_file = NULL;
+	}
+	
+	g_object_unref(app);
+	
+	gtk_main_quit();
 }

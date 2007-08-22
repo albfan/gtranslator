@@ -28,6 +28,9 @@ G_BEGIN_DECLS
 void       gtranslator_open_file_dialog         (GtkAction * action,
 						 GtranslatorWindow *window);
 
+void       gtranslator_save_current_file_dialog (GtkWidget * widget,
+						 GtranslatorWindow *window);
+
 void       gtranslator_save_file_as_dialog      (GtkAction * action,
 						 GtranslatorWindow *window);
 

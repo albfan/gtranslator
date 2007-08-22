@@ -20,9 +20,11 @@
 #include <config.h>
 #endif
 
+#include "comment-panel.h"
 #include "draw-spaces.h"
 #include "msg.h"
 #include "tab.h"
+#include "panel.h"
 #include "po.h"
 #include "prefs.h"
 #include "view.h"
@@ -41,7 +43,7 @@
 					 GTR_TYPE_TAB,     \
 					 GtranslatorTabPrivate))
 
-#define MAX_PLURALS 9
+#define MAX_PLURALS 6
 
 G_DEFINE_TYPE(GtranslatorTab, gtranslator_tab, GTK_TYPE_VBOX)
 
@@ -52,9 +54,7 @@ struct _GtranslatorTabPrivate
 	
 	GtkWidget *table_pane;
 	GtkWidget *content_pane;
-	
-	GtkWidget *comment;
-	GtkWidget *edit_button;
+	GtranslatorPanel *panel;
 	
 	/*Original text*/
 	GtkWidget *text_notebook;
@@ -270,9 +270,6 @@ static void
 gtranslator_tab_draw (GtranslatorTab *tab)
 {
 	GtkWidget *vertical_box;
-	GtkWidget *horizontal_box;
-	GtkWidget *comments_scrolled_window;
-	GtkWidget *comments_viewport;
 	GtkWidget *status_box;
 	GtkWidget *status_label;
 	GtkTextBuffer *buf;
@@ -288,31 +285,14 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	priv->content_pane = gtk_vpaned_new();
 	
 	/*
+	 * Panel
+	 */
+	priv->panel = GTR_PANEL(gtranslator_panel_new(GTK_ORIENTATION_HORIZONTAL));
+	
+	/*
 	 * Table pane
 	 */
 	priv->table_pane = gtk_hpaned_new();
-	
-	horizontal_box=gtk_hbox_new(FALSE, 1);
-	/*
-	 * Set up the scrolling window for the comments display
-	 */	
-	comments_scrolled_window = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(comments_scrolled_window),
-				       GTK_POLICY_AUTOMATIC,
-				       GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start(GTK_BOX(horizontal_box), comments_scrolled_window, TRUE, TRUE, 0);
-	
-	comments_viewport = gtk_viewport_new(NULL, NULL);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(comments_scrolled_window),
-					      comments_viewport);
-	
-	priv->comment=gtk_label_new("");
-	gtk_container_add(GTK_CONTAINER(comments_viewport), priv->comment);
-	
-	priv->edit_button=gtk_button_new_with_label(_("Edit comment"));
-	gtk_widget_set_sensitive(priv->edit_button, FALSE);
-	gtk_box_pack_end(GTK_BOX(horizontal_box), priv->edit_button,
-		FALSE, FALSE, 0);
 	
 	gtk_paned_set_position(GTK_PANED(priv->content_pane), 0);
 
@@ -320,7 +300,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Pack the comments pane and the main content
 	 */
 	vertical_box=gtk_vbox_new(FALSE, 0);
-	gtk_paned_pack1(GTK_PANED(priv->content_pane), horizontal_box, TRUE, FALSE);
+	gtk_paned_pack1(GTK_PANED(priv->content_pane), GTK_WIDGET(priv->panel), TRUE, FALSE);
 	gtk_paned_pack2(GTK_PANED(priv->content_pane), vertical_box, FALSE, TRUE);
 	
 	/*
@@ -384,9 +364,19 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 static void
 gtranslator_tab_init (GtranslatorTab *tab)
 {
+	GtkWidget *comment;
+	GtkWidget *image;
+	
 	tab->priv = GTR_TAB_GET_PRIVATE (tab);
 	
 	gtranslator_tab_draw(tab);
+	
+	/* Comment panel */
+	comment = gtranslator_comment_panel_new();
+	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
+					 GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtranslator_panel_add_item(tab->priv->panel, comment,
+				   _("Comment"), image);
 	
 	#ifdef HAVE_GTKSPELL
 	gtranslator_attach_gskspell(tab);

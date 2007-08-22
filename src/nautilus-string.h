@@ -64,18 +64,10 @@ gboolean nautilus_str_is_equal                  (const char    *str_a,
 						 const char    *str_b);
 gboolean nautilus_istr_is_equal                 (const char    *str_a,
 						 const char    *str_b);
-gboolean nautilus_str_has_prefix                (const char    *target,
-						 const char    *prefix);
 char *   nautilus_str_get_prefix                (const char    *source,
 						 const char    *delimiter);
 char *   nautilus_str_get_after_prefix          (const char    *source,
 						 const char    *delimiter);
-gboolean nautilus_istr_has_prefix               (const char    *target,
-						 const char    *prefix);
-gboolean nautilus_str_has_suffix                (const char    *target,
-						 const char    *suffix);
-gboolean nautilus_istr_has_suffix               (const char    *target,
-						 const char    *suffix);
 char *   nautilus_str_strip_chr                 (const char    *str,
 						 char           remove_this);
 char *   nautilus_str_strip_trailing_chr        (const char    *str,

@@ -1,3 +1,25 @@
+2007-08-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* comment-panel.ch: Added to manage the comment in tabs.
+	* utils.c, 
+	* translator.c: Changed indentation rules.
+	* actions.h: Added gtranslator_save_current_file_dialog func.
+	* nautilus-string.ch: Removed nautilus_str_has_prefix,
+	  nautilus_str_has_suffix, nautilus_istr_has_prefix and
+	  nautilus_istr_has_suffix funcs.
+	* actions-file.c: Added gtranslator_save_file func and
+	  gtranslator_save_current_file_dialog.
+	* prefs.c: Removed "page.c" dependencie.
+	* save.c: Ported the funcs to the new api.
+	* alternate-language.c: Added activate and deactivate funcs.
+	* application.c: Now session funcs are here.
+	* bookmark.c: Added indentation rules.
+	* tab.c: Added horizontal panel and added in the comment-panel.
+	* window.c: Added call to save file.
+	* main.c: Removed session funcs.
+	* Makefile.am: Added save.ch ,comment-panel.ch  and removed session.h
+	  and main_window.glade files
+
 2007-08-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* session.ch: Removed.

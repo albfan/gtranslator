@@ -26,13 +26,8 @@
 #include <gnome.h>
 
 #include "application.h"
-//#include "bookmark.h"
-//#include "dialogs.h"
-//#include "gui.h"
-#include "learn.h"
 #include "prefs.h"
 #include "runtime-config.h"
-#include "session.h"
 #include "sighandling.h"
 #include "translator.h"
 #include "utils.h"
@@ -76,20 +71,21 @@ static struct poptOption gtranslator_options[] = {
 /*
  * The ubiquitous main function...
  */
-int main(int argc, char *argv[])
+gint
+main(gint argc,
+     gchar *argv[])
 {
 	GnomeProgram    *program=NULL;
-	GnomeClient 	*client=NULL;
-	GnomeClientFlags flags;
+	
 	
 	poptContext 	context;
 	
-	const char 	**args=NULL;
+	const gchar 	**args=NULL;
 	GValue value = { 0, };
 
 	GError		*error=NULL;
 
-	int			i;
+	gint			i;
 	
 	/*
 	 * Initialize gettext.
@@ -139,12 +135,6 @@ int main(int argc, char *argv[])
 	gtranslator_config_init();
 
 	/*
-	 * Read all of our "normal" preferences -- translator data is now
-	 *  outsourced into the GtrTranslator structure.
-	 */
-//	gtranslator_preferences_read();
-
-	/*
 	 * Show the application window with icon.
 	 */
 	gtk_window_set_default_icon_from_file(WINDOW_ICON, &error);
@@ -166,19 +156,6 @@ int main(int argc, char *argv[])
 	 */
 	gtranslator_translator=gtranslator_translator_new();
 	
-	/*
-	 * Get the master session management client.
-	 */
-	client = gnome_master_client();
-		
-	/*
-	 * Connect the signals needed for session management.
-	 */
-/*	g_signal_connect(G_OBJECT(client), "save_yourself",
-			 G_CALLBACK(gtranslator_session_sleep),
-			   (gpointer) argv[0]);
-	g_signal_connect(G_OBJECT(client), "die",
-			 G_CALLBACK(gtranslator_session_die), NULL);*/
 
 	/*
 	 * Initialize our generally used GtrRuntimeConfig structure.
@@ -188,7 +165,6 @@ int main(int argc, char *argv[])
 	/* 
 	 * Create the main app-window. 
 	 */
-	//gtranslator_create_main_window();
 	gtranslator_application_open_window(GTR_APP);
 
 	/*
@@ -198,29 +174,7 @@ int main(int argc, char *argv[])
 	{
 		gnome_vfs_init();
 	}
-
-	/*
-	 * Init the learn buffer and connected stuff.
-	 */
-	//gtranslator_learn_init();
-
-
-	/*
-	 * Load our possibly existing bookmarks' list from our preferences
-	 *  settings - shall make easy access to problematic messages
-	 *   possible and make life faster and easier.
-	 */
-	/*gtranslator_bookmark_load_list();
-	gtranslator_bookmark_show_list();*/
 	
-	/*
-	 * Check the session client flags, and restore state if needed 
-	 */
-	flags = gnome_client_get_flags(client);
-	if(flags & GNOME_CLIENT_RESTORED)
-	{
-//		gtranslator_session_restore(client);
-	}
 
 	/*
 	 * Clean up the temporary file in the user's home dir eventually 

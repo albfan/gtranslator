@@ -185,109 +185,11 @@ nautilus_strcasecmp_compare_func (gconstpointer string_a,
 				    (const gchar *) string_b);
 }
 
-gboolean
-nautilus_str_has_prefix (const gchar *haystack,
-			 const gchar *needle)
-{
-	const gchar *h, *n;
 
-	/* Eat one character at a time. */
-	h = haystack == NULL ? "" : haystack;
-	n = needle == NULL ? "" : needle;
-	do {
-		if (*n == '\0') {
-			return TRUE;
-		}
-		if (*h == '\0') {
-			return FALSE;
-		}
-	} while (*h++ == *n++);
-	return FALSE;
-}
 
-gboolean
-nautilus_str_has_suffix (const gchar *haystack,
-			 const gchar *needle)
-{
-	const gchar *h, *n;
 
-	if (needle == NULL) {
-		return TRUE;
-	}
-	if (haystack == NULL) {
-		return needle[0] == '\0';
-	}
-		
-	/* Eat one character at a time. */
-	h = haystack + strlen(haystack);
-	n = needle + strlen(needle);
-	do {
-		if (n == needle) {
-			return TRUE;
-		}
-		if (h == haystack) {
-			return FALSE;
-		}
-	} while (*--h == *--n);
-	return FALSE;
-}
 
-gboolean
-nautilus_istr_has_prefix (const gchar *haystack,
-			  const gchar *needle)
-{
-	const gchar *h, *n;
-	gchar hc, nc;
 
-	/* Eat one character at a time. */
-	h = haystack == NULL ? "" : haystack;
-	n = needle == NULL ? "" : needle;
-	do {
-		if (*n == '\0') {
-			return TRUE;
-		}
-		if (*h == '\0') {
-			return FALSE;
-		}
-		hc = *h++;
-		nc = *n++;
-		hc = tolower ((guchar) hc);
-		nc = tolower ((guchar) nc);
-	} while (hc == nc);
-	return FALSE;
-}
-
-gboolean
-nautilus_istr_has_suffix (const gchar *haystack,
-			  const gchar *needle)
-{
-	const gchar *h, *n;
-	gchar hc, nc;
-
-	if (needle == NULL) {
-		return TRUE;
-	}
-	if (haystack == NULL) {
-		return needle[0] == '\0';
-	}
-		
-	/* Eat one character at a time. */
-	h = haystack + strlen (haystack);
-	n = needle + strlen (needle);
-	do {
-		if (n == needle) {
-			return TRUE;
-		}
-		if (h == haystack) {
-			return FALSE;
-		}
-		hc = *--h;
-		nc = *--n;
-		hc = tolower ((guchar) hc);
-		nc = tolower ((guchar) nc);
-	} while (hc == nc);
-	return FALSE;
-}
 
 /**
  * nautilus_str_get_prefix:

@@ -54,8 +54,9 @@ static GtrLanguage *gtranslator_translator_read_language(void);
 /*
  * Set the values safely from the given configpath's.
  */
-static void gtranslator_translator_read_value(gchar **destvalue,
-        gchar *configpath)
+static void
+gtranslator_translator_read_value(gchar **destvalue,
+				  gchar *configpath)
 {
 	if(!configpath)
 	{
@@ -87,8 +88,9 @@ static void gtranslator_translator_read_value(gchar **destvalue,
 /*
  * Determine environmental values from the given envpath.
  */
-static void gtranslator_translator_read_env_value(gchar *envpath,
-	gchar **destvalue)
+static void
+gtranslator_translator_read_env_value(gchar *envpath,
+				      gchar **destvalue)
 {
 	gchar	*value=NULL;
 
@@ -111,7 +113,8 @@ static void gtranslator_translator_read_env_value(gchar *envpath,
 /*
  * Return the newly parsed and set up GtrLanguage from the preferences.
  */
-static GtrLanguage *gtranslator_translator_read_language()
+static GtrLanguage *
+gtranslator_translator_read_language()
 {
 	GtrLanguage *language=g_new0(GtrLanguage, 1);
     
@@ -137,7 +140,8 @@ static GtrLanguage *gtranslator_translator_read_language()
  * Creates a new GtrTranslator structure with the information/configuration
  *  from the preferences.
  */
-GtrTranslator *gtranslator_translator_new()
+GtrTranslator *
+gtranslator_translator_new()
 {
 	GtrTranslator 	*new_translator;
 
@@ -200,7 +204,8 @@ GtrTranslator *gtranslator_translator_new()
  * Creates a more "fresh" GtrTranslator structure without reading from the
  *  preferences -- useful for init tasks.
  */
-GtrTranslator *gtranslator_translator_new_with_default_values()
+GtrTranslator *
+gtranslator_translator_new_with_default_values()
 {
 	GtrTranslator 	*new_translator;
 
@@ -310,7 +315,8 @@ GtrTranslator *gtranslator_translator_new_with_default_values()
 /*
  * Return the well-formed translator string we're using in many places.
  */
-gchar *gtranslator_translator_get_translator_string(GtrTranslator *translator)
+gchar *
+gtranslator_translator_get_translator_string(GtrTranslator *translator)
 {
 	gchar	*translator_string=NULL;
 	
@@ -341,7 +347,8 @@ gchar *gtranslator_translator_get_translator_string(GtrTranslator *translator)
  * Set the translator name + Email information of the given GtrTranslator
  *  safely from the given arguments.
  */
-void gtranslator_translator_set_translator(GtrTranslator *translator,
+void 
+gtranslator_translator_set_translator(GtrTranslator *translator,
 	gchar *name, gchar *email)
 {
 	g_return_if_fail(translator!=NULL);
@@ -376,8 +383,10 @@ void gtranslator_translator_set_translator(GtrTranslator *translator,
  *    the group EMail address to a custom value; this is honored here; can be
  *     safely given as NULL).
  */
-void gtranslator_translator_set_language(GtrTranslator *translator, 
-	gchar *language_name, gchar *custom_group_email)
+void
+gtranslator_translator_set_language(GtrTranslator *translator, 
+				    gchar *language_name,
+				    gchar *custom_group_email)
 {
 	gint	z=0;
 	
@@ -431,7 +440,8 @@ void gtranslator_translator_set_language(GtrTranslator *translator,
 /*
  * Save the GtrTranslator's data/information into our preferences.
  */
-void gtranslator_translator_save(GtrTranslator *translator)
+void
+gtranslator_translator_save(GtrTranslator *translator)
 {
 	g_return_if_fail(translator!=NULL);
 	
@@ -473,7 +483,8 @@ void gtranslator_translator_save(GtrTranslator *translator)
 /*
  * Free the GtrTranslator safely and rightly.
  */
-void gtranslator_translator_free(GtrTranslator *translator)
+void
+gtranslator_translator_free(GtrTranslator *translator)
 {
 	if(translator)
 	{

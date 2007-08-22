@@ -47,7 +47,6 @@ gtranslator_SOURCES = \
 	preferences.c preferences.h \
 	prefs.h \
 	runtime-config.c runtime-config.h \
-	session.h \
 	tab.c tab.h \
 	translator.h \
 	vfs-handle.h \
@@ -67,7 +66,11 @@ gtranslator_SOURCES = \
 	actions-file.c \
 	actions.h \
 	actions-go.c \
-	actions-edit.c
+	actions-edit.c \
+	save.c \
+	save.h \
+	comment-panel.c \
+	comment-panel.h
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \
@@ -93,7 +96,6 @@ gladedir = $(pkgdatadir)
 
 glade_DATA =  \
        header_dialog.glade \
-       main_window.glade \
        preferences.glade
 
 EXTRA_DIST = ChangeLog $(glade_DATA)

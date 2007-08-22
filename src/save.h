@@ -21,10 +21,12 @@
 #define GTR_SAVE_H 1
 
 #include <glib.h>
+#include "window.h"
 
 /*
  * Save the po file rightly.
  */
-gboolean gtranslator_save_po_file(const gchar *filename);
+gboolean gtranslator_save_po_file(const gchar *filename,
+				  GtranslatorWindow *window);
 
 #endif

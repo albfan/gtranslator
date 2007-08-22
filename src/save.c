@@ -21,67 +21,62 @@
 #include <config.h>
 #endif
 
-#include "about.h"
-#include "gui.h"
-#include "nautilus-string.h"
-#include "save.h"
-#include "parse.h"
 #include "runtime-config.h"
-#include "utils.h"
-#include "utils_gui.h"
-#include "vfs-handle.h"
+#include "save.h"
+#include "window.h"
 
 #include <gtk/gtkmessagedialog.h>
+#include <glib/gi18n.h>
 
 #include <string.h>
 #include <stdlib.h>
 
-//#include <libgnomeui/gnome-app-util.h>
-
 /*
  * The "backend" for the gzip. bzip2 and uncompress based functions.
  */
-void save_compressed_po_file(const gchar *file, gchar *command);
+void save_compressed_po_file(const gchar *file, gchar *command, GtranslatorWindow *window);
 
 /*
  * The internally used functions' prototypes.
  */
-void gtranslator_save_compiled_po_file(const gchar *file);
-void gtranslator_save_gzipped_po_file(const gchar *file);
-void gtranslator_save_bzip2ed_po_file(const gchar *file);
-void gtranslator_save_compressed_po_file(const gchar *file);
-void gtranslator_save_ziped_po_file(const gchar *file);
+void gtranslator_save_compiled_po_file(const gchar *file, GtranslatorWindow *window);
+void gtranslator_save_gzipped_po_file(const gchar *file, GtranslatorWindow *window);
+void gtranslator_save_bzip2ed_po_file(const gchar *file, GtranslatorWindow *window);
+void gtranslator_save_compressed_po_file(const gchar *file, GtranslatorWindow *window);
+void gtranslator_save_ziped_po_file(const gchar *file, GtranslatorWindow *window);
 
 /*
  * Detects whether we can save the given file with the
  *  "special" save functions of gtranslator.
  */
-gboolean gtranslator_save_po_file(const gchar *filename)
+gboolean
+gtranslator_save_po_file(const gchar *filename,
+			 GtranslatorWindow *window)
 {
-	if(nautilus_istr_has_suffix(filename, ".mo") || 
-		nautilus_istr_has_suffix(filename, ".gmo"))
+	if(g_str_has_suffix(filename, ".mo") || 
+		g_str_has_suffix(filename, ".gmo"))
 	{
-		gtranslator_save_compiled_po_file(filename);
+		gtranslator_save_compiled_po_file(filename, window);
 		return TRUE;
 	}
-	else if(nautilus_istr_has_suffix(filename, ".po.gz"))
+	else if(g_str_has_suffix(filename, ".po.gz"))
 	{
-		gtranslator_save_gzipped_po_file(filename);
+		gtranslator_save_gzipped_po_file(filename, window);
 		return TRUE;
 	}
-	else if(nautilus_istr_has_suffix(filename, ".po.bz2"))
+	else if(g_str_has_suffix(filename, ".po.bz2"))
 	{
-		gtranslator_save_bzip2ed_po_file(filename);
+		gtranslator_save_bzip2ed_po_file(filename, window);
 		return TRUE;
 	}
-	else if(nautilus_istr_has_suffix(filename, ".po.z"))
+	else if(g_str_has_suffix(filename, ".po.z"))
 	{
-		gtranslator_save_compressed_po_file(filename);
+		gtranslator_save_compressed_po_file(filename, window);
 		return TRUE;
 	}
-	else if(nautilus_istr_has_suffix(filename, ".po.zip"))
+	else if(g_str_has_suffix(filename, ".po.zip"))
 	{
-		gtranslator_save_ziped_po_file(filename);
+		gtranslator_save_ziped_po_file(filename, window);
 		return TRUE;
 	}
 	
@@ -91,7 +86,9 @@ gboolean gtranslator_save_po_file(const gchar *filename)
 /*
  * Save the given compiled gettext file.
  */
-void gtranslator_save_compiled_po_file(const gchar *file)
+void
+gtranslator_save_compiled_po_file(const gchar *file,
+				  GtranslatorWindow *window)
 {
 	gchar *cmd;
 
@@ -100,15 +97,15 @@ void gtranslator_save_compiled_po_file(const gchar *file)
 		return;
 	}
 
-	gtranslator_save_file(gtranslator_runtime_config->	save_filename);
+	gtranslator_save_file(gtranslator_runtime_config->save_filename);
 	
 	/*
 	 * Build up the command to execute in the shell to get the compiled
 	 *  gettext file.
 	 */
 	cmd=g_strdup_printf("msgfmt '%s' -o '%s'",
-		gtranslator_runtime_config->save_filename,
-		file);
+			    gtranslator_runtime_config->save_filename,
+			    file);
 
 	/* 
 	 * Execute the command and test the result.
@@ -116,12 +113,12 @@ void gtranslator_save_compiled_po_file(const gchar *file)
 	if(system(cmd))
 	{
 		cmd=g_strdup_printf(_("Couldn't save compiled gettext file `%s'!"),
-			file);
+				    file);
 		/*
 		 * Show a warning to the user.
 		 */
 		GtkWidget *dialog;
-		dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+		dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_MESSAGE_WARNING,
 						GTK_BUTTONS_CLOSE,
@@ -137,7 +134,10 @@ void gtranslator_save_compiled_po_file(const gchar *file)
  * This acts as the backend function for the gzip & bzip2'ed po file
  *  functions.
  */
-void save_compressed_po_file(const gchar *file, gchar *command)
+void
+save_compressed_po_file(const gchar *file,
+			gchar *command,
+			GtranslatorWindow *window)
 {
 	gchar *cmd;
 
@@ -146,16 +146,15 @@ void save_compressed_po_file(const gchar *file, gchar *command)
 		return;
 	}
 
-	gtranslator_save_file(
-		gtranslator_runtime_config->save_filename);
+	gtranslator_save_file(gtranslator_runtime_config->save_filename);
 	
 	/* 
 	 * Set up the command to execute in the system shell.
 	 */
 	cmd=g_strdup_printf("'%s' -c -q < '%s' > '%s'",
-		command,
-		gtranslator_runtime_config->save_filename,
-		file);
+			    command,
+			    gtranslator_runtime_config->save_filename,
+			    file);
 
 	/*
 	 * Execute the command and check the result.
@@ -164,9 +163,8 @@ void save_compressed_po_file(const gchar *file, gchar *command)
 	{
 		if(!strcmp(command, "compress"))
 		{
-			cmd=g_strdup_printf(
-			_("Couldn't save compressed gettext file `%s'!"),
-			file);
+			cmd=g_strdup_printf(_("Couldn't save compressed gettext file `%s'!"),
+					    file);
 		}
 		else
 		{
@@ -184,7 +182,7 @@ void save_compressed_po_file(const gchar *file, gchar *command)
 		 * Display the warning to the user.
 		 */
 		GtkWidget *dialog;
-		dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+		dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_MESSAGE_WARNING,
 						GTK_BUTTONS_CLOSE,
@@ -199,28 +197,36 @@ void save_compressed_po_file(const gchar *file, gchar *command)
 /*
  * Save routines for all the stuff:
  */ 
-void gtranslator_save_gzipped_po_file(const gchar *file)
+void
+gtranslator_save_gzipped_po_file(const gchar *file,
+				 GtranslatorWindow *window)
 {
 	g_return_if_fail(file!=NULL);
 
-	save_compressed_po_file(file, "gzip");
+	save_compressed_po_file(file, "gzip", window);
 }
 
-void gtranslator_save_bzip2ed_po_file(const gchar *file)
+void
+gtranslator_save_bzip2ed_po_file(const gchar *file,
+				 GtranslatorWindow *window)
 {
 	g_return_if_fail(file!=NULL);
 
-	save_compressed_po_file(file, "bzip2");
+	save_compressed_po_file(file, "bzip2", window);
 }
 
-void gtranslator_save_compressed_po_file(const gchar *file)
+void
+gtranslator_save_compressed_po_file(const gchar *file,
+				    GtranslatorWindow *window)
 {
 	g_return_if_fail(file!=NULL);
 
-	save_compressed_po_file(file, "compress");
+	save_compressed_po_file(file, "compress", window);
 }
 
-void gtranslator_save_ziped_po_file(const gchar *file)
+void
+gtranslator_save_ziped_po_file(const gchar *file,
+			       GtranslatorWindow *window)
 {
 	gchar 	*cmd;
 
@@ -235,8 +241,8 @@ void gtranslator_save_ziped_po_file(const gchar *file)
 		gtranslator_runtime_config->save_filename);
 
 	cmd=g_strdup_printf("zip -q '%s' '%s'", 
-		file,
-		gtranslator_runtime_config->save_filename);
+			    file,
+			    gtranslator_runtime_config->save_filename);
 
 	if(system(cmd))
 	{
@@ -244,7 +250,7 @@ void gtranslator_save_ziped_po_file(const gchar *file)
 			file);
 
 		GtkWidget *dialog;
-		dialog = gtk_message_dialog_new (GTK_WINDOW(gtranslator_application),
+		dialog = gtk_message_dialog_new (GTK_WINDOW(window),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_MESSAGE_WARNING,
 						GTK_BUTTONS_CLOSE,

@@ -528,9 +528,11 @@ gtranslator_parse_the_file_from_file_dialog(GtkWidget * dialog,
 }
 
 gboolean 
-gtranslator_save_file(GtrPo *po, const gchar *name, GError **error)
+gtranslator_save_file(GtranslatorPo *po,
+		      const gchar *name,
+		      GError **error)
 {
-	if(nautilus_istr_has_suffix(name, ".pot"))
+	if(g_str_has_suffix(name, ".pot"))
 	{
 		g_set_error(error,
 			GTR_PARSER_ERROR,

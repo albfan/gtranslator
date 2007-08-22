@@ -73,7 +73,10 @@ GtranslatorApplication	*gtranslator_application_get_instance	           (void);
 
 
 EggToolbarsModel *gtranslator_application_get_toolbars_model  (GtranslatorApplication   *application);
+
 void              gtranslator_application_save_toolbars_model (GtranslatorApplication   *application);
+
+void              gtranslator_application_shutdown            (GtranslatorApplication *app);
 
 G_END_DECLS
 
