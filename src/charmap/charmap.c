@@ -48,7 +48,7 @@ typedef struct
 
 
 static void
-charmap_init (GtranslatorCharmap *charmap)
+gtranslator_charmap_init (GtranslatorCharmap *charmap)
 {
 }
 
@@ -154,7 +154,7 @@ on_table_activate (GucharmapTable *chartable,
 	
 	g_return_if_fail (gucharmap_unichar_validate (wc));
 	
-	/*view = GTK_TEXT_VIEW (gtranslator_window_get_active_view (window));
+	view = GTK_TEXT_VIEW (gtranslator_window_get_active_view (window));
 	
 	if (!view || !gtk_text_view_get_editable (view))
 		return;
@@ -173,7 +173,7 @@ on_table_activate (GucharmapTable *chartable,
 	if (gtk_text_iter_editable (&start, TRUE))
 		gtk_text_buffer_insert (document, &start, buffer, length);
 	
-	gtk_text_buffer_end_user_action (document);*/
+	gtk_text_buffer_end_user_action (document);
 }
 
 static GtkWidget *

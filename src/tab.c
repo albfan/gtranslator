@@ -499,6 +499,14 @@ gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
 	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->trans_notebook));
 }
 
+GtranslatorView *
+gtranslator_tab_get_active_view(GtranslatorTab *tab)
+{
+	gint num;
+	
+	num = gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->trans_notebook));
+	return GTR_VIEW(tab->priv->trans_msgstr[num]);
+}
 
 void
 gtranslator_tab_show_message(GtranslatorTab *tab,
@@ -569,20 +577,7 @@ gtranslator_message_go_to(GtranslatorTab *tab,
 	
 	//gtranslator_message_update();
 	
-	/*if (pos == 0)
-	{
-		gtk_widget_set_sensitive(gtranslator_menuitems->first, TRUE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, TRUE);
-		gtk_widget_set_sensitive(gtranslator_menuitems->go_back, TRUE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, TRUE);
-	}	
-	else if (pos == g_list_length(po->messages) - 1)
-	{
-		gtk_widget_set_sensitive(gtranslator_menuitems->go_forward, TRUE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_forward, TRUE);
-		gtk_widget_set_sensitive(gtranslator_menuitems->goto_last, TRUE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_goto_last, TRUE);
-	}*/
+	
 	current_msg = gtranslator_po_get_current_message(po);
 	message_error = gtranslator_msg_check(current_msg->data);
 	if(message_error == NULL)
@@ -592,40 +587,9 @@ gtranslator_message_go_to(GtranslatorTab *tab,
 	}
 	else
 	{
-		message_area = create_error_message_area(_("There is an error in the message"),
+		message_area = create_error_message_area(_("There is an error in the message:"),
 							 message_error);
 		set_message_area(tab, message_area);
 		return;
 	}
-	
-	//pos = g_list_position(po->messages, po->current);
-	
-	/*if (pos == 0)
-	{
-	    	//First items
-		gtk_widget_set_sensitive(gtranslator_menuitems->first, FALSE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_first, FALSE);
-	    	//go_back items
-		gtk_widget_set_sensitive(gtranslator_menuitems->go_back, FALSE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_back, FALSE);
-	    	
-	}	
-	else if (pos == g_list_length(po->messages) - 1)
-	{
-	    	//Go_forward items
-		gtk_widget_set_sensitive(gtranslator_menuitems->go_forward, FALSE);
-	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_go_forward, FALSE);
-	    	//Goto_last items
-		gtk_widget_set_sensitive(gtranslator_menuitems->goto_last, FALSE);
-	 	gtk_widget_set_sensitive(gtranslator_menuitems->t_goto_last, FALSE);
-	}
-	
-	gtranslator_application_bar_update(pos);*/
-
-	/*
-	 * Clean up any Undo stuff lying 'round.
-	 */
-	/*gtranslator_undo_clean_register();
-	gtk_widget_set_sensitive(gtranslator_menuitems->undo, FALSE);
-    	gtk_widget_set_sensitive(gtranslator_menuitems->t_undo, FALSE);*/
 }

@@ -146,6 +146,14 @@ gtranslator_msg_is_fuzzy(GtranslatorMsg *msg)
 	return po_message_is_fuzzy(msg->priv->message);
 }
 
+
+/**
+ * gtranslator_msg_set_fuzzy:
+ * @msg: a #GtranslatorMsg
+ * @fuzzy: the fuzzy value to set to the message
+ * 
+ * Change the fuzzy mark of a message.
+ **/
 void
 gtranslator_msg_set_fuzzy(GtranslatorMsg *msg,
 			  gboolean fuzzy)
@@ -262,7 +270,7 @@ gtranslator_msg_get_comment(GtranslatorMsg *msg)
  * gtranslator_msg_get_extracted_comments:
  * @msg: a #GtranslatorMsg
  *
- * Return value: 
+ * Return value: the extracted comments for a message.
  **/
 const gchar *
 gtranslator_msg_get_extracted_comments(GtranslatorMsg *msg)
@@ -280,11 +288,34 @@ on_gettext_po_xerror(gint severity,
 	message_error = g_strdup(message_text);
 }
 
+static void
+on_gettext_po_xerror2(gint severity,
+		      po_message_t message1,
+		      const gchar *filename1, size_t lineno1, size_t column1,
+		      gint multiline_p1, const gchar *message_text1,
+		      po_message_t message2,
+		      const gchar *filename2, size_t lineno2, size_t column2,
+		      gint multiline_p2, const gchar *message_text2)
+{
+	
+}
+
+
+/**
+ * gtranslator_msg_check:
+ * @msg: a #GtranslatorMsg
+ * 
+ * Return value: the message error or NULL if there is not any error.
+ *
+ * Test whether the message translation is a valid format string if the message
+ * is marked as being a format string.  
+ **/
 const gchar *
 gtranslator_msg_check(GtranslatorMsg *msg)
 {
 	struct po_xerror_handler handler;
 	handler.xerror = &on_gettext_po_xerror;
+	//handler.xerror2 = &on_gettext_po_xerror2;
 	
 	if(message_error != NULL)
 	{

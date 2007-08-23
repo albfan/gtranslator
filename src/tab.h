@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "po.h"
+#include "view.h"
 
 G_BEGIN_DECLS
 
@@ -77,6 +78,8 @@ GtranslatorPo         *gtranslator_tab_get_po              (GtranslatorTab *tab)
 gint                   gtranslator_tab_get_active_text_tab (GtranslatorTab *tab);
 
 gint                   gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab);
+
+GtranslatorView       *gtranslator_tab_get_active_view     (GtranslatorTab *tab);
 
 
 G_END_DECLS

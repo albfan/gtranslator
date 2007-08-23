@@ -23,6 +23,7 @@
 #include "about.h"
 #include "actions.h"
 #include "application.h"
+#include "charmap.h"
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
@@ -628,6 +629,9 @@ gtranslator_window_init (GtranslatorWindow *window)
 	
 	gtranslator_window_restore_geometry(window, NULL);
 	
+	/* Charmap panel */
+	impl_activate(window);
+	
 }
 
 static void
@@ -713,5 +717,12 @@ gtranslator_window_get_ui_manager(GtranslatorWindow *window)
 	return window->priv->ui_manager;
 }
 
-
+GtranslatorView *
+gtranslator_window_get_active_view(GtranslatorWindow *window)
+{
+	GtranslatorTab *current_tab;
+	current_tab = gtranslator_window_get_active_tab(window);
+	
+	return gtranslator_tab_get_active_view(current_tab);
+}
 

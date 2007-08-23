@@ -207,51 +207,6 @@ static GtkWidget *prefs = NULL, *prefs_notebook = NULL;
  */
 static gboolean prefs_changed;
 
-//Maybe this is useful with glade to change the colors
-/*GtkWidget* 
-gtranslator_preferences_category_new_pack_start(GtkWidget *page,
-												const gchar *caption,
-												gchar *image_file) 
-{
-	GtkWidget *vbox;
-	GdkPixbuf *image;
-	GdkColor bg;
-	GtkStyle *style;
-	GtkWidget *event_box, *label, *hbox, *content_box;
-	gchar *labeltext;
-
-	vbox = gtk_vbox_new (FALSE, 5);
-
-	labeltext = g_strconcat("<span weight=\"bold\" size=\"large\" foreground=\"white\">",caption,"</span>",NULL);
-	label = gtk_label_new (labeltext);
-	g_free(labeltext);
-	gtk_label_set_use_markup(GTK_LABEL (label), TRUE);
-	gtk_label_set_justify(GTK_LABEL (label), GTK_JUSTIFY_CENTER);
-	gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);  
-	
-	event_box = gtk_event_box_new();
-	style = gtk_widget_get_style(gtk_button_new());
-	if (gdk_color_parse("#7f7f7f",&bg))
-		gtk_widget_modify_bg(event_box, GTK_STATE_NORMAL, &bg);
-	
-	image = gtranslator_pixbuf_from_file(
-				g_strconcat(DATADIR,"/pixmaps/gtranslator/",image_file,NULL));
-	hbox = gtk_hbox_new(FALSE, 20);
-	gtk_container_add(GTK_CONTAINER(event_box),hbox);
-	gtk_box_pack_start(GTK_BOX (hbox), gtk_image_new_from_pixbuf(image),FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX (hbox), label, TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX (vbox), event_box, FALSE, FALSE, 0);
-
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
-	content_box = gtk_vbox_new (FALSE, 5);
-	gtk_box_pack_start (GTK_BOX (hbox), content_box, TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (page), vbox, TRUE, TRUE, 0);
-
-	return content_box;
-}*/
-
 
 /*
  * Set sensitive of a widget and/or a label
@@ -485,7 +440,8 @@ gtranslator_control_table_selection_changed(GtkTreeSelection *selection,
 }
 
 
-GtkWidget *gtranslator_preferences_dialog_control_new()
+GtkWidget *
+gtranslator_preferences_dialog_control_new()
 {
 	GtkWidget *control;
 	GtkTreeViewColumn *column;
@@ -656,9 +612,7 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, autosave_str, 
 			  PAGENUM_COLUMN, 1,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, autosave_str); 
-	category_box = gtranslator_preferences_category_new_pack_start(page, autosave_str,"auto.png");*/
-
+	
 	//Autosave check button
 	autosave = gtranslator_preferences_toggle_new(GLADE_AUTOSAVE,
 						      GtrPreferences.autosave,
@@ -702,10 +656,6 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			  PAGENUM_COLUMN, 2,
 			 -1);
 	
-	/*
-	page = gtranslator_preferences_page_new_append(prefs_notebook, recent_str);
-	category_box =  gtranslator_preferences_category_new_pack_start(page, recent_str,"recent.png");
-	*/
 	
 	//max_history_entries spin button
 	adjustment = (GtkAdjustment *)gtk_adjustment_new (GtrPreferences.max_history_entries, 3, 15, 1, 10, 10);
@@ -743,9 +693,6 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, display_str, 
 			  PAGENUM_COLUMN, 3,
 			 -1);
-	//page = gtranslator_preferences_page_new_append(prefs_notebook, display_str);
-	
-	//category_box = gtranslator_preferences_category_new_pack_start(page, display_str,"text.png");
 	
 	//highlight toggle button
     	highlight = gtranslator_preferences_toggle_new(GLADE_HIGHLIGHT,
@@ -806,9 +753,6 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, content_str, 
 			  PAGENUM_COLUMN, 4,
 			 -1);	
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, content_str);
-	category_box = gtranslator_preferences_category_new_pack_start(page, content_str,"content.png");*/
-	
 	
 	//unmark_fuzzy toggle button
 	unmark_fuzzy = gtranslator_preferences_toggle_new(GLADE_UNMARK_FUZZY,
@@ -849,9 +793,6 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, personal_str, 
 			  PAGENUM_COLUMN, 5,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, _("PO header")); 
-	
-	category_box = gtranslator_preferences_category_new_pack_start(page, personal_str,"about_me.png");*/
 	
 	GtkWidget *personal_info_box;
 	personal_info_box = gtk_vbox_new(FALSE,0);
@@ -931,8 +872,7 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, language_str, 
 			  PAGENUM_COLUMN, 6,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, language_str); 			 
-	category_box = gtranslator_preferences_category_new_pack_start(page, language_str,"language.png");*/
+	
 	gtranslator_utils_language_lists_create();
 	
 	//authors_language combobox
@@ -1006,9 +946,6 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, general_str, 
 			  PAGENUM_COLUMN, 7,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, general_str);
-	label_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	category_box = gtranslator_preferences_category_new_pack_start(page, general_str,"func.png");*/
 	
 	//use_update_function toggle button
 	use_update_function = gtranslator_preferences_toggle_new(GLADE_USE_UPDATE_FUNCTION,
@@ -1037,19 +974,15 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, messagestable_str, 
 			  PAGENUM_COLUMN, 8,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, messagestable_str);
-	category_box = gtranslator_preferences_category_new_pack_start(page, messagestable_str,"table.png");*/
-	
 	
 	//show_messages_table toggle button
 	show_messages_table = gtranslator_preferences_toggle_new(GLADE_SHOW_MESSAGES_TABLE,
-															 GtrPreferences.show_messages_table,
+								 GtrPreferences.show_messages_table,
 															 G_CALLBACK(gtranslator_preferences_dialog_changed));
 	
 	//collapse_all_entries toggle button
 	collapse_all_entries = gtranslator_preferences_toggle_new(GLADE_COLLAPSE_ALL_ENTRIES,
-															  GtrPreferences.collapse_all,
-															  G_CALLBACK(gtranslator_preferences_dialog_changed));
+								  GtrPreferences.collapse_all,													  G_CALLBACK(gtranslator_preferences_dialog_changed));
 	
 
 	/*
@@ -1068,17 +1001,15 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, general_str, 
 			  PAGENUM_COLUMN, 9,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, general_str);
-	category_box = gtranslator_preferences_category_new_pack_start(page, general_str,"autotrans.png");*/
 															 
 	//use_learn_buffer toggle button
 	use_learn_buffer = gtranslator_preferences_toggle_new(GLADE_USE_LEARN_BUFFER,
-														  GtrPreferences.use_learn_buffer,
+							      GtrPreferences.use_learn_buffer,
 														  G_CALLBACK(gtranslator_preferences_dialog_changed));
 	
 	//auto_learn toggle button
 	auto_learn = gtranslator_preferences_toggle_new(GLADE_AUTO_LEARN,
-													GtrPreferences.auto_learn,
+							GtrPreferences.auto_learn,
 													G_CALLBACK(gtranslator_preferences_dialog_changed));
 		
 	/* Fuzzy item */
@@ -1088,8 +1019,6 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 			 CATEGORY_COLUMN, fuzzy_str, 
 			  PAGENUM_COLUMN, 10,
 			 -1);
-	/*page = gtranslator_preferences_page_new_append(prefs_notebook, fuzzy_str);
-	category_box = gtranslator_preferences_category_new_pack_start(page, fuzzy_str, "fuzzy.png");*/
 	
 	//fuzzy_matching toggle button
 	fuzzy_matching = gtranslator_preferences_toggle_new(GLADE_FUZZY_MATCHING,

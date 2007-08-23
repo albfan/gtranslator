@@ -1,5 +1,15 @@
 2007-08-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* prefs.c: Removed some useless comments.
+	* charmap/charmap.c: Now gets the active view.
+	* tab.c: Added gtranslator_tab_get_active_view func and
+	  removed some useless comments.
+	* window.c: Added charmap panel and window_get_active view func.
+	* msg.c: Added comments.
+	* Makefile.am: Added charmap.
+
+2007-08-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* io-error-message-area.ch: Added to create the message area dialogs.
 	* comment-panel.c: Now shows the comments.
 	* tab.c: Added plural forms support.

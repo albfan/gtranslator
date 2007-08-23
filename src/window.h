@@ -26,6 +26,7 @@
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
+#include "view.h"
 
 G_BEGIN_DECLS
 
@@ -84,6 +85,8 @@ GtranslatorPanel *gtranslator_window_get_side_panel   (GtranslatorWindow *window
 GtkStatusbar 	 *gtranslator_window_get_statusbar    (GtranslatorWindow *window);
 
 GtkUIManager     *gtranslator_window_get_ui_manager   (GtranslatorWindow *window);
+
+GtranslatorView  *gtranslator_window_get_active_view  (GtranslatorWindow *window);
 
 G_END_DECLS
 
