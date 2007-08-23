@@ -147,26 +147,28 @@ static void
 style_set (GtkWidget *widget,
 	   GtkStyle  *prev_style)
 {
-	GtkTooltips *tooltips;
 	GtkStyle *style;
-	
-	GtranslatorMessageArea *message_area = GTRANSLATOR_MESSAGE_AREA (widget);
-	
-	if (message_area->priv->changing_style)
-		return;
-	
-	tooltips = gtk_tooltips_new ();
-	g_object_ref_sink (tooltips);
+        GtkWidget *window;
+        GtkWindow *tooltip_win;
+         
+        GtranslatorMessageArea *message_area = GTRANSLATOR_MESSAGE_AREA (widget);
+        
+        if (message_area->priv->changing_style)
+                return;
 
-	gtk_tooltips_force_window (tooltips);
-	gtk_widget_ensure_style (tooltips->tip_window);
-	style = gtk_widget_get_style (tooltips->tip_window);
-	
-	message_area->priv->changing_style = TRUE;
-	gtk_widget_set_style (GTK_WIDGET (widget), style);
-	message_area->priv->changing_style = FALSE;	
-	
-	g_object_unref (tooltips);
+        window = gtk_window_new(GTK_WINDOW_POPUP);
+        gtk_widget_set_tooltip_text(window, "gtranslator");
+        tooltip_win = gtk_widget_get_tooltip_window(window);
+
+        gtk_widget_ensure_style (GTK_WIDGET (tooltip_win));
+        
+        style = gtk_widget_get_style (GTK_WIDGET(tooltip_win));
+        
+        message_area->priv->changing_style = TRUE;
+        gtk_widget_set_style (GTK_WIDGET (widget), style);
+        message_area->priv->changing_style = FALSE;     
+
+        gtk_widget_destroy(window);
 }
 
 static void 

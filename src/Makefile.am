@@ -70,7 +70,9 @@ gtranslator_SOURCES = \
 	save.c \
 	save.h \
 	comment-panel.c \
-	comment-panel.h
+	comment-panel.h \
+	io-error-message-area.c \
+	io-error-message-area.h
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \

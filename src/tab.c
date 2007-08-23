@@ -22,6 +22,8 @@
 
 #include "comment-panel.h"
 #include "draw-spaces.h"
+#include "io-error-message-area.h"
+#include "message-area.h"
 #include "msg.h"
 #include "tab.h"
 #include "panel.h"
@@ -55,6 +57,10 @@ struct _GtranslatorTabPrivate
 	GtkWidget *table_pane;
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
+	GtranslatorCommentPanel *comment;
+	
+	/*Message area*/
+	GtkWidget *message_area;
 	
 	/*Original text*/
 	GtkWidget *text_notebook;
@@ -125,7 +131,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 			gtranslator_msg_set_msgstr(msg, translation);
 		}
 		else {
-			//po_message_set_msgstr_plural(msg->message, 0, translation);
+			gtranslator_msg_set_msgstr_plural(msg, 0, translation);
 			//free(check);
 		}
 		g_free(translation);
@@ -155,7 +161,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		/* TODO: convert to file's own encoding if not UTF-8 */
 		
 		/* Write back to PO file in memory */
-		//po_message_set_msgstr_plural(msg->message, i, translation);
+		gtranslator_msg_set_msgstr_plural(msg, i, translation);
 
 		/* Activate 'save', 'revert' etc. */
 		gtranslator_page_dirty(textbuffer, tab);
@@ -250,6 +256,31 @@ gtranslator_tab_append_page(const gchar *tab_label,
 }
 
 static void
+gtranslator_message_plural_forms(GtranslatorTab *tab,
+				 GtranslatorMsg *msg)
+{
+	GtkTextBuffer *buf;
+	const gchar *msgstr_plural;
+	gint i;
+
+	
+	/*
+	 * Should show the number of plural forms defined in header
+	 */
+	for(i = 0; i < (gint)GtrPreferences.nplurals ; i++)
+	{
+		msgstr_plural = gtranslator_msg_get_msgstr_plural(msg, i);
+		if(msgstr_plural)
+		{
+			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[i]));
+			gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+			gtk_text_buffer_set_text(buf, (gchar*)msgstr_plural, -1);
+			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+		}
+	}
+}
+
+static void
 status_widgets(GtkWidget *buffer,
 	       GtranslatorTab *tab)
 {
@@ -265,7 +296,34 @@ status_widgets(GtkWidget *buffer,
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->untranslated), TRUE);
 
 }
-	
+
+
+static void
+set_message_area (GtranslatorTab  *tab,
+                  GtkWidget *message_area)
+{
+        if (tab->priv->message_area == message_area)
+                return;
+
+        if (tab->priv->message_area != NULL)
+                gtk_widget_destroy (tab->priv->message_area);
+
+        tab->priv->message_area = message_area;
+
+        if (message_area == NULL)
+                return;
+
+        gtk_box_pack_start (GTK_BOX (tab),
+                            tab->priv->message_area,
+                            FALSE,
+                            FALSE,
+                            0);         
+
+        g_object_add_weak_pointer (G_OBJECT (tab->priv->message_area), 
+                                   (gpointer *)&tab->priv->message_area);
+}
+
+
 static void
 gtranslator_tab_draw (GtranslatorTab *tab)
 {
@@ -278,7 +336,8 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	gint i = 0;
 	
 	GtranslatorTabPrivate *priv = tab->priv;
-
+	
+	
 	/*
 	 * Content pane
 	 */
@@ -364,7 +423,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 static void
 gtranslator_tab_init (GtranslatorTab *tab)
 {
-	GtkWidget *comment;
 	GtkWidget *image;
 	
 	tab->priv = GTR_TAB_GET_PRIVATE (tab);
@@ -372,10 +430,10 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	gtranslator_tab_draw(tab);
 	
 	/* Comment panel */
-	comment = gtranslator_comment_panel_new();
+	tab->priv->comment = GTR_COMMENT_PANEL(gtranslator_comment_panel_new());
 	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
 					 GTK_ICON_SIZE_SMALL_TOOLBAR);
-	gtranslator_panel_add_item(tab->priv->panel, comment,
+	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->comment),
 				   _("Comment"), image);
 	
 	#ifdef HAVE_GTKSPELL
@@ -470,7 +528,9 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 		 * Disable notebook tabs
 		 */
 		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->text_notebook), FALSE);
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->text_notebook), 0);
 		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->trans_notebook), FALSE);
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->trans_notebook), 0);
 		if(msgstr) 
 		{
 			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[0]));
@@ -479,6 +539,17 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
 		}
 	}
+	else {
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tab->priv->text_notebook), TRUE);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tab->priv->trans_notebook), TRUE);
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->text_msgid_plural));
+		gtk_text_buffer_set_text(buf, (gchar*)msgid_plural, -1);
+		gtranslator_message_plural_forms(tab, msg);
+	}
+	
+	/* Comment */
+	gtranslator_comment_panel_set_text(tab->priv->comment,
+					   gtranslator_msg_get_extracted_comments(msg));
 }
 
 
@@ -488,6 +559,9 @@ gtranslator_message_go_to(GtranslatorTab *tab,
 {
 	GtranslatorPo *po;
 	static gint pos = 0;
+	GList *current_msg;
+	const gchar *message_error;
+	GtkWidget *message_area;
  
 	g_return_if_fail (to_go!=NULL);
 		
@@ -509,9 +583,21 @@ gtranslator_message_go_to(GtranslatorTab *tab,
 		gtk_widget_set_sensitive(gtranslator_menuitems->goto_last, TRUE);
 	    	gtk_widget_set_sensitive(gtranslator_menuitems->t_goto_last, TRUE);
 	}*/
+	current_msg = gtranslator_po_get_current_message(po);
+	message_error = gtranslator_msg_check(current_msg->data);
+	if(message_error == NULL)
+	{
+		gtranslator_tab_show_message(tab, to_go->data);
+		set_message_area(tab, NULL);
+	}
+	else
+	{
+		message_area = create_error_message_area(_("There is an error in the message"),
+							 message_error);
+		set_message_area(tab, message_area);
+		return;
+	}
 	
-	gtranslator_tab_show_message(tab, to_go->data);
-
 	//pos = g_list_position(po->messages, po->current);
 	
 	/*if (pos == 0)

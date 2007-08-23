@@ -43,6 +43,7 @@ struct _GtranslatorMsgPrivate
 	po_message_t message;
 };
 
+static gchar *message_error = NULL;
 
 static void
 gtranslator_msg_init (GtranslatorMsg *msg)
@@ -211,6 +212,21 @@ gtranslator_msg_set_msgstr(GtranslatorMsg *msg,
 
 
 /**
+ * gtranslator_msg_get_msgstr_plural:
+ * @msg: a #GtranslatorMsg
+ * @index: the index of the plural array
+ *
+ * Return value: the msgstr[index] for a message with plural handling, or
+ * NULL when the index is out of range or for a message without plural.
+ **/
+const gchar *
+gtranslator_msg_get_msgstr_plural(GtranslatorMsg *msg,
+				  gint index)
+{
+	return po_message_msgstr_plural(msg->priv->message, index);
+}
+
+/**
  * gtranslator_msg_set_msgstr_plural:
  * @msg: a #GtranslatorMsg
  * @index: the index where to set the msgstr
@@ -227,4 +243,60 @@ gtranslator_msg_set_msgstr_plural(GtranslatorMsg *msg,
 	po_message_set_msgstr_plural(msg->priv->message,
 				     index,
 				     msgstr);
+}
+
+
+/**
+ * gtranslator_msg_get_comment:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: the comments for a message.
+ **/
+const gchar *
+gtranslator_msg_get_comment(GtranslatorMsg *msg)
+{
+	return po_message_comments(msg->priv->message);
+}
+
+/**
+ * gtranslator_msg_get_extracted_comments:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: 
+ **/
+const gchar *
+gtranslator_msg_get_extracted_comments(GtranslatorMsg *msg)
+{
+	return po_message_extracted_comments(msg->priv->message);
+}
+
+
+static void
+on_gettext_po_xerror(gint severity,
+		     po_message_t message,
+		     const gchar *filename, size_t lineno, size_t column,
+		     gint multiline_p, const gchar *message_text)
+{
+	message_error = g_strdup(message_text);
+}
+
+const gchar *
+gtranslator_msg_check(GtranslatorMsg *msg)
+{
+	struct po_xerror_handler handler;
+	handler.xerror = &on_gettext_po_xerror;
+	
+	if(message_error != NULL)
+	{
+		g_free(message_error);
+		message_error = NULL;
+	}
+	
+	po_message_check_format(msg->priv->message, &handler);
+	
+	if(gtranslator_msg_is_fuzzy(msg) || !gtranslator_msg_is_translated(msg))
+		message_error = NULL;
+	
+	/*Are there any other way to do this?*/
+	return message_error;
 }

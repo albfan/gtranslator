@@ -89,9 +89,16 @@ const gchar      *gtranslator_msg_get_msgstr           (GtranslatorMsg *msg);
 void              gtranslator_msg_set_msgstr           (GtranslatorMsg *msg,
 							const gchar *msgstr);
 
+const gchar      *gtranslator_msg_get_msgstr_plural    (GtranslatorMsg *msg,
+							gint index);
+
 void              gtranslator_msg_set_msgstr_plural    (GtranslatorMsg *msg,
 							gint index,
 							const gchar *msgstr);
+
+const gchar      *gtranslator_msg_get_comment          (GtranslatorMsg *msg);
+
+const gchar      *gtranslator_msg_check                (GtranslatorMsg *msg);
 
 G_END_DECLS
 

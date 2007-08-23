@@ -36,7 +36,7 @@ G_DEFINE_TYPE(GtranslatorCommentPanel, gtranslator_comment_panel, GTK_TYPE_VBOX)
 
 struct _GtranslatorCommentPanelPrivate
 {
-	GtkWidget *comment;
+	GtkLabel *comment;
 	GtkWidget *edit_button;
 };
 
@@ -61,8 +61,8 @@ gtranslator_comment_panel_draw(GtranslatorCommentPanel *panel)
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(comments_scrolled_window),
 					      comments_viewport);
 	
-	priv->comment=gtk_label_new("");
-	gtk_container_add(GTK_CONTAINER(comments_viewport), priv->comment);
+	priv->comment=GTK_LABEL(gtk_label_new(""));
+	gtk_container_add(GTK_CONTAINER(comments_viewport), GTK_WIDGET(priv->comment));
 	
 	priv->edit_button=gtk_button_new_with_label(_("Edit comment"));
 	gtk_widget_set_sensitive(priv->edit_button, FALSE);
@@ -105,6 +105,6 @@ void
 gtranslator_comment_panel_set_text(GtranslatorCommentPanel *panel,
 				   const gchar *text)
 {
-	gtk_label_set_text(GTK_LABEL(panel->priv->comment),
+	gtk_label_set_text(panel->priv->comment,
 			   text);
 }

@@ -1,3 +1,15 @@
+2007-08-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* io-error-message-area.ch: Added to create the message area dialogs.
+	* comment-panel.c: Now shows the comments.
+	* tab.c: Added plural forms support.
+	  Now shows an error message if there are errors in the message
+	  before go to another message.
+	* view.c: Added line highlight.
+	* msg.ch: Added msg_get_msgstr_plural, msg_get_comment,
+	  msg_get_extracted_comments and msg_check funcs.
+	* message-area.c: Switched to GtkTooltip.
+
 2007-08-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* comment-panel.ch: Added to manage the comment in tabs.
