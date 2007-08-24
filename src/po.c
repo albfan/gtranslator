@@ -460,6 +460,7 @@ gtranslator_po_get_next_untrans(GtranslatorPo *po)
  * @po: a #GtranslatorPo
  *
  * Return value: a pointer to the previously untranslated message
+ * or NULL if there are not previously untranslated message.
  **/
 GList *
 gtranslator_po_get_prev_untrans(GtranslatorPo *po)

@@ -1,3 +1,9 @@
+2007-08-24  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* charmap/charmap-panel.c: Switched to block-chapters.
+	* window.c: Added set_sensitive_according_to_tab func and
+	  notebook_switch_page to manage the switch-page signal.
+
 2007-08-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* prefs.c: Removed some useless comments.

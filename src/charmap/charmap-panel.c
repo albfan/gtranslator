@@ -27,7 +27,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <gucharmap/gucharmap-table.h>
-#include <gucharmap/gucharmap-script-chapters.h>
+#include <gucharmap/gucharmap-block-chapters.h>
 
 #define GTR_CHARMAP_PANEL_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 						 (object),		       \
@@ -58,7 +58,7 @@ gtranslator_charmap_panel_init (GtranslatorCharmapPanel *panel)
 	
 	panel->priv = GTR_CHARMAP_PANEL_GET_PRIVATE (panel);
 	
-	panel->priv->chapters = gucharmap_script_chapters_new ();
+	panel->priv->chapters = gucharmap_block_chapters_new ();
 	
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (GUCHARMAP_CHAPTERS (panel->priv->chapters)->tree_view),
 					   FALSE);

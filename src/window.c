@@ -218,6 +218,97 @@ static const GtkActionEntry entries[] = {
 };
 
 
+static void
+set_sensitive_according_to_tab(GtranslatorWindow *window,
+			       GtranslatorTab *tab)
+{
+	GtranslatorView *view;
+	GtranslatorPo *po;
+	GtkSourceBuffer *buf;
+	GtkAction *action;
+	GList *current;
+	
+	view = gtranslator_tab_get_active_view(tab);
+	po = gtranslator_tab_get_po(tab);
+	current = gtranslator_po_get_current_message(po);
+	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	
+	
+	/*Edit*/
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditUndo");
+	gtk_action_set_sensitive (action, 
+				  gtk_source_buffer_can_undo (buf));
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditRedo");
+	gtk_action_set_sensitive (action, 
+				  gtk_source_buffer_can_redo (buf));
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditCut");
+	gtk_action_set_sensitive (action, 
+				  gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buf)));
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditCopy");
+	gtk_action_set_sensitive (action, 
+				  gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buf)));
+	/*Go*/
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoForward");
+	gtk_action_set_sensitive (action, 
+				  g_list_next(current) != NULL);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoPrevious");
+	gtk_action_set_sensitive (action, 
+				  g_list_previous(current) != NULL);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoFirst");
+	gtk_action_set_sensitive (action, 
+				  g_list_first(current) != current);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoLast");
+	gtk_action_set_sensitive (action, 
+				  g_list_last(current) != current);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoNextFuzzy");
+	gtk_action_set_sensitive (action, 
+				  gtranslator_po_get_next_fuzzy(po) != NULL);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoPreviousFuzzy");
+	gtk_action_set_sensitive (action, 
+				  gtranslator_po_get_prev_fuzzy(po) != NULL);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoNextUntranslated");
+	gtk_action_set_sensitive (action, 
+				  gtranslator_po_get_next_untrans(po) != NULL);
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "GoPreviousUntranslated");
+	gtk_action_set_sensitive (action, 
+				  gtranslator_po_get_prev_untrans(po) != NULL);
+}
+
+static void
+notebook_switch_page(GtkNotebook *nb,
+		     GtkNotebookPage *page,
+		     gint page_num,
+		     GtranslatorWindow *window)
+{
+	GtranslatorTab *current_tab;
+	
+	current_tab = gtranslator_window_get_active_tab(window);
+	
+	set_sensitive_according_to_tab(window, current_tab);
+}
+
 /*
  * Update the progress bar
  */
@@ -555,11 +646,6 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	
 	
 	/*
-	 * TODO: message area box
-	 */
-	
-	
-	/*
 	 * hpaned
 	 * TODO: Get the pane position
 	 */
@@ -586,6 +672,9 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	 * notebook
 	 */
 	priv->notebook = GTK_WIDGET(gtranslator_notebook_new());
+	g_signal_connect(priv->notebook, "switch-page",
+			 G_CALLBACK(notebook_switch_page), window);
+	
 	gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
 	gtk_widget_show(priv->notebook);
 
