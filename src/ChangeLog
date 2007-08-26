@@ -1,3 +1,12 @@
+2007-08-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-file.c:
+	* actions-go.c: Added calls to update statusbar and progress bar.
+	* dialogs.c: Applied Pablo's patch.
+	* tab.c: Switched to g_signal_connect_after in status_widget func. (Now work)
+	* window.ch: Added statusbar update.
+	* po.c: Now parse don't load obsolete messages, and added get funcs for message count.
+
 2007-08-24  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* charmap/charmap-panel.c: Switched to block-chapters.

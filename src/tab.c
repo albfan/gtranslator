@@ -406,11 +406,9 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		g_signal_connect(buf, "end-user-action",
 				 G_CALLBACK(gtranslator_message_translation_update),
 				 tab);
-		
-		/*I need to create my own signal to manage the status widgets*/
 		if(i == 0)
-		g_signal_connect(buf, "end-user-action",
-			 G_CALLBACK(status_widgets), tab);
+			g_signal_connect_after(buf, "changed",
+					       G_CALLBACK(status_widgets), tab);
 		i++;
 		g_free(label);
 	}while(i < (gint)GtrPreferences.nplurals);

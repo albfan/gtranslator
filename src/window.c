@@ -65,6 +65,7 @@ struct _GtranslatorWindowPrivate
 	GtkWidget *sidebar;
 	
 	GtkWidget *statusbar;
+	gint context_id;
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
@@ -307,37 +308,8 @@ notebook_switch_page(GtkNotebook *nb,
 	current_tab = gtranslator_window_get_active_tab(window);
 	
 	set_sensitive_according_to_tab(window, current_tab);
-}
-
-/*
- * Update the progress bar
- */
-static void 
-gtranslator_window_update_progress_bar(GtranslatorWindow *window)
-{
-	gdouble percentage;
-	GtranslatorTab *current_page;
-	GtranslatorPo *po;
 	
-	current_page = gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
-	po = gtranslator_tab_get_po(GTR_TAB(current_page));
-	
-	/*
-	 * Calculate the percentage.
-	 */
-	//percentage = (gdouble)(po->translated / (gdouble)g_list_length(po->messages));
-	
-	/*
-	 * Set the progress only if the values are reasonable.
-	 */
-	if(percentage > 0.0 || percentage < 1.0)
-	{
-		/*
-		 * Set the progressbar status.
-		 */
-		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(window->priv->progressbar),
-					      percentage);
-	}
+	gtranslator_window_update_statusbar(window);
 }
 
 /*
@@ -705,6 +677,8 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	 * statusbar
 	 */
 	priv->statusbar = gtk_statusbar_new();
+	priv->context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(priv->statusbar),
+							"status_message");
 	gtk_box_pack_start( GTK_BOX(hbox), priv->statusbar, TRUE, TRUE, 0);
 	gtk_widget_show(priv->statusbar);
 }
@@ -815,3 +789,64 @@ gtranslator_window_get_active_view(GtranslatorWindow *window)
 	return gtranslator_tab_get_active_view(current_tab);
 }
 
+void
+gtranslator_window_update_statusbar(GtranslatorWindow *window)
+{
+	GtranslatorTab *tab;
+	GtranslatorPo *po;
+	gchar *msg;
+	gint pos, message_count, fuzzy, untranslated;
+	GList *current_msg;
+	
+	tab = gtranslator_window_get_active_tab(window);
+	po = gtranslator_tab_get_po(tab);
+	current_msg = gtranslator_po_get_current_message(po);
+	
+	message_count = gtranslator_po_get_messages_count(po);
+	pos = gtranslator_po_get_message_position(po);
+	fuzzy = gtranslator_po_get_fuzzy_count(po);
+	untranslated = gtranslator_po_get_untranslated_count(po);
+	
+	msg = g_strdup_printf(_("Current: %d   Total: %d   Fuzzies: %d   Untranslated: %d"), 
+			      pos+1, message_count, fuzzy, untranslated);
+	
+	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
+			  window->priv->context_id);
+	
+	gtk_statusbar_push(GTK_STATUSBAR(window->priv->statusbar),
+			   window->priv->context_id,
+			   msg);
+	g_free(msg);			 
+}
+
+/*
+ * Update the progress bar
+ */
+void 
+gtranslator_window_update_progress_bar(GtranslatorWindow *window)
+{
+	gdouble percentage;
+	GtranslatorTab *current_page;
+	GtranslatorPo *po;
+	
+	current_page = gtranslator_window_get_active_tab(window);
+	po = gtranslator_tab_get_po(current_page);
+	
+	/*
+	 * Calculate the percentage.
+	 */
+	percentage = (gdouble)(gtranslator_po_get_translated_count(po)
+			       / (gdouble)gtranslator_po_get_messages_count(po));
+	
+	/*
+	 * Set the progress only if the values are reasonable.
+	 */
+	if(percentage > 0.0 || percentage < 1.0)
+	{
+		/*
+		 * Set the progressbar status.
+		 */
+		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(window->priv->progressbar),
+					      percentage);
+	}
+}

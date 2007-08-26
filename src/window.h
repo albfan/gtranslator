@@ -78,7 +78,8 @@ GtranslatorTab   *gtranslator_window_create_tab       (GtranslatorWindow *window
 
 GtranslatorTab   *gtranslator_window_get_active_tab   (GtranslatorWindow *window);
 
-GtranslatorNotebook  *gtranslator_window_get_notebook     (GtranslatorWindow *window);
+GtranslatorNotebook
+                 *gtranslator_window_get_notebook     (GtranslatorWindow *window);
 
 GtranslatorPanel *gtranslator_window_get_side_panel   (GtranslatorWindow *window);
 
@@ -87,6 +88,11 @@ GtkStatusbar 	 *gtranslator_window_get_statusbar    (GtranslatorWindow *window);
 GtkUIManager     *gtranslator_window_get_ui_manager   (GtranslatorWindow *window);
 
 GtranslatorView  *gtranslator_window_get_active_view  (GtranslatorWindow *window);
+
+void              gtranslator_window_update_statusbar (GtranslatorWindow *window);
+
+void              gtranslator_window_update_progress_bar
+                                                      (GtranslatorWindow *window);
 
 G_END_DECLS
 

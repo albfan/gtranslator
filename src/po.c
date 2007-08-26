@@ -249,12 +249,15 @@ gtranslator_po_parse(GtranslatorPo *po,
 	 */
 	while((message = po_next_message(iter)))
 	{
-		/* Unpack into a GtrMsg */
-		msg = gtranslator_msg_new();
-		gtranslator_msg_set_message(msg, message);
+		if(!po_message_is_obsolete(message))
+		{
+			/* Unpack into a GtrMsg */
+			msg = gtranslator_msg_new();
+			gtranslator_msg_set_message(msg, message);
   
-		/* Build up messages */
-		priv->messages = g_list_append(priv->messages, msg);
+			/* Build up messages */
+			priv->messages = g_list_append(priv->messages, msg);
+		}
 	}
 	if(priv->messages == NULL) {
 		/*g_set_error(error,
@@ -477,4 +480,64 @@ gtranslator_po_get_prev_untrans(GtranslatorPo *po)
 	}while(msg != g_list_first(po->priv->current));
 	
 	return NULL;
+}
+
+
+gint
+gtranslator_po_get_translated_count(GtranslatorPo *po)
+{
+	return po->priv->translated;
+}
+
+gint
+gtranslator_po_get_fuzzy_count(GtranslatorPo *po)
+{
+	return po->priv->fuzzy;
+}
+
+gint
+gtranslator_po_get_untranslated_count(GtranslatorPo *po)
+{
+	return (g_list_length(po->priv->messages) - po->priv->translated);
+}
+
+gint
+gtranslator_po_get_messages_count(GtranslatorPo *po)
+{
+	return g_list_length(po->priv->messages);
+}
+
+gint
+gtranslator_po_get_message_position(GtranslatorPo *po)
+{
+	return g_list_position(po->priv->messages,
+			       po->priv->current);
+}
+
+
+/*
+ * A helper function simply increments the "translated" variable of the
+ *  po-file.
+ */
+static void 
+determine_translation_status(GtranslatorMsg *msg,
+			     GtranslatorPo *po)
+{
+	if(gtranslator_msg_is_fuzzy(msg))
+		po->priv->fuzzy++;
+	else if(gtranslator_msg_is_translated(msg))
+		po->priv->translated++;
+}
+
+/*
+ * Update the count of the completed translated entries.
+ */
+void 
+gtranslator_po_update_translated_count(GtranslatorPo *po)
+{
+	po->priv->translated = 0;
+	po->priv->fuzzy = 0;
+	g_list_foreach(po->priv->messages,
+		       (GFunc) determine_translation_status,
+		       po);
 }

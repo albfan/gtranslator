@@ -75,6 +75,10 @@ gtranslator_open(const gchar *filename,
 	current = gtranslator_po_get_current_message(po);
 	gtranslator_tab_show_message(tab, current->data);
 	
+	gtranslator_po_update_translated_count(po);
+	gtranslator_window_update_statusbar(window);
+	gtranslator_window_update_progress_bar(window);
+	
 	return TRUE;
 }
 
