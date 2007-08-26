@@ -1,5 +1,13 @@
 2007-08-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* actions-file.c: Added gtranslator_file_quit func.
+	* application.c: Added delete_event signal.
+	* window.c: Added call to gtranslator_file_quit.
+	* draw-spaces.c: Changed the color.
+	* view.c: Commented highlight_current_line func.
+
+2007-08-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* actions-file.c:
 	* actions-go.c: Added calls to update statusbar and progress bar.
 	* dialogs.c: Applied Pablo's patch.

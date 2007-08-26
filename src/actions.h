@@ -41,6 +41,9 @@ gboolean   gtranslator_open                     (const gchar *filename,
 void       gtranslator_file_close               (GtkAction * widget,
 						 GtranslatorWindow *window);
 
+void       gtranslator_file_quit                (GtkAction *action,
+						 GtranslatorWindow *window);
+
 /*Edit*/
 void       gtranslator_message_copy_to_translation
                                                 (GtkAction *action,

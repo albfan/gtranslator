@@ -28,6 +28,7 @@
 #include "file-dialogs.h"
 #include "notebook.h"
 #include "po.h"
+#include "runtime-config.h"
 #include "tab.h"
 #include "window.h"
 
@@ -374,6 +375,79 @@ gtranslator_file_close(GtkAction * widget,
 	i = gtk_notebook_page_num(GTK_NOTEBOOK(nb), GTK_WIDGET(current_page));
 	if (i != -1)
 		gtk_notebook_remove_page(GTK_NOTEBOOK(nb), i);
+}
+
+void
+gtranslator_file_quit(GtkAction *action,
+		      GtranslatorWindow *window)
+{	
+	GtranslatorNotebook *nb;
+	gint pages;
+	gint table_pane_position;
+	
+	nb = gtranslator_window_get_notebook(window);
+	pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(nb));
+	
+	while(pages > 0)
+	{
+		gtranslator_file_close(NULL, window);
+		pages--;
+	}
+
+	/*
+	 * Get the EPaned's position offset.
+	 */
+	table_pane_position=gtk_paned_get_position(GTK_PANED(gtranslator_window_get_paned(window)));
+	/*
+	 * Store the pane position in the preferences.
+	 */
+	gtranslator_config_set_int("interface/table_pane_position", table_pane_position);
+	
+	//gtranslator_utils_save_geometry();
+
+	/*
+	 * "Flush" our runtime config string for the current filename.
+	 */
+	gtranslator_config_set_string("runtime/filename", "--- No file ---");
+
+	/*
+	 * Free the used GtrTranslator structure.
+	 */
+	//gtranslator_translator_free(gtranslator_translator);
+
+	/*
+	 * Free any lungering stuff 'round -- free prefs.
+	 */
+	gtranslator_preferences_free();
+
+	/*
+	 * Remove any lungering temp. file.
+	 */
+	gtranslator_utils_remove_temp_files();
+
+	/*
+	 * Free our used runtime config structure.
+	 */
+	gtranslator_runtime_config_free(gtranslator_runtime_config);
+	
+	/*
+	 * Store the current date.
+	 */
+	gtranslator_config_set_last_run_date();
+
+	/*
+	 * Shutdown the eventually (non-)initialized stuff from GnomeVFS.
+	 */
+	if(gnome_vfs_initialized())
+	{
+		gnome_vfs_shutdown();
+	}
+
+	/*
+	 * Quit with the normal Gtk+ quit.
+	 */
+	gtk_main_quit();
+	return;
 }
 
 /*

@@ -107,8 +107,8 @@ static const GtkActionEntry entries[] = {
 	  N_("Close the current file"),
 	  G_CALLBACK (gtranslator_file_close) },
 	{ "FileQuitWindow", GTK_STOCK_QUIT, NULL, "<control>Q", 
-	  N_("Quit the program"), NULL},
-	//  G_CALLBACK (gtranslator_menu_quit_cb) },
+	  N_("Quit the program"),
+	  G_CALLBACK (gtranslator_file_quit) },
 	
         /* Edit menu */
         { "EditUndo", GTK_STOCK_UNDO, NULL, "<control>Z", 
@@ -780,6 +780,12 @@ gtranslator_window_get_ui_manager(GtranslatorWindow *window)
 	return window->priv->ui_manager;
 }
 
+GtkWidget *
+gtranslator_window_get_paned(GtranslatorWindow *window)
+{
+	return window->priv->hpaned;
+}
+
 GtranslatorView *
 gtranslator_window_get_active_view(GtranslatorWindow *window)
 {
@@ -807,7 +813,7 @@ gtranslator_window_update_statusbar(GtranslatorWindow *window)
 	fuzzy = gtranslator_po_get_fuzzy_count(po);
 	untranslated = gtranslator_po_get_untranslated_count(po);
 	
-	msg = g_strdup_printf(_("Current: %d   Total: %d   Fuzzies: %d   Untranslated: %d"), 
+	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"), 
 			      pos+1, message_count, fuzzy, untranslated);
 	
 	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),

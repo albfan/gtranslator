@@ -135,6 +135,28 @@ gtranslator_init_session(GtranslatorApplication *app)
 }
 
 
+
+/***************
+ FIXME: This should be improved
+***************/
+static gboolean
+on_window_delete_event_cb(GtranslatorWindow *window,
+			  GdkEvent *event,
+			  GtranslatorApplication *app)
+{
+	gtranslator_file_quit(NULL, window);
+	g_object_unref(app);
+	return TRUE;
+}
+
+static void
+on_window_destroy_cb(GtranslatorWindow *window,
+		     GtranslatorApplication *app)
+{
+	if(app->priv->active_window == NULL)
+		g_object_unref(app);
+}
+
 static void
 gtranslator_application_init (GtranslatorApplication *application)
 {
@@ -204,6 +226,12 @@ gtranslator_application_open_window (GtranslatorApplication *app)
 	GtranslatorWindow *window;
 
 	app->priv->active_window = window = GTR_WINDOW(g_object_new(GTR_TYPE_WINDOW, NULL));
+	
+	g_signal_connect(window, "delete-event",
+			 G_CALLBACK(on_window_delete_event_cb), GTR_APP);
+	
+	g_signal_connect(window, "destroy",
+			 G_CALLBACK(on_window_destroy_cb), GTR_APP);
 	
 	gtk_widget_show_all(GTK_WIDGET(window));
 }
