@@ -14,7 +14,9 @@ libdictionary_la_SOURCES = \
 	dict-panel.c \
 	dict-panel.h \
 	dict-sidebar.c \
-	dict-sidebar.h
+	dict-sidebar.h \
+	dictionary.c \
+	dictionary.h
 
 libcharmap_la_CFLAGS = \
 	$(GTRANSLATOR_CFLAGS)			\

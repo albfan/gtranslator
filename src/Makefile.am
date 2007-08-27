@@ -4,7 +4,8 @@
 
 SUBDIRS = toolbareditor \
 	  dialogs \
-	  charmap
+	  charmap \
+	  dictionary
 
 INCLUDES = \
 	-I$(top_srcdir)						\
@@ -12,6 +13,7 @@ INCLUDES = \
 	-I$(top_srcdir)/src/dialogs				\
 	-I$(top_srcdir)/src/toolbareditor			\
 	-I$(top_srcdir)/src/charmap				\
+	-I$(top_srcdir)/src/dictionary				\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
         -DPREFIX=\""$(prefix)"\"                                \
         -DSYSCONFDIR=\""$(sysconfdir)"\"                        \
@@ -80,6 +82,7 @@ gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \
 	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la \
 	$(top_srcdir)/src/charmap/libcharmap.la \
+	$(top_srcdir)/src/dictionary/libdictionary.la \
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \
 	$(GTKSPELL_LIBS)

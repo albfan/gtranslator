@@ -1,3 +1,11 @@
+2007-08-27  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dictionary/dict-panel.c: Removed gtranslator_show_message func.
+	* dictionary/dictionary.ch: Added activate and deactivate funcs.
+	* dictionary/Makefile.am: Added dictionary.ch files.
+	* window.c: Added dictionary panel.
+	* Makefile.am: Added dictionary dependencie.
+
 2007-08-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* actions-file.c: Added gtranslator_file_quit func.

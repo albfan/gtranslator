@@ -24,6 +24,7 @@
 #include "actions.h"
 #include "application.h"
 #include "charmap.h"
+#include "dictionary.h"
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
@@ -694,6 +695,9 @@ gtranslator_window_init (GtranslatorWindow *window)
 	
 	/* Charmap panel */
 	impl_activate(window);
+	
+	/* Dictionary panel */
+	dictionary_activate(window);
 	
 }
 

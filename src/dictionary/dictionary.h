@@ -1,6 +1,10 @@
 #ifndef __GTR_DICTIONARY__H
 #define __GTR_DICTIONARY__H
 
-void gtranslator_dictionary_create();
+#include "window.h"
+
+void dictionary_activate(GtranslatorWindow *window);
+
+void dictionary_deactivate(GtranslatorWindow *window);
 
 #endif
