@@ -1,5 +1,12 @@
 2007-08-27  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* window.c: Subdivied ui into always_sensitive_entries
+	and entries.
+	Now accel keys works fine.
+	Added call to deactivate panel funcs.
+
+2007-08-27  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* dictionary/dict-panel.c: Removed gtranslator_show_message func.
 	* dictionary/dictionary.ch: Added activate and deactivate funcs.
 	* dictionary/Makefile.am: Added dictionary.ch files.

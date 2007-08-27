@@ -60,6 +60,7 @@ struct _GtranslatorWindowPrivate
 	
 	GtkWidget *menubar;
 	GtkWidget *toolbar;
+	GtkActionGroup *always_sensitive_action_group;
 	GtkActionGroup *action_group;
 	
 	GtkWidget *notebook;
@@ -75,9 +76,8 @@ struct _GtranslatorWindowPrivate
 };
 	
 
-
-/* Normal items */
-static const GtkActionEntry entries[] = {
+static const GtkActionEntry always_sensitive_entries[] = {
+	
 	{ "File", NULL, N_("_File") },
         { "Edit", NULL, N_("_Edit") },
 	{ "View", NULL, N_("_View") },
@@ -85,7 +85,7 @@ static const GtkActionEntry entries[] = {
 	{ "Search", NULL, N_("_Search") },
         { "Go", NULL, N_("_Go") },
 	{ "Help", NULL, N_("_Help") },
-
+	
 	/* File menu */
 	{ "FileOpen", GTK_STOCK_OPEN, NULL, "<control>O",
 	  N_("Open a po file"),
@@ -95,6 +95,32 @@ static const GtkActionEntry entries[] = {
 	//  G_CALLBACK (gtranslator_open_uri_dialog) },
 	{ "FileRecentFiles", NULL, N_("_Recent files"), NULL,
 	  NULL, NULL },
+	{ "FileQuitWindow", GTK_STOCK_QUIT, NULL, "<control>Q", 
+	  N_("Quit the program"),
+	  G_CALLBACK (gtranslator_file_quit) },
+	
+	/* Edit menu */
+	{ "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
+          G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
+	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
+	  N_("Edit gtranslator preferences"),
+	  G_CALLBACK (gtranslator_preferences_dialog_create) },
+	
+	/* Help menu */
+	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
+	  NULL },
+	{ "HelpWebSite", GTK_STOCK_HOME, N_("_Website"), NULL,
+	  N_("gtranslator's homepage on the web"),
+	  G_CALLBACK(gtranslator_window_show_home_page) },
+	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
+	  G_CALLBACK (gtranslator_about_dialog) },
+};
+	
+
+/* Normal items */
+static const GtkActionEntry entries[] = {
+	
+	/* File menu */
        	{ "FileSave", GTK_STOCK_SAVE, NULL, "<control>S",
 	  N_("Save the file"),
 	  G_CALLBACK (gtranslator_save_current_file_dialog) },
@@ -107,9 +133,6 @@ static const GtkActionEntry entries[] = {
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W", 
 	  N_("Close the current file"),
 	  G_CALLBACK (gtranslator_file_close) },
-	{ "FileQuitWindow", GTK_STOCK_QUIT, NULL, "<control>Q", 
-	  N_("Quit the program"),
-	  G_CALLBACK (gtranslator_file_quit) },
 	
         /* Edit menu */
         { "EditUndo", GTK_STOCK_UNDO, NULL, "<control>Z", 
@@ -142,11 +165,6 @@ static const GtkActionEntry entries[] = {
 	{ "EditFuzzy", NULL, N_("_Fuzzy"), "<control>U",
 	  N_("Toggle fuzzy status of a message"),
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
-	{ "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
-          G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
-	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
-	  N_("Edit gtranslator preferences"),
-	  G_CALLBACK (gtranslator_preferences_dialog_create) },
 	
 	/* View menu */
 	{ "ViewBookmarks", NULL, N_("_Bookmarks"), NULL,
@@ -173,10 +191,10 @@ static const GtkActionEntry entries[] = {
         { "GoFirst", GTK_STOCK_GOTO_FIRST, NULL, NULL,
           N_("Go to the first message"),
           G_CALLBACK (gtranslator_message_go_to_first) },
-	{ "GoPrevious", GTK_STOCK_GO_BACK, NULL, "Page_Down",
+	{ "GoPrevious", GTK_STOCK_GO_BACK, NULL, "Page_Up",
           N_("Move back one message"),
           G_CALLBACK (gtranslator_message_go_to_previous) },
-	{ "GoForward", GTK_STOCK_GO_FORWARD, NULL, "Page_Up",
+	{ "GoForward", GTK_STOCK_GO_FORWARD, NULL, "Page_Down",
           N_("Move forward one message"),
           G_CALLBACK (gtranslator_message_go_to_next) },
 	{ "GoLast", GTK_STOCK_GOTO_LAST, NULL, NULL,
@@ -186,16 +204,16 @@ static const GtkActionEntry entries[] = {
           N_("Go to especified message number"), NULL},
           //G_CALLBACK (gtranslator_go_to_dialog) },
 	{ "GoNextFuzzy", GTK_STOCK_GO_FORWARD, N_("Next fuz_zy"),
-	  "<control>Page_Up", N_("Go to the next fuzzy message"),
+	  "<control>Page_Down", N_("Go to the next fuzzy message"),
           G_CALLBACK (gtranslator_message_go_to_next_fuzzy) },
 	{ "GoPreviousFuzzy", GTK_STOCK_GO_BACK, N_("Previous fuzz_y"),
-	  "<control>Page_Down", N_("Go to the previous fuzzy message"),
+	  "<control>Page_Up", N_("Go to the previous fuzzy message"),
           G_CALLBACK (gtranslator_message_go_to_prev_fuzzy) },
 	{ "GoNextUntranslated", GTK_STOCK_GO_FORWARD, N_("Next _untranslated"),
-	  "<alt>Page_Up", N_("Go to the next untranslated message"),
+	  "<alt>Page_Down", N_("Go to the next untranslated message"),
           G_CALLBACK (gtranslator_message_go_to_next_untranslated) },
 	{ "GoPreviousUntranslated", GTK_STOCK_GO_BACK, N_("Previ_ous untranslated"),
-	  "<alt>Page_Down", N_("Go to the previous untranslated message"),
+	  "<alt>Page_Up", N_("Go to the previous untranslated message"),
           G_CALLBACK (gtranslator_message_go_to_prev_untranslated) },
 
 	/* Search menu*/
@@ -209,14 +227,6 @@ static const GtkActionEntry entries[] = {
 	  N_("   "), NULL},
 	 // G_CALLBACK (gtranslator_replace_dialog) },
 	
-	/* Help menu */
-	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
-	  NULL },
-	{ "HelpWebSite", GTK_STOCK_HOME, N_("_Website"), NULL,
-	  N_("gtranslator's homepage on the web"),
-	  G_CALLBACK(gtranslator_window_show_home_page) },
-	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
-	  G_CALLBACK (gtranslator_about_dialog) },
 };
 
 
@@ -544,8 +554,6 @@ static void
 gtranslator_window_draw (GtranslatorWindow *window)
 {
 	GtkWidget *hbox; //Statusbar and progressbar
-	GtkActionGroup *action_group;
-	GtkAccelGroup *accel_group;
 	GtkWidget *widget;
 	GError *error = NULL;
 	gint table_pane_position;
@@ -562,15 +570,28 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	/*
 	 * Menus
 	 */
-	action_group = gtk_action_group_new ("MenuActions");
-	priv->action_group = action_group;
-	gtk_action_group_set_translation_domain (action_group, NULL);
-	gtk_action_group_add_actions (action_group, entries,
+	priv->ui_manager = gtk_ui_manager_new ();
+	
+	gtk_window_add_accel_group(GTK_WINDOW(window), 
+				   gtk_ui_manager_get_accel_group(priv->ui_manager));
+	
+	priv->always_sensitive_action_group = gtk_action_group_new ("AlwaysSensitiveMenuActions");
+	gtk_action_group_set_translation_domain(priv->always_sensitive_action_group, NULL);
+	gtk_action_group_add_actions (priv->always_sensitive_action_group,
+				      always_sensitive_entries,
+				      G_N_ELEMENTS(always_sensitive_entries),
+				      window);
+	
+	gtk_ui_manager_insert_action_group (priv->ui_manager,
+					    priv->always_sensitive_action_group, 0);
+	
+	priv->action_group = gtk_action_group_new ("MenuActions");
+	gtk_action_group_set_translation_domain (priv->action_group, NULL);
+	gtk_action_group_add_actions (priv->action_group, entries,
 				      G_N_ELEMENTS (entries), window);
 
-	priv->ui_manager = gtk_ui_manager_new ();
 	gtk_ui_manager_insert_action_group (priv->ui_manager,
-					    action_group, 0);
+					    priv->action_group, 0);
 
 
 	if (!gtk_ui_manager_add_ui_from_file (priv->ui_manager,
@@ -717,6 +738,11 @@ gtranslator_window_dispose (GObject *object)
 		g_object_unref(priv->action_group);
 		priv->action_group = NULL;
 	}
+	
+	/* Deactivate Panels */
+	impl_deactivate(window);
+	dictionary_deactivate(window);
+	
 	G_OBJECT_CLASS (gtranslator_window_parent_class)->dispose (object);
 }
 
