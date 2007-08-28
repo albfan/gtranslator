@@ -45,6 +45,21 @@ void       gtranslator_file_quit                (GtkAction *action,
 						 GtranslatorWindow *window);
 
 /*Edit*/
+void       gtranslator_actions_edit_undo        (GtkAction   *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_actions_edit_redo        (GtkAction   *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_actions_edit_cut         (GtkAction   *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_actions_edit_copy        (GtkAction   *action,
+						 GtranslatorWindow *window);
+
+void       gtranslator_actions_edit_paste       (GtkAction   *action,
+						 GtranslatorWindow *window);
+
 void       gtranslator_message_copy_to_translation
                                                 (GtkAction *action,
 						 GtranslatorWindow *window);

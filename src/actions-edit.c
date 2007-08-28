@@ -31,6 +31,83 @@
 #include "window.h"
 
 
+void
+gtranslator_actions_edit_undo (GtkAction   *action,
+			       GtranslatorWindow *window)
+{
+	GtranslatorView *active_view;
+	GtkSourceBuffer *active_document;
+
+	active_view = gtranslator_window_get_active_view (window);
+	g_return_if_fail (active_view);
+
+	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
+
+	gtk_source_buffer_undo (active_document);
+
+	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+}
+
+void
+gtranslator_actions_edit_redo (GtkAction   *action,
+			       GtranslatorWindow *window)
+{
+	GtranslatorView *active_view;
+	GtkSourceBuffer *active_document;
+
+	active_view = gtranslator_window_get_active_view (window);
+	g_return_if_fail (active_view);
+
+	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
+
+	gtk_source_buffer_redo (active_document);
+
+	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+}
+
+void
+gtranslator_actions_edit_cut (GtkAction   *action,
+			      GtranslatorWindow *window)
+{
+	GtranslatorView *active_view;
+
+	active_view = gtranslator_window_get_active_view (window);
+	g_return_if_fail (active_view);
+
+	gtranslator_view_cut_clipboard (active_view);
+
+	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+}
+
+void
+gtranslator_actions_edit_copy (GtkAction   *action,
+			       GtranslatorWindow *window)
+{
+	GtranslatorView *active_view;
+
+	active_view = gtranslator_window_get_active_view (window);
+	g_return_if_fail (active_view);
+
+	gtranslator_view_copy_clipboard (active_view);
+
+	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+}
+
+void
+gtranslator_actions_edit_paste (GtkAction   *action,
+				GtranslatorWindow *window)
+{
+	GtranslatorView *active_view;
+
+	active_view = gtranslator_window_get_active_view (window);
+	g_return_if_fail (active_view);
+
+	gtranslator_view_paste_clipboard (active_view);
+
+	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+}
+
+
 /*
  * Use the untranslated message as the translation.
  */

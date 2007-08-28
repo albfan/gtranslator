@@ -142,3 +142,78 @@ gtranslator_view_new (void)
 	return view;
 }
 
+void
+gtranslator_view_cut_clipboard (GtranslatorView *view)
+{
+	GtkTextBuffer *buffer;
+	GtkClipboard *clipboard;
+
+	g_return_if_fail (GTR_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+	g_return_if_fail (buffer != NULL);
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+
+	/* FIXME: what is default editability of a buffer? */
+  	gtk_text_buffer_cut_clipboard (buffer,
+  				       clipboard,
+				       gtk_text_view_get_editable(
+						GTK_TEXT_VIEW (view)));
+  	
+	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
+				      gtk_text_buffer_get_insert (buffer),
+				      0.0,
+				      FALSE,
+				      0.0,
+				      0.0);
+}
+
+void
+gtranslator_view_copy_clipboard (GtranslatorView *view)
+{
+	GtkTextBuffer *buffer;
+	GtkClipboard *clipboard;
+
+	g_return_if_fail (GTR_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+	g_return_if_fail (buffer != NULL);
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+
+  	gtk_text_buffer_copy_clipboard (buffer, clipboard);
+
+	/* on copy do not scroll, we are already on screen */
+}
+
+void
+gtranslator_view_paste_clipboard (GtranslatorView *view)
+{
+  	GtkTextBuffer *buffer;
+	GtkClipboard *clipboard;
+
+	g_return_if_fail (GTR_IS_VIEW (view));
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+	g_return_if_fail (buffer != NULL);
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+
+	/* FIXME: what is default editability of a buffer? */
+  	gtk_text_buffer_paste_clipboard (buffer,
+					 clipboard,
+					 NULL,
+					 gtk_text_view_get_editable(
+						GTK_TEXT_VIEW (view)));
+
+	gtk_text_view_scroll_to_mark (GTK_TEXT_VIEW (view),
+				      gtk_text_buffer_get_insert (buffer),
+				      0.0,
+				      FALSE,
+				      0.0,
+				      0.0);
+}

@@ -66,8 +66,16 @@ struct _GtranslatorViewClass
  * Public methods
  */
 GType		 gtranslator_view_get_type	   (void) G_GNUC_CONST;
+
 GType		 gtranslator_view_register_type    (GTypeModule * module);
+
 GtkWidget	*gtranslator_view_new	           (void);
+
+void             gtranslator_view_cut_clipboard          (GtranslatorView *view);
+
+void             gtranslator_view_copy_clipboard         (GtranslatorView *view);
+
+void             gtranslator_view_paste_clipboard        (GtranslatorView *view);
 
 G_END_DECLS
 

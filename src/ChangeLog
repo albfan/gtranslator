@@ -1,3 +1,12 @@
+2007-08-28  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* action.h, actions-edit.c: Added copy, paste, cut, 
+	undo and redo funcs.
+	* view.ch: Added copy, paste and cut funcs to manage 
+	clipboard.
+	* window.c: Added calls to copy, paste, cut, undo and
+	redo funcs.
+
 2007-08-27  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c: Subdivied ui into always_sensitive_entries
