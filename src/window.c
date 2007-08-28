@@ -223,6 +223,9 @@ static const GtkActionEntry entries[] = {
 	{ "SearchFindNext", NULL, N_("Search ne_xt"), NULL,
 	  N_("   "), NULL},
 	 // G_CALLBACK (gtranslator_find) },
+	{ "SearchFindPrevious", NULL, N_("Search _previous"), NULL,
+	  N_("   "), NULL},
+	 // G_CALLBACK (gtranslator_find) },
 	{ "SearchReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, NULL,
 	  N_("   "), NULL},
 	 // G_CALLBACK (gtranslator_replace_dialog) },
@@ -230,43 +233,15 @@ static const GtkActionEntry entries[] = {
 };
 
 
-static void
-set_sensitive_according_to_tab(GtranslatorWindow *window,
-			       GtranslatorTab *tab)
+void
+set_sensitive_according_to_message(GtranslatorWindow *window,
+				   GtranslatorPo *po)
 {
-	GtranslatorView *view;
-	GtranslatorPo *po;
-	GtkSourceBuffer *buf;
-	GtkAction *action;
 	GList *current;
+	GtkAction *action;
 	
-	view = gtranslator_tab_get_active_view(tab);
-	po = gtranslator_tab_get_po(tab);
 	current = gtranslator_po_get_current_message(po);
-	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
 	
-	
-	/*Edit*/
-	action = gtk_action_group_get_action(window->priv->action_group,
-					     "EditUndo");
-	gtk_action_set_sensitive (action, 
-				  gtk_source_buffer_can_undo (buf));
-	
-	action = gtk_action_group_get_action(window->priv->action_group,
-					     "EditRedo");
-	gtk_action_set_sensitive (action, 
-				  gtk_source_buffer_can_redo (buf));
-	
-	action = gtk_action_group_get_action(window->priv->action_group,
-					     "EditCut");
-	gtk_action_set_sensitive (action, 
-				  gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buf)));
-	
-	action = gtk_action_group_get_action(window->priv->action_group,
-					     "EditCopy");
-	gtk_action_set_sensitive (action, 
-				  gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buf)));
-	/*Go*/
 	action = gtk_action_group_get_action(window->priv->action_group,
 					     "GoForward");
 	gtk_action_set_sensitive (action, 
@@ -306,6 +281,47 @@ set_sensitive_according_to_tab(GtranslatorWindow *window,
 					     "GoPreviousUntranslated");
 	gtk_action_set_sensitive (action, 
 				  gtranslator_po_get_prev_untrans(po) != NULL);
+}
+
+static void
+set_sensitive_according_to_tab(GtranslatorWindow *window,
+			       GtranslatorTab *tab)
+{
+	GtranslatorView *view;
+	GtranslatorPo *po;
+	GtkSourceBuffer *buf;
+	GtkAction *action;
+	GList *current;
+	
+	view = gtranslator_tab_get_active_view(tab);
+	po = gtranslator_tab_get_po(tab);
+	current = gtranslator_po_get_current_message(po);
+	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	
+	
+	/*Edit*/
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditUndo");
+	gtk_action_set_sensitive (action, 
+				  gtk_source_buffer_can_undo (buf));
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditRedo");
+	gtk_action_set_sensitive (action, 
+				  gtk_source_buffer_can_redo (buf));
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditCut");
+	gtk_action_set_sensitive (action, 
+				  gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buf)));
+	
+	action = gtk_action_group_get_action(window->priv->action_group,
+					     "EditCopy");
+	gtk_action_set_sensitive (action, 
+				  gtk_text_buffer_get_has_selection (GTK_TEXT_BUFFER (buf)));
+	
+	/*Go*/
+	set_sensitive_according_to_message(window, po);
 }
 
 static void

@@ -94,6 +94,9 @@ void              gtranslator_window_update_statusbar (GtranslatorWindow *window
 void              gtranslator_window_update_progress_bar
                                                       (GtranslatorWindow *window);
 
+void              set_sensitive_according_to_message  (GtranslatorWindow *window,
+						       GtranslatorPo *po);
+
 G_END_DECLS
 
 #endif /* __WINDOW_H__ */

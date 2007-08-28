@@ -1,5 +1,13 @@
 2007-08-28  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* gtranslator-ui.xml: Added find previous item.
+	* actions-go.c: Added call to set_sensitive_according_to_message func.
+	* window.c: Added find previous item.
+	Added set_sensitive_according_to_message func.
+	* po.c: Fixed gtranslator_po_get_untranslated_count func.
+
+2007-08-28  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* action.h, actions-edit.c: Added copy, paste, cut, 
 	undo and redo funcs.
 	* view.ch: Added copy, paste and cut funcs to manage 

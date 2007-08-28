@@ -498,7 +498,7 @@ gtranslator_po_get_fuzzy_count(GtranslatorPo *po)
 gint
 gtranslator_po_get_untranslated_count(GtranslatorPo *po)
 {
-	return (g_list_length(po->priv->messages) - po->priv->translated);
+	return (g_list_length(po->priv->messages) - po->priv->translated - po->priv->fuzzy);
 }
 
 gint
