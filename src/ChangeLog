@@ -1,3 +1,11 @@
+2007-08-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-file.c: Added call to set_sensitive_according_to_window func.
+	* window.c: Added set_sensitive_according_to_window, 
+	can_undo, can_redo, notebook_tab_added funcs and connected page-added
+	signal.
+	* po.c: Using simple if instead of g_return_val_if_fail.
+
 2007-08-28  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* gtranslator-ui.xml: Added find previous item.

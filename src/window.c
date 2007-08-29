@@ -239,7 +239,7 @@ set_sensitive_according_to_message(GtranslatorWindow *window,
 {
 	GList *current;
 	GtkAction *action;
-	
+		
 	current = gtranslator_po_get_current_message(po);
 	
 	action = gtk_action_group_get_action(window->priv->action_group,
@@ -298,6 +298,8 @@ set_sensitive_according_to_tab(GtranslatorWindow *window,
 	current = gtranslator_po_get_current_message(po);
 	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
 	
+	if(gtk_action_group_get_sensitive(window->priv->action_group) == FALSE)
+		gtk_action_group_set_sensitive(window->priv->action_group, TRUE);
 	
 	/*Edit*/
 	action = gtk_action_group_get_action(window->priv->action_group,
@@ -324,6 +326,18 @@ set_sensitive_according_to_tab(GtranslatorWindow *window,
 	set_sensitive_according_to_message(window, po);
 }
 
+void
+set_sensitive_according_to_window(GtranslatorWindow *window)
+{
+	gint pages;
+	
+	pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(window->priv->notebook));
+	
+	gtk_action_group_set_sensitive(window->priv->action_group,
+				       pages > 0);
+				       
+}
+
 static void
 notebook_switch_page(GtkNotebook *nb,
 		     GtkNotebookPage *page,
@@ -339,12 +353,79 @@ notebook_switch_page(GtkNotebook *nb,
 	gtranslator_window_update_statusbar(window);
 }
 
+static void
+can_undo(GtkSourceBuffer *doc,
+	 gboolean    undo,
+	 GtranslatorWindow *window)
+{
+	GtkAction *action;
+	gboolean sensitive;
+	GtranslatorView *view;
+	GtkSourceBuffer *buf;
+
+	view = gtranslator_window_get_active_view (window);
+	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	if (doc != buf)
+		return;
+
+	action = gtk_action_group_get_action (window->priv->action_group,
+					     "EditUndo");
+	gtk_action_set_sensitive (action, undo);
+}
+
+static void
+can_redo(GtkSourceBuffer *doc,
+	 gboolean    redo,
+	 GtranslatorWindow *window)
+{
+	GtkAction *action;
+	gboolean sensitive;
+	GtranslatorView *view;
+	GtkSourceBuffer *buf;
+
+	view = gtranslator_window_get_active_view (window);
+	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	if (doc != buf)
+		return;
+
+	action = gtk_action_group_get_action (window->priv->action_group,
+					     "EditRedo");
+	gtk_action_set_sensitive (action, redo);
+}
+
+static void
+notebook_tab_added(GtkNotebook *notebook,
+		   GtkWidget   *child,
+		   guint        page_num,
+		   GtranslatorWindow *window)
+{
+	GtranslatorView *view;
+	GtranslatorTab *tab = GTR_TAB(child);
+	GtkTextBuffer *buffer;
+	
+	g_return_if_fail(GTR_IS_TAB(tab));
+	
+	view = gtranslator_tab_get_active_view(tab);
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+	
+	
+	g_signal_connect(GTK_SOURCE_BUFFER(buffer),
+			 "can-undo",
+			 G_CALLBACK(can_undo),
+			 window);
+	
+	g_signal_connect(GTK_SOURCE_BUFFER(buffer),
+			 "can-redo",
+			 G_CALLBACK(can_redo),
+			 window);
+}
+
 /*
  * Shows the gtranslator homepage on the web.
  */
 static void
 gtranslator_window_show_home_page(GtkWidget *widget,
-				 gpointer useless)
+				  gpointer useless)
 {
 	gnome_url_show("http://gtranslator.sourceforge.net", NULL);
 }
@@ -684,6 +765,8 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	priv->notebook = GTK_WIDGET(gtranslator_notebook_new());
 	g_signal_connect(priv->notebook, "switch-page",
 			 G_CALLBACK(notebook_switch_page), window);
+	g_signal_connect(priv->notebook, "page-added",
+			 G_CALLBACK(notebook_tab_added), window);
 	
 	gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
 	gtk_widget_show(priv->notebook);
@@ -729,6 +812,8 @@ gtranslator_window_init (GtranslatorWindow *window)
 	gtranslator_window_draw(window);
 	
 	gtranslator_window_restore_geometry(window, NULL);
+	
+	set_sensitive_according_to_window(window);
 	
 	/* Charmap panel */
 	impl_activate(window);

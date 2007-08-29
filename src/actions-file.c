@@ -375,6 +375,8 @@ gtranslator_file_close(GtkAction * widget,
 	i = gtk_notebook_page_num(GTK_NOTEBOOK(nb), GTK_WIDGET(current_page));
 	if (i != -1)
 		gtk_notebook_remove_page(GTK_NOTEBOOK(nb), i);
+	
+	set_sensitive_according_to_window(window);
 }
 
 void

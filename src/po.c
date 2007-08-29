@@ -400,7 +400,8 @@ gtranslator_po_get_next_fuzzy(GtranslatorPo *po)
 	msg = g_list_next(po->priv->current);
 	
 	do{
-		g_return_val_if_fail(msg != NULL, NULL);
+		if(msg == NULL)
+			return NULL;
 		if(gtranslator_msg_is_fuzzy(msg->data))
 			return msg;
 		msg = g_list_next(msg);
@@ -424,7 +425,8 @@ gtranslator_po_get_prev_fuzzy(GtranslatorPo *po)
 	msg = g_list_previous(po->priv->current);
 	
 	do{
-		g_return_val_if_fail(msg != NULL, NULL);
+		if(msg == NULL)
+			return NULL;
 		if(gtranslator_msg_is_fuzzy(msg->data))
 			return msg;
 		msg = g_list_previous(msg);
@@ -448,7 +450,8 @@ gtranslator_po_get_next_untrans(GtranslatorPo *po)
 	msg = g_list_next(po->priv->current);
 	
 	do{
-		g_return_val_if_fail(msg != NULL, NULL);
+		if(msg == NULL)
+			return NULL;
 		if(!gtranslator_msg_is_translated(msg->data))
 			return msg;
 		msg = g_list_next(msg);
@@ -473,7 +476,8 @@ gtranslator_po_get_prev_untrans(GtranslatorPo *po)
 	msg = g_list_previous(po->priv->current);
 	
 	do{
-		g_return_val_if_fail(msg != NULL, NULL);
+		if(msg == NULL)
+			return NULL;
 		if(!gtranslator_msg_is_translated(msg->data))
 			return msg;
 		msg = g_list_previous(msg);
