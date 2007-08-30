@@ -1,5 +1,9 @@
 2007-08-30  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* message-area.c: Improved message-area widget.
+
+2007-08-30  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* po.c, msg.ch: Improved gtranslator_msg_check func.
 
 2007-08-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>

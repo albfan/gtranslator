@@ -148,27 +148,18 @@ style_set (GtkWidget *widget,
 	   GtkStyle  *prev_style)
 {
 	GtkStyle *style;
-        GtkWidget *window;
-        GtkWindow *tooltip_win;
          
         GtranslatorMessageArea *message_area = GTRANSLATOR_MESSAGE_AREA (widget);
         
         if (message_area->priv->changing_style)
                 return;
-
-        window = gtk_window_new(GTK_WINDOW_POPUP);
-        gtk_widget_set_tooltip_text(window, "gtranslator");
-        tooltip_win = gtk_widget_get_tooltip_window(window);
-
-        gtk_widget_ensure_style (GTK_WIDGET (tooltip_win));
         
-        style = gtk_widget_get_style (GTK_WIDGET(tooltip_win));
-        
+	style = gtk_rc_get_style_by_paths(gtk_settings_get_default(), "GtkWindow",
+					  "gtk-tooltip", GTK_TYPE_WINDOW);
+	
         message_area->priv->changing_style = TRUE;
         gtk_widget_set_style (GTK_WIDGET (widget), style);
         message_area->priv->changing_style = FALSE;     
-
-        gtk_widget_destroy(window);
 }
 
 static void 
