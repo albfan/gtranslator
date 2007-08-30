@@ -50,6 +50,11 @@ struct _GtranslatorPoPrivate
 	 * Gettext's file handle
 	 */
 	po_file_t gettext_po_file;
+	
+	/*
+	 * Message iter
+	 */
+	po_message_iterator_t iter;
 
 	/*
 	 * The message domains in this file
@@ -117,6 +122,7 @@ gtranslator_po_finalize (GObject *object)
 	
 	g_free(po->priv->filename);
 	g_free(po->priv->obsolete);
+	po_message_iterator_free(po->priv->iter);
 	
 	G_OBJECT_CLASS (gtranslator_po_parent_class)->finalize (object);
 }
@@ -233,7 +239,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 	 * message.
 	 */
 	priv->messages = NULL;
-	iter = po_message_iterator(priv->gettext_po_file, NULL);
+	priv->iter = iter = po_message_iterator(priv->gettext_po_file, NULL);
 	message = po_next_message(iter);
 	msgstr = po_message_msgstr(message);
 	if(!strncmp(msgstr, "Project-Id-Version: ", 20)) {
@@ -252,7 +258,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 		if(!po_message_is_obsolete(message))
 		{
 			/* Unpack into a GtrMsg */
-			msg = gtranslator_msg_new();
+			msg = gtranslator_msg_new(iter);
 			gtranslator_msg_set_message(msg, message);
   
 			/* Build up messages */
@@ -267,7 +273,6 @@ gtranslator_po_parse(GtranslatorPo *po,
 		g_object_unref(po);
 		return;
 	}
-	po_message_iterator_free(iter);
 
 	/*
 	 * Set the current message to the first message.

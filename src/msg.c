@@ -40,6 +40,8 @@ struct _GtranslatorMsgPrivate
 {
 	//Missing comment
 	//Header too??
+	po_message_iterator_t iterator;
+	
 	po_message_t message;
 };
 
@@ -75,9 +77,14 @@ gtranslator_msg_class_init (GtranslatorMsgClass *klass)
  * Return value: a new #GtranslatorMsg object
  **/
 GtranslatorMsg *
-gtranslator_msg_new(void)
+gtranslator_msg_new(po_message_iterator_t iter)
 {
-	return g_object_new (GTR_TYPE_MSG, NULL);
+	GtranslatorMsg *msg;
+	
+	msg = g_object_new (GTR_TYPE_MSG, NULL);
+	msg->priv->iterator = iter;
+	
+	return msg;
 }
 
 /**
@@ -322,8 +329,8 @@ gtranslator_msg_check(GtranslatorMsg *msg)
 		g_free(message_error);
 		message_error = NULL;
 	}
-	
-	po_message_check_format(msg->priv->message, &handler);
+
+	po_message_check_all(msg->priv->message, msg->priv->iterator, &handler);
 	
 	if(gtranslator_msg_is_fuzzy(msg) || !gtranslator_msg_is_translated(msg))
 		message_error = NULL;

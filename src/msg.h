@@ -69,7 +69,7 @@ GType		  gtranslator_msg_get_type	       (void) G_GNUC_CONST;
 
 GType		  gtranslator_msg_register_type	       (GTypeModule * module);
 
-GtranslatorMsg   *gtranslator_msg_new                  (void);
+GtranslatorMsg   *gtranslator_msg_new                  (po_message_iterator_t iter);
 
 po_message_t      gtranslator_msg_get_message          (GtranslatorMsg *msg);
 
