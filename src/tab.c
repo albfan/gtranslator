@@ -36,10 +36,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#ifdef HAVE_GTKSPELL
-#include <gtkspell/gtkspell.h>
-#endif
-
 #define GTR_TAB_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 					 (object),	\
 					 GTR_TYPE_TAB,     \
@@ -75,10 +71,6 @@ struct _GtranslatorTabPrivate
 	GtkWidget *translated;
 	GtkWidget *fuzzy;
 	GtkWidget *untranslated;
-	
-	#ifdef HAVE_GTKSPELL
-	GtkSpell *gtrans_spell[MAX_PLURALS];
-	#endif
 };
 
 static void
@@ -174,54 +166,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 }
 
 
-#ifdef HAVE_GTKSPELL
-void
-gtranslator_attach_gskspell(GtranslatorTab *tab)
-{
-	gint i;
-	/*
-	 * Use instant spell checking via gtkspell only if the corresponding
-	 *  setting in the preferences is set.
-	 */
-	if(GtrPreferences.instant_spell_check)
-	{
-		/*
-		 * Start up gtkspell if not already done.
-		 */ 
-		GError *error = NULL;
-		gchar *errortext = NULL;
-		
-		guint i;
-		for(i = 0; i <= (gint)GtrPreferences.nplurals; i++) 
-		{
-			if(tab->priv->gtrans_spell[i] == NULL && tab->priv->trans_msgstr[i] != NULL)
-			{
-				tab->priv->gtrans_spell[i] = NULL;
-				tab->priv->gtrans_spell[i] = 
-					gtkspell_new_attach(GTK_TEXT_VIEW(tab->priv->trans_msgstr[i]),
-							    NULL, &error);
-				if (tab->priv->gtrans_spell[i] == NULL) {
-					g_print(_("gtkspell error: %s\n"), error->message);
-					errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"),
-								    error->message);
-					g_error_free(error);
-		    		}
-			}
-			else
-				break;
-		}
-	} else {
-		i = 0;
-		do{
-			if(tab->priv->gtrans_spell[i] != NULL) {
-				gtkspell_detach(tab->priv->gtrans_spell[i]);
-				tab->priv->gtrans_spell[i] = NULL;
-			}
-			i++;
-		}while(i < (gint)GtrPreferences.nplurals);
-	}
-}
-#endif
+
 
 static GtkWidget *
 gtranslator_tab_append_page(const gchar *tab_label,
@@ -433,10 +378,6 @@ gtranslator_tab_init (GtranslatorTab *tab)
 					 GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->comment),
 				   _("Comment"), image);
-	
-	#ifdef HAVE_GTKSPELL
-	gtranslator_attach_gskspell(tab);
-	#endif
 	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
 }

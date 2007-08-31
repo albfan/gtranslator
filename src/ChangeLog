@@ -1,3 +1,8 @@
+2007-08-31  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* tab.c, view.c: Moved gtkspell support from tab.c to view.c.
+	* message-area.c: Finally working perfect.
+
 2007-08-30  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* message-area.c: Improved message-area widget.

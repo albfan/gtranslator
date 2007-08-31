@@ -21,12 +21,18 @@
 #endif
 
 #include "view.h"
+#include "prefs.h"
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksourcetag.h>
 #include <gtksourceview/gtksourcetagtable.h>
+
+#ifdef HAVE_GTKSPELL
+#include <gtkspell/gtkspell.h>
+#endif
 
 #define GTR_VIEW_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 						 	(object),	\
@@ -40,8 +46,62 @@ struct _GtranslatorViewPrivate
 	GtkSourceTagTable *table;
 	GtkSourceBuffer *buffer;
 	GSList		*tags;
+	
+#ifdef HAVE_GTKSPELL
+	GtkSpell *spell;
+#endif
+	
+#ifdef HAVE_SPELL_CHECK
+	GtkTextViewSpellCheckClient *client;
+	GtkSpellCheckManager *manager;
+#endif
 };
 
+
+#ifdef HAVE_GTKSPELL
+static void
+gtranslator_attach_gtkspell(GtranslatorView *view)
+{
+	gint i;
+	/*
+	 * Use instant spell checking via gtkspell only if the corresponding
+	 *  setting in the preferences is set.
+	 */
+	if(GtrPreferences.instant_spell_check)
+	{
+		/*
+		 * Start up gtkspell if not already done.
+		 */ 
+		GError *error = NULL;
+		gchar *errortext = NULL;
+		view->priv->spell = NULL;
+		
+		view->priv->spell = 
+			gtkspell_new_attach(GTK_TEXT_VIEW(view), NULL, &error);
+		if (view->priv->spell == NULL) 
+		{
+			g_printf(_("gtkspell error: %s\n"), error->message);
+			errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"),
+						    error->message);
+			g_error_free(error);
+		}
+		
+	}
+}
+#endif
+
+#ifdef HAVE_SPELL_CHECK
+static void
+gtranslator_attach_spellcheck(GtranslatorView *view)
+{
+	view->priv->client = gtk_text_view_spell_check_new(GTK_TEXT_VIEW(view));
+	view->priv->manager = gtk_spell_check_manager_new(NULL, TRUE);
+	
+	gtk_spell_check_manager_attach(view->priv->manager,
+				       view->priv->client);
+	
+}
+#endif
 
 static void
 setup_all_tags(GtranslatorViewPrivate *priv)
@@ -114,6 +174,10 @@ gtranslator_view_init (GtranslatorView *view)
 /*	gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(view), TRUE);
 	gtk_source_view_set_show_line_markers(GTK_SOURCE_VIEW(view), TRUE);
 	gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(view), TRUE);*/
+	
+#ifdef HAVE_GTKSPELL
+	gtranslator_attach_gtkspell(view);
+#endif
 }
 
 static void

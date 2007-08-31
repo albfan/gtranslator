@@ -148,18 +148,25 @@ style_set (GtkWidget *widget,
 	   GtkStyle  *prev_style)
 {
 	GtkStyle *style;
+	GtkWidget *window;
          
         GtranslatorMessageArea *message_area = GTRANSLATOR_MESSAGE_AREA (widget);
         
         if (message_area->priv->changing_style)
                 return;
         
-	style = gtk_rc_get_style_by_paths(gtk_settings_get_default(), "GtkWindow",
-					  "gtk-tooltip", GTK_TYPE_WINDOW);
+	window = gtk_window_new(GTK_WINDOW_POPUP);
+	gtk_widget_set_name(window, "gtk-tooltip");
+	
+	gtk_widget_ensure_style(window);
+	
+	style = gtk_widget_get_style(window);
 	
         message_area->priv->changing_style = TRUE;
         gtk_widget_set_style (GTK_WIDGET (widget), style);
-        message_area->priv->changing_style = FALSE;     
+        message_area->priv->changing_style = FALSE;
+	
+	gtk_widget_destroy(window);
 }
 
 static void 
@@ -231,9 +238,8 @@ gtranslator_message_area_init (GtranslatorMessageArea *message_area)
 			    TRUE, 
 			    TRUE, 
 			    0);
-			
-	/* CHECK: do we really need it? */    	
-	gtk_widget_set_name (GTK_WIDGET (message_area), "gtk-tooltips");	    
+				
+	gtk_widget_set_app_paintable(GTK_WIDGET(message_area), TRUE);
 	
 	g_signal_connect (message_area,
 			  "expose_event",
