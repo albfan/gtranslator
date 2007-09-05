@@ -413,6 +413,22 @@ sidebar_page_changed_cb (GdictSidebar *sidebar,
 }
 
 static void
+gtranslator_dict_panel_link_clicked(GtkWidget *defbox,
+				    const gchar *link_text,
+				    GtranslatorDictPanel *panel)
+{
+	if (!link_text)
+		return;
+  
+	g_free (panel->priv->word);
+	panel->priv->word = g_strdup(link_text);
+	
+	gtk_entry_set_text(GTK_ENTRY(panel->priv->entry), link_text);
+
+	gdict_defbox_lookup (GDICT_DEFBOX (defbox), panel->priv->word);
+}
+
+static void
 gtranslator_dict_panel_draw (GtranslatorDictPanel *panel)
 {
 	GtkPaned   *paned;
@@ -459,6 +475,8 @@ gtranslator_dict_panel_draw (GtranslatorDictPanel *panel)
 	if (panel->priv->context)
 		gdict_defbox_set_context (GDICT_DEFBOX (panel->priv->defbox),
 					  panel->priv->context);
+	g_signal_connect(panel->priv->defbox, "link-clicked",
+			 G_CALLBACK(gtranslator_dict_panel_link_clicked), panel);
 	
 	//Missing link signal
 	
