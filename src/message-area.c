@@ -36,6 +36,8 @@
 #define GTRANSLATOR_MESSAGE_AREA_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), GTRANSLATOR_TYPE_MESSAGE_AREA, GtranslatorMessageAreaPrivate))
 
+#define GTK_PARAM_READABLE G_PARAM_READABLE|G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB
+
 G_DEFINE_TYPE(GtranslatorMessageArea, gtranslator_message_area, GTK_TYPE_HBOX)
 
 struct _GtranslatorMessageAreaPrivate
@@ -144,29 +146,27 @@ paint_message_area (GtkWidget      *widget,
 }
 
 static void
-style_set (GtkWidget *widget,
-	   GtkStyle  *prev_style)
+update_spacings (GtranslatorMessageArea *message_area)
 {
-	GtkStyle *style;
-	GtkWidget *window;
-         
-        GtranslatorMessageArea *message_area = GTRANSLATOR_MESSAGE_AREA (widget);
-        
-        if (message_area->priv->changing_style)
-                return;
-        
-	window = gtk_window_new(GTK_WINDOW_POPUP);
-	gtk_widget_set_name(window, "gtk-tooltip");
-	
-	gtk_widget_ensure_style(window);
-	
-	style = gtk_widget_get_style(window);
-	
-        message_area->priv->changing_style = TRUE;
-        gtk_widget_set_style (GTK_WIDGET (widget), style);
-        message_area->priv->changing_style = FALSE;
-	
-	gtk_widget_destroy(window);
+	GtkWidget *widget;
+	gint content_area_border;
+	gint button_spacing;
+	gint action_area_border;
+  
+	widget = GTK_WIDGET (message_area);
+
+	gtk_widget_style_get (widget,
+			      "content-area-border", &content_area_border,
+			      "button-spacing", &button_spacing,
+			      "action-area-border", &action_area_border,
+			      NULL);
+
+	gtk_container_set_border_width (GTK_CONTAINER (message_area->priv->main_hbox),
+					content_area_border);
+	gtk_box_set_spacing (GTK_BOX (message_area->priv->main_hbox),
+			     button_spacing);
+	gtk_container_set_border_width (GTK_CONTAINER (message_area->priv->action_area),
+					action_area_border);
 }
 
 static void 
@@ -177,11 +177,9 @@ gtranslator_message_area_class_init (GtranslatorMessageAreaClass *class)
 	GtkBindingSet *binding_set;
 	
 	object_class = G_OBJECT_CLASS (class);
-	widget_class = GTK_WIDGET_CLASS (class);
+	widget_class = GTK_WIDGET_CLASS(class);
 	object_class->finalize = gtranslator_message_area_finalize;
-	
-	widget_class->style_set = style_set;
-	
+		
 	class->close = gtranslator_message_area_close;
 
 	g_type_class_add_private (object_class, sizeof(GtranslatorMessageAreaPrivate));
@@ -204,10 +202,65 @@ gtranslator_message_area_class_init (GtranslatorMessageAreaClass *class)
 		  	      NULL, NULL,
 		 	      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
+
+	gtk_widget_class_install_style_property (widget_class,
+						 g_param_spec_int ("content-area-border",
+								   "Content area border",
+								   "Width of border around the main message area",
+								   0,
+								   G_MAXINT,
+								   8,
+								   GTK_PARAM_READABLE));
+	gtk_widget_class_install_style_property (widget_class,
+						 g_param_spec_int ("button-spacing",
+								   "Button spacing",
+								   "Spacing between buttons",
+								   0,
+								   G_MAXINT,
+								   16,
+								   GTK_PARAM_READABLE));
   
+	gtk_widget_class_install_style_property (widget_class,
+						 g_param_spec_int ("action-area-border",
+								   "Action area border",
+								   "Width of border around the button area",
+								   0,
+								   G_MAXINT,
+								   10,
+								   GTK_PARAM_READABLE));
+	
 	binding_set = gtk_binding_set_by_class (class);
   
 	gtk_binding_entry_add_signal (binding_set, GDK_Escape, 0, "close", 0);
+}
+
+static void
+style_set (GtkWidget *widget,
+	   GtkStyle  *prev_style,
+	   GtranslatorMessageArea *message_area)
+{
+	GtkStyle *style;
+	GtkWidget *window;
+        
+	update_spacings(message_area);
+	
+        if (message_area->priv->changing_style)
+                return;
+        
+	window = gtk_window_new(GTK_WINDOW_POPUP);
+	gtk_widget_set_name(window, "gtk-tooltip");
+	
+	gtk_widget_ensure_style(window);
+	
+	style = gtk_widget_get_style(window);
+	
+        message_area->priv->changing_style = TRUE;
+        gtk_widget_set_style (GTK_WIDGET (widget), style);
+        message_area->priv->changing_style = FALSE;
+	
+	gtk_widget_destroy(window);
+	
+	gtk_widget_queue_draw (GTK_WIDGET (message_area));
 }
 
 static void
@@ -215,16 +268,10 @@ gtranslator_message_area_init (GtranslatorMessageArea *message_area)
 {
 	message_area->priv = GTRANSLATOR_MESSAGE_AREA_GET_PRIVATE (message_area);
 
-        /* FIXME: use style properties */
-	message_area->priv->main_hbox = gtk_hbox_new (FALSE, 16);
+	message_area->priv->main_hbox = gtk_hbox_new (FALSE, 0);
 	gtk_widget_show (message_area->priv->main_hbox);
 
-	/* FIXME: use style properties */
-	gtk_container_set_border_width (GTK_CONTAINER (message_area->priv->main_hbox), 
-					8);
-
-        /* FIXME: use style properties */ 
-	message_area->priv->action_area = gtk_vbox_new (TRUE, 10); 
+	message_area->priv->action_area = gtk_vbox_new (TRUE, 0); 
 	gtk_widget_show (message_area->priv->action_area);
 
 	gtk_box_pack_end (GTK_BOX (message_area->priv->main_hbox), 
@@ -238,13 +285,20 @@ gtranslator_message_area_init (GtranslatorMessageArea *message_area)
 			    TRUE, 
 			    TRUE, 
 			    0);
+	
+        /* Note that we connect to style-set on one of the internal
+         * widgets, not on the message area itself, since gtk does
+         * not deliver any further style-set signals for a widget on
+         * which the style has been forced with gtk_widget_set_style() */
+	g_signal_connect(message_area->priv->action_area,
+			 "style-set", G_CALLBACK(style_set), message_area);
 				
 	gtk_widget_set_app_paintable(GTK_WIDGET(message_area), TRUE);
 	
 	g_signal_connect (message_area,
 			  "expose_event",
 			  G_CALLBACK (paint_message_area), 
-			  NULL);			  		    
+			  NULL);
 }
 
 static gint

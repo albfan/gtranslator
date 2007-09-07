@@ -1,3 +1,8 @@
+2007-09-07  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* message-area.c: Fixed some bugs and added style
+	properties. You can see bug #467623 and #474334.
+
 2007-09-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dict-panel: Added link text support.
