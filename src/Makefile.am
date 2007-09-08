@@ -21,6 +21,7 @@ INCLUDES = \
         -DLIBDIR=\""$(libdir)"\"                                \
 	$(GTRANSLATOR_CFLAGS)                                   \
 	$(GTKSPELL_CFLAGS)                                      \
+	$(SPELLCHECK_CFLAGS)					\
 	$(DEPRECATED_FLAGS)                                     \
 	-DG_LOG_DOMAIN=\""$(PACKAGE)"\"                         \
 	-DSCHEMESDIR=\""$(datadir)"/gtranslator/colorschemes\"	\
@@ -44,7 +45,6 @@ gtranslator_SOURCES = \
 	languages.c languages.h \
 	main.c \
 	message-area.c message-area.h \
-	messages-table.h \
 	nautilus-string.c nautilus-string.h \
 	notebook.c notebook.h \
 	panel.c panel.h \
@@ -85,7 +85,8 @@ gtranslator_LDADD = \
 	$(top_srcdir)/src/dictionary/libdictionary.la \
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \
-	$(GTKSPELL_LIBS)
+	$(GTKSPELL_LIBS) \
+	$(SPELLCHECK_LIBS)
 	
 gtranslator_LDFLAGS = \
 	-Wall

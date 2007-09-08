@@ -4,8 +4,10 @@
 #include "window.h"
 
 #include <glib/gi18n.h>
+#include <gconf/gconf-client.h>
 
 #define WINDOW_DATA_KEY	"DictionaryWindowData"
+#define PANEL_KEY "/apps/gtranslator/plugins/dictionary"
 
 static GtkWidget *
 gtranslator_dictionary_create(GtranslatorWindow *window)
@@ -17,6 +19,19 @@ gtranslator_dictionary_create(GtranslatorWindow *window)
 	gtk_widget_show_all(panel);
 	
 	return panel;
+}
+
+static void
+restore_position(GtranslatorDictPanel *panel)
+{
+	GConfClient *client;
+	gint position;
+	
+	client = gconf_client_get_default();
+	position = gconf_client_get_int(client, PANEL_KEY "/panel_position", NULL);
+	gtranslator_dict_panel_set_position(panel, position);
+	
+	g_object_unref(client);
 }
 
 void
@@ -39,6 +54,8 @@ dictionary_activate(GtranslatorWindow *window)
 						      GTK_ICON_SIZE_MENU);
 				   
 	dictionary = gtranslator_dictionary_create(window);
+	
+	restore_position(GTR_DICT_PANEL(dictionary));
 	
 	gtranslator_panel_add_item(panel, dictionary,
 				   _("Dictionary"),

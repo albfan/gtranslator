@@ -380,6 +380,7 @@ gtranslator_tab_init (GtranslatorTab *tab)
 				   _("Comment"), image);
 	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
+	
 }
 
 static void

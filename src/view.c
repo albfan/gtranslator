@@ -30,8 +30,17 @@
 #include <gtksourceview/gtksourcetag.h>
 #include <gtksourceview/gtksourcetagtable.h>
 
+
+//#undef HAVE_GTKSPELL
 #ifdef HAVE_GTKSPELL
 #include <gtkspell/gtkspell.h>
+#endif
+
+#undef HAVE_SPELL_CHECK
+#ifdef HAVE_SPELL_CHECK
+#include <gtkspellcheck/client.h>
+#include <gtkspellcheck/manager.h>
+#include <gtkspellcheck/textviewclient.h>
 #endif
 
 #define GTR_VIEW_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
@@ -52,7 +61,7 @@ struct _GtranslatorViewPrivate
 #endif
 	
 #ifdef HAVE_SPELL_CHECK
-	GtkTextViewSpellCheckClient *client;
+	GtkSpellCheckClient *client;
 	GtkSpellCheckManager *manager;
 #endif
 };
@@ -94,12 +103,11 @@ gtranslator_attach_gtkspell(GtranslatorView *view)
 static void
 gtranslator_attach_spellcheck(GtranslatorView *view)
 {
-	view->priv->client = gtk_text_view_spell_check_new(GTK_TEXT_VIEW(view));
+	view->priv->client = GTK_SPELL_CHECK_CLIENT(gtk_spell_check_text_view_client_new(GTK_TEXT_VIEW(view)));
 	view->priv->manager = gtk_spell_check_manager_new(NULL, TRUE);
 	
 	gtk_spell_check_manager_attach(view->priv->manager,
 				       view->priv->client);
-	
 }
 #endif
 
@@ -114,7 +122,11 @@ setup_all_tags(GtranslatorViewPrivate *priv)
 	/*"http:\\/\\/[a-zA-Z0-9\\.\\-_/~]+",
 	"mailto:[a-z0-9\\.\\-_]+@[a-z0-9\\.\\-_]+",
 	"<?[a-z0-9\\.\\-_]+@[a-z0-9\\.\\-_]+>?",
-	"&[a-z,A-Z,\\-,0-9,#\\.]*;"*/
+	"&[a-z,A-Z,\\-,0-9,#\\.]*;"
+	
+	Engadir unha para as variables %(name) %(email) ...
+	
+	*/
 
 	
 	/*
@@ -177,6 +189,9 @@ gtranslator_view_init (GtranslatorView *view)
 	
 #ifdef HAVE_GTKSPELL
 	gtranslator_attach_gtkspell(view);
+#endif
+#ifdef HAVE_SPELL_CHECK
+	gtranslator_attach_spellcheck(view);
 #endif
 }
 

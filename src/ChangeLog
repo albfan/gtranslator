@@ -1,3 +1,13 @@
+2007-09-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* prefs.c: Removed messages-table.h dependencie.
+	* dictionary/dict-panel.ch:
+	* dictionary/dictionary.c: Now dictionary stores the
+	paned position.
+	* view.c: Added gtkspellcheck support (This is experimental)
+	if you want use it you should undef gtkspell and add gtkspellcheck
+	to configure.in.
+
 2007-09-07  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* message-area.c: Fixed some bugs and added style

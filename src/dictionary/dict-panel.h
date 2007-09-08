@@ -64,8 +64,13 @@ struct _GtranslatorDictPanelClass
  * Public methods
  */
 GType		 gtranslator_dict_panel_get_type	   (void) G_GNUC_CONST;
+
 GType		 gtranslator_dict_panel_register_type 	   (GTypeModule * module);
+
 GtkWidget *	 gtranslator_dict_panel_new 		   (void);
+
+void             gtranslator_dict_panel_set_position       (GtranslatorDictPanel *panel,
+							    gint pos);
 
 G_END_DECLS
 

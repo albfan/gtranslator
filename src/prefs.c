@@ -30,7 +30,7 @@
 #include "find.h"
 #include "gui.h"
 #include "languages.h"
-#include "messages-table.h"
+//#include "messages-table.h"
 #include "nautilus-string.h"
 #include "prefs.h"
 #include "stylistics.h"
@@ -949,23 +949,23 @@ void gtranslator_preferences_dialog_create(GtkWidget *widget,
 	
 	//use_update_function toggle button
 	use_update_function = gtranslator_preferences_toggle_new(GLADE_USE_UPDATE_FUNCTION,
-															 GtrPreferences.update_function,
-															 G_CALLBACK(gtranslator_preferences_dialog_changed));
+								 GtrPreferences.update_function,
+								 G_CALLBACK(gtranslator_preferences_dialog_changed));
 		
 	//rambo_function toggle button
 	rambo_function = gtranslator_preferences_toggle_new(GLADE_RAMBO_FUNCTION,
-														GtrPreferences.rambo_function,
-														G_CALLBACK(gtranslator_preferences_dialog_changed));
+							    GtrPreferences.rambo_function,
+							    G_CALLBACK(gtranslator_preferences_dialog_changed));
 		
 	//show_comment toggle button
 	show_comment = gtranslator_preferences_toggle_new(GLADE_SHOW_COMMENT,
-													  GtrPreferences.show_comment,
-													  G_CALLBACK(gtranslator_preferences_dialog_changed));
+							  GtrPreferences.show_comment,
+							  G_CALLBACK(gtranslator_preferences_dialog_changed));
 		
 	//save_geometry_tb toggle button
 	save_geometry_tb = gtranslator_preferences_toggle_new(GLADE_SAVE_GEOMETRY_TB,
-														  GtrPreferences.save_geometry,
-														  G_CALLBACK(gtranslator_preferences_dialog_changed));
+							      GtrPreferences.save_geometry,
+							      G_CALLBACK(gtranslator_preferences_dialog_changed));
 		
 	/* Messages table item */
 	gchar *messagestable_str = _("Messages table");
