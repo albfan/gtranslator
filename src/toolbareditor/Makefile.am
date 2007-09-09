@@ -23,7 +23,7 @@ libtoolbareditor_la_CPPFLAGS = \
 	-I$(top_builddir)/lib/egg		\
 	$(AM_CPPFLAGS)
 
-libtoolbareditor_la_CFLAGS = \
+INCLUDES = \
 	$(GTRANSLATOR_CFLAGS)				\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)			\

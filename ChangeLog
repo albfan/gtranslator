@@ -1,3 +1,15 @@
+2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	Patch by Sean Burke: Thanks a lot.
+
+	This patch does a few things: it renames configure.in to configure.ac (to start
+	cleaning up build and using more recent conventions), removes
+	SPELLCHECKER_CFLAGS from the Makefile as it appears to be undefined, forces use
+	of a more recent automake version, moves the UI XML files to data/ and modifies
+	the Makefile there to install it and modifies the source file that opens
+	gtranslator-ui to point to the correct directory. It also fixes the
+	aforementioned build errors.
+
 2007-09-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
         * AUTHORS: Added me.

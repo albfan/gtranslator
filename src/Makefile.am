@@ -15,17 +15,17 @@ INCLUDES = \
 	-I$(top_srcdir)/src/charmap				\
 	-I$(top_srcdir)/src/dictionary				\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
-        -DPREFIX=\""$(prefix)"\"                                \
-        -DSYSCONFDIR=\""$(sysconfdir)"\"                        \
-        -DDATADIR=\""$(datadir)"\"                              \
-        -DLIBDIR=\""$(libdir)"\"                                \
+	-DPREFIX=\""$(prefix)"\"                                \
+	-DSYSCONFDIR=\""$(sysconfdir)"\"                        \
+	-DDATADIR=\""$(pkgdatadir)"\"                              \
+	-DLIBDIR=\""$(libdir)"\"                                \
 	$(GTRANSLATOR_CFLAGS)                                   \
 	$(GTKSPELL_CFLAGS)                                      \
 	$(SPELLCHECK_CFLAGS)					\
 	$(DEPRECATED_FLAGS)                                     \
 	-DG_LOG_DOMAIN=\""$(PACKAGE)"\"                         \
-	-DSCHEMESDIR=\""$(datadir)"/gtranslator/colorschemes\"	\
-	-DSCRIPTSDIR=\""$(datadir)"/gtranslator/scripts\"	\
+	-DSCHEMESDIR=\""$(pkgdatadir)"/colorschemes\"	\
+	-DSCRIPTSDIR=\""$(pkgdatadir)"/scripts\"	\
 	-DWINDOW_ICON=\""$(datadir)"/pixmaps/gtranslator.png\"
 
 bin_PROGRAMS = \
@@ -85,8 +85,7 @@ gtranslator_LDADD = \
 	$(top_srcdir)/src/dictionary/libdictionary.la \
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \
-	$(GTKSPELL_LIBS) \
-	$(SPELLCHECK_LIBS)
+	$(GTKSPELL_LIBS)
 	
 gtranslator_LDFLAGS = \
 	-Wall

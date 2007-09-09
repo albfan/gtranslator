@@ -692,7 +692,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 
 
 	if (!gtk_ui_manager_add_ui_from_file (priv->ui_manager,
-					      "gtranslator-ui.xml",
+					      DATADIR"/gtranslator-ui.xml",
 					      &error)) {
 		g_warning ("building menus failed: %s", error->message);
 		g_error_free (error);
