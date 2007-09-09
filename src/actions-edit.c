@@ -155,17 +155,21 @@ gtranslator_message_status_toggle_fuzzy(GtkAction *action,
 {
 	GtranslatorTab *current;
 	GtranslatorPo *po;
+	GtkTextView *view;
+	GtkSourceBuffer *buf;
 	GList *msg;
 	
 	current = gtranslator_window_get_active_tab(window);
 	po = gtranslator_tab_get_po(current);
 	msg = gtranslator_po_get_current_message(po);
+	view = GTK_TEXT_VIEW(gtranslator_window_get_active_view(window));
+	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(view));
 	
 	if(gtranslator_msg_is_fuzzy(msg->data))
 		gtranslator_msg_set_fuzzy(msg->data, FALSE);
 	else
 		gtranslator_msg_set_fuzzy(msg->data, TRUE);
-		
-						
-	/*Maybe something like g_signal_emit message change??*/
+	
+	/*FIXME: I think this is ugly */
+	g_signal_emit_by_name(buf, "changed", NULL);					
 }

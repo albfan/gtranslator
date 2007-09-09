@@ -1,5 +1,12 @@
 2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* tab.c: Status widgets works fine but it is an ugly
+	implementation.
+	* actions-edit.c: If the fuzzy menuitem is clicked
+	now emits a changed signal (Really ugly).
+
+2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* msg.h: Added gtranslator_msg_set_fuzzy func.
 	* tab.c: Now if a message change and it was fuzzy
 	now the status change to translate or untranslate.

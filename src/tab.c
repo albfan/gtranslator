@@ -104,7 +104,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 	const gchar *check;
 	gchar *translation;
 	gint i;
-	
+		
 	/* Work out which message this is associated with */
 	
 	msg_aux = gtranslator_po_get_current_message(tab->priv->po);
@@ -112,12 +112,8 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[0]));
 	
 	if(gtranslator_msg_is_fuzzy(msg))
-	{
 		gtranslator_msg_set_fuzzy(msg, FALSE);
-		/* This is neccessary to put the status widget in the right place */
-		g_signal_emit_by_name(G_OBJECT(textbuffer), "changed", NULL);	
-	}
-	
+		
 	if(textbuffer == buf)
 	{
 		/* Get message as UTF-8 buffer */
@@ -234,7 +230,7 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 }
 
 static void
-status_widgets(GtkWidget *buffer,
+status_widgets(GtkTextBuffer *buffer,
 	       GtranslatorTab *tab)
 {
 	GList *msg = gtranslator_po_get_current_message(tab->priv->po);
@@ -360,8 +356,11 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 				 G_CALLBACK(gtranslator_message_translation_update),
 				 tab);
 		
-		g_signal_connect(buf, "changed",
+		/* FIXME: Connect the same func twice is not a good idea */
+		g_signal_connect_after(buf, "changed",
 				 G_CALLBACK(status_widgets), tab);
+		g_signal_connect_after(buf, "end-user-action",
+				       G_CALLBACK(status_widgets), tab);
 		i++;
 		g_free(label);
 	}while(i < (gint)GtrPreferences.nplurals);
