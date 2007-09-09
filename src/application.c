@@ -178,7 +178,7 @@ gtranslator_application_init (GtranslatorApplication *application)
 	if (!egg_toolbars_model_load_toolbars (priv->toolbars_model,
 					       priv->toolbars_file)) {
 		egg_toolbars_model_load_toolbars (priv->toolbars_model,
-						  "gtr-toolbar.xml");
+						  DATADIR"gtr-toolbar.xml");
 	}
 
 	egg_toolbars_model_set_flags (priv->toolbars_model, 0,

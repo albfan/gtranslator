@@ -1,5 +1,9 @@
 2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* application.c: Addded DATADIR patch to search for gtr-toolbar.xml
+
+2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* tab.c: Status widgets works fine but it is an ugly
 	implementation.
 	* actions-edit.c: If the fuzzy menuitem is clicked
