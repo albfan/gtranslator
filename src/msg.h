@@ -80,6 +80,9 @@ gboolean          gtranslator_msg_is_translated        (GtranslatorMsg *msg);
 
 gboolean          gtranslator_msg_is_fuzzy             (GtranslatorMsg *msg);
 
+void              gtranslator_msg_set_fuzzy            (GtranslatorMsg *msg,
+							gboolean fuzzy);
+
 const gchar      *gtranslator_msg_get_msgid            (GtranslatorMsg *msg);
 
 const gchar      *gtranslator_msg_get_msgid_plural     (GtranslatorMsg *msg);

@@ -110,6 +110,14 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 	msg_aux = gtranslator_po_get_current_message(tab->priv->po);
 	msg = msg_aux->data;
 	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[0]));
+	
+	if(gtranslator_msg_is_fuzzy(msg))
+	{
+		gtranslator_msg_set_fuzzy(msg, FALSE);
+		/* This is neccessary to put the status widget in the right place */
+		g_signal_emit_by_name(G_OBJECT(textbuffer), "changed", NULL);	
+	}
+	
 	if(textbuffer == buf)
 	{
 		/* Get message as UTF-8 buffer */
@@ -351,9 +359,9 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		g_signal_connect(buf, "end-user-action",
 				 G_CALLBACK(gtranslator_message_translation_update),
 				 tab);
-		if(i == 0)
-			g_signal_connect_after(buf, "changed",
-					       G_CALLBACK(status_widgets), tab);
+		
+		g_signal_connect(buf, "changed",
+				 G_CALLBACK(status_widgets), tab);
 		i++;
 		g_free(label);
 	}while(i < (gint)GtrPreferences.nplurals);
