@@ -14,5 +14,10 @@ libdialogs_la_SOURCES = \
 	file-dialogs.c \
 	file-dialogs.h
 
-## File created by the gnome-build tools
+gladedir = $(pkgdatadir)
 
+glade_DATA =  \
+		preferences.glade
+
+EXTRA_DIST = \
+		$(glade_DATA)

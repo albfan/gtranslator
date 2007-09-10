@@ -173,12 +173,12 @@ gtranslator_application_init (GtranslatorApplication *application)
 				     "%s/.gtranslator/gtr-toolbar.xml", g_get_home_dir());
 	
 	egg_toolbars_model_load_names (priv->toolbars_model,
-				       DATADIR"gtr-toolbar.xml");
+				       DATADIR"/gtr-toolbar.xml");
 
 	if (!egg_toolbars_model_load_toolbars (priv->toolbars_model,
 					       priv->toolbars_file)) {
 		egg_toolbars_model_load_toolbars (priv->toolbars_model,
-						  DATADIR"gtr-toolbar.xml");
+						  DATADIR"/gtr-toolbar.xml");
 	}
 
 	egg_toolbars_model_set_flags (priv->toolbars_model, 0,

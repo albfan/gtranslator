@@ -1,5 +1,12 @@
 2007-09-10  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	Path by Sean de Búrca:
+	* dialogs/Makefile.am: Added preferences.glade.
+	* prefs.c: Changed glade definition.
+	* application.c: Fixed bug in toolbar path.
+
+2007-09-10  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* dialogs/preferences.glade: Moved becouse dialogs should be
 	there, so missing move preferences dialog to dialogs folder.
 	* Makefile.am: Removed preferences.glade.
