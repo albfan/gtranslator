@@ -923,6 +923,9 @@ gtranslator_window_get_active_view(GtranslatorWindow *window)
 	GtranslatorTab *current_tab;
 	current_tab = gtranslator_window_get_active_tab(window);
 	
+	if(!current_tab)
+		return NULL;
+	
 	return gtranslator_tab_get_active_view(current_tab);
 }
 

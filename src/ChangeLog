@@ -1,5 +1,10 @@
 2007-09-10  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* window.c: Now if you try to add char from charmap panel
+	and if there aren't any file opened the program don't crashes.
+
+2007-09-10  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	Path by Sean de Búrca:
 	* dialogs/Makefile.am: Added preferences.glade.
 	* prefs.c: Changed glade definition.
