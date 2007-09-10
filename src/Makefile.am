@@ -103,8 +103,7 @@ gtranslator_LDFLAGS = \
 gladedir = $(pkgdatadir)
 
 glade_DATA =  \
-       header_dialog.glade \
-       preferences.glade
+       header_dialog.glade 
 
 EXTRA_DIST = ChangeLog $(glade_DATA)
 

@@ -1,3 +1,9 @@
+2007-09-10  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs/preferences.glade: Moved becouse dialogs should be
+	there, so missing move preferences dialog to dialogs folder.
+	* Makefile.am: Removed preferences.glade.
+
 2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* application.c: Addded DATADIR patch to search for gtr-toolbar.xml
