@@ -1,3 +1,13 @@
+2007-09-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* about.c: Fixed spaces in license.
+
+2007-09-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* src/toolbareditor/egg-toolbar-editor.c:
+	* src/toolbareditor/egg-editable-toolbar.c:
+	  Updated from svn server.
+
 2007-09-10  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c: Now if you try to add char from charmap panel
