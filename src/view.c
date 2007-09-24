@@ -186,13 +186,6 @@ gtranslator_view_init (GtranslatorView *view)
 /*	gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(view), TRUE);
 	gtk_source_view_set_show_line_markers(GTK_SOURCE_VIEW(view), TRUE);
 	gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(view), TRUE);*/
-	
-#ifdef HAVE_GTKSPELL
-	gtranslator_attach_gtkspell(view);
-#endif
-#ifdef HAVE_SPELL_CHECK
-	gtranslator_attach_spellcheck(view);
-#endif
 }
 
 static void
@@ -219,6 +212,31 @@ gtranslator_view_new (void)
 	view = GTK_WIDGET (g_object_new (GTR_TYPE_VIEW, NULL));
 	gtk_widget_show_all(view);
 	return view;
+}
+
+void
+gtranslator_view_enable_spell_check(GtranslatorView *view,
+				    gboolean enable)
+{
+	if(enable)
+#ifdef HAVE_GTKSPELL
+	gtranslator_attach_gtkspell(view);
+#endif
+#ifdef HAVE_SPELL_CHECK
+	gtranslator_attach_spellcheck(view);
+#endif
+	else
+	{
+#ifdef HAVE_GTKSPELL
+		if(!view->priv->spell)
+			return;
+		gtkspell_detach(view->priv->spell);
+#endif
+#ifdef HAVE_SPELL_CHECK
+		gtk_spell_check_manager_detach(view->priv->manager,
+					       view->priv->client);
+#endif
+	}
 }
 
 void

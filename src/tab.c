@@ -174,7 +174,8 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 
 static GtkWidget *
 gtranslator_tab_append_page(const gchar *tab_label,
-			    GtkWidget *notebook)
+			    GtkWidget *notebook,
+			    gboolean spellcheck)
 {
 	GtkWidget *scroll;
 	GtkWidget *label;
@@ -185,6 +186,13 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	scroll = gtk_scrolled_window_new(NULL, NULL);
 	
 	widget = gtranslator_view_new();
+	
+	/*
+	 * FIXME: This should be called parsing the preferences
+	 */
+	if(spellcheck)
+		gtranslator_view_enable_spell_check(GTR_VIEW(widget),
+						    spellcheck);
 	
 	g_signal_connect(widget, "event-after",
 			 G_CALLBACK(on_event_after), NULL);
@@ -197,8 +205,6 @@ gtranslator_tab_append_page(const gchar *tab_label,
 				       GTK_POLICY_AUTOMATIC);
 	
 	gtk_widget_show_all(scroll);
-	
-	
 	
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), scroll, label);
 	return widget;
@@ -316,10 +322,12 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 */
 	priv->text_notebook = gtk_notebook_new();
 	priv->text_msgid = gtranslator_tab_append_page(_("Singular"),
-						       priv->text_notebook);
+						       priv->text_notebook,
+						       FALSE);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(priv->text_msgid), FALSE);
 	priv->text_msgid_plural = gtranslator_tab_append_page(_("Plural"),
-							      priv->text_notebook);
+							      priv->text_notebook,
+							      FALSE);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(priv->text_msgid_plural), FALSE);
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->text_notebook, TRUE, TRUE, 0);
 
@@ -350,7 +358,8 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	do{
 		label = g_strdup_printf(_("Plural %d"), i+1);
 		priv->trans_msgstr[i] = gtranslator_tab_append_page(label,
-								    priv->trans_notebook);
+								    priv->trans_notebook,
+								    TRUE);
 		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[i]));
 		g_signal_connect(buf, "end-user-action",
 				 G_CALLBACK(gtranslator_message_translation_update),
@@ -538,5 +547,24 @@ gtranslator_message_go_to(GtranslatorTab *tab,
 							 message_error);
 		set_message_area(tab, message_area);
 		return;
+	}
+}
+
+/**
+ * gtranslator_tab_enable_spell_check:
+ * @tab: a #GtranslatorTab
+ * @enable: if is TRUE it enables the spellcheck
+ *
+ **/
+void
+gtranslator_tab_enable_spell_check(GtranslatorTab *tab,
+				   gboolean enable)
+{
+	gint i;
+	for(i = 0; ; i++)
+	{
+		if(tab->priv->trans_msgstr[i])
+			gtranslator_view_enable_spell_check(GTR_VIEW(tab->priv->trans_msgstr[i]),
+							    enable);
 	}
 }

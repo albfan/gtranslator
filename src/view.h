@@ -65,11 +65,14 @@ struct _GtranslatorViewClass
 /*
  * Public methods
  */
-GType		 gtranslator_view_get_type	   (void) G_GNUC_CONST;
+GType		 gtranslator_view_get_type               (void) G_GNUC_CONST;
 
-GType		 gtranslator_view_register_type    (GTypeModule * module);
+GType		 gtranslator_view_register_type          (GTypeModule * module);
 
-GtkWidget	*gtranslator_view_new	           (void);
+GtkWidget	*gtranslator_view_new                    (void);
+
+void             gtranslator_view_enable_spell_check     (GtranslatorView *view,
+							  gboolean enable);
 
 void             gtranslator_view_cut_clipboard          (GtranslatorView *view);
 
