@@ -219,12 +219,18 @@ gtranslator_view_enable_spell_check(GtranslatorView *view,
 				    gboolean enable)
 {
 	if(enable)
+	{
 #ifdef HAVE_GTKSPELL
-	gtranslator_attach_gtkspell(view);
+		gtranslator_attach_gtkspell(view);
 #endif
 #ifdef HAVE_SPELL_CHECK
-	gtranslator_attach_spellcheck(view);
+		if(!view->priv->manager)
+			gtranslator_attach_spellcheck(view);
+		else
+			gtk_spell_check_manager_set_active(view->priv->manager,
+							   TRUE);
 #endif
+	}
 	else
 	{
 #ifdef HAVE_GTKSPELL
@@ -233,8 +239,10 @@ gtranslator_view_enable_spell_check(GtranslatorView *view,
 		gtkspell_detach(view->priv->spell);
 #endif
 #ifdef HAVE_SPELL_CHECK
-		gtk_spell_check_manager_detach(view->priv->manager,
-					       view->priv->client);
+		if(!view->priv->manager)
+			return;
+		gtk_spell_check_manager_set_active(view->priv->manager,
+						   FALSE);
 #endif
 	}
 }

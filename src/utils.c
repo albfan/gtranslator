@@ -23,7 +23,7 @@
 #endif
 
 //#include "dialogs.h"
-#include "gui.h"
+//#include "gui.h"
 #include "languages.h"
 #include "nautilus-string.h"
 #include "prefs.h"

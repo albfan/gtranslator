@@ -18,7 +18,7 @@
  */
 
 //#include "dialogs.h"
-#include "gui.h"
+//#include "gui.h"
 #include "nautilus-string.h"
 #include "parse.h"
 #include "prefs.h"
@@ -29,6 +29,7 @@
 #include <libgnome/gnome-url.h>
 
 #include <libgnomeui/libgnomeui.h>
+#include <glib/gi18n.h>
 
 
 /*

@@ -1,5 +1,12 @@
 2007-09-25  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* utils.c:
+	* utils-gui.c:
+	* prefs.c: Removed gui.h dependency.
+	* view.c: Improved spellcheck support.
+
+2007-09-25  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* gui.ch: Removed.
 
 2007-09-24  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>

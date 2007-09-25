@@ -26,9 +26,12 @@
 #include <config.h>
 #endif
 
+#include <glade/glade-xml.h>
+#include <glib/gi18n.h>
+
 //#include "dialogs.h"
 #include "find.h"
-#include "gui.h"
+//#include "gui.h"
 #include "languages.h"
 //#include "messages-table.h"
 #include "nautilus-string.h"
