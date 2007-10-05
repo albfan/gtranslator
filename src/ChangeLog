@@ -1,3 +1,12 @@
+2007-10-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs/preferences-dialog.ch: Remade the preferences dialog.
+	* prefs-manager.ch:
+	* prefs-manager-private.h: Added new preferences system to 
+	manage all configuration stuff.
+	This files will replace prefs.ch, preferences.ch and prefs_init.c
+	files.
+
 2007-09-25  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* utils.c:
