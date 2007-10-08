@@ -22,6 +22,7 @@
 
 #include "preferences-dialog.h"
 #include "prefs-manager.h"
+#include "utils_gui.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -33,6 +34,8 @@
 						 	(object),	\
 						 	GTR_TYPE_PREFERENCES_DIALOG,     \
 						 	GtranslatorPreferencesDialogPrivate))
+
+#define PIXMAPSDIR "/usr/local/share/pixmaps/gtranslator"
 
 G_DEFINE_TYPE(GtranslatorPreferencesDialog, gtranslator_preferences_dialog, GTK_TYPE_DIALOG)
 
@@ -51,8 +54,9 @@ struct _GtranslatorPreferencesDialogPrivate
 	GtkWidget *treeview;
 	GtkTreeStore *store;
 	Parents parents;
-	//GtkTreeStore *store;
 	
+	GtkWidget *main_box;
+	GtkWidget *treeview_box;
 	GtkWidget *notebook;
 	
 	/*Files->General*/
@@ -129,12 +133,13 @@ create_pixbuf(const gchar *path)
 		g_warning ("Could not load icon: %s\n", error->message);
 		g_error_free(error);
 		error = NULL;
+		return NULL;
 	}
 	
 	return icon;
 }
 
-GtkTreePath* prev_path = NULL;
+static GtkTreePath* prev_path = NULL;
 
 static void
 gtranslator_control_table_node_expanded(GtkTreeView *treeview,
@@ -216,8 +221,18 @@ gtranslator_preferences_dialog_control_new(GtranslatorPreferencesDialog *dlg)
 	
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(dlg->priv->treeview), TRUE);
 	
+	column = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(column, "Pixbuf + categorie");
+	
+	renderer = gtk_cell_renderer_pixbuf_new();
+	gtk_tree_view_column_pack_start(column, renderer, FALSE);
+	
+	gtk_tree_view_column_set_attributes(column,
+							renderer, "pixbuf",
+							IMAGE_COLUMN, NULL);
+	
 	renderer=gtk_cell_renderer_text_new();
-	column=gtk_tree_view_column_new_with_attributes(_(" Categories: "),
+	gtk_tree_view_column_set_attributes(column,
 							renderer, "text",
 							TEXT_COLUMN, NULL);
 	
@@ -265,7 +280,7 @@ setup_files_general_page(GtranslatorPreferencesDialog *dlg)
 	GtkTreeIter iter;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/files.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/files.png");
 	gtk_tree_store_append(dlg->priv->store, &iter, &dlg->priv->parents.files);
 	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
@@ -338,7 +353,7 @@ setup_files_autosave_page(GtranslatorPreferencesDialog *dlg)
 	const gchar *autosave_suffix;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/files.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/files.png");
 	gtk_tree_store_append(dlg->priv->store, &iter, &dlg->priv->parents.files);
 	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
@@ -395,11 +410,12 @@ static void
 setup_files_pages(GtranslatorPreferencesDialog *dlg)
 {
 	GdkPixbuf *pixbuf;
+	GtkTreeIter iter;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/files.png");
-	gtk_tree_store_append(dlg->priv->store, &dlg->priv->parents.files, NULL);
-	gtk_tree_store_set(dlg->priv->store, &dlg->priv->parents.files,
+	pixbuf = create_pixbuf(PIXMAPSDIR"/files.png");
+	gtk_tree_store_append(dlg->priv->store, &iter, NULL);
+	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
 			   TEXT_COLUMN, _("Files"),
 			   PAGENUM_COLUMN, -1,
@@ -407,8 +423,8 @@ setup_files_pages(GtranslatorPreferencesDialog *dlg)
 	g_object_unref(pixbuf);
 	
 	/*Children*/
-	setup_files_general_page(dlg);
-	setup_files_autosave_page(dlg);
+	/*setup_files_general_page(dlg);
+	setup_files_autosave_page(dlg);*/
 }
 
 
@@ -470,7 +486,7 @@ setup_editor_text_display_page(GtranslatorPreferencesDialog *dlg)
 	const gchar *text_font;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/text.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/text.png");
 	gtk_tree_store_append(dlg->priv->store, &iter, &dlg->priv->parents.editor);
 	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
@@ -550,7 +566,7 @@ setup_editor_contents(GtranslatorPreferencesDialog *dlg)
 	GtkTreeIter iter;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/content.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/content.png");
 	gtk_tree_store_append(dlg->priv->store, &iter, &dlg->priv->parents.editor);
 	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
@@ -585,7 +601,7 @@ setup_editor_pages(GtranslatorPreferencesDialog *dlg)
 	GdkPixbuf *pixbuf;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/files.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/files.png");
 	gtk_tree_store_append(dlg->priv->store, &dlg->priv->parents.editor, NULL);
 	gtk_tree_store_set(dlg->priv->store, &dlg->priv->parents.editor,
 			   IMAGE_COLUMN, pixbuf,
@@ -595,8 +611,8 @@ setup_editor_pages(GtranslatorPreferencesDialog *dlg)
 	g_object_unref(pixbuf);
 	
 	/*Children*/
-	setup_editor_text_display_page(dlg);
-	setup_editor_contents(dlg);
+/*	setup_editor_text_display_page(dlg);
+	setup_editor_contents(dlg);*/
 }
 
 /***************PO header pages****************/
@@ -638,7 +654,7 @@ setup_po_header_personal_information_page(GtranslatorPreferencesDialog *dlg)
 	const gchar *value;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/about_me.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/about_me.png");
 	gtk_tree_store_append(dlg->priv->store, &iter, &dlg->priv->parents.po_header);
 	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
@@ -673,7 +689,7 @@ setup_po_header_language_settings_page(GtranslatorPreferencesDialog *dlg)
 	GtkTreeIter iter;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/language.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/language.png");
 	gtk_tree_store_append(dlg->priv->store, &iter, &dlg->priv->parents.po_header);
 	gtk_tree_store_set(dlg->priv->store, &iter,
 			   IMAGE_COLUMN, pixbuf,
@@ -696,7 +712,7 @@ setup_po_header_pages(GtranslatorPreferencesDialog *dlg)
 	GdkPixbuf *pixbuf;
 	
 	/*Tree item*/
-	pixbuf = create_pixbuf(DATADIR"/pixmaps/header.png");
+	pixbuf = create_pixbuf(PIXMAPSDIR"/header.png");
 	gtk_tree_store_append(dlg->priv->store, &dlg->priv->parents.po_header, NULL);
 	gtk_tree_store_set(dlg->priv->store, &dlg->priv->parents.po_header,
 			   IMAGE_COLUMN, pixbuf,
@@ -706,23 +722,92 @@ setup_po_header_pages(GtranslatorPreferencesDialog *dlg)
 	g_object_unref(pixbuf);
 	
 	/*Children*/
-	setup_po_header_personal_information_page(dlg);
-	setup_po_header_language_settings_page(dlg);
+	/*setup_po_header_personal_information_page(dlg);
+	setup_po_header_language_settings_page(dlg);*/
 }
 
 static void
 gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 {
+	gboolean ret;
+	GtkWidget *error_widget;
+	
 	dlg->priv = GTR_PREFERENCES_DIALOG_GET_PRIVATE (dlg);
 	
-	GtranslatorPreferencesDialogPrivate *priv = dlg->priv;
+	gtk_dialog_add_buttons (GTK_DIALOG (dlg),
+				GTK_STOCK_CLOSE,
+				GTK_RESPONSE_CLOSE,
+				NULL);
 	
-	/*FIXME: Glade*/
+	gtk_window_set_title (GTK_WINDOW (dlg), _("gtranslator Preferences"));
+	gtk_window_set_resizable (GTK_WINDOW (dlg), FALSE);
+	gtk_dialog_set_has_separator (GTK_DIALOG (dlg), FALSE);
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (dlg), TRUE);
+	
+	/* HIG defaults */
+	gtk_container_set_border_width (GTK_CONTAINER (dlg), 5);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dlg)->vbox), 2); /* 2 * 5 + 2 = 12 */
+	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->action_area), 5);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dlg)->action_area), 6);
+	
+	/*Glade*/
+	
+	ret = gtranslator_utils_get_glade_widgets(DATADIR"/preferences.glade",
+		"main_box",
+		&error_widget,
+		
+		"main_box", &dlg->priv->main_box,
+		"notebook", &dlg->priv->notebook,
+		"vbox1", &dlg->priv->treeview_box,
+		"warn_if_fuzzy", &dlg->priv->warn_if_fuzzy,
+		"sweep_compile_file", &dlg->priv->sweep_compile_file,
+		"autosave", &dlg->priv->autosave,
+		"autosave_timeout", &dlg->priv->autosave_timeout,
+		"autosave_hbox", &dlg->priv->autosave_hbox,
+		"autosave_with_suffix", &dlg->priv->autosave_with_suffix,
+		"autosave_suffix", &dlg->priv->autosave_suffix,
+		"suffix_hbox", &dlg->priv->suffix_hbox,
+		"highlight", &dlg->priv->highlight,
+		"use_dot_char", &dlg->priv->use_dot_char,
+		"own_fonts", &dlg->priv->own_fonts,
+		"text_font", &dlg->priv->text_font,
+		"font_hbox", &dlg->priv->font_hbox,
+		"unmark_fuzzy", &dlg->priv->unmark_fuzzy,
+		"keep_obsolete", &dlg->priv->keep_obsolete,
+		"instant_spell_checking", &dlg->priv->instant_spell_checking,
+		"authors_name", &dlg->priv->authors_name,
+		"authors_email", &dlg->priv->authors_email,
+		"authors_language", &dlg->priv->authors_language,
+		"lcode", &dlg->priv->lcode,
+		"mime_type", &dlg->priv->mime_type,
+		"encoding", &dlg->priv->encoding,
+		"lg_email", &dlg->priv->lg_email,
+		"number_plurals", &dlg->priv->number_plurals,
+		"plural", &dlg->priv->plural,
+		"plural_note", &dlg->priv->plural_note,
+		NULL);
+	
+	if(!ret)
+	{
+		gtk_widget_show(error_widget);
+		gtk_box_pack_start_defaults (GTK_BOX (GTK_DIALOG (dlg)->vbox),
+					     error_widget);
+		
+		return;
+	}
+	
+	gtk_box_pack_start(GTK_BOX(dlg->priv->treeview_box), dlg->priv->treeview,
+			   FALSE, FALSE, 0);
+	
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox),
+			    dlg->priv->main_box, FALSE, FALSE, 0);
+	
+	gtk_container_set_border_width (GTK_CONTAINER (dlg->priv->notebook), 5);
 	
 	gtranslator_preferences_dialog_control_new(dlg);
 	setup_files_pages(dlg);
-	setup_editor_pages(dlg);
-	setup_po_header_pages(dlg);
+	/*setup_editor_pages(dlg);
+	setup_po_header_pages(dlg);*/
 }
 
 static void
@@ -741,12 +826,28 @@ gtranslator_preferences_dialog_class_init (GtranslatorPreferencesDialogClass *kl
 	object_class->finalize = gtranslator_preferences_dialog_finalize;
 }
 
-GtkWidget *
-gtranslator_show_preferences_dialog (void)
+void
+gtranslator_show_preferences_dialog (GtranslatorWindow *window)
 {
-	GtkWidget *dlg;
+	static GtkWidget *dlg = NULL;
 	
-	dlg = GTK_WIDGET (g_object_new (GTR_TYPE_PREFERENCES_DIALOG, NULL));
-	gtk_widget_show_all(dlg);
-	return dlg;
+	g_return_if_fail(GTR_IS_WINDOW(window));
+	
+	if(dlg == NULL)
+	{
+		dlg = GTK_WIDGET (g_object_new (GTR_TYPE_PREFERENCES_DIALOG, NULL));
+		g_signal_connect (dlg,
+				  "destroy",
+				  G_CALLBACK (gtk_widget_destroyed),
+				  &dlg);
+		gtk_widget_show_all(dlg);
+	}
+	
+	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (dlg)))
+	{
+		gtk_window_set_transient_for (GTK_WINDOW (dlg),
+					      GTK_WINDOW (window));
+	}
+
+	gtk_window_present (GTK_WINDOW (dlg));
 }
