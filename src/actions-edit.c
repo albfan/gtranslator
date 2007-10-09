@@ -173,3 +173,10 @@ gtranslator_message_status_toggle_fuzzy(GtkAction *action,
 	/*FIXME: I think this is ugly */
 	g_signal_emit_by_name(buf, "changed", NULL);					
 }
+
+void
+gtranslator_actions_edit_preferences(GtkAction *action,
+				     GtranslatorWindow *window)
+{
+	gtranslator_show_preferences_dialog(window);
+}

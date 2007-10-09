@@ -170,12 +170,12 @@ gtranslator_control_table_selection_changed(GtkTreeSelection *selection,
 	if (gtk_tree_selection_get_selected(selection, &model, &iter) == TRUE)
 	{
     		gtk_tree_model_get(model, &iter, PAGENUM_COLUMN, &page, -1);
-	
+
 		/*compare old & new selected path*/
-		new_path = gtk_tree_model_get_path(model, &iter);
-    		new_path_parent = gtk_tree_path_copy(new_path);
+	/*	new_path = gtk_tree_model_get_path(model, &iter);
+    		new_path_parent = gtk_tree_path_copy(new_path);*/
 	
-		if(prev_path != NULL)
+		/*if(prev_path != NULL)
 		{		
 			if(gtk_tree_path_get_depth(prev_path) > 1)
 				gtk_tree_path_up(prev_path);
@@ -183,24 +183,24 @@ gtranslator_control_table_selection_changed(GtkTreeSelection *selection,
 				gtk_tree_path_up(new_path_parent);
 			
 		/*collapse old node*/
-			if(gtk_tree_path_compare(prev_path,new_path_parent) !=0)
+		/*	if(gtk_tree_path_compare(prev_path,new_path_parent) !=0)
 				gtk_tree_view_collapse_row(view,prev_path);
-		}
+		}*/
 		/*expand new node*/
-		gtk_tree_view_expand_to_path(view,new_path);
+		//gtk_tree_view_expand_to_path(view,new_path);
 	
 		/*show new page*/
 		if(page !=-1)
 		{
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(dlg->priv->notebook),
 						      page);
-		} else { 
+		}/* else { 
 	  		gtk_tree_path_down(new_path);
 	  		gtk_tree_selection_select_path(selection,new_path);	  
-		}
-		prev_path = gtk_tree_path_copy(new_path);
+		}*/
+		/*prev_path = gtk_tree_path_copy(new_path);
 		gtk_tree_path_free(new_path);
-		gtk_tree_path_free(new_path_parent);
+		gtk_tree_path_free(new_path_parent);*/
 	}
 
 }
@@ -218,23 +218,24 @@ gtranslator_preferences_dialog_control_new(GtranslatorPreferencesDialog *dlg)
 					       G_TYPE_INT);
 	
 	dlg->priv->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL(dlg->priv->store));
+	gtk_tree_view_expand_all(GTK_TREE_VIEW(dlg->priv->treeview));
 	
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(dlg->priv->treeview), TRUE);
 	
 	column = gtk_tree_view_column_new();
-	gtk_tree_view_column_set_title(column, "Pixbuf + categorie");
+	gtk_tree_view_column_set_title(column, "Pixbuf + category");
 	
 	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	
 	gtk_tree_view_column_set_attributes(column,
-							renderer, "pixbuf",
-							IMAGE_COLUMN, NULL);
+					    renderer, "pixbuf",
+					    IMAGE_COLUMN, NULL);
 	
 	renderer=gtk_cell_renderer_text_new();
+	gtk_tree_view_column_pack_start(column, renderer, TRUE);
 	gtk_tree_view_column_set_attributes(column,
-							renderer, "text",
-							TEXT_COLUMN, NULL);
+					    renderer, "text",
+					    TEXT_COLUMN, NULL);
 	
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(dlg->priv->treeview), column);
@@ -244,11 +245,11 @@ gtranslator_preferences_dialog_control_new(GtranslatorPreferencesDialog *dlg)
 	
 	g_signal_connect (G_OBJECT(selection), "changed", 
 			  G_CALLBACK(gtranslator_control_table_selection_changed), 
-			  NULL);
+			  dlg);
 	
-	g_signal_connect (G_OBJECT(dlg->priv->treeview), "row-expanded", 
+	/*g_signal_connect (G_OBJECT(dlg->priv->treeview), "row-expanded", 
 			  G_CALLBACK(gtranslator_control_table_node_expanded), 
-			  selection);
+			  selection);*/
 	
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(dlg->priv->treeview),FALSE);
 }
@@ -308,18 +309,28 @@ static void
 autosave_checkbutton_toggled(GtkToggleButton *button,
 			     GtranslatorPreferencesDialog *dlg)
 {
+	gboolean autosave;
+	
 	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->autosave));
 	
-	gtranslator_prefs_manager_set_autosave(gtk_toggle_button_get_active(button));
+	autosave = gtk_toggle_button_get_active(button);
+	
+	gtk_widget_set_sensitive(dlg->priv->autosave_hbox, autosave);
+	gtranslator_prefs_manager_set_autosave(autosave);
 }
 
 static void
 autosave_with_suffix_checkbutton_toggled(GtkToggleButton *button,
 					 GtranslatorPreferencesDialog *dlg)
 {
+	gboolean aws;
+	
 	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->autosave_with_suffix));
 	
-	gtranslator_prefs_manager_set_autosave_with_suffix(gtk_toggle_button_get_active(button));
+	aws = gtk_toggle_button_get_active(button);
+	
+	gtk_widget_set_sensitive(dlg->priv->suffix_hbox, aws);
+	gtranslator_prefs_manager_set_autosave_with_suffix(aws);
 }
 
 static void
@@ -410,12 +421,11 @@ static void
 setup_files_pages(GtranslatorPreferencesDialog *dlg)
 {
 	GdkPixbuf *pixbuf;
-	GtkTreeIter iter;
 	
 	/*Tree item*/
 	pixbuf = create_pixbuf(PIXMAPSDIR"/files.png");
-	gtk_tree_store_append(dlg->priv->store, &iter, NULL);
-	gtk_tree_store_set(dlg->priv->store, &iter,
+	gtk_tree_store_append(dlg->priv->store, &dlg->priv->parents.files, NULL);
+	gtk_tree_store_set(dlg->priv->store, &dlg->priv->parents.files,
 			   IMAGE_COLUMN, pixbuf,
 			   TEXT_COLUMN, _("Files"),
 			   PAGENUM_COLUMN, -1,
@@ -423,8 +433,8 @@ setup_files_pages(GtranslatorPreferencesDialog *dlg)
 	g_object_unref(pixbuf);
 	
 	/*Children*/
-	/*setup_files_general_page(dlg);
-	setup_files_autosave_page(dlg);*/
+	setup_files_general_page(dlg);
+	setup_files_autosave_page(dlg);
 }
 
 
@@ -611,8 +621,8 @@ setup_editor_pages(GtranslatorPreferencesDialog *dlg)
 	g_object_unref(pixbuf);
 	
 	/*Children*/
-/*	setup_editor_text_display_page(dlg);
-	setup_editor_contents(dlg);*/
+	setup_editor_text_display_page(dlg);
+	setup_editor_contents(dlg);
 }
 
 /***************PO header pages****************/
@@ -722,8 +732,20 @@ setup_po_header_pages(GtranslatorPreferencesDialog *dlg)
 	g_object_unref(pixbuf);
 	
 	/*Children*/
-	/*setup_po_header_personal_information_page(dlg);
-	setup_po_header_language_settings_page(dlg);*/
+	setup_po_header_personal_information_page(dlg);
+	setup_po_header_language_settings_page(dlg);
+}
+
+
+static void
+dialog_response_handler (GtkDialog *dlg, 
+			 gint       res_id)
+{
+	switch (res_id)
+	{
+		default:
+			gtk_widget_destroy (GTK_WIDGET(dlg));
+	}
 }
 
 static void
@@ -748,7 +770,12 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 	gtk_container_set_border_width (GTK_CONTAINER (dlg), 5);
 	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dlg)->vbox), 2); /* 2 * 5 + 2 = 12 */
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->action_area), 5);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dlg)->action_area), 6);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dlg)->action_area), 4);
+	
+	g_signal_connect (dlg,
+			  "response",
+			  G_CALLBACK (dialog_response_handler),
+			  NULL);
 	
 	/*Glade*/
 	
@@ -758,7 +785,7 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 		
 		"main_box", &dlg->priv->main_box,
 		"notebook", &dlg->priv->notebook,
-		"vbox1", &dlg->priv->treeview_box,
+		"scrolledwindow1", &dlg->priv->treeview_box,
 		"warn_if_fuzzy", &dlg->priv->warn_if_fuzzy,
 		"sweep_compile_file", &dlg->priv->sweep_compile_file,
 		"autosave", &dlg->priv->autosave,
@@ -796,8 +823,7 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 		return;
 	}
 	
-	gtk_box_pack_start(GTK_BOX(dlg->priv->treeview_box), dlg->priv->treeview,
-			   FALSE, FALSE, 0);
+	
 	
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox),
 			    dlg->priv->main_box, FALSE, FALSE, 0);
@@ -806,8 +832,14 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 	
 	gtranslator_preferences_dialog_control_new(dlg);
 	setup_files_pages(dlg);
-	/*setup_editor_pages(dlg);
-	setup_po_header_pages(dlg);*/
+	setup_editor_pages(dlg);
+	setup_po_header_pages(dlg);
+	
+	
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(dlg->priv->treeview_box),
+					      dlg->priv->treeview);
+	
+	
 }
 
 static void

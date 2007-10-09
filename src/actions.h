@@ -68,6 +68,9 @@ void       gtranslator_message_status_toggle_fuzzy
                                                 (GtkAction *action,
 						 GtranslatorWindow *window);
 
+void       gtranslator_actions_edit_preferences (GtkAction *action,
+						 GtranslatorWindow *window);
+
 /*Go*/
 void       gtranslator_message_go_to_first      (GtkAction  * action,
 						 GtranslatorWindow *window);

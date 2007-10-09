@@ -35,7 +35,7 @@
 /*
  * Routines for saving/restoring/setting geometry of the main window.
  */
-void gtranslator_utils_save_geometry(GtranslatorWindow *window);
+//void gtranslator_utils_save_geometry(GtranslatorWindow *window);
 
 /*
  * Convenience functions for adding items 
@@ -81,5 +81,13 @@ gboolean gtranslator_utils_check_file_being_open(const gchar *filename);
  */
 gboolean gtranslator_utils_check_program(const gchar *program_name,
 	const gint type_int);
+
+
+
+gboolean       gtranslator_utils_get_glade_widgets (const gchar *filename,
+						    const gchar *root_node,
+						    GtkWidget **error_widget,
+						    const gchar *widget_name,
+						    ...)G_GNUC_NULL_TERMINATED;
 
 #endif

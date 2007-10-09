@@ -71,7 +71,7 @@ gtranslator_translator_read_value(gchar **destvalue,
 		 *  if any value could be read -- if not, set the given 
 		 *   deststring to NULL.
 		 */
-		value=gtranslator_config_get_string(configpath);
+//		value=gtranslator_config_get_string(configpath);
 
 		if(value)
 		{
@@ -451,15 +451,15 @@ gtranslator_translator_save(GtrTranslator *translator)
 #ifdef GTR_ABOUT_ME
 	if(!gtranslator_config_get_bool("toggles/use_about_me")) {
 #endif
-	gtranslator_config_set_string("translator/name", translator->name);
-	gtranslator_config_set_string("translator/email", translator->email);
+/*	gtranslator_config_set_string("translator/name", translator->name);
+	gtranslator_config_set_string("translator/email", translator->email);*/
 #ifdef GTR_ABOUT_ME
 	}
 #endif
 	/*
 	 * Save the language settings.
 	 */
-	gtranslator_config_set_string("language/name", 
+	/*gtranslator_config_set_string("language/name", 
 		translator->language->name);
 	gtranslator_config_set_string("language/language_code", 
 		translator->language->locale);
@@ -470,14 +470,14 @@ gtranslator_translator_save(GtrTranslator *translator)
 	gtranslator_config_set_string("language/encoding", 
 		translator->language->bits);
 	gtranslator_config_set_string("language/plural_form_string", 
-		translator->language->plural);
+		translator->language->plural);*/
 	/*
 	 * Save the TM/auto translation settings.
 	 */
-	gtranslator_config_set_string("translator/learn_buffer", 
+	/*gtranslator_config_set_string("translator/learn_buffer", 
 		translator->learn_buffer);
 	gtranslator_config_set_string("translator/translator_memory_buffer", 
-		translator->tm_buffer);
+		translator->tm_buffer);*/
 }
 
 /*

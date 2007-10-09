@@ -48,8 +48,6 @@ gtranslator_SOURCES = \
 	nautilus-string.c nautilus-string.h \
 	notebook.c notebook.h \
 	panel.c panel.h \
-	preferences.c preferences.h \
-	prefs.h \
 	runtime-config.c runtime-config.h \
 	tab.c tab.h \
 	translator.h \
@@ -58,9 +56,7 @@ gtranslator_SOURCES = \
 	window.c window.h \
 	po.c \
 	po.h \
-	prefs.c \
 	translator.c \
-	prefs_init.c \
 	utils_gui.c \
 	utils_gui.h \
 	utils.c \
@@ -76,7 +72,10 @@ gtranslator_SOURCES = \
 	comment-panel.c \
 	comment-panel.h \
 	io-error-message-area.c \
-	io-error-message-area.h
+	io-error-message-area.h \
+	prefs-manager.c \
+	prefs-manager.h \
+	prefs-manager-private.h
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \

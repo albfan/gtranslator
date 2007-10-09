@@ -1,3 +1,27 @@
+2007-10-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* utils.c:
+	* translator.c:
+	* dialogs/file-dialogs.c:
+	* actions-file.c:
+	* application.c: Commented old config funcs calls.
+	* actions.h:
+	* actions-edit.c: Added gtranslator_actions_edit_preferences
+	to call the preferences dialog.
+	* dialogs/preferences-dialog.c: Now works but is neccessary
+	add more configurable things.
+	* dialogs/preferences-dialog.h: _show_preferences_dialog is now
+	a void func.
+	* dialogs/Makefile.am: Added DATADIR constant and preferences-dialog.ch
+	files.
+	* dialogs/preferences.glade: Added and removed some things.
+	* utils_gui.ch: Added gtranslator_utils_get_glade_widgets func
+	that i copied from gedit code.
+	* prefs-manager.c: Added lots of defines for configuration funcs.
+	* prefs-manager.h: Added lots of defines for prefs-manager funcs.
+	* main.c: Added new preferences manager.
+	* Makefile.am: Added new preferences manager and removed old manager.
+
 2007-10-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dialogs/preferences-dialog.c: Updated.

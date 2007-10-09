@@ -72,7 +72,7 @@ gtranslator_prefs_manager_set_ ## name (gint v)				\
 				     v);				\
 }
 
-#define DEFINE_STRING_PREF(name, key, def) gchar*	 		\
+#define DEFINE_STRING_PREF(name, key, def) const gchar*	 		\
 gtranslator_prefs_manager_get_ ## name (void)			 		\
 {									\
 									\
@@ -258,6 +258,7 @@ gtranslator_prefs_manager_key_is_writable (const gchar* key)
 }
 
 
+/* Files */
 DEFINE_BOOL_PREF(warn_if_fuzzy,
 		 GPM_WARN_IF_FUZZY,
 		 GPM_DEFAULT_WARN_IF_FUZZY)
@@ -265,6 +266,73 @@ DEFINE_BOOL_PREF(warn_if_fuzzy,
 DEFINE_BOOL_PREF(sweep_compile_file,
 		 GPM_SWEEP_COMPILE_FILE,
 		 GPM_DEFAULT_SWEEP_COMPILE_FILE)
+
+DEFINE_BOOL_PREF(autosave,
+		 GPM_AUTOSAVE,
+		 GPM_DEFAULT_AUTOSAVE)
+
+DEFINE_INT_PREF(autosave_timeout,
+		GPM_AUTOSAVE_TIMEOUT,
+		GPM_DEFAULT_AUTOSAVE_TIMEOUT)
+
+DEFINE_BOOL_PREF(autosave_with_suffix,
+		 GPM_AUTOSAVE_WITH_SUFFIX,
+		 GPM_DEFAULT_AUTOSAVE_WITH_SUFFIX)
+
+DEFINE_STRING_PREF(autosave_suffix,
+		   GPM_AUTOSAVE_SUFFIX,
+		   GPM_DEFAULT_AUTOSAVE_SUFFIX)
+
+/* Editor */
+DEFINE_BOOL_PREF(highlight,
+		 GPM_HIGHLIGHT,
+		 GPM_DEFAULT_HIGHLIGHT)
+
+DEFINE_BOOL_PREF(use_dot_char,
+		 GPM_USE_DOT_CHAR,
+		 GPM_DEFAULT_USE_DOT_CHAR)
+
+DEFINE_BOOL_PREF(own_fonts,
+		 GPM_OWN_FONTS,
+		 GPM_DEFAULT_OWN_FONTS)
+
+DEFINE_STRING_PREF(text_font,
+		   GPM_TEXT_FONT,
+		   GPM_DEFAULT_TEXT_FONT)
+
+DEFINE_BOOL_PREF(unmark_fuzzy,
+		 GPM_UNMARK_FUZZY,
+		 GPM_DEFAULT_UNMARK_FUZZY)
+
+DEFINE_BOOL_PREF(keep_obsolete,
+		 GPM_KEEP_OBSOLETE,
+		 GPM_DEFAULT_KEEP_OBSOLETE)
+
+DEFINE_BOOL_PREF(instant_spell_checking,
+		 GPM_INSTANT_SPELL_CHECKING,
+		 GPM_DEFAULT_INSTANT_SPELL_CHECKING)
+
+/* PO header */
+DEFINE_STRING_PREF(authors_name,
+		   GPM_AUTHORS_NAME,
+		   GPM_DEFAULT_AUTHORS_NAME)
+
+DEFINE_STRING_PREF(authors_email,
+		   GPM_AUTHORS_EMAIL,
+		   GPM_DEFAULT_AUTHORS_EMAIL)
+
+DEFINE_INT_PREF(number_plurals,
+		GPM_NUMBER_PLURALS,
+		GPM_DEFAULT_NUMBER_PLURALS)
+
+DEFINE_STRING_PREF(plural,
+		   GPM_PLURAL,
+		   GPM_DEFAULT_PLURAL)
+
+DEFINE_STRING_PREF(plural_note,
+		   GPM_PLURAL_NOTE,
+		   GPM_DEFAULT_PLURAL_NOTE)
+
 
 
 /* The following functions are taken from gconf-client.c 

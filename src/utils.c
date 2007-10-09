@@ -211,8 +211,8 @@ void gtranslator_utils_set_language_values_by_language(const gchar *language)
 		if(!nautilus_strcasecmp(languages[i].name, language) ||
 			!nautilus_strcasecmp(_(languages[i].name), language))
 		{
-			gtranslator_config_set_string("language/name", languages[i].name);
-			gtranslator_config_set_string("language/language_code", languages[i].locale);
+		/*	gtranslator_config_set_string("language/name", languages[i].name);
+			gtranslator_config_set_string("language/language_code", languages[i].locale);*/
 			
 			/*
 			 * Unfortunately not all languages in our languages list have
@@ -221,12 +221,12 @@ void gtranslator_utils_set_language_values_by_language(const gchar *language)
 			 */
 			if(languages[i].group_email)
 			{
-				gtranslator_config_set_string("language/team_email", languages[i].group_email);
+			//	gtranslator_config_set_string("language/team_email", languages[i].group_email);
 			}
 			
-			gtranslator_config_set_string("language/mime_type", languages[i].encoding);
+		/*	gtranslator_config_set_string("language/mime_type", languages[i].encoding);
 			gtranslator_config_set_string("language/encoding", languages[i].bits);
-			gtranslator_config_set_string("language/plural_string", languages[i].plural);
+			gtranslator_config_set_string("language/plural_string", languages[i].plural);*/
 			return;
 		}
 	}

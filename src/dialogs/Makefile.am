@@ -3,6 +3,7 @@ INCLUDES =                                                      \
         -I$(top_builddir)                                       \
         -I$(top_srcdir)/src                                     \
         -I$(top_builddir)/src                                   \
+	-DDATADIR=\""$(pkgdatadir)"\"				\
         $(GTRANSLATOR_CFLAGS)                                   \
         $(WARN_CFLAGS)                                          \
         $(DISABLE_DEPRECATED_CFLAGS)
@@ -12,7 +13,9 @@ noinst_LTLIBRARIES = \
 
 libdialogs_la_SOURCES = \
 	file-dialogs.c \
-	file-dialogs.h
+	file-dialogs.h \
+	preferences-dialog.c \
+	preferences-dialog.h
 
 gladedir = $(pkgdatadir)
 

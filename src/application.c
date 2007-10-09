@@ -21,7 +21,6 @@
 #endif
 
 #include "application.h"
-#include "prefs.h"
 #include "window.h"
 #include "egg-toolbars-model.h"
 
@@ -80,9 +79,9 @@ gtranslator_session_sleep(GnomeClient * client, gint phase,
 	 * The state (for now only the current message number) is stored
 	 *  in the preferences.
 	 */
-	gtranslator_config_set_int("state/message_number", 
+/*	gtranslator_config_set_int("state/message_number", 
 			     g_list_position(gtranslator_po_get_messages(po),
-					     gtranslator_po_get_current_message(po)));
+					     gtranslator_po_get_current_message(po)));*/
 	
 	argv[2] = NULL;
 
@@ -183,12 +182,6 @@ gtranslator_application_init (GtranslatorApplication *application)
 
 	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
-	
-	/*
-	 * Read all of our "normal" preferences -- translator data is now
-	 *  outsourced into the GtrTranslator structure.
-	 */
-	gtranslator_preferences_read();
 }
 
 

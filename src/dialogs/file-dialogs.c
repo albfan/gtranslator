@@ -39,7 +39,7 @@ gtranslator_file_dialogs_store_directory(const gchar *filename)
 	
 	directory=g_path_get_dirname(filename);
 	
-	gtranslator_config_set_string("informations/last_directory", directory);
+//	gtranslator_config_set_string("informations/last_directory", directory);
 
 	g_free(directory);
 }

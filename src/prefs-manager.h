@@ -73,61 +73,39 @@
 #define GPM_PLURAL_NOTE			GPM_LANGUAGE_SETTINGS_DIR "/plural_note"
 
 
-
-#define GPM_DEFAULT_WARN_IF_FUZZY	0
-
 /* Fallback default values. Keep in sync with gtranslator.schemas */
 
-#define GPM_DEFAULT_USE_DEFAULT_FONT 	1 /* TRUE */
-#define GPM_DEFAULT_EDITOR_FONT 	(const gchar*) "Sans 12"
-#define GPM_DEFAULT_SYSTEM_FONT 	(const gchar*) "Monospace 10"
+/* Files */
+#define GPM_DEFAULT_WARN_IF_FUZZY	  0 /* FALSE */
+#define GPM_DEFAULT_SWEEP_COMPILE_FILE    0 /* FALSE */
 
-#define GPM_DEFAULT_CREATE_BACKUP_COPY	1 /* TRUE */
-#define GPM_DEFAULT_BACKUP_COPY_EXTENSION (const gchar*) "~"
-#define GPM_DEFAULT_AUTOSAVE_SUFFIX     (const gchar *) "autosave"
+#define GPM_DEFAULT_AUTOSAVE		  0 /* FALSE */
+#define GPM_DEFAULT_AUTOSAVE_TIMEOUT	  4
+#define GPM_DEFAULT_AUTOSAVE_WITH_SUFFIX  0 /* FALSE */
+#define GPM_DEFAULT_AUTOSAVE_SUFFIX	  (const gchar*) "autosave"
 
-#define GPM_DEFAULT_AUTO_SAVE		0 /* FALSE */
-#define GPM_DEFAULT_AUTOSAVE_TIMEOUT	4 /* minutes */
+/* Editor */
+#define GPM_DEFAULT_HIGHLIGHT             1 /* TRUE */
+#define GPM_DEFAULT_USE_DOT_CHAR          1 /* TRUE */
+#define GPM_DEFAULT_OWN_FONTS             0 /* FALSE */
+#define GPM_DEFAULT_TEXT_FONT             (const gchar*) "Sans 12"
 
-#define GPM_DEFAULT_UNDO_ACTIONS_LIMIT	2000 /* actions */
+#define GPM_DEFAULT_UNMARK_FUZZY          0 /* FALSE */
+#define GPM_DEFAULT_KEEP_OBSOLETE         0 /* FALSE */
+#define GPM_DEFAULT_INSTANT_SPELL_CHECKING 1 /* TRUE */
 
-#define GPM_DEFAULT_WRAP_MODE		"GTK_WRAP_WORD"
+/* PO header */
+#define GPM_DEFAULT_AUTHORS_NAME          (const gchar*) ""
+#define GPM_DEFAULT_AUTHORS_EMAIL         (const gchar*) ""
 
-#define GPM_DEFAULT_TABS_SIZE		8
-#define GPM_DEFAULT_INSERT_SPACES	0 /* FALSE */
-
-#define GPM_DEFAULT_AUTO_INDENT		0 /* FALSE */
-
-#define GPM_DEFAULT_DISPLAY_LINE_NUMBERS 0 /* FALSE */
-
-#define GPM_DEFAULT_AUTO_DETECTED_ENCODINGS {"UTF-8", "CURRENT", "ISO-8859-15", NULL}
-       	
-#define GPM_DEFAULT_TOOLBAR_VISIBLE	1 /* TRUE */
-#define GPM_DEFAULT_TOOLBAR_BUTTONS_STYLE "GTR_TOOLBAR_SYSTEM"
-#define GPM_DEFAULT_TOOLBAR_SHOW_TOOLTIPS 1 /* TRUE */
-
-#define GPM_DEFAULT_STATUSBAR_VISIBLE	1 /* TRUE */
-#define GPM_DEFAULT_SIDE_PANE_VISIBLE	0 /* FALSE */
-#define GPM_DEFAULT_BOTTOM_PANEL_VISIBLE 0 /* FALSE */
-
-
-#define GPM_DEFAULT_HIGHLIGHT_CURRENT_LINE  1 /* TRUE */
-
-#define GPM_DEFAULT_BRACKET_MATCHING	  0 /* FALSE */
-
-#define GPM_DEFAULT_DISPLAY_RIGHT_MARGIN  0 /* FALSE */
-#define GPM_DEFAULT_RIGHT_MARGIN_POSITION 80
-
-#define GPM_DEFAULT_SMART_HOME_END	"AFTER"
-
-#define GPM_DEFAULT_SYNTAX_HL_ENABLE	1 /* TRUE */
-
-#define GPM_DEFAULT_RESTORE_CURSOR_POSITION 1 /* TRUE */
-
-#define GPM_DEFAULT_SEARCH_HIGHLIGHTING_ENABLE 1 /* TRUE */
-
-#define GPM_DEFAULT_SOURCE_STYLE_SCHEME "classic"
-
+/*#define GPM_AUTHORS_LANGUAGE		GPM_LANGUAGE_SETTINGS_DIR "/authors_language"
+#define GPM_LCODE			GPM_LANGUAGE_SETTINGS_DIR "/lcode"
+#define GPM_MIME_TYPE			GPM_LANGUAGE_SETTINGS_DIR "/mime_type"
+#define GPM_ENCODING			GPM_LANGUAGE_SETTINGS_DIR "/encoding"
+#define GPM_LG_EMAIL			GPM_LANGUAGE_SETTINGS_DIR "/lg_email"*/
+#define GPM_DEFAULT_NUMBER_PLURALS      2
+#define GPM_DEFAULT_PLURAL              (const gchar*) ""
+#define GPM_DEFAULT_PLURAL_NOTE         ""
 
 /** LIFE CYCLE MANAGEMENT FUNCTIONS **/
 

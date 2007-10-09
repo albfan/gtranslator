@@ -403,14 +403,14 @@ gtranslator_file_quit(GtkAction *action,
 	/*
 	 * Store the pane position in the preferences.
 	 */
-	gtranslator_config_set_int("interface/table_pane_position", table_pane_position);
+	//gtranslator_config_set_int("interface/table_pane_position", table_pane_position);
 	
 	//gtranslator_utils_save_geometry();
 
 	/*
 	 * "Flush" our runtime config string for the current filename.
 	 */
-	gtranslator_config_set_string("runtime/filename", "--- No file ---");
+	//gtranslator_config_set_string("runtime/filename", "--- No file ---");
 
 	/*
 	 * Free the used GtrTranslator structure.
@@ -420,7 +420,7 @@ gtranslator_file_quit(GtkAction *action,
 	/*
 	 * Free any lungering stuff 'round -- free prefs.
 	 */
-	gtranslator_preferences_free();
+//	gtranslator_preferences_free();
 
 	/*
 	 * Remove any lungering temp. file.
@@ -435,7 +435,7 @@ gtranslator_file_quit(GtkAction *action,
 	/*
 	 * Store the current date.
 	 */
-	gtranslator_config_set_last_run_date();
+//	gtranslator_config_set_last_run_date();
 
 	/*
 	 * Shutdown the eventually (non-)initialized stuff from GnomeVFS.

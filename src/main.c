@@ -26,7 +26,7 @@
 #include <gnome.h>
 
 #include "application.h"
-#include "prefs.h"
+#include "prefs-manager.h"
 #include "runtime-config.h"
 #include "sighandling.h"
 #include "translator.h"
@@ -132,7 +132,7 @@ main(gint argc,
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 
 	/* Initialize configuration client */
-	gtranslator_config_init();
+//	gtranslator_config_init();
 
 	/*
 	 * Show the application window with icon.
@@ -156,6 +156,7 @@ main(gint argc,
 	 */
 	gtranslator_translator=gtranslator_translator_new();
 	
+	gtranslator_prefs_manager_init();
 
 	/*
 	 * Initialize our generally used GtrRuntimeConfig structure.

@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include "window.h"
 
 G_BEGIN_DECLS
 
@@ -68,7 +69,7 @@ GType		 gtranslator_preferences_dialog_get_type               (void) G_GNUC_CONS
 
 GType		 gtranslator_preferences_dialog_register_type          (GTypeModule * module);
 
-GtkWidget	*gtranslator_show_preferences_dialog                   (void);
+void	         gtranslator_show_preferences_dialog                   (GtranslatorWindow *window);
 
 G_END_DECLS
 
