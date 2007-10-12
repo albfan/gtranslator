@@ -1,11 +1,15 @@
 2007-10-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* Makefile.am: Removed dictionary plugin.
+
+2007-10-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* utils.c:
 	* translator.c:
 	* utils_gui.c:
 	* tab.c:
 	* window.c:
-	Removed all prefs system.
+	Removed old prefs system.
 
 	* view.c: Switched to gtksourceview2
 	* dictionary: It is not added becouse in debian there aren't the
