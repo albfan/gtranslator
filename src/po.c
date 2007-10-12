@@ -22,7 +22,6 @@
 
 #include "file-dialogs.h"
 #include "po.h"
-#include "prefs.h"
 #include "msg.h"
 
 #include <glib.h>

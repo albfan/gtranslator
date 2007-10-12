@@ -28,7 +28,6 @@
 #include "tab.h"
 #include "panel.h"
 #include "po.h"
-#include "prefs.h"
 #include "view.h"
 
 #include <glib.h>
@@ -137,17 +136,17 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		return;
 	}
 	i=1;
-	while(i < (gint)GtrPreferences.nplurals) {
+	//while(i < (gint)GtrPreferences.nplurals) {
 		/* Know when to break out of the loop */
 		if(!tab->priv->trans_msgstr[i]) {
-			break;
+		//	break;
 		}
 		
 		/* Have we reached the one we want yet? */
 		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[i]));
 		if(textbuffer != buf) {
 			i++;
-			continue;
+		//	continue;
 		}
 		
 		/* Get message as UTF-8 buffer */
@@ -163,7 +162,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		gtranslator_page_dirty(textbuffer, tab);
 		return;
 		
-	}
+	//}
 
 	/* Shouldn't get here */
 	g_return_if_reached();
@@ -222,8 +221,8 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 	/*
 	 * Should show the number of plural forms defined in header
 	 */
-	for(i = 0; i < (gint)GtrPreferences.nplurals ; i++)
-	{
+	/*for(i = 0; i < (gint)GtrPreferences.nplurals ; i++)
+	{*/
 		msgstr_plural = gtranslator_msg_get_msgstr_plural(msg, i);
 		if(msgstr_plural)
 		{
@@ -232,7 +231,7 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 			gtk_text_buffer_set_text(buf, (gchar*)msgstr_plural, -1);
 			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
 		}
-	}
+	//}
 }
 
 static void
@@ -355,7 +354,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Translation widgets
 	 */
 	priv->trans_notebook = gtk_notebook_new();
-	do{
+	//do{
 		label = g_strdup_printf(_("Plural %d"), i+1);
 		priv->trans_msgstr[i] = gtranslator_tab_append_page(label,
 								    priv->trans_notebook,
@@ -372,7 +371,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 				       G_CALLBACK(status_widgets), tab);
 		i++;
 		g_free(label);
-	}while(i < (gint)GtrPreferences.nplurals);
+	//}while(i < (gint)GtrPreferences.nplurals);
 	
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->trans_notebook, TRUE, TRUE, 0);	
 	

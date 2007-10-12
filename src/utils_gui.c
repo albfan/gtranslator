@@ -21,7 +21,6 @@
 //#include "gui.h"
 #include "nautilus-string.h"
 #include "parse.h"
-#include "prefs.h"
 #include "runtime-config.h"
 #include "utils.h"
 #include "utils_gui.h"
@@ -38,7 +37,7 @@
  */
 void gtranslator_utils_save_geometry(GtranslatorWindow *window)
 {
-	if (GtrPreferences.save_geometry == TRUE) {
+	/*if (GtrPreferences.save_geometry == TRUE) {
 		gint x, y, w, h, d;
 		
 		/*
@@ -46,14 +45,14 @@ void gtranslator_utils_save_geometry(GtranslatorWindow *window)
 		 *  store the data - we're currently stumping the silly "depth"
 		 *   data also, but well...
 		 */
-		gdk_window_get_geometry(GDK_WINDOW(GTK_WIDGET(window)->window),
+		/*gdk_window_get_geometry(GDK_WINDOW(GTK_WIDGET(window)->window),
 			&x, &y, &w, &h, &d);
 		
 	/*	gtranslator_config_set_int("geometry/x", x);
 		gtranslator_config_set_int("geometry/y", y);
 		gtranslator_config_set_int("geometry/width", w);
-		gtranslator_config_set_int("geometry/height", h);*/
-	}
+		gtranslator_config_set_int("geometry/height", h);
+	}*/
 }
 
 

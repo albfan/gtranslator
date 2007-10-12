@@ -72,7 +72,7 @@ LIBGNOMEUI_REQUIRED=1.105.0
 GNOME_VFS_REQUIRED=1.9.4
 LIBXML_REQUIRED=2.4.12
 LIBGLADE_REQUIRED=2.6.0
-SOURCEVIEW_REQUIRED=1.8.0
+SOURCEVIEW_REQUIRED=2.0.0
 LIBGUCHARMAP_REQUIRED=1.6.0
 GDICT_REQUIRED=0.10.8
 GTKSPELL_OPTIONAL=2.0.2
@@ -95,9 +95,8 @@ libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED
 gnome-vfs-2.0 >= $GNOME_VFS_REQUIRED 
 libxml-2.0 >= $LIBXML_REQUIRED 
 libglade-2.0 >= $LIBGLADE_REQUIRED
-gtksourceview-1.0 >= $SOURCEVIEW_REQUIRED
+gtksourceview-2.0 >= $SOURCEVIEW_REQUIRED
 gucharmap >= $LIBGUCHARMAP_REQUIRED
-gdict-1.0 >= $GDICT_REQUIRED
 ])
 
 AC_SUBST(GTRANSLATOR_CFLAGS)
@@ -206,7 +205,6 @@ src/Makefile
 src/dialogs/Makefile
 src/toolbareditor/Makefile
 src/charmap/Makefile
-src/dictionary/Makefile
 ])
 
 dnl ------------------------------------------------------------------

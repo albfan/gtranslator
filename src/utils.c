@@ -26,7 +26,6 @@
 //#include "gui.h"
 #include "languages.h"
 #include "nautilus-string.h"
-#include "prefs.h"
 #include "runtime-config.h"
 #include "translator.h"
 #include "utils.h"

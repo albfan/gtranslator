@@ -10,7 +10,8 @@ SUBDIRS = \
 uidir = $(pkgdatadir)
 ui_DATA = \
 		gtranslator-ui.xml \
-		gtr-toolbar.xml
+		gtr-toolbar.xml \
+		po.lang
 
 EXTRA_DIST = \
 		$(ui_DATA)

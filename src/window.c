@@ -24,12 +24,11 @@
 #include "actions.h"
 #include "application.h"
 #include "charmap.h"
-#include "dictionary.h"
+//#include "dictionary.h"
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
 #include "po.h"
-#include "prefs.h"
 #include "window.h"
 
 #include "egg-toolbars-model.h"
@@ -104,7 +103,7 @@ static const GtkActionEntry always_sensitive_entries[] = {
           G_CALLBACK (gtranslator_window_cmd_edit_toolbar) },
 	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
 	  N_("Edit gtranslator preferences"),
-	  G_CALLBACK (gtranslator_preferences_dialog_create) },
+	  G_CALLBACK (gtranslator_actions_edit_preferences) },
 	
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
@@ -355,7 +354,7 @@ notebook_switch_page(GtkNotebook *nb,
 
 static void
 can_undo(GtkSourceBuffer *doc,
-	 gboolean    undo,
+	 GParamSpec *pspec,
 	 GtranslatorWindow *window)
 {
 	GtkAction *action;
@@ -365,17 +364,20 @@ can_undo(GtkSourceBuffer *doc,
 
 	view = gtranslator_window_get_active_view (window);
 	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	
+	sensitive = gtk_source_buffer_can_undo(buf);
+	
 	if (doc != buf)
 		return;
 
 	action = gtk_action_group_get_action (window->priv->action_group,
 					     "EditUndo");
-	gtk_action_set_sensitive (action, undo);
+	gtk_action_set_sensitive (action, sensitive);
 }
 
 static void
 can_redo(GtkSourceBuffer *doc,
-	 gboolean    redo,
+	 GParamSpec *spec,
 	 GtranslatorWindow *window)
 {
 	GtkAction *action;
@@ -385,12 +387,15 @@ can_redo(GtkSourceBuffer *doc,
 
 	view = gtranslator_window_get_active_view (window);
 	buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	
+	sensitive = gtk_source_buffer_can_redo(buf);
+	
 	if (doc != buf)
 		return;
 
 	action = gtk_action_group_get_action (window->priv->action_group,
 					     "EditRedo");
-	gtk_action_set_sensitive (action, redo);
+	gtk_action_set_sensitive (action, sensitive);
 }
 
 static void
@@ -410,12 +415,12 @@ notebook_tab_added(GtkNotebook *notebook,
 	
 	
 	g_signal_connect(GTK_SOURCE_BUFFER(buffer),
-			 "can-undo",
+			 "notify::can-undo",
 			 G_CALLBACK(can_undo),
 			 window);
 	
 	g_signal_connect(GTK_SOURCE_BUFFER(buffer),
-			 "can-redo",
+			 "notify::can-redo",
 			 G_CALLBACK(can_redo),
 			 window);
 }
@@ -444,7 +449,7 @@ gtranslator_window_restore_geometry(GtranslatorWindow *window,
 	 */
 	if (gstr == NULL)
 	{
-		if(GtrPreferences.save_geometry == TRUE)
+		/*if(GtrPreferences.save_geometry == TRUE)
 		{
 			x=gtranslator_config_get_int("geometry/x");
 			y=gtranslator_config_get_int("geometry/y");
@@ -454,7 +459,7 @@ gtranslator_window_restore_geometry(GtranslatorWindow *window,
 		else
 		{
 			return;
-		}
+		}*/
 	}
 	/*
 	 * If a geometry definition had been defined try to parse it.
@@ -773,13 +778,13 @@ gtranslator_window_draw (GtranslatorWindow *window)
 
 	/*sidebar position*/
 	/*FIXME: This preferences name should change*/
-	if(GtrPreferences.show_messages_table)
+/*	if(GtrPreferences.show_messages_table)
 	{
 		table_pane_position=gtranslator_config_get_int("interface/table_pane_position");
 		gtk_paned_set_position(GTK_PANED(priv->hpaned), table_pane_position);
 	}else
 		gtk_widget_hide(priv->hpaned);
-	
+	*/
 	/*
 	 * hbox
 	 */
@@ -819,7 +824,7 @@ gtranslator_window_init (GtranslatorWindow *window)
 	impl_activate(window);
 	
 	/* Dictionary panel */
-	dictionary_activate(window);
+	//dictionary_activate(window);
 	
 }
 
@@ -842,7 +847,7 @@ gtranslator_window_dispose (GObject *object)
 	
 	/* Deactivate Panels */
 	impl_deactivate(window);
-	dictionary_deactivate(window);
+//dictionary_deactivate(window);
 	
 	G_OBJECT_CLASS (gtranslator_window_parent_class)->dispose (object);
 }

@@ -1,3 +1,7 @@
+2007-10-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.ac: Switched to gtksourceview 2 and removed dictionary.
+
 2007-09-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	Patch by Sean Burke: Thanks a lot.

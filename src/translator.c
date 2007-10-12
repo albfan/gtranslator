@@ -22,7 +22,6 @@
 #endif
 
 #include "nautilus-string.h"
-#include "prefs.h"
 #include "translator.h"
 #include "utils.h"
 
