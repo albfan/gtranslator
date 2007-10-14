@@ -1,3 +1,9 @@
+2007-10-14  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* view.c: Becouse of a gsv 2 bug i need to manage
+	the dirs with a gchar **. Syntax highlight is now 
+	perfectly working.
+
 2007-10-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* Makefile.am: Removed dictionary plugin.

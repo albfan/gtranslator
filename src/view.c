@@ -114,19 +114,32 @@ gtranslator_view_init (GtranslatorView *view)
 {
 	GtkSourceLanguageManager *lm;
 	GtkSourceLanguage *lang;
-	gchar *dir;
+	GPtrArray *dirs;
+	gchar **langs;
+	const gchar * const *temp;
+	gint i;
 	
 	view->priv = GTR_VIEW_GET_PRIVATE (view);
 	
 	GtranslatorViewPrivate *priv = view->priv;
 	
 	lm = gtk_source_language_manager_new();
+	dirs = g_ptr_array_new();
 	
-	dir = g_strdup(DATADIR);
-	gtk_source_language_manager_set_search_path(lm, &dir);
-	lang = gtk_source_language_manager_get_language(lm, "gettext-translation2");
-	g_free(dir);
+	for(temp = gtk_source_language_manager_get_search_path(lm);
+	    temp != NULL && *temp != NULL;
+	    ++temp)
+		g_ptr_array_add(dirs, g_strdup(*temp));
+		
+	g_ptr_array_add(dirs, g_strdup(DATADIR));
+	g_ptr_array_add(dirs, NULL);
+	langs = (gchar **)g_ptr_array_free(dirs, FALSE);
+
 	
+	gtk_source_language_manager_set_search_path(lm, langs);
+	lang = gtk_source_language_manager_get_language(lm, "gtranslator");
+	g_strfreev(langs);
+		
 	priv->buffer = gtk_source_buffer_new_with_language(lang);
 	
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(view), GTK_TEXT_BUFFER(priv->buffer));
