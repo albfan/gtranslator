@@ -1,3 +1,10 @@
+2007-10-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* preferences.ch: Removed.
+	* runtime-config.c: 
+	* dialogs/file-dialogs.c:
+		Removed preferences.c dependencie.
+
 2007-10-14  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* view.c: Becouse of a gsv 2 bug i need to manage

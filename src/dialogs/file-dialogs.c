@@ -22,10 +22,8 @@
 
 #include "file-dialogs.h"
 #include "tab.h"
-#include "preferences.h"
 #include "po.h"
 #include "window.h"
-
 
 /*
   * Store the given filename's directory for our file dialogs completion-routine.

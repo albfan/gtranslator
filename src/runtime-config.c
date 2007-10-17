@@ -22,12 +22,11 @@
 #include <config.h>
 #endif
 
-#include "preferences.h"
 #include "runtime-config.h"
 #include "utils.h"
 
 //#include <libgnome/gnome-defs.h>
-#include <libgnome/gnome-i18n.h>
+#include <glib/gi18n.h>
 
 /*
  * This is the externally declared and generally used GtrRuntimeConfig.
