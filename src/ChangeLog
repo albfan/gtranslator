@@ -1,5 +1,15 @@
 2007-10-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* about.ch: Removed.
+	* actions-help.c: Following new specifications.
+	Now this have about and show home page funcs.
+	Missing help func.
+	* window.c: Removed home page func.
+	* actions.h: Added about and home page funcs.
+	* Makefile.am: Added actions-help.c and removed about.ch files.
+
+2007-10-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* preferences.ch: Removed.
 	* runtime-config.c: 
 	* dialogs/file-dialogs.c:

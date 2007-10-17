@@ -23,7 +23,6 @@
 #include <config.h>
 #endif
 
-#include "about.h"
 #include "window.h"
 
 #include <string.h>
@@ -33,11 +32,23 @@
 
 #include <gtk/gtkaboutdialog.h>
 
+
+/*
+ * Shows the gtranslator homepage on the web.
+ */
+void
+gtranslator_window_show_home_page(GtkAction *action,
+				  gpointer useless)
+{
+	gnome_url_show("http://gtranslator.sourceforge.net", NULL);
+}
+
 /*
  * Creates and shows the about box for gtranslator.
  */ 
-void gtranslator_about_dialog(GtkWidget * widget,
-			      GtranslatorWindow *window)
+void
+gtranslator_about_dialog(GtkAction *action,
+			 GtranslatorWindow *window)
 {
 	gchar *license_trans;
 	

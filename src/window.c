@@ -20,7 +20,6 @@
 #include <config.h>
 #endif
 
-#include "about.h"
 #include "actions.h"
 #include "application.h"
 #include "charmap.h"
@@ -46,7 +45,6 @@
 					 GTR_TYPE_WINDOW,     \
 					 GtranslatorWindowPrivate))
 
-static void gtranslator_window_show_home_page(GtkWidget *widget, gpointer useless);
 static void gtranslator_window_cmd_edit_toolbar (GtkAction *action, GtranslatorWindow *window);
 
 
@@ -425,15 +423,6 @@ notebook_tab_added(GtkNotebook *notebook,
 			 window);
 }
 
-/*
- * Shows the gtranslator homepage on the web.
- */
-static void
-gtranslator_window_show_home_page(GtkWidget *widget,
-				  gpointer useless)
-{
-	gnome_url_show("http://gtranslator.sourceforge.net", NULL);
-}
 
 /*
  * Restore the geometry.

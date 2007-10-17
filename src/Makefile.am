@@ -33,7 +33,6 @@ bin_PROGRAMS = \
 #	gtranslator-export-learn-buffer
 
 gtranslator_SOURCES = \
-	about.c about.h \
 	application.c application.h \
 	compile.h \
 	dnd.h \
@@ -73,7 +72,8 @@ gtranslator_SOURCES = \
 	io-error-message-area.h \
 	prefs-manager.c \
 	prefs-manager.h \
-	prefs-manager-private.h
+	prefs-manager-private.h \
+	actions-help.c
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \

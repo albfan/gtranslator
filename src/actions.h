@@ -98,6 +98,14 @@ void       gtranslator_message_go_to_prev_untranslated
                                                 (GtkAction *action,
 						 GtranslatorWindow *window);
 
+/*Help*/
+void       gtranslator_window_show_home_page    (GtkAction *action,
+						 gpointer useless);
+
+void       gtranslator_about_dialog             (GtkAction *action,
+						 GtranslatorWindow *window);
+
+
 
 G_END_DECLS
 
