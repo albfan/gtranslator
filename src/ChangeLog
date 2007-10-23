@@ -1,3 +1,22 @@
+2007-10-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-file.c: Fixed some things in quit func.
+	* prefs-manager.h: Added glib dependencie.
+	* application.c: Now destroy the program when all windows
+	are closed. And added window size and state when a new window
+	is created.
+	* window.c: Added save_panes_state func to store window size,
+	panel size and window state.
+	Added destroy event. When a window is destroyed the size should
+	be saved. Added configure event to store width and height values.
+	* main.c: Now main func call to gtranslator_prefs_manager_app_init func
+	instead of gtranslator_prefs_manager_init and calls 
+	_prefs_manager_app_shutdown when gtk_main loop is finished to store
+	the state window preferences.
+	* Makefile.am: Added prefs-manager-app.ch.
+	* prefs-manager-app.ch: Added to manage the preferences in the window.
+	If something is changed in the preferences dialog window should change.
+
 2007-10-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* about.ch: Removed.

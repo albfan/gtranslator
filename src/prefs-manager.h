@@ -26,6 +26,7 @@
 #define __GTR_PREFS_MANAGER_H__
 
 //#include "application.h"
+#include <glib.h>
 
 #define GTR_BASE_KEY			"/apps/gtranslator"
 

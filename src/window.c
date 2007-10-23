@@ -62,6 +62,7 @@ struct _GtranslatorWindowPrivate
 	
 	GtkWidget *notebook;
 	GtkWidget *sidebar;
+	gint sidebar_size;
 	
 	GtkWidget *statusbar;
 	gint context_id;
@@ -70,6 +71,12 @@ struct _GtranslatorWindowPrivate
 	GtkUIManager *ui_manager;
 	GtkRecentManager *recent_manager;
 	GtkWidget *recent_menu;
+	
+	gint            width;
+        gint            height; 
+	GdkWindowState  window_state;
+	
+	gboolean destroy_has_run : 1;
 };
 	
 
@@ -803,6 +810,8 @@ gtranslator_window_init (GtranslatorWindow *window)
 {
 	window->priv = GTR_WINDOW_GET_PRIVATE (window);
 	
+	window->priv->destroy_has_run = FALSE;
+	
 	gtranslator_window_draw(window);
 	
 	gtranslator_window_restore_geometry(window, NULL);
@@ -848,14 +857,72 @@ gtranslator_window_finalize (GObject *object)
 }
 
 static void
+save_panes_state(GtranslatorWindow *window)
+{
+	gint pane_page;
+
+        if (gtranslator_prefs_manager_window_size_can_set ())
+        	gtranslator_prefs_manager_set_window_size (window->priv->width,
+							   window->priv->height);
+
+        if (gtranslator_prefs_manager_window_state_can_set ())
+		gtranslator_prefs_manager_set_window_state (window->priv->window_state);
+
+        if ((window->priv->sidebar_size > 0) &&
+	    gtranslator_prefs_manager_side_panel_size_can_set ())
+		gtranslator_prefs_manager_set_side_panel_size (
+                                        window->priv->sidebar_size);
+
+	pane_page = _gtranslator_panel_get_active_item_id (GTR_PANEL (window->priv->sidebar));
+	if (pane_page != 0 &&
+	    gtranslator_prefs_manager_side_panel_active_page_can_set ())
+		gtranslator_prefs_manager_set_side_panel_active_page (pane_page);
+}
+
+static void
+gtranslator_window_destroy (GtkObject *object)
+{
+	g_warning("destroy window");
+        GtranslatorWindow *window;
+
+        window = GTR_WINDOW (object);
+
+        if (!window->priv->destroy_has_run)
+        {
+                save_panes_state (window);
+                window->priv->destroy_has_run = TRUE;
+        }
+
+        GTK_OBJECT_CLASS (gtranslator_window_parent_class)->destroy (object);
+}
+
+static gboolean 
+gtranslator_window_configure_event (GtkWidget         *widget,
+				    GdkEventConfigure *event)
+{
+        GtranslatorWindow *window = GTR_WINDOW (widget);
+
+        window->priv->width = event->width;
+        window->priv->height = event->height;
+	
+        return GTK_WIDGET_CLASS (gtranslator_window_parent_class)->configure_event (widget, event);
+}
+
+static void
 gtranslator_window_class_init (GtranslatorWindowClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
+	GtkObjectClass *gobject_class = GTK_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+	
 	g_type_class_add_private (klass, sizeof (GtranslatorWindowPrivate));
 
 	object_class->finalize = gtranslator_window_finalize;
 	object_class->dispose = gtranslator_window_dispose;
+	
+	gobject_class->destroy = gtranslator_window_destroy;
+	
+	widget_class->configure_event = gtranslator_window_configure_event;
 }
 
 /***************************** Public funcs ***********************************/

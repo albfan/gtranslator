@@ -26,7 +26,7 @@
 #include <gnome.h>
 
 #include "application.h"
-#include "prefs-manager.h"
+#include "prefs-manager-app.h"
 #include "runtime-config.h"
 #include "sighandling.h"
 #include "translator.h"
@@ -156,7 +156,7 @@ main(gint argc,
 	 */
 	gtranslator_translator=gtranslator_translator_new();
 	
-	gtranslator_prefs_manager_init();
+	gtranslator_prefs_manager_app_init();
 
 	/*
 	 * Initialize our generally used GtrRuntimeConfig structure.
@@ -223,6 +223,8 @@ main(gint argc,
 	 * Enter main GTK loop
 	 */
 	gtk_main();
+	
+	gtranslator_prefs_manager_app_shutdown();
 	
 	return 0;
 }

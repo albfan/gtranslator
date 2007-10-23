@@ -144,7 +144,7 @@ on_window_delete_event_cb(GtranslatorWindow *window,
 			  GtranslatorApplication *app)
 {
 	gtranslator_file_quit(NULL, window);
-	g_object_unref(app);
+	g_warning("delete app");
 	return TRUE;
 }
 
@@ -152,7 +152,8 @@ static void
 on_window_destroy_cb(GtranslatorWindow *window,
 		     GtranslatorApplication *app)
 {
-	if(app->priv->active_window == NULL)
+	g_warning("destroy app");
+	//if(app->priv->active_window == NULL)
 		g_object_unref(app);
 }
 
@@ -201,6 +202,13 @@ gtranslator_application_class_init (GtranslatorApplicationClass *klass)
 	object_class->finalize = gtranslator_application_finalize;
 }
 
+static void
+app_weak_notify (gpointer data,
+                 GObject *where_the_app_was)
+{
+        gtk_main_quit ();
+}
+
 GtranslatorApplication *
 gtranslator_application_get_instance (void)
 {
@@ -209,6 +217,10 @@ gtranslator_application_get_instance (void)
 	if(!instance)
 	{
 		instance = GTR_APPLICATION(g_object_new (GTR_TYPE_APPLICATION, NULL));
+		
+		g_object_weak_ref (G_OBJECT (instance),
+				   app_weak_notify,
+				   NULL);
 	}
 	return instance;
 }
@@ -217,8 +229,25 @@ void
 gtranslator_application_open_window (GtranslatorApplication *app)
 {
 	GtranslatorWindow *window;
+	GdkWindowState state;
+	gint w,h;
 
 	app->priv->active_window = window = GTR_WINDOW(g_object_new(GTR_TYPE_WINDOW, NULL));
+	
+	state = gtranslator_prefs_manager_get_window_state();
+	
+	if((state & GDK_WINDOW_STATE_MAXIMIZED) != 0)
+	{
+		gtranslator_prefs_manager_get_window_size(&w, &h);
+		gtk_window_set_default_size (GTK_WINDOW (window), w, h);
+                gtk_window_maximize (GTK_WINDOW (window));
+	}
+	else
+	{
+		gtranslator_prefs_manager_get_window_size(&w, &h);
+		gtk_window_set_default_size (GTK_WINDOW (window), w, h);
+                gtk_window_unmaximize (GTK_WINDOW (window));
+	}
 	
 	g_signal_connect(window, "delete-event",
 			 G_CALLBACK(on_window_delete_event_cb), GTR_APP);
@@ -246,6 +275,8 @@ gtranslator_application_save_toolbars_model (GtranslatorApplication *application
 void
 gtranslator_application_shutdown(GtranslatorApplication *app)
 {
+	g_warning("shutdown");
+	
 	if(app->priv->toolbars_model)
 	{
 		g_object_unref(app->priv->toolbars_model);
@@ -256,5 +287,5 @@ gtranslator_application_shutdown(GtranslatorApplication *app)
 	
 	g_object_unref(app);
 	
-	gtk_main_quit();
+	//gtk_main_quit();
 }

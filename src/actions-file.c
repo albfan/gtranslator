@@ -396,10 +396,12 @@ gtranslator_file_quit(GtkAction *action,
 		pages--;
 	}
 
+	
+	gtk_widget_destroy(GTK_WIDGET(window));
 	/*
 	 * Get the EPaned's position offset.
 	 */
-	table_pane_position=gtk_paned_get_position(GTK_PANED(gtranslator_window_get_paned(window)));
+	//table_pane_position=gtk_paned_get_position(GTK_PANED(gtranslator_window_get_paned(window)));
 	/*
 	 * Store the pane position in the preferences.
 	 */
@@ -425,12 +427,12 @@ gtranslator_file_quit(GtkAction *action,
 	/*
 	 * Remove any lungering temp. file.
 	 */
-	gtranslator_utils_remove_temp_files();
+	//gtranslator_utils_remove_temp_files();
 
 	/*
 	 * Free our used runtime config structure.
 	 */
-	gtranslator_runtime_config_free(gtranslator_runtime_config);
+	//gtranslator_runtime_config_free(gtranslator_runtime_config);
 	
 	/*
 	 * Store the current date.
@@ -440,16 +442,15 @@ gtranslator_file_quit(GtkAction *action,
 	/*
 	 * Shutdown the eventually (non-)initialized stuff from GnomeVFS.
 	 */
-	if(gnome_vfs_initialized())
+	/*if(gnome_vfs_initialized())
 	{
 		gnome_vfs_shutdown();
-	}
+	}*/
 
 	/*
 	 * Quit with the normal Gtk+ quit.
 	 */
-	gtk_main_quit();
-	return;
+	//gtk_main_quit();
 }
 
 /*
