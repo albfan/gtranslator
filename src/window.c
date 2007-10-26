@@ -649,6 +649,14 @@ gtranslator_window_cmd_edit_toolbar (GtkAction *action,
 }
 
 static void
+window_sidebar_position_change_cb(GObject    *gobject,
+				  GParamSpec *arg1,
+				  GtranslatorWindow *window)
+{
+	window->priv->sidebar_size = gtk_paned_get_position(GTK_PANED(gobject));
+}
+
+static void
 gtranslator_window_draw (GtranslatorWindow *window)
 {
 	GtkWidget *hbox; //Statusbar and progressbar
@@ -739,15 +747,16 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	
 	/*
 	 * hpaned
-	 * TODO: Get the pane position
 	 */
 	priv->hpaned = gtk_hpaned_new ();
-	/*g_signal_connect (ev_window->priv->hpaned,
+	g_signal_connect (priv->hpaned,
 			  "notify::position",
-			  G_CALLBACK (ev_window_sidebar_position_change_cb),
-			  ev_window);*/
+			  G_CALLBACK (window_sidebar_position_change_cb),
+			  window);
 	
-	//gtk_paned_set_position (GTK_PANED (priv->hpaned), SIDEBAR_DEFAULT_SIZE);
+	gtk_paned_set_position (GTK_PANED (priv->hpaned),
+				gtranslator_prefs_manager_get_side_panel_size());
+	
 	gtk_box_pack_start (GTK_BOX (priv->main_box), priv->hpaned,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (priv->hpaned);
@@ -772,15 +781,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
 	gtk_widget_show(priv->notebook);
 
-	/*sidebar position*/
-	/*FIXME: This preferences name should change*/
-/*	if(GtrPreferences.show_messages_table)
-	{
-		table_pane_position=gtranslator_config_get_int("interface/table_pane_position");
-		gtk_paned_set_position(GTK_PANED(priv->hpaned), table_pane_position);
-	}else
-		gtk_widget_hide(priv->hpaned);
-	*/
+
 	/*
 	 * hbox
 	 */
