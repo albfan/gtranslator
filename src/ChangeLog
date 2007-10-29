@@ -1,5 +1,9 @@
 2007-10-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* dialogs/preferences.glade: Removed color edition.
+
+2007-10-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* prefs-manager.h: Added GPM_FONT_DIR to store font configuration
 	in gconf.
 	* prefs-manager-app.c: Added listener for fonts changes.
