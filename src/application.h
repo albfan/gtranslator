@@ -78,6 +78,8 @@ void              gtranslator_application_save_toolbars_model (GtranslatorApplic
 
 void              gtranslator_application_shutdown            (GtranslatorApplication *app);
 
+GList            *gtranslator_application_get_views           (GtranslatorApplication *app);
+
 G_END_DECLS
 
 #endif /* __APPLICATION_H__ */

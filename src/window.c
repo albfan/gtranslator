@@ -985,10 +985,30 @@ gtranslator_window_get_active_view(GtranslatorWindow *window)
 	GtranslatorTab *current_tab;
 	current_tab = gtranslator_window_get_active_tab(window);
 	
-	if(!current_tab)
-		return NULL;
+	g_return_if_fail(current_tab != NULL);
 	
 	return gtranslator_tab_get_active_view(current_tab);
+}
+
+GList *
+gtranslator_window_get_all_views(GtranslatorWindow *window)
+{
+	gint numtabs;
+	gint i;
+	GList *views = NULL;
+	GtkWidget *tab;
+	
+	numtabs = gtk_notebook_get_n_pages(GTK_NOTEBOOK(window->priv->notebook));
+	i = numtabs;
+	
+	do{
+		i--;
+		tab = gtk_notebook_get_nth_page(GTK_NOTEBOOK(window->priv->notebook),
+						i);
+		views = g_list_concat(views, gtranslator_tab_get_all_views(GTR_TAB(tab)));
+	}while(i != 0);
+	
+	return views;
 }
 
 void

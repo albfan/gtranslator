@@ -20,6 +20,7 @@
 #include <config.h>
 #endif
 
+#include "prefs-manager.h"
 #include "view.h"
 
 #include <glib.h>
@@ -144,6 +145,24 @@ gtranslator_view_init (GtranslatorView *view)
 	
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(view), GTK_TEXT_BUFFER(priv->buffer));
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(view), GTK_WRAP_WORD);
+	
+	/*
+	 *  Set fonts according to preferences 
+	 */
+	if (gtranslator_prefs_manager_get_own_fonts ())
+	{
+		gchar *editor_font;
+
+		editor_font = g_strdup(gtranslator_prefs_manager_get_text_font ());
+
+		gtranslator_view_set_font (view, FALSE, editor_font);
+
+		g_free (editor_font);
+	}
+	else
+	{
+		gtranslator_view_set_font (view, TRUE, NULL);
+	}
 }
 
 static void
@@ -279,4 +298,29 @@ gtranslator_view_paste_clipboard (GtranslatorView *view)
 				      FALSE,
 				      0.0,
 				      0.0);
+}
+
+void
+gtranslator_view_set_font (GtranslatorView   *view, 
+			   gboolean     def, 
+			   const gchar *font_name)
+{
+	PangoFontDescription *font_desc = NULL;
+
+
+	g_return_if_fail (GTR_IS_VIEW (view));
+
+	if (def)
+		font_name = g_strdup(GPM_DEFAULT_TEXT_FONT);
+
+	g_return_if_fail (font_name != NULL);
+
+	font_desc = pango_font_description_from_string (font_name);
+	g_return_if_fail (font_desc != NULL);
+
+	gtk_widget_modify_font (GTK_WIDGET (view), font_desc);
+
+	pango_font_description_free (font_desc);
+	
+	g_printf("%s\n",font_name);
 }

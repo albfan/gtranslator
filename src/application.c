@@ -289,3 +289,24 @@ gtranslator_application_shutdown(GtranslatorApplication *app)
 	
 	//gtk_main_quit();
 }
+
+/**
+ * gtranslator_application_get_views:
+ * @app: the #GtranslationApplication
+ *
+ * Returns all the views currently present in #GtranslationApplication.
+ *
+ * Return value: a newly allocated list of #GtranslationApplication objects
+ */
+GList *
+gtranslator_application_get_views (GtranslatorApplication *app)
+{
+	GList *res = NULL;
+
+	g_return_val_if_fail (GTR_IS_APPLICATION (app), NULL);
+
+	res = g_list_concat (res,
+			     gtranslator_window_get_all_views (GTR_WINDOW (app->priv->active_window)));
+	
+	return res;
+}

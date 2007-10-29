@@ -80,6 +80,10 @@ void             gtranslator_view_copy_clipboard         (GtranslatorView *view)
 
 void             gtranslator_view_paste_clipboard        (GtranslatorView *view);
 
+void             gtranslator_view_set_font               (GtranslatorView   *view, 
+							  gboolean     def, 
+							  const gchar *font_name);
+
 G_END_DECLS
 
 #endif /* __VIEW_H__ */

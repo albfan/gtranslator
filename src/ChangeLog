@@ -1,3 +1,18 @@
+2007-10-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* prefs-manager.h: Added GPM_FONT_DIR to store font configuration
+	in gconf.
+	* prefs-manager-app.c: Added listener for fonts changes.
+	Added func to manage font changes.
+	* application.ch: Added application_get_views to return a list
+	of all views in the application.
+	* tab.ch: Added get_all_views func to get a list with all views
+	in a tab.
+	* window.ch: Added get_all_views to get a list with all views in
+	a window.
+	* view.ch: Added change fonts calls in init func.
+	Added set font func.
+
 2007-10-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c: gTranslator now remembers sidebar position.

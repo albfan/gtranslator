@@ -463,6 +463,26 @@ gtranslator_tab_get_active_view(GtranslatorTab *tab)
 	return GTR_VIEW(tab->priv->trans_msgstr[num]);
 }
 
+GList *
+gtranslator_tab_get_all_views(GtranslatorTab *tab)
+{
+	GList *ret = NULL;
+	gint i = 0;
+	
+	ret = g_list_append(ret, tab->priv->text_msgid);
+	ret = g_list_append(ret, tab->priv->text_msgid_plural);
+	
+	while(i < MAX_PLURALS)
+	{
+		if(tab->priv->trans_msgstr[i])
+			ret = g_list_append(ret, tab->priv->trans_msgstr[i]);
+		else break;
+		i++;
+	}
+
+	return ret;
+}
+
 void
 gtranslator_tab_show_message(GtranslatorTab *tab,
 			     GtranslatorMsg *msg)

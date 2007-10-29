@@ -50,8 +50,9 @@
 #define GPM_TEXT_DISPLAY_DIR		GPM_PREFS_DIR "/editor/text_display"
 #define GPM_HIGHLIGHT			GPM_TEXT_DISPLAY_DIR "/highlight"
 #define GPM_USE_DOT_CHAR		GPM_TEXT_DISPLAY_DIR "/user_dot_char"
-#define GPM_OWN_FONTS			GPM_TEXT_DISPLAY_DIR "/own_fonts"
-#define GPM_TEXT_FONT			GPM_TEXT_DISPLAY_DIR "/text_font"
+#define GPM_FONT_DIR			GPM_TEXT_DISPLAY_DIR "/fonts"
+#define GPM_OWN_FONTS			GPM_FONT_DIR "/own_fonts"
+#define GPM_TEXT_FONT			GPM_FONT_DIR "/text_font"
 
 #define GPM_CONTENTS_DIR		GPM_PREFS_DIR "/editor/contents"
 #define GPM_UNMARK_FUZZY		GPM_CONTENTS_DIR "/unmark_fuzzy"
@@ -89,7 +90,7 @@
 #define GPM_DEFAULT_HIGHLIGHT             1 /* TRUE */
 #define GPM_DEFAULT_USE_DOT_CHAR          1 /* TRUE */
 #define GPM_DEFAULT_OWN_FONTS             0 /* FALSE */
-#define GPM_DEFAULT_TEXT_FONT             (const gchar*) "Sans 12"
+#define GPM_DEFAULT_TEXT_FONT             (const gchar*) "Sans 10"
 
 #define GPM_DEFAULT_UNMARK_FUZZY          0 /* FALSE */
 #define GPM_DEFAULT_KEEP_OBSOLETE         0 /* FALSE */

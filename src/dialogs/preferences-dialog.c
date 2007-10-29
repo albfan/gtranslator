@@ -181,7 +181,7 @@ gtranslator_control_table_selection_changed(GtkTreeSelection *selection,
 				gtk_tree_path_up(prev_path);
 			if(gtk_tree_path_get_depth(new_path) > 1)
 				gtk_tree_path_up(new_path_parent);
-			
+		*/	
 		/*collapse old node*/
 		/*	if(gtk_tree_path_compare(prev_path,new_path_parent) !=0)
 				gtk_tree_view_collapse_row(view,prev_path);

@@ -34,12 +34,12 @@
 #include "application.h"
 #include "view.h"
 #include "window.h"
-/*
+
 static void gtranslator_prefs_manager_editor_font_changed	(GConfClient *client,
 							 guint        cnxn_id,
 							 GConfEntry  *entry,
 							 gpointer     user_data);
-
+/*
 static void gtranslator_prefs_manager_system_font_changed	(GConfClient *client,
 							 guint        cnxn_id,
 							 GConfEntry  *entry,
@@ -418,11 +418,11 @@ gtranslator_prefs_manager_app_init (void)
 				      GCONF_CLIENT_PRELOAD_RECURSIVE,
 				      NULL);
 		
-		/*gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
+		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_FONT_DIR,
 				gtranslator_prefs_manager_editor_font_changed,
 				NULL, NULL, NULL);
-
+/*
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_SYSTEM_FONT,
 				gtranslator_prefs_manager_system_font_changed,
@@ -450,109 +450,61 @@ gtranslator_prefs_manager_app_shutdown ()
 
 	gtranslator_state_file_sync ();
 }
-/*
+
 
 static void 
 gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
-					 guint        cnxn_id, 
-					 GConfEntry  *entry, 
-					 gpointer     user_data)
+					       guint        cnxn_id, 
+					       GConfEntry  *entry, 
+					       gpointer     user_data)
 {
 	GList *views;
 	GList *l;
 	gchar *font = NULL;
 	gboolean def = TRUE;
-	gint ts;
 	
 	g_return_if_fail (entry->key != NULL);
 	g_return_if_fail (entry->value != NULL);
 
-	if (strcmp (entry->key, GPM_USE_DEFAULT_FONT) == 0)
+	if (strcmp (entry->key, GPM_OWN_FONTS) == 0)
 	{
 		if (entry->value->type == GCONF_VALUE_BOOL)
 			def = gconf_value_get_bool (entry->value);
 		else
-			def = GPM_DEFAULT_USE_DEFAULT_FONT;
+			def = !GPM_DEFAULT_OWN_FONTS;
 		
-		if (def)
-			font = gtranslator_prefs_manager_get_system_font ();
+		if (!def)
+			font = g_strdup(GPM_DEFAULT_TEXT_FONT);
 		else
-			font = gtranslator_prefs_manager_get_editor_font ();
+			font = g_strdup(gtranslator_prefs_manager_get_text_font ());
 	}
-	else if (strcmp (entry->key, GPM_EDITOR_FONT) == 0)
+	else if (strcmp (entry->key, GPM_TEXT_FONT) == 0)
 	{
 		if (entry->value->type == GCONF_VALUE_STRING)
 			font = g_strdup (gconf_value_get_string (entry->value));
 		else
-			font = g_strdup (GPM_DEFAULT_EDITOR_FONT);
+			font = g_strdup (GPM_DEFAULT_TEXT_FONT);
 				
-		def = gtranslator_prefs_manager_get_use_default_font ();
+		def = gtranslator_prefs_manager_get_own_fonts ();
 	}
 	else
 		return;
 
 	g_return_if_fail (font != NULL);
 	
-	ts = gtranslator_prefs_manager_get_tabs_size ();
-
-	views = gtranslator_app_get_views (gtranslator_app_get_default ());
+	views = gtranslator_application_get_views (GTR_APP);
 	l = views;
 
 	while (l != NULL)
-	{*/
+	{
 		/* Note: we use def=FALSE to avoid GtranslatorView to query gconf */
-	/*	gtranslator_view_set_font (GTR_VIEW (l->data), FALSE,  font);
-		gtk_source_view_set_tab_width (GTK_SOURCE_VIEW (l->data), ts);
-
+		gtranslator_view_set_font (GTR_VIEW (l->data), FALSE,  font);
 		l = l->next;
 	}
 
 	g_list_free (views);
 	g_free (font);
 }
-
-static void 
-gtranslator_prefs_manager_system_font_changed (GConfClient *client,
-					 guint        cnxn_id, 
-					 GConfEntry  *entry, 
-					 gpointer     user_data)
-{
-	GList *views;
-	GList *l;
-	gchar *font;
-	gint ts;
-
-	g_return_if_fail (entry->key != NULL);
-	g_return_if_fail (entry->value != NULL);
-
-	if (strcmp (entry->key, GPM_SYSTEM_FONT) != 0)
-		return;
-
-	if (!gtranslator_prefs_manager_get_use_default_font ())
-		return;
-
-	if (entry->value->type == GCONF_VALUE_STRING)
-		font = g_strdup (gconf_value_get_string (entry->value));
-	else
-		font = g_strdup (GPM_DEFAULT_SYSTEM_FONT);
-
-	ts = gtranslator_prefs_manager_get_tabs_size ();
-
-	views = gtranslator_app_get_views (gtranslator_app_get_default ());
-	l = views;
-
-	while (l != NULL)
-	{*/
-		/* Note: we use def=FALSE to avoid GtranslatorView to query gconf */
-		/*gtranslator_view_set_font (GTR_VIEW (l->data), FALSE, font);
-
-		gtk_source_view_set_tab_width (GTK_SOURCE_VIEW (l->data), ts);
-		l = l->next;
-	}
-
-	g_list_free (views);
-	g_free (font);
-}*/
 
 /*
 static void
