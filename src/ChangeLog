@@ -1,3 +1,11 @@
+2007-10-31  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* prefs-manager-app.c: Added listener for instant spellchecking.
+	* application, window, tab: get_all_views funcs now have a boolean
+	to choose if you want original textviews too.
+	Added comments.
+	* view.c: Added comments and removed useless comments.
+
 2007-10-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dialogs/preferences.glade: Removed color edition.

@@ -189,7 +189,7 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	/*
 	 * FIXME: This should be called parsing the preferences
 	 */
-	if(spellcheck)
+	if(spellcheck && gtranslator_prefs_manager_get_instant_spell_checking())
 		gtranslator_view_enable_spell_check(GTR_VIEW(widget),
 						    spellcheck);
 	
@@ -463,14 +463,29 @@ gtranslator_tab_get_active_view(GtranslatorTab *tab)
 	return GTR_VIEW(tab->priv->trans_msgstr[num]);
 }
 
+/**
+ * gtranslator_tab_get_all_views:
+ * @tab: the #GtranslationTab
+ * @all_views: TRUE if you want original TextViews too.
+ *
+ * Returns all the views currently present in #GtranslationTab
+ *
+ * Return value: a newly allocated list of #GtranslationTab objects
+ */
 GList *
-gtranslator_tab_get_all_views(GtranslatorTab *tab)
+gtranslator_tab_get_all_views(GtranslatorTab *tab,
+			      gboolean all_views)
 {
 	GList *ret = NULL;
 	gint i = 0;
 	
-	ret = g_list_append(ret, tab->priv->text_msgid);
-	ret = g_list_append(ret, tab->priv->text_msgid_plural);
+	g_return_if_fail(GTR_IS_TAB(tab));
+	
+	if(all_views)
+	{
+		ret = g_list_append(ret, tab->priv->text_msgid);
+		ret = g_list_append(ret, tab->priv->text_msgid_plural);
+	}
 	
 	while(i < MAX_PLURALS)
 	{
@@ -479,7 +494,7 @@ gtranslator_tab_get_all_views(GtranslatorTab *tab)
 		else break;
 		i++;
 	}
-
+	
 	return ret;
 }
 
@@ -492,6 +507,7 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 	GtkTextBuffer *buf;
 	const gchar *msgid, *msgid_plural;
 	const gchar *msgstr, *msgstr_plural;
+	
 	g_return_if_fail(GTR_IS_TAB(tab));
 	
 	po = priv->po;
@@ -536,6 +552,11 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 }
 
 
+/**
+ * gtranslator_message_go_to:
+ * @tab: a #GtranslatorTab
+ * @to_go: the #GtranslatorMsg you want to jump
+**/
 void 
 gtranslator_message_go_to(GtranslatorTab *tab,
 			  GList * to_go)

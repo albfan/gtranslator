@@ -70,30 +70,22 @@ static void
 gtranslator_attach_gtkspell(GtranslatorView *view)
 {
 	gint i;
-	/*
-	 * Use instant spell checking via gtkspell only if the corresponding
-	 *  setting in the preferences is set.
-	 */
-	/*if(GtrPreferences.instant_spell_check)
-	{*/
-		/*
-		 * Start up gtkspell if not already done.
-		 */ 
-		GError *error = NULL;
-		gchar *errortext = NULL;
-		view->priv->spell = NULL;
+	GError *error = NULL;
+	gchar *errortext = NULL;
+	view->priv->spell = NULL;
+	
+	view->priv->spell = 
+		gtkspell_new_attach(GTK_TEXT_VIEW(view), NULL, &error);
+	if (view->priv->spell == NULL) 
+	{
+		g_warning(_("gtkspell error: %s\n"), error->message);
+		errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"),
+					    error->message);
+		g_warning(errortext);
 		
-		view->priv->spell = 
-			gtkspell_new_attach(GTK_TEXT_VIEW(view), NULL, &error);
-		if (view->priv->spell == NULL) 
-		{
-			g_printf(_("gtkspell error: %s\n"), error->message);
-			errortext = g_strdup_printf(_("GtkSpell was unable to initialize.\n %s"),
-						    error->message);
-			g_error_free(error);
-		}
-		
-	//}
+		g_error_free(error);
+		g_free(errortext);
+	}
 }
 #endif
 
@@ -191,6 +183,14 @@ gtranslator_view_new (void)
 	return view;
 }
 
+
+/**
+ * gtranslator_view_enable_spell_check:
+ * @view: a #GtranslatorView
+ * @enable: TRUE if you want enable the spellcheck
+ * 
+ * Enables the spellcheck
+ **/
 void
 gtranslator_view_enable_spell_check(GtranslatorView *view,
 				    gboolean enable)
@@ -300,13 +300,20 @@ gtranslator_view_paste_clipboard (GtranslatorView *view)
 				      0.0);
 }
 
+/**
+ * gtranslator_view_set_font:
+ * @view: a #GtranslatorView
+ * @def: TRUE if you want to use the default font
+ * @font_name: The name of the font you want to use in the #GtranslatorView
+ * 
+ * Sets the #GtranslatorView font.
+ **/
 void
-gtranslator_view_set_font (GtranslatorView   *view, 
+gtranslator_view_set_font (GtranslatorView *view, 
 			   gboolean     def, 
 			   const gchar *font_name)
 {
 	PangoFontDescription *font_desc = NULL;
-
 
 	g_return_if_fail (GTR_IS_VIEW (view));
 
@@ -320,7 +327,5 @@ gtranslator_view_set_font (GtranslatorView   *view,
 
 	gtk_widget_modify_font (GTK_WIDGET (view), font_desc);
 
-	pango_font_description_free (font_desc);
-	
-	g_printf("%s\n",font_name);
+	pango_font_description_free (font_desc);	
 }

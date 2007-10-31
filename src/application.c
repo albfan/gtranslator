@@ -293,20 +293,23 @@ gtranslator_application_shutdown(GtranslatorApplication *app)
 /**
  * gtranslator_application_get_views:
  * @app: the #GtranslationApplication
+ * @all_views: TRUE if you want original TextViews too.
  *
  * Returns all the views currently present in #GtranslationApplication.
  *
  * Return value: a newly allocated list of #GtranslationApplication objects
  */
 GList *
-gtranslator_application_get_views (GtranslatorApplication *app)
+gtranslator_application_get_views (GtranslatorApplication *app,
+				   gboolean all_views)
 {
 	GList *res = NULL;
 
 	g_return_val_if_fail (GTR_IS_APPLICATION (app), NULL);
 
 	res = g_list_concat (res,
-			     gtranslator_window_get_all_views (GTR_WINDOW (app->priv->active_window)));
+			     gtranslator_window_get_all_views (GTR_WINDOW (app->priv->active_window),
+							       all_views));
 	
 	return res;
 }

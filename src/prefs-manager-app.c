@@ -35,10 +35,15 @@
 #include "view.h"
 #include "window.h"
 
-static void gtranslator_prefs_manager_editor_font_changed	(GConfClient *client,
+static void gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 							 guint        cnxn_id,
 							 GConfEntry  *entry,
 							 gpointer     user_data);
+
+static void gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
+								  guint        cnxn_id, 
+								  GConfEntry  *entry, 
+								  gpointer     user_data);
 /*
 static void gtranslator_prefs_manager_system_font_changed	(GConfClient *client,
 							 guint        cnxn_id,
@@ -422,6 +427,11 @@ gtranslator_prefs_manager_app_init (void)
 				GPM_FONT_DIR,
 				gtranslator_prefs_manager_editor_font_changed,
 				NULL, NULL, NULL);
+		
+		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
+				GPM_INSTANT_SPELL_CHECKING,
+				gtranslator_prefs_manager_instant_spellchecking_changed,
+				NULL, NULL, NULL);
 /*
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_SYSTEM_FONT,
@@ -492,7 +502,7 @@ gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 
 	g_return_if_fail (font != NULL);
 	
-	views = gtranslator_application_get_views (GTR_APP);
+	views = gtranslator_application_get_views (GTR_APP, TRUE);
 	l = views;
 
 	while (l != NULL)
@@ -504,6 +514,30 @@ gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 
 	g_list_free (views);
 	g_free (font);
+}
+
+
+static void 
+gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
+						      guint        cnxn_id, 
+						      GConfEntry  *entry, 
+						      gpointer     user_data)
+{
+	GList *l;
+	GList *views;
+	
+	g_return_if_fail (entry->key != NULL);
+	g_return_if_fail (entry->value != NULL);
+	
+	l = views = gtranslator_application_get_views(GTR_APP, FALSE);
+	
+	while(l != NULL)
+	{
+		gtranslator_view_enable_spell_check(GTR_VIEW(l->data),
+						    gtranslator_prefs_manager_get_instant_spell_checking());
+		l = l->next;
+	}
+	g_list_free(views);
 }
 
 /*

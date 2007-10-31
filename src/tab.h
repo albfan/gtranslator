@@ -81,7 +81,8 @@ gint                   gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
 
 GtranslatorView       *gtranslator_tab_get_active_view     (GtranslatorTab *tab);
 
-GList                 *gtranslator_tab_get_all_views       (GtranslatorTab *tab);
+GList                 *gtranslator_tab_get_all_views       (GtranslatorTab *tab,
+							    gboolean all_views);
 
 G_END_DECLS
 

@@ -89,7 +89,8 @@ GtkUIManager     *gtranslator_window_get_ui_manager   (GtranslatorWindow *window
 
 GtranslatorView  *gtranslator_window_get_active_view  (GtranslatorWindow *window);
 
-GList            *gtranslator_window_get_all_views    (GtranslatorWindow *window);
+GList            *gtranslator_window_get_all_views    (GtranslatorWindow *window,
+						       gboolean all_views);
 
 void              gtranslator_window_update_statusbar (GtranslatorWindow *window);
 

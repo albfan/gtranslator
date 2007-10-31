@@ -979,6 +979,12 @@ gtranslator_window_get_paned(GtranslatorWindow *window)
 	return window->priv->hpaned;
 }
 
+/**
+ * gtranslator_window_get_active_view:
+ * @window: a #GtranslationWindow
+ *
+ * Return value: the active translation view in the #GtranslationWindow
+ **/
 GtranslatorView *
 gtranslator_window_get_active_view(GtranslatorWindow *window)
 {
@@ -990,8 +996,19 @@ gtranslator_window_get_active_view(GtranslatorWindow *window)
 	return gtranslator_tab_get_active_view(current_tab);
 }
 
+
+/**
+ * gtranslator_window_get_all_views:
+ * @window: the #GtranslationWindow
+ * @all_views: TRUE if you want original TextViews too.
+ *
+ * Returns all the views currently present in #GtranslationWindow
+ *
+ * Return value: a newly allocated list of #GtranslationWindow objects
+ **/
 GList *
-gtranslator_window_get_all_views(GtranslatorWindow *window)
+gtranslator_window_get_all_views(GtranslatorWindow *window,
+				 gboolean all_views)
 {
 	gint numtabs;
 	gint i;
@@ -1005,7 +1022,7 @@ gtranslator_window_get_all_views(GtranslatorWindow *window)
 		i--;
 		tab = gtk_notebook_get_nth_page(GTK_NOTEBOOK(window->priv->notebook),
 						i);
-		views = g_list_concat(views, gtranslator_tab_get_all_views(GTR_TAB(tab)));
+		views = g_list_concat(views, gtranslator_tab_get_all_views(GTR_TAB(tab), all_views));
 	}while(i != 0);
 	
 	return views;
