@@ -1015,15 +1015,18 @@ gtranslator_window_get_all_views(GtranslatorWindow *window,
 	GList *views = NULL;
 	GtkWidget *tab;
 	
-	numtabs = gtk_notebook_get_n_pages(GTK_NOTEBOOK(window->priv->notebook));
-	i = numtabs;
+	g_return_val_if_fail(GTR_IS_WINDOW(window), NULL);
 	
-	do{
-		i--;
+	numtabs = gtk_notebook_get_n_pages(GTK_NOTEBOOK(window->priv->notebook));
+	i = numtabs - 1;
+	
+	while(i >= 0 && numtabs != 0)
+	{
 		tab = gtk_notebook_get_nth_page(GTK_NOTEBOOK(window->priv->notebook),
 						i);
 		views = g_list_concat(views, gtranslator_tab_get_all_views(GTR_TAB(tab), all_views));
-	}while(i != 0);
+		i--;
+	}
 	
 	return views;
 }
