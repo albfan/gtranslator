@@ -3,9 +3,10 @@
 [encoding: UTF-8]
 data/desktop/gtranslator.desktop.in.in
 data/mime/gtranslator.keys_template.in
-src/about.c
+data/po.lang
 src/actions-file.c
 data/desktop/gtranslator.desktop.in
+src/actions-help.c
 src/alternate-language.c
 src/bookmark.c
 src/charmap/charmap.c
@@ -15,10 +16,10 @@ src/compile.c
 src/dialogs.c
 src/dialogs/file-dialogs.c
 src/dialogs/preferences.glade
+src/dialogs/preferences-dialog.c
 src/dictionary/dict-panel.c
 src/dictionary/dictionary.c
 src/find.c
-src/gui.c
 src/header_dialog.glade
 src/header_stuff.c
 src/languages.c
@@ -28,8 +29,7 @@ src/messages-table.c
 src/notebook.c
 src/panel.c
 src/parse.c
-src/preferences.c
-src/prefs.c
+src/prefs-manager.c
 src/replace.c
 src/runtime-config.c
 src/save.c
