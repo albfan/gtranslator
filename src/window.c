@@ -28,6 +28,7 @@
 #include "tab.h"
 #include "panel.h"
 #include "po.h"
+#include "utils_gui.h"
 #include "window.h"
 
 #include "egg-toolbars-model.h"
@@ -78,7 +79,11 @@ struct _GtranslatorWindowPrivate
 	
 	gboolean destroy_has_run : 1;
 };
-	
+
+enum
+{
+	TARGET_URI_LIST = 100
+};	
 
 static const GtkActionEntry always_sensitive_entries[] = {
 	
@@ -430,50 +435,6 @@ notebook_tab_added(GtkNotebook *notebook,
 			 window);
 }
 
-
-/*
- * Restore the geometry.
- */
-static void
-gtranslator_window_restore_geometry(GtranslatorWindow *window,
-				    gchar* gstr)
-{
-	gint x=0, y=0, width=0, height=0;
-
-	/*
-	 * Set the main application's geometry from the preferences.
-	 */
-	if (gstr == NULL)
-	{
-		/*if(GtrPreferences.save_geometry == TRUE)
-		{
-			x=gtranslator_config_get_int("geometry/x");
-			y=gtranslator_config_get_int("geometry/y");
-			width=gtranslator_config_get_int("geometry/width");
-			height=gtranslator_config_get_int("geometry/height");
-		}
-		else
-		{
-			return;
-		}*/
-	}
-	/*
-	 * If a geometry definition had been defined try to parse it.
-	 */
-	else
-	{
-		if(!gtk_window_parse_geometry(GTK_WINDOW(window), gstr))
-		{
-			g_warning(_("The geometry string \"%s\" couldn't be parsed!"), gstr);
-			return;
-		}
-	}
-	if (x != -1)
-		gtk_window_move(GTK_WINDOW(window), x, y);
-	if ((width > 0) && (height > 0))
-		gtk_window_resize(GTK_WINDOW(window), width, height);
-}
-
 void
 gtranslator_recent_add (GtranslatorWindow *window,
 			const gchar *path)
@@ -656,6 +617,66 @@ window_sidebar_position_change_cb(GObject    *gobject,
 	window->priv->sidebar_size = gtk_paned_get_position(GTK_PANED(gobject));
 }
 
+static GtranslatorWindow *
+get_drop_window (GtkWidget *widget)
+{
+	GtkWidget *target_window;
+
+	target_window = gtk_widget_get_toplevel (widget);
+	g_return_val_if_fail (GTR_IS_WINDOW (target_window), NULL);
+	
+	return GTR_WINDOW (target_window);
+}
+
+static void
+load_uris_from_drop (GtranslatorWindow  *window,
+		     gchar       **uri_list)
+{
+	GSList *uris = NULL;
+	gint i;
+	
+	if (uri_list == NULL)
+		return;
+	
+	for (i = 0; uri_list[i] != NULL; ++i)
+	{
+		uris = g_slist_prepend (uris, uri_list[i]);
+	}
+
+	uris = g_slist_reverse (uris);
+	gtranslator_actions_load_uris (window,
+				      uris);
+
+	g_slist_free (uris);
+}
+
+/* Handle drops on the GtranslatorWindow */
+static void
+drag_data_received_cb (GtkWidget        *widget,
+		       GdkDragContext   *context,
+		       gint              x,
+		       gint              y,
+		       GtkSelectionData *selection_data,
+		       guint             info,
+		       guint             time,
+		       gpointer          data)
+{
+	GtranslatorWindow *window;
+	gchar **uri_list;
+
+	window = get_drop_window (widget);
+	
+	if (window == NULL)
+		return;
+
+	if (info == TARGET_URI_LIST)
+	{
+		uri_list = gtranslator_utils_drop_get_uris(selection_data);
+		load_uris_from_drop (window, uri_list);
+		g_strfreev (uri_list);
+	}
+}
+
 static void
 gtranslator_window_draw (GtranslatorWindow *window)
 {
@@ -809,15 +830,42 @@ gtranslator_window_draw (GtranslatorWindow *window)
 static void
 gtranslator_window_init (GtranslatorWindow *window)
 {
+	GtkTargetList *tl;
 	window->priv = GTR_WINDOW_GET_PRIVATE (window);
 	
 	window->priv->destroy_has_run = FALSE;
 	
 	gtranslator_window_draw(window);
-	
-	gtranslator_window_restore_geometry(window, NULL);
-	
+		
 	set_sensitive_according_to_window(window);
+	
+	/* Drag and drop support, set targets to NULL because we add the
+	   default uri_targets below */
+	gtk_drag_dest_set (GTK_WIDGET (window),
+			   GTK_DEST_DEFAULT_MOTION |
+			   GTK_DEST_DEFAULT_HIGHLIGHT |
+			   GTK_DEST_DEFAULT_DROP,
+			   NULL,
+			   0,
+			   GDK_ACTION_COPY);
+
+	/* Add uri targets */
+	tl = gtk_drag_dest_get_target_list (GTK_WIDGET (window));
+	
+	if (tl == NULL)
+	{
+		tl = gtk_target_list_new (NULL, 0);
+		gtk_drag_dest_set_target_list (GTK_WIDGET (window), tl);
+		gtk_target_list_unref (tl);
+	}
+	
+	gtk_target_list_add_uri_targets (tl, TARGET_URI_LIST);
+	
+	/* Connect signals */
+	g_signal_connect (window,
+			  "drag_data_received",
+	                  G_CALLBACK (drag_data_received_cb), 
+	                  NULL);
 	
 	/* Charmap panel */
 	impl_activate(window);

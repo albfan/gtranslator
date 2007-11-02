@@ -44,6 +44,9 @@ void       gtranslator_file_close               (GtkAction * widget,
 void       gtranslator_file_quit                (GtkAction *action,
 						 GtranslatorWindow *window);
 
+void       gtranslator_actions_load_uris        (GtranslatorWindow *window,
+						 const GSList        *uris);
+
 /*Edit*/
 void       gtranslator_actions_edit_undo        (GtkAction   *action,
 						 GtranslatorWindow *window);

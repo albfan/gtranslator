@@ -1,5 +1,14 @@
 2007-11-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* utils_gui.ch: Removed useless funcs and added some funcs
+	to manage uris.
+	* actions-file.c: Added funcs to manage uris in drag 'n drop.
+	* window.c: Added drag n' drop support.
+	* dnd.ch: Removed. is not neccessary anymore.
+	* Makefile.am: Removed dnd.h.
+
+2007-11-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* utils_gui.h: Removed stylistics.h dependencie.
 	* color-schemes.ch:
 	* stylistics.ch:

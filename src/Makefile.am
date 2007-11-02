@@ -34,7 +34,6 @@ bin_PROGRAMS = \
 gtranslator_SOURCES = \
 	application.c application.h \
 	compile.h \
-	dnd.h \
 	draw-spaces.c draw-spaces.h \
 	find.h \
 	header_stuff.h \

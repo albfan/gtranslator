@@ -89,4 +89,6 @@ gboolean       gtranslator_utils_get_glade_widgets (const gchar *filename,
 						    const gchar *widget_name,
 						    ...)G_GNUC_NULL_TERMINATED;
 
+gchar **gtranslator_utils_drop_get_uris (GtkSelectionData *selection_data);
+
 #endif

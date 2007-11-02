@@ -49,7 +49,7 @@ gtranslator_open(const gchar *filename,
 	GtranslatorPo	*po;
 	GtranslatorTab *tab;
 	GList *current;
-	
+
 	/*
 	 * If the filename can't be opened, pass the error back to the caller
 	 * to handle.
@@ -483,4 +483,113 @@ gtranslator_save_current_file_dialog(GtkWidget * widget,
 		g_clear_error(&error);
 		return;
 	}
+}
+
+static gboolean
+is_duplicated_uri (const GSList *uris, 
+		   const gchar  *u)
+{
+	while (uris != NULL)
+	{
+		if (gnome_vfs_uris_match (u, (const gchar*)uris->data))
+			return TRUE;
+			
+		uris = g_slist_next (uris);
+	}
+	
+	return FALSE;
+}
+
+static void
+load_file_list(GtranslatorWindow *window,
+	       const GSList *uris)
+{
+	GSList        *uris_to_load = NULL;
+	const GSList  *l;
+	GError *error;
+	
+	g_return_if_fail ((uris != NULL) && (uris->data != NULL));
+		
+	/* Remove the uris corresponding to documents already open
+	 * in "window" and remove duplicates from "uris" list */
+	l = uris;
+	while (uris != NULL)
+	{
+		if (!is_duplicated_uri (uris_to_load, uris->data))
+		{
+			
+			/*We need to now if is already loaded in any tab*/
+			
+			/*tab = get_tab_from_uri (win_docs, (const gchar *)uris->data);
+			if (tab != NULL)
+			{
+				if (uris == l)
+				{
+					gedit_window_set_active_tab (window, tab);
+					jump_to = FALSE;
+
+					if (line_pos > 0)
+					{
+						GeditDocument *doc;
+						GeditView *view;
+
+						doc = gedit_tab_get_document (tab);
+						view = gedit_tab_get_view (tab);
+
+						gedit_document_goto_line (doc, line_pos);
+						gedit_view_scroll_to_cursor (view);
+					}
+				}
+
+				++loaded_files;
+			}
+			else
+			{*/
+				uris_to_load = g_slist_prepend (uris_to_load, 
+								uris->data);
+			//}
+		}
+
+		uris = g_slist_next (uris);
+	}
+	
+	if (uris_to_load == NULL)
+		return;
+	
+	uris_to_load = g_slist_reverse (uris_to_load);
+	l = uris_to_load;
+	
+	while (uris_to_load != NULL)
+	{
+		gchar *path;
+		g_return_if_fail (uris_to_load->data != NULL);
+
+		path = g_filename_from_uri((const gchar *)uris_to_load->data,
+					   NULL, NULL);
+		gtranslator_open(path,
+				 window,
+				 &error);
+		
+		g_free(path);
+		uris_to_load = g_slist_next (uris_to_load);
+	}
+	
+	/* Free uris_to_load. Note that l points to the first element of uris_to_load */
+	g_slist_free ((GSList *)l);
+}
+
+
+/**
+ * gtranslator_actions_load_uris:
+ *
+ * Ignore non-existing URIs 
+ */
+void
+gtranslator_actions_load_uris (GtranslatorWindow *window,
+			       const GSList        *uris)
+{	
+	g_return_if_fail (GTR_IS_WINDOW (window));
+	g_return_if_fail ((uris != NULL) && (uris->data != NULL));
+	
+	load_file_list (window, uris);
 }

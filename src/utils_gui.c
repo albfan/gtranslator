@@ -20,7 +20,7 @@
 //#include "dialogs.h"
 //#include "gui.h"
 #include "nautilus-string.h"
-#include "parse.h"
+//#include "parse.h"
 #include "runtime-config.h"
 #include "utils.h"
 #include "utils_gui.h"
@@ -28,156 +28,9 @@
 #include <libgnome/gnome-url.h>
 
 #include <libgnomeui/libgnomeui.h>
+#include <libgnomevfs/gnome-vfs.h>
 #include <glib/gi18n.h>
 #include <glade/glade.h>
-
-
-/*
- * Save the current application main window's geometry.
- */
-void gtranslator_utils_save_geometry(GtranslatorWindow *window)
-{
-	/*if (GtrPreferences.save_geometry == TRUE) {
-		gint x, y, w, h, d;
-		
-		/*
-		 * Use the Gdk functions to get the window typistics and then
-		 *  store the data - we're currently stumping the silly "depth"
-		 *   data also, but well...
-		 */
-		/*gdk_window_get_geometry(GDK_WINDOW(GTK_WIDGET(window)->window),
-			&x, &y, &w, &h, &d);
-		
-	/*	gtranslator_config_set_int("geometry/x", x);
-		gtranslator_config_set_int("geometry/y", y);
-		gtranslator_config_set_int("geometry/width", w);
-		gtranslator_config_set_int("geometry/height", h);
-	}*/
-}
-
-
-GtkWidget *gtranslator_utils_attach_combo_with_label(GtkWidget  * table, gint row,
-				   const char *label_text,
-				   GList  * list, const char *value,
-				   gboolean editable,
-				   GCallback callback,
-				   gpointer user_data)
-{
-	GtkWidget *label;
-	GtkWidget *combo;
-	label = gtk_label_new(label_text);
-	combo = gtk_combo_new();
-	gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
-	if (value)
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo)->entry), value);
-	
-	gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(combo)->entry), editable);
-	
-	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, row, row + 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), combo, 1, 2, row, row + 1);
-	
-	g_signal_connect(G_OBJECT(GTK_COMBO(combo)->entry), "changed",
-			 G_CALLBACK(callback), user_data);
-	return combo;
-}
-
-GtkWidget *gtranslator_utils_attach_toggle_with_label(GtkWidget  * table, gint row,
-				    const char *label_text,
-				    gboolean value,
-				    GCallback callback)
-{
-	GtkWidget *toggle;
-	toggle = gtk_check_button_new_with_label(label_text);
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(toggle), value);
-	gtk_table_attach_defaults(GTK_TABLE(table), toggle,
-	                          0, GTK_TABLE(table)->ncols > 1 ? 2 : 1,
-	                          row, row + 1);
-
-	if(callback)
-	{
-		g_signal_connect(G_OBJECT(toggle), "toggled",
-			         G_CALLBACK(callback), NULL);
-	}
-
-	return toggle;
-}
-
-GtkWidget *gtranslator_utils_attach_entry_with_label(GtkWidget  * table, gint row,
-				   const char *label_text,
-				   const char *value,
-				   GCallback callback)
-{
-	GtkWidget *label;
-	GtkWidget *entry;
-	label = gtk_label_new(label_text);
-	entry = gtk_entry_new();
-	if (value)
-		gtk_entry_set_text(GTK_ENTRY(entry), value);
-	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, row, row + 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), entry, 1, 2, row, row + 1);
-	g_signal_connect(G_OBJECT(entry), "changed",
-			 G_CALLBACK(callback), NULL);
-	return entry;
-}
-
-GtkWidget *gtranslator_utils_attach_text_with_label(GtkWidget  * table, gint row,
-				  const char *label_text,
-				  const char *value,
-				  GCallback callback)
-{
-	GtkWidget *label;
-	GtkWidget *widget;
-	GtkWidget *scroll;
-	GtkTextBuffer *buff;
-	GtkTextIter start;
-
-	label = gtk_label_new(label_text);
-	scroll = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
-				       GTK_POLICY_NEVER,
-				       GTK_POLICY_AUTOMATIC);
-	widget = gtk_text_view_new();
-	if (value) {
-		buff = gtk_text_buffer_new(NULL);
-		gtk_text_buffer_get_start_iter(buff, &start);
-		gtk_text_buffer_insert(buff, &start, value, strlen(value));
-		gtk_text_view_set_buffer(GTK_TEXT_VIEW(widget), buff);
-		if(callback)
-		{
-			g_signal_connect(G_OBJECT(buff), "changed",
-					 G_CALLBACK(callback), NULL);
-		}
-
-	}
-	gtk_container_add(GTK_CONTAINER(scroll), widget);
-	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, row, row + 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), scroll, 1, 2, row, row + 1);
-
-	return widget;
-}
-
-GtkWidget *gtranslator_utils_attach_spin_with_label(GtkWidget *table,
-	gint row, const gchar *label_text, gfloat minimum, gfloat maximum,
-	gfloat value, GCallback callback)
-{
-	GtkWidget *label;
-	GtkWidget *spin_button;
-	GtkObject *adjustment;
-
-	label=gtk_label_new(label_text);
-	adjustment=gtk_adjustment_new(value, minimum, maximum, 1.0, 1.0, 1.0);
-
-	spin_button=gtk_spin_button_new(GTK_ADJUSTMENT(adjustment), 1, 0);
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button), value);
-
-	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, row, row + 1);
-	gtk_table_attach_defaults(GTK_TABLE(table), spin_button, 1, 2, row, row + 1);
-
-	g_signal_connect(G_OBJECT(spin_button), "changed",
-		G_CALLBACK(callback), NULL);
-	
-	return spin_button;
-}
 
 
 
@@ -352,4 +205,140 @@ gtranslator_utils_get_glade_widgets (const gchar *filename,
 	g_object_unref (gui);
 
 	return ret;
+}
+
+static gboolean
+is_valid_scheme_character (gchar c)
+{
+	return g_ascii_isalnum (c) || c == '+' || c == '-' || c == '.';
+}
+
+static gboolean
+has_valid_scheme (const gchar *uri)
+{
+	const gchar *p;
+
+	p = uri;
+
+	if (!is_valid_scheme_character (*p)) {
+		return FALSE;
+	}
+
+	do {
+		p++;
+	} while (is_valid_scheme_character (*p));
+
+	return *p == ':';
+}
+
+gboolean
+gtranslator_utils_is_valid_uri (const gchar *uri)
+{
+	const guchar *p;
+
+	if (uri == NULL)
+		return FALSE;
+
+	if (!has_valid_scheme (uri))
+		return FALSE;
+
+	/* We expect to have a fully valid set of characters */
+	for (p = (const guchar *)uri; *p; p++) {
+		if (*p == '%')
+		{
+			++p;
+			if (!g_ascii_isxdigit (*p))
+				return FALSE;
+
+			++p;		
+			if (!g_ascii_isxdigit (*p))
+				return FALSE;
+		}
+		else
+		{
+			if (*p <= 32 || *p >= 128)
+				return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+gchar *
+gtranslator_utils_make_canonical_uri_from_shell_arg (const gchar *str)
+{	
+	gchar *uri;
+	gchar *canonical_uri;
+
+	g_return_val_if_fail (str != NULL, NULL);
+	g_return_val_if_fail (*str != '\0', NULL);
+	
+	/* Note for the future: 
+	 *
+	 * <federico> paolo: and flame whoever tells 
+	 * you that file:///gnome/test_files/hëllò 
+	 * doesn't work --- that's not a valid URI
+	 *
+	 * <paolo> federico: well, another solution that 
+	 * does not requires patch to _from_shell_args 
+	 * is to check that the string returned by it 
+	 * contains only ASCII chars
+	 * <federico> paolo: hmmmm, isn't there 
+	 * gnome_vfs_is_uri_valid() or something?
+	 * <paolo>: I will use gedit_utils_is_valid_uri ()
+	 *
+	 */
+	 
+	uri = gnome_vfs_make_uri_from_shell_arg (str);
+	canonical_uri = gnome_vfs_make_uri_canonical (uri);
+	g_free (uri);
+	
+	/* g_print ("URI: %s\n", canonical_uri); */
+	
+	if (gtranslator_utils_is_valid_uri (canonical_uri))
+		return canonical_uri;
+	
+	return NULL;
+}
+
+/**
+ * gtranslator_utils_drop_get_uris:
+ * @selection_data: the #GtkSelectionData from drag_data_received
+ * @info: the info from drag_data_received
+ *
+ * Create a list of valid uri's from a uri-list drop.
+ * 
+ * Return value: a string array which will hold the uris or NULL if there 
+ *		 were no valid uris. g_strfreev should be used when the 
+ *		 string array is no longer used
+ */
+gchar **
+gtranslator_utils_drop_get_uris (GtkSelectionData *selection_data)
+{
+	gchar **uris;
+	gint i;
+	gint p = 0;
+	gchar **uri_list;
+
+	uris = g_uri_list_extract_uris ((gchar *) selection_data->data);
+	uri_list = g_new0(gchar *, g_strv_length (uris) + 1);
+
+	for (i = 0; uris[i] != NULL; i++)
+	{
+		gchar *uri;
+		
+		uri = gtranslator_utils_make_canonical_uri_from_shell_arg (uris[i]);
+		
+		/* Silently ignore malformed URI/filename */
+		if (uri != NULL)
+			uri_list[p++] = uri;
+	}
+
+	if (*uri_list == NULL)
+	{
+		g_free(uri_list);
+		return NULL;
+	}
+
+	return uri_list;
 }
