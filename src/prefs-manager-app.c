@@ -44,16 +44,18 @@ static void gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient
 								  guint        cnxn_id, 
 								  GConfEntry  *entry, 
 								  gpointer     user_data);
+
+static void gtranslator_prefs_manager_syntax_hl_enable_changed(GConfClient *client,
+							       guint        cnxn_id, 
+							       GConfEntry  *entry, 
+							       gpointer     user_data);
+
 /*
 static void gtranslator_prefs_manager_system_font_changed	(GConfClient *client,
 							 guint        cnxn_id,
 							 GConfEntry  *entry,
 							 gpointer     user_data);
 
-static void gtranslator_prefs_manager_syntax_hl_enable_changed(GConfClient *client,
-							 guint        cnxn_id, 
-							 GConfEntry  *entry, 
-							 gpointer     user_data);
 
 
 static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
@@ -432,16 +434,18 @@ gtranslator_prefs_manager_app_init (void)
 				GPM_INSTANT_SPELL_CHECKING,
 				gtranslator_prefs_manager_instant_spellchecking_changed,
 				NULL, NULL, NULL);
+		
+		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
+				GPM_HIGHLIGHT,
+				gtranslator_prefs_manager_syntax_hl_enable_changed,
+				NULL, NULL, NULL);
 /*
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_SYSTEM_FONT,
 				gtranslator_prefs_manager_system_font_changed,
 				NULL, NULL, NULL);
 
-		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
-				GPM_SYNTAX_HL_ENABLE,
-				gtranslator_prefs_manager_syntax_hl_enable_changed,
-				NULL, NULL, NULL);
+		
 
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_SAVE_DIR,
@@ -540,61 +544,44 @@ gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
 	g_list_free(views);
 }
 
-/*
+
 static void
 gtranslator_prefs_manager_syntax_hl_enable_changed (GConfClient *client,
-					      guint        cnxn_id,
-					      GConfEntry  *entry,
-					      gpointer     user_data)
+						    guint        cnxn_id,
+						    GConfEntry  *entry,
+						    gpointer     user_data)
 {
 	g_return_if_fail (entry->key != NULL);
 	g_return_if_fail (entry->value != NULL);
 
-	if (strcmp (entry->key, GPM_SYNTAX_HL_ENABLE) == 0)
+	if (strcmp (entry->key, GPM_HIGHLIGHT) == 0)
 	{
 		gboolean enable;
-		GList *docs;
+		GList *views;
 		GList *l;
-		const GList *windows;
+		GtkSourceBuffer *buf;
 
 		if (entry->value->type == GCONF_VALUE_BOOL)
 			enable = gconf_value_get_bool (entry->value);
 		else
-			enable = GPM_DEFAULT_SYNTAX_HL_ENABLE;
+			enable = GPM_DEFAULT_HIGHLIGHT;
 
-		docs = gtranslator_app_get_documents (gtranslator_app_get_default ());
-		l = docs;
+		views = gtranslator_application_get_views (GTR_APP, TRUE);
+		l = views;
 
 		while (l != NULL)
 		{
-			g_return_if_fail (GTK_IS_SOURCE_BUFFER (l->data));
+			buf = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(l->data)));
+			g_return_if_fail (GTK_IS_SOURCE_BUFFER (buf));
 
-			gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER (l->data),
-								enable);
+			gtk_source_buffer_set_highlight_syntax (buf, enable);
 
 			l = l->next;
 		}
 
-		g_list_free (docs);
-*/
-		/* update the sensitivity of the Higlight Mode menu item */
-/*		windows = gtranslator_app_get_windows (gtranslator_app_get_default ());
-		while (windows != NULL)
-		{
-			GtkUIManager *ui;
-			GtkAction *a;
-
-			ui = gtranslator_window_get_ui_manager (GTR_WINDOW (windows->data));
-
-			a = gtk_ui_manager_get_action (ui,
-						       "/MenuBar/ViewMenu/ViewHighlightModeMenu");
-
-			gtk_action_set_sensitive (a, enable);
-
-			windows = g_list_next (windows);
-		}
+		g_list_free (views);
 	}
-}*/
+}
 
 /*
 static void

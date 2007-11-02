@@ -1,3 +1,8 @@
+2007-11-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* prefs-manager-app.c: Added listener for syntax highlight.
+	* view.c: Now sets the highlight according to preferences.
+
 2007-11-01  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c: Fixed bug in get_all_views func that makes 

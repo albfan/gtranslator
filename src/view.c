@@ -138,6 +138,9 @@ gtranslator_view_init (GtranslatorView *view)
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(view), GTK_TEXT_BUFFER(priv->buffer));
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(view), GTK_WRAP_WORD);
 	
+	//Set syntax highlight according to preferences
+	gtk_source_buffer_set_highlight_syntax(priv->buffer, gtranslator_prefs_manager_get_highlight());
+	
 	/*
 	 *  Set fonts according to preferences 
 	 */
