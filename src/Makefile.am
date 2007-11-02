@@ -22,7 +22,6 @@ INCLUDES = \
 	$(SPELLCHECK_CFLAGS)					\
 	$(DEPRECATED_FLAGS)                                     \
 	-DG_LOG_DOMAIN=\""$(PACKAGE)"\"                         \
-	-DSCHEMESDIR=\""$(pkgdatadir)"/colorschemes\"	\
 	-DSCRIPTSDIR=\""$(pkgdatadir)"/scripts\"	\
 	-DWINDOW_ICON=\""$(datadir)"/pixmaps/gtranslator.png\"
 

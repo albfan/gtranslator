@@ -21,7 +21,6 @@
 #define GTR_UTILS_GUI_H 1
 
 #include "po.h"
-#include "stylistics.h"
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtksignal.h>

@@ -1,5 +1,13 @@
 2007-11-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* utils_gui.h: Removed stylistics.h dependencie.
+	* color-schemes.ch:
+	* stylistics.ch:
+	* Makefile.am:
+	 Removed. It isn't neccessary anymore.
+
+2007-11-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* prefs-manager-app.c: Added listener for syntax highlight.
 	* view.c: Now sets the highlight according to preferences.
 
