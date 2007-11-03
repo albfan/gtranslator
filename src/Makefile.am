@@ -73,7 +73,9 @@ gtranslator_SOURCES = \
 	prefs-manager-private.h \
 	actions-help.c \
 	prefs-manager-app.c \
-	prefs-manager-app.h
+	prefs-manager-app.h \
+	messages-table.c \
+	messages-table.h
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \

@@ -1,66 +1,79 @@
 /*
- * (C) 2001-2003 	Fatih Demir <kabalak@kabalak.net>
- *			Kevin Vandersloot <kfv101@psu.edu>
- *			Peeter Vois <peeter@kabalak.net>
- *
- * gtranslator is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or   
- *    (at your option) any later version.
- *    
- * gtranslator is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- *    GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ * 
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GTR_MESSAGES_TABLE_H
-#define GTR_MESSAGES_TABLE_H 1
+#ifndef __MESSAGE_TABLE_H__
+#define __MESSAGE_TABLE_H__
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtktreestore.h>
-#include "message.h"
+#include <glib.h>
+#include <glib-object.h>
+#include <gtk/gtk.h>
+
+#include "po.h"
+
+G_BEGIN_DECLS
 
 /*
- * Attributes of the messages table
+ * Type checking and casting macros
  */
-typedef struct {
-	GtkWidget *widget;
-	GtkTreeStore *store;
-	GtkTreeIter untranslated_node;
-	GtkTreeIter fuzzy_node;
-	GtkTreeIter translated_node;
-} GtrMessagesTable;
+#define GTR_TYPE_MESSAGE_TABLE		(gtranslator_message_table_get_type ())
+#define GTR_MESSAGE_TABLE(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GTR_TYPE_MESSAGE_TABLE, GtranslatorMessageTable))
+#define GTR_MESSAGE_TABLE_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), GTR_TYPE_MESSAGE_TABLE, GtranslatorMessageTableClass))
+#define GTR_IS_MESSAGE_TABLE(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_MESSAGE_TABLE))
+#define GTR_IS_MESSAGE_TABLE_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_MESSAGE_TABLE))
+#define GTR_MESSAGE_TABLE_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_MESSAGE_TABLE, GtranslatorMessageTableClass))
 
-
-/*
- * Returns the ready widget with all the specs.
- */
-GtrMessagesTable *gtranslator_messages_table_new();
+/* Private structure type */
+typedef struct _GtranslatorMessageTablePrivate	GtranslatorMessageTablePrivate;
 
 /*
- * Populate a messages table from a given po
+ * Main object structure
  */
-void gtranslator_messages_table_populate(GtrMessagesTable *table, GList *messages);
+typedef struct _GtranslatorMessageTable		GtranslatorMessageTable;
+
+struct _GtranslatorMessageTable
+{
+	GtkVBox parent_instance;
+	
+	/*< private > */
+	GtranslatorMessageTablePrivate *priv;
+};
 
 /*
- * Update the data in a single row
+ * Class definition
  */
-void gtranslator_messages_table_update_row(GtrMessagesTable *table, GtrMsg *message); 
+typedef struct _GtranslatorMessageTableClass	GtranslatorMessageTableClass;
+
+struct _GtranslatorMessageTableClass
+{
+	GtkVBoxClass parent_class;
+};
 
 /*
- * Select given message
+ * Public methods
  */
-void gtranslator_messages_table_select_row(GtrMessagesTable *table, GtrMsg *message);
+GType		 gtranslator_message_table_get_type	   (void) G_GNUC_CONST;
 
-/*
- * Frees resources allocated to this messages table
- */
-void gtranslator_messages_table_free(GtrMessagesTable *table);
- 
-#endif
+GType		 gtranslator_message_table_register_type   (GTypeModule * module);
+
+GtkWidget	*gtranslator_message_table_new	           (GtranslatorPo *po);
+
+void             gtranslator_messages_table_populate       (GtranslatorMessageTable *table, 
+							    GList *messages);
+
+G_END_DECLS
+
+#endif /* __MESSAGE_TABLE_H__ */

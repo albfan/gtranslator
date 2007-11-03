@@ -24,6 +24,7 @@
 #include "draw-spaces.h"
 #include "io-error-message-area.h"
 #include "message-area.h"
+#include "messages-table.h"
 #include "msg.h"
 #include "tab.h"
 #include "panel.h"
@@ -53,6 +54,7 @@ struct _GtranslatorTabPrivate
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
 	GtranslatorCommentPanel *comment;
+	GtranslatorMessageTable *message_table;
 	
 	/*Message area*/
 	GtkWidget *message_area;
@@ -394,6 +396,13 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->comment),
 				   _("Comment"), image);
 	
+	/* Message table */
+	tab->priv->message_table = GTR_MESSAGE_TABLE(gtranslator_message_table_new(tab->priv->po));
+	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
+					 GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->message_table),
+				   _("Message Table"), image);
+	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
 	
 }
@@ -427,10 +436,13 @@ gtranslator_tab_new (GtranslatorPo *po)
 {
 	GtranslatorTab *tab;
 	
+	g_return_val_if_fail(po != NULL, NULL);
+	
 	tab = g_object_new (GTR_TYPE_TAB, NULL);
 	
-	if(po)
-		tab->priv->po = po;
+	tab->priv->po = po;
+	gtranslator_messages_table_populate(tab->priv->message_table,
+					    gtranslator_po_get_messages(po));
 	
 	gtk_widget_show_all(GTK_WIDGET(tab));
 	return tab;

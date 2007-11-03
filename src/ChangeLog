@@ -1,3 +1,10 @@
+2007-11-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* messages-table.ch: Ported to GObject.
+	There are some missing features like update a message when
+	is changed.
+	* tab.c: Added messages-table widget to the panel.
+
 2007-11-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* utils_gui.ch: Removed useless funcs and added some funcs
