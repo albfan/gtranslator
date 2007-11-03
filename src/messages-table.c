@@ -109,7 +109,7 @@ gtranslator_message_table_draw(GtranslatorMessageTable *panel)
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
 	
 	renderer=gtk_cell_renderer_text_new();
-	column = gtk_tree_view_column_new_with_attributes(_("Translation text"),
+	column = gtk_tree_view_column_new_with_attributes(_("Translated text"),
 							  renderer,
 							  "text", TRANSLATION_COLUMN,
 							  "foreground-gdk", COLOR_COLUMN,
