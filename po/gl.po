@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-02 15:26+0100\n"
+"POT-Creation-Date: 2007-11-03 22:24+0100\n"
 "PO-Revision-Date: 2007-08-03 00:14+0200\n"
 "Last-Translator: Ignacio Casal Quinteiro <icq@cvs.gnome.org>\n"
 "Language-Team: Galego <proxecto@trasno.net>\n"
@@ -143,7 +143,7 @@ msgid "Open alternate PO file"
 msgstr "Abrir un ficheiro po alternativo"
 
 #. do{
-#: ../src/alternate-language.c:236 ../src/tab.c:358
+#: ../src/alternate-language.c:236 ../src/tab.c:360
 #, c-format
 msgid "Plural %d"
 msgstr "Plural %d"
@@ -156,32 +156,6 @@ msgstr "Abrir %s (%s)"
 #: ../src/charmap/charmap.c:248
 msgid "Character Map"
 msgstr "Mapa de caracteres"
-
-#: ../src/color-schemes.c:199
-#, c-format
-msgid "Can't apply color scheme file `%s'!"
-msgstr "Non se pode aplicar o ficheiro de esquema de cores '%s'!"
-
-#: ../src/color-schemes.c:325
-msgid "Couldn't retrieve author information!"
-msgstr "Non foi posible recuperar a información do autor!"
-
-#.
-#. * Translators: These strings are used as author informations if
-#. *  no author informations could be retrieved:
-#.
-#: ../src/color-schemes.c:331 ../src/translator.c:339
-msgid "Unknown"
-msgstr "Descoñecido"
-
-#: ../src/color-schemes.c:332
-msgid "<Not Given>"
-msgstr "<Non dado>"
-
-#: ../src/color-schemes.c:524
-#, c-format
-msgid "Activate colorscheme %s"
-msgstr "Activar o esquema de cores %s"
 
 #: ../src/comment-panel.c:67
 msgid "Edit comment"
@@ -258,7 +232,7 @@ msgstr "Comentarios"
 msgid "English"
 msgstr "Inglés"
 
-#: ../src/dialogs.c:752 ../src/dialogs.c:888 ../src/messages-table.c:237
+#: ../src/dialogs.c:752 ../src/dialogs.c:888
 msgid "Translation"
 msgstr "Tradución"
 
@@ -1111,21 +1085,13 @@ msgstr "Erro na inicialización de GConf: %s."
 msgid "Error setting the default window icon: %s"
 msgstr "Erro establecendo a icona por defecto da ventá: %s"
 
-#: ../src/messages-table.c:225
-msgid "Original"
-msgstr "Orixinal"
+#: ../src/messages-table.c:102
+msgid "Original text"
+msgstr "Texto orixinal"
 
-#: ../src/messages-table.c:259 ../src/tab.c:349
-msgid "Untranslated"
-msgstr "Sen Traducir"
-
-#: ../src/messages-table.c:267 ../src/tab.c:345
-msgid "Fuzzy"
-msgstr "Dubidosa"
-
-#: ../src/messages-table.c:275 ../src/tab.c:341
-msgid "Translated"
-msgstr "Traducida"
+#: ../src/messages-table.c:112
+msgid "Translated text"
+msgstr "Texto traducido"
 
 #: ../src/notebook.c:84
 msgid "Close document"
@@ -1253,35 +1219,39 @@ msgstr "Non se puido abrir o ficheiro po comprimido con zip '%s'!"
 msgid "Saving file failed: %s"
 msgstr "Fallou o gardado do ficheiro: %s"
 
-#: ../src/stylistics.c:283
-msgid "No font set! Using default font"
-msgstr "Non hai ningunha fonte definida! Usando a fonte predeterminada"
-
-#.
-#. * Use gtranslator's font in this case -- should be a fallback font
-#. *  for your language.
-#.
-#: ../src/stylistics.c:289
-msgid "Sans 10"
-msgstr "Sans 10"
-
-#: ../src/tab.c:323
+#: ../src/tab.c:325
 msgid "Singular"
 msgstr "Singular"
 
-#: ../src/tab.c:327
+#: ../src/tab.c:329
 msgid "Plural"
 msgstr "Plural"
 
-#: ../src/tab.c:338
+#: ../src/tab.c:340
 msgid "Translation status:"
 msgstr "Estado da tradución:"
 
-#: ../src/tab.c:395
+#: ../src/tab.c:343
+msgid "Translated"
+msgstr "Traducida"
+
+#: ../src/tab.c:347
+msgid "Fuzzy"
+msgstr "Dubidosa"
+
+#: ../src/tab.c:351
+msgid "Untranslated"
+msgstr "Sen Traducir"
+
+#: ../src/tab.c:397
 msgid "Comment"
 msgstr "Comentario"
 
-#: ../src/tab.c:586
+#: ../src/tab.c:404
+msgid "Message Table"
+msgstr "Táboa de mensaxes"
+
+#: ../src/tab.c:598
 msgid "There is an error in the message:"
 msgstr "Hai un erro na mensaxe:"
 
@@ -1325,31 +1295,35 @@ msgstr "Eliminar a barra de ferramentas seleccionada"
 msgid "Separator"
 msgstr "Separador"
 
+#: ../src/translator.c:339
+msgid "Unknown"
+msgstr "Descoñecido"
+
 #: ../src/utils.c:274 ../src/utils.c:291
 #, c-format
 msgid "Can't create directory `%s'!"
 msgstr "Non foi posible xerar o directorio `%s'!"
 
-#: ../src/utils_gui.c:230
+#: ../src/utils_gui.c:83
 #, c-format
 msgid "The necessary decompression program `%s' is not installed!"
 msgstr "O programa necesario para a descompresión`%s' non está instalado! "
 
-#: ../src/utils_gui.c:235
+#: ../src/utils_gui.c:88
 #, c-format
 msgid "The necessary compression program `%s' is not installed!"
 msgstr "O programa necesario para a compresión `%s' non está instalado!"
 
-#: ../src/utils_gui.c:291
+#: ../src/utils_gui.c:144
 #, c-format
 msgid "Unable to find file %s."
 msgstr "Imposible encontrar o ficheiro %s."
 
-#: ../src/utils_gui.c:295 ../src/utils_gui.c:331
+#: ../src/utils_gui.c:148 ../src/utils_gui.c:184
 msgid "Please check your installation."
 msgstr "Comprobe a súa instalación."
 
-#: ../src/utils_gui.c:327
+#: ../src/utils_gui.c:180
 #, c-format
 msgid "Unable to find the required widgets inside file %s."
 msgstr "Imposible encontrar os widgets necesarios dentro do ficheiro %s."
@@ -1402,278 +1376,297 @@ msgstr ""
 "GtkSpell non foi capaz de inicializarse\n"
 " %s"
 
-#: ../src/window.c:85
+#: ../src/window.c:90
 msgid "_File"
 msgstr "_Ficheiro"
 
-#: ../src/window.c:86
+#: ../src/window.c:91
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/window.c:87
+#: ../src/window.c:92
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/window.c:88
+#: ../src/window.c:93
 msgid "_Actions"
 msgstr "_Accións"
 
-#: ../src/window.c:89
+#: ../src/window.c:94
 msgid "_Search"
 msgstr "_Buscar"
 
-#: ../src/window.c:90
+#: ../src/window.c:95
 msgid "_Go"
 msgstr "_Ir"
 
-#: ../src/window.c:91
+#: ../src/window.c:96
 msgid "_Help"
 msgstr "A_xuda"
 
-#: ../src/window.c:95
+#: ../src/window.c:100
 msgid "Open a po file"
 msgstr "Abrir un ficheiro po"
 
-#: ../src/window.c:97
+#: ../src/window.c:102
 msgid "Open from _URI..."
 msgstr "Abrir desde _URI..."
 
-#: ../src/window.c:98
+#: ../src/window.c:103
 msgid "Open a po file from a given URI"
 msgstr "Abrir un ficheiro po desde unha URI"
 
 #. G_CALLBACK (gtranslator_open_uri_dialog) },
-#: ../src/window.c:100
+#: ../src/window.c:105
 msgid "_Recent files"
 msgstr "Ficheiros _recentes"
 
-#: ../src/window.c:103
+#: ../src/window.c:108
 msgid "Quit the program"
 msgstr "Saír do programa"
 
 #. Edit menu
-#: ../src/window.c:107
+#: ../src/window.c:112
 msgid "T_oolbar"
 msgstr "Barra de _ferramentas"
 
-#: ../src/window.c:110
+#: ../src/window.c:115
 msgid "Edit gtranslator preferences"
 msgstr "Editar as preferencias de gtranslator"
 
 #. Help menu
-#: ../src/window.c:114
+#: ../src/window.c:119
 msgid "_Contents"
 msgstr "_Contidos"
 
-#: ../src/window.c:116
+#: ../src/window.c:121
 msgid "_Website"
 msgstr "Sitio _web"
 
-#: ../src/window.c:117
+#: ../src/window.c:122
 msgid "gtranslator's homepage on the web"
 msgstr "Páxina de inicio de gtranslator na web"
 
-#: ../src/window.c:119
+#: ../src/window.c:124
 msgid "_About"
 msgstr "_Sobre"
 
-#: ../src/window.c:129
+#: ../src/window.c:134
 msgid "Save the file"
 msgstr "Gardar o ficheiro"
 
-#: ../src/window.c:132
+#: ../src/window.c:137
 msgid "Save the file with another name"
 msgstr "Gardar o ficheiro con outro nome"
 
-#: ../src/window.c:138
+#: ../src/window.c:143
 msgid "Close the current file"
 msgstr "Pechar o ficheiro actual"
 
-#: ../src/window.c:143
+#: ../src/window.c:148
 msgid "Undo last operation"
 msgstr "Desfacer a última operación"
 
-#: ../src/window.c:146
+#: ../src/window.c:151
 msgid "Redo last undo operation"
 msgstr "Refacer a última operación desfeita"
 
-#: ../src/window.c:149
+#: ../src/window.c:154
 msgid "Cut the selected text"
 msgstr "Cortar o texto seleccionado"
 
-#: ../src/window.c:152
+#: ../src/window.c:157
 msgid "Copy the selected text"
 msgstr "Copiar o texto seleccionado"
 
-#: ../src/window.c:155 ../src/window.c:225 ../src/window.c:228
-#: ../src/window.c:231 ../src/window.c:234
+#: ../src/window.c:160 ../src/window.c:230 ../src/window.c:233
+#: ../src/window.c:236 ../src/window.c:239
 msgid "   "
 msgstr "   "
 
-#: ../src/window.c:158
+#: ../src/window.c:163
 msgid "Clear the translation text box"
 msgstr "Limpar a caixa de texto da tradución"
 
 #. G_CALLBACK (gtranslator_selection_clear) },
-#: ../src/window.c:160
+#: ../src/window.c:165
 msgid "_Header..."
 msgstr "Ca_beceira..."
 
-#: ../src/window.c:161
+#: ../src/window.c:166
 msgid "Edit po file header"
 msgstr "Editar a cabeceira do ficheiro po"
 
 #. G_CALLBACK (gtranslator_header_edit_dialog) },
-#: ../src/window.c:163
+#: ../src/window.c:168
 msgid "C_omment..."
 msgstr "C_omentario..."
 
-#: ../src/window.c:164
+#: ../src/window.c:169
 msgid "Edit message comment"
 msgstr "Editar o comentario da mensaxe"
 
 #. G_CALLBACK (gtranslator_edit_comment_dialog) },
-#: ../src/window.c:166
+#: ../src/window.c:171
 msgid "Copy _message -> translation"
 msgstr "Copiar _mensaxe -> tradución"
 
-#: ../src/window.c:167
+#: ../src/window.c:172
 msgid "Copy the original message contents and paste them as translation"
 msgstr "Copia o contido da mensaxe orixinal e a pega como tradución"
 
-#: ../src/window.c:169
+#: ../src/window.c:174
 msgid "_Fuzzy"
 msgstr "_Dubidosa"
 
-#: ../src/window.c:170
+#: ../src/window.c:175
 msgid "Toggle fuzzy status of a message"
 msgstr "Cambiar a dubidosa o estado da mensaxe"
 
 #. View menu
-#: ../src/window.c:174
+#: ../src/window.c:179
 msgid "_Bookmarks"
 msgstr "_Marcadores"
 
-#: ../src/window.c:176
+#: ../src/window.c:181
 msgid "_ColorSchemes"
 msgstr "Esquemas de _cor"
 
 #. Action menu
-#: ../src/window.c:180
+#: ../src/window.c:185
 msgid "_Compile"
 msgstr "_Compilar"
 
-#: ../src/window.c:181
+#: ../src/window.c:186
 msgid "Compile the po file"
 msgstr "Compilar o ficheiro po"
 
-#: ../src/window.c:183
+#: ../src/window.c:188
 msgid "  "
 msgstr "  "
 
-#: ../src/window.c:184
+#: ../src/window.c:189
 msgid "_Add bookmark"
 msgstr "_Engadir marcador"
 
-#: ../src/window.c:185
+#: ../src/window.c:190
 msgid "Add a bookmark for this message in this po file"
 msgstr "Engadir un marcador para esta mensaxe neste ficheiro po"
 
 #. G_CALLBACK(gtranslator_bookmark_adding_dialog) },
-#: ../src/window.c:187
+#: ../src/window.c:192
 msgid "Aut_otranslate..."
 msgstr "Traducir aut_omaticamente...."
 
-#: ../src/window.c:188
+#: ../src/window.c:193
 msgid "Autotranslate the file with information from your learn buffer"
 msgstr ""
 "Traducir automaticamente o ficheiro coa información do búfer de aprendizaxe"
 
 #. G_CALLBACK(gtranslator_auto_translation_dialog) },
-#: ../src/window.c:190
+#: ../src/window.c:195
 msgid "Remo_ve all translations..."
 msgstr "Elimina_r todas as traducións..."
 
-#: ../src/window.c:191
+#: ../src/window.c:196
 msgid "Remove all existing translations from the po file"
 msgstr "Eliminar todas as traducións existentes do ficheiro po"
 
-#: ../src/window.c:196
+#: ../src/window.c:201
 msgid "Go to the first message"
 msgstr "Ir á primeira mensaxe"
 
-#: ../src/window.c:199
+#: ../src/window.c:204
 msgid "Move back one message"
 msgstr "Ir unha mensaxe atrás"
 
-#: ../src/window.c:202
+#: ../src/window.c:207
 msgid "Move forward one message"
 msgstr "Ir unha mensaxe adiante"
 
-#: ../src/window.c:205
+#: ../src/window.c:210
 msgid "Go to the last message"
 msgstr "Ir á última mensaxe"
 
-#: ../src/window.c:208
+#: ../src/window.c:213
 msgid "Go to especified message number"
 msgstr "Ir a unha mensaxe especificada"
 
 #. G_CALLBACK (gtranslator_go_to_dialog) },
-#: ../src/window.c:210
+#: ../src/window.c:215
 msgid "Next fuz_zy"
 msgstr "Seguinte _dubidosa"
 
-#: ../src/window.c:211
+#: ../src/window.c:216
 msgid "Go to the next fuzzy message"
 msgstr "Ir á seguinte mensaxe dubidosa"
 
-#: ../src/window.c:213
+#: ../src/window.c:218
 msgid "Previous fuzz_y"
 msgstr "D_ubidosa anterior"
 
-#: ../src/window.c:214
+#: ../src/window.c:219
 msgid "Go to the previous fuzzy message"
 msgstr "Ir á mensaxe dubidosa anterior"
 
-#: ../src/window.c:216
+#: ../src/window.c:221
 msgid "Next _untranslated"
 msgstr "Seguinte _sen traducir"
 
-#: ../src/window.c:217
+#: ../src/window.c:222
 msgid "Go to the next untranslated message"
 msgstr "Ir á seguinte mensaxe sen traducir"
 
-#: ../src/window.c:219
+#: ../src/window.c:224
 msgid "Previ_ous untranslated"
 msgstr "Anterior s_en traducir"
 
-#: ../src/window.c:220
+#: ../src/window.c:225
 msgid "Go to the previous untranslated message"
 msgstr "Ir á anterior mensaxe sen traducir"
 
 #. G_CALLBACK (gtranslator_find_dialog) },
-#: ../src/window.c:227
+#: ../src/window.c:232
 msgid "Search ne_xt"
 msgstr "_Buscar seguinte"
 
 #. G_CALLBACK (gtranslator_find) },
-#: ../src/window.c:230
+#: ../src/window.c:235
 msgid "Search _previous"
 msgstr "Buscar _anterior"
 
-#: ../src/window.c:467
-#, c-format
-msgid "The geometry string \"%s\" couldn't be parsed!"
-msgstr "Non se puido analizar a cadea de xeometría \"%s\"!"
-
-#: ../src/window.c:623
+#: ../src/window.c:584
 msgid "Toolbar Editor"
 msgstr "Editor da barra de ferramentas"
 
-#: ../src/window.c:1052
+#: ../src/window.c:1100
 #, c-format
 msgid "    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"
 msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
+
+#~ msgid "Can't apply color scheme file `%s'!"
+#~ msgstr "Non se pode aplicar o ficheiro de esquema de cores '%s'!"
+
+#~ msgid "Couldn't retrieve author information!"
+#~ msgstr "Non foi posible recuperar a información do autor!"
+
+#~ msgid "<Not Given>"
+#~ msgstr "<Non dado>"
+
+#~ msgid "Activate colorscheme %s"
+#~ msgstr "Activar o esquema de cores %s"
+
+#~ msgid "Original"
+#~ msgstr "Orixinal"
+
+#~ msgid "No font set! Using default font"
+#~ msgstr "Non hai ningunha fonte definida! Usando a fonte predeterminada"
+
+#~ msgid "Sans 10"
+#~ msgstr "Sans 10"
+
+#~ msgid "The geometry string \"%s\" couldn't be parsed!"
+#~ msgstr "Non se puido analizar a cadea de xeometría \"%s\"!"
 
 #~ msgid "\"&\" (KDE)"
 #~ msgstr "\"&\" (KDE)"
@@ -1698,9 +1691,6 @@ msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
 
 #~ msgid "Maximum number of entries in the recent files list:"
 #~ msgstr "Número máximo de entradas a mostrar na lista de ficheiros recentes:"
-
-#~ msgid "Original text font:"
-#~ msgstr "Fonte orixinal do texto:"
 
 #~ msgid "Translation text font:"
 #~ msgstr "Tipo de letra do texto da tradución:"
@@ -1803,9 +1793,6 @@ msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
 
 #~ msgid "Last message"
 #~ msgstr "Derradeira mensaxe"
-
-#~ msgid "Message table"
-#~ msgstr "Táboa de mensaxes"
 
 #~ msgid "Next message"
 #~ msgstr "Seguinte mensaxe"

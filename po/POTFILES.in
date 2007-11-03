@@ -10,7 +10,6 @@ src/actions-help.c
 src/alternate-language.c
 src/bookmark.c
 src/charmap/charmap.c
-src/color-schemes.c
 src/comment-panel.c
 src/compile.c
 src/dialogs.c
@@ -34,7 +33,6 @@ src/replace.c
 src/runtime-config.c
 src/save.c
 src/sighandling.c
-src/stylistics.c
 src/tab.c
 src/toolbareditor/egg-editable-toolbar.c
 src/toolbareditor/egg-toolbar-editor.c
