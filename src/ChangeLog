@@ -1,6 +1,8 @@
 2007-11-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
-	* messages-table.c: Fixed string.
+	* messages-table.c:
+	* tab.c: 
+	Some string fixes.
 
 2007-11-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 

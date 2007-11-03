@@ -396,12 +396,12 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->comment),
 				   _("Comment"), image);
 	
-	/* Message table */
+	/* Messages table */
 	tab->priv->message_table = GTR_MESSAGE_TABLE(gtranslator_message_table_new(tab->priv->po));
 	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
 					 GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->message_table),
-				   _("Message Table"), image);
+				   _("Messages Table"), image);
 	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
 	
