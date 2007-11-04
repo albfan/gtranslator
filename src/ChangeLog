@@ -1,3 +1,7 @@
+2007-11-04  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* messages-table.c: Added ID column.
+
 2007-11-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* messages-table.c:

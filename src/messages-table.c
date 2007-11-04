@@ -51,6 +51,7 @@ struct _GtranslatorMessageTablePrivate
 
 enum
 {
+	ID_COLUMN,
 	ORIGINAL_COLUMN,
 	TRANSLATION_COLUMN,
 	COLOR_COLUMN,
@@ -89,15 +90,24 @@ gtranslator_message_table_draw(GtranslatorMessageTable *panel)
 	priv->store = gtk_tree_store_new (N_COLUMNS,
 					  G_TYPE_STRING,
 					  G_TYPE_STRING,
+					  G_TYPE_STRING,
 					  GDK_TYPE_COLOR);
 	
 	priv->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL(priv->store));
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(priv->treeview));
 	
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(priv->treeview), TRUE);
-	
-	column = gtk_tree_view_column_new();
-	
+		
+	renderer=gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes(_("ID"),
+							  renderer,
+							  "text", ID_COLUMN,
+							  "foreground-gdk", COLOR_COLUMN,
+							  NULL);
+
+	gtk_tree_view_column_set_resizable(column, FALSE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
+		
 	renderer=gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(_("Original text"),
 							  renderer,
@@ -185,6 +195,7 @@ gtranslator_messages_table_populate(GtranslatorMessageTable *table,
 {
 	const gchar *msgid, *msgstr;
 	GtkTreeIter iter;
+	gint id = 1;
 	/*Message table should store plural forms too*/
 	
 	g_return_if_fail(table != NULL);
@@ -200,6 +211,7 @@ gtranslator_messages_table_populate(GtranslatorMessageTable *table,
 		{
 			gtk_tree_store_append(table->priv->store, &iter, NULL);
 			gtk_tree_store_set(table->priv->store, &iter,
+					   ID_COLUMN, g_strdup_printf("%d", id),
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
 					   COLOR_COLUMN, &table->priv->fuzzy,
@@ -210,6 +222,7 @@ gtranslator_messages_table_populate(GtranslatorMessageTable *table,
 		{
 			gtk_tree_store_append(table->priv->store, &iter, NULL);
 			gtk_tree_store_set(table->priv->store, &iter,
+					   ID_COLUMN, g_strdup_printf("%d", id),
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
 					   COLOR_COLUMN, &table->priv->translated,
@@ -219,12 +232,14 @@ gtranslator_messages_table_populate(GtranslatorMessageTable *table,
 		else {
 			gtk_tree_store_append(table->priv->store, &iter, NULL);
 			gtk_tree_store_set(table->priv->store, &iter,
+					   ID_COLUMN, g_strdup_printf("%d", id),
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
 					   COLOR_COLUMN, &table->priv->untranslated,
 					   -1);
 		}
 
+		id++;
 		messages = g_list_next(messages);
 	}
 }
