@@ -24,7 +24,6 @@
 #include "draw-spaces.h"
 #include "io-error-message-area.h"
 #include "message-area.h"
-#include "messages-table.h"
 #include "msg.h"
 #include "tab.h"
 #include "panel.h"
@@ -54,7 +53,6 @@ struct _GtranslatorTabPrivate
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
 	GtranslatorCommentPanel *comment;
-	GtranslatorMessageTable *message_table;
 	
 	/*Message area*/
 	GtkWidget *message_area;
@@ -73,6 +71,14 @@ struct _GtranslatorTabPrivate
 	GtkWidget *fuzzy;
 	GtkWidget *untranslated;
 };
+
+enum
+{
+	SHOWED_MESSAGE,
+	LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL];
 
 static void
 gtranslator_page_dirty(GtkTextBuffer *textbuffer,
@@ -396,13 +402,6 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->comment),
 				   _("Comment"), image);
 	
-	/* Messages table */
-	tab->priv->message_table = GTR_MESSAGE_TABLE(gtranslator_message_table_new(tab->priv->po));
-	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
-					 GTK_ICON_SIZE_SMALL_TOOLBAR);
-	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->message_table),
-				   _("Messages Table"), image);
-	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
 	
 }
@@ -427,6 +426,16 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 	g_type_class_add_private (klass, sizeof (GtranslatorTabPrivate));
 
 	object_class->finalize = gtranslator_tab_finalize;
+	
+	
+	signals[SHOWED_MESSAGE] = 
+		g_signal_new("showed-message",
+			     G_OBJECT_CLASS_TYPE (klass),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (GtranslatorTabClass, showed_message),
+		  	      NULL, NULL,
+		  	      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 }
 
 /***************************** Public funcs ***********************************/
@@ -441,8 +450,6 @@ gtranslator_tab_new (GtranslatorPo *po)
 	tab = g_object_new (GTR_TYPE_TAB, NULL);
 	
 	tab->priv->po = po;
-	gtranslator_messages_table_populate(tab->priv->message_table,
-					    gtranslator_po_get_messages(po));
 	
 	gtk_widget_show_all(GTK_WIDGET(tab));
 	return tab;
@@ -592,6 +599,10 @@ gtranslator_message_go_to(GtranslatorTab *tab,
 	{
 		gtranslator_tab_show_message(tab, to_go->data);
 		set_message_area(tab, NULL);
+		/*This is a good place to send a showed message signal
+		 * This signal would be useful for message table plugin for example
+		*/
+		g_signal_emit(G_OBJECT(tab), signals[SHOWED_MESSAGE], 0); 
 	}
 	else
 	{

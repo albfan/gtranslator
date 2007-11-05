@@ -62,6 +62,8 @@ typedef struct _GtranslatorTabClass	GtranslatorTabClass;
 struct _GtranslatorTabClass
 {
 	GtkVBoxClass parent_class;
+	
+	void (* showed_message) (GtranslatorTab *tab);
 };
 
 /*

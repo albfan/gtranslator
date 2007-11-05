@@ -1,3 +1,11 @@
+2007-11-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* messagetable: Now messages-table.ch are ubicated here,
+	becouse i'll start with the conversion of this code to
+	a standalone plugin like charmap.
+	* tab.c: Added showed-message signal and removed 
+	calls to messages-table funcs.
+
 2007-11-04  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* messages-table.c: Added ID column.
