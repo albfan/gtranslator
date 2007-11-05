@@ -461,6 +461,14 @@ gtranslator_tab_get_po(GtranslatorTab *tab)
 	return tab->priv->po;
 }
 
+GtranslatorPanel *
+gtranslator_tab_get_panel(GtranslatorTab *tab)
+{
+	g_return_val_if_fail(tab != NULL, NULL);
+	
+	return tab->priv->panel;
+}
+
 gint
 gtranslator_tab_get_active_text_tab(GtranslatorTab *tab)
 {

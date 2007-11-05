@@ -8,72 +8,68 @@
  * 
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     MERCHANPOILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *     Based on Gedit messages_table plugin
  */
 
-#ifndef __MESSAGE_TABLE_H__
-#define __MESSAGE_TABLE_H__
+#ifndef __GTR_MESSAGES_TABLE_H__
+#define __GTR_MESSAGES_TABLE_H__
 
 #include <glib.h>
 #include <glib-object.h>
-#include <gtk/gtk.h>
-
-#include "po.h"
+#include "window.h"
 
 G_BEGIN_DECLS
 
 /*
  * Type checking and casting macros
  */
-#define GTR_TYPE_MESSAGE_TABLE		(gtranslator_message_table_get_type ())
-#define GTR_MESSAGE_TABLE(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GTR_TYPE_MESSAGE_TABLE, GtranslatorMessageTable))
-#define GTR_MESSAGE_TABLE_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), GTR_TYPE_MESSAGE_TABLE, GtranslatorMessageTableClass))
-#define GTR_IS_MESSAGE_TABLE(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_MESSAGE_TABLE))
-#define GTR_IS_MESSAGE_TABLE_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_MESSAGE_TABLE))
-#define GTR_MESSAGE_TABLE_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_MESSAGE_TABLE, GtranslatorMessageTableClass))
+#define GTR_TYPE_MESSAGES_TABLE		(gtranslator_messages_table_get_type ())
+#define GTR_MESSAGES_TABLE(o)			(G_TYPE_CHECK_INSTANCE_CAST ((o), GTR_TYPE_MESSAGEMESSAGES_TABLE, GtranslatorMessagesTable))
+#define GTR_MESSAGES_TABLE_CLASS(k)		(G_TYPE_CHECK_CLASS_CAST((k), GTR_TYPE_MESSAGES_TABLE, GtranslatorMessagesTableClass))
+#define GTR_IS_MESSAGES_TABLE(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_MESSAGES_TABLE))
+#define GTR_IS_MESSAGES_TABLE_CLASS(k)		(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_MESSAGES_TABLE))
+#define GTR_MESSAGES_TABLE_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_MESSAGES_TABLE_PLUGIN, GtranslatorMessagesTableClass))
 
 /* Private structure type */
-typedef struct _GtranslatorMessageTablePrivate	GtranslatorMessageTablePrivate;
+typedef struct _GtranslatorMessagesTablePrivate	GtranslatorMessagesTablePrivate;
 
 /*
  * Main object structure
  */
-typedef struct _GtranslatorMessageTable		GtranslatorMessageTable;
+typedef struct _GtranslatorMessagesTable		GtranslatorMessagesTable;
 
-struct _GtranslatorMessageTable
+struct _GtranslatorMessagesTable
 {
-	GtkVBox parent_instance;
-	
-	/*< private > */
-	GtranslatorMessageTablePrivate *priv;
+	GObject parent_instance;
 };
 
 /*
  * Class definition
  */
-typedef struct _GtranslatorMessageTableClass	GtranslatorMessageTableClass;
+typedef struct _GtranslatorMessagesTableClass	GtranslatorMessagesTableClass;
 
-struct _GtranslatorMessageTableClass
+struct _GtranslatorMessagesTableClass
 {
-	GtkVBoxClass parent_class;
+	GObjectClass parent_class;
 };
 
 /*
  * Public methods
  */
-GType		 gtranslator_message_table_get_type	   (void) G_GNUC_CONST;
+GType	gtranslator_messages_table_get_type	(void) G_GNUC_CONST;
+GType	gtranslator_messages_table_register_type  (GTypeModule * module);
+/* All the plugins must implement this function */
+//G_MODULE_EXPORT GType register_gedit_plugin (GTypeModule *module);
 
-GType		 gtranslator_message_table_register_type   (GTypeModule * module);
-
-GtkWidget	*gtranslator_message_table_new	           (GtranslatorPo *po);
-
-void             gtranslator_messages_table_populate       (GtranslatorMessageTable *table, 
-							    GList *messages);
+void 	messages_table_activate (GtranslatorWindow *window);
+void 	messages_table_deactivate	(GtranslatorWindow *window);
 
 G_END_DECLS
 
-#endif /* __MESSAGE_TABLE_H__ */
+#endif /* __GTR_MESSAGES_TABLE_H__ */

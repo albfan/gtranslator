@@ -1,5 +1,14 @@
 2007-11-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* messagestable/messages-table-panel.ch: Now this is used
+	to create the widget.
+	* messagestable/messages-table.ch: Used to implement
+	func activate.
+	* tab.c: Added get panel func.
+	* window.c: Added call to messages_table_activate func.
+
+2007-11-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* messagetable: Now messages-table.ch are ubicated here,
 	becouse i'll start with the conversion of this code to
 	a standalone plugin like charmap.

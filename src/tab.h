@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "panel.h"
 #include "po.h"
 #include "view.h"
 
@@ -76,6 +77,8 @@ GType	               gtranslator_tab_register_type       (GTypeModule * module);
 GtranslatorTab        *gtranslator_tab_new	           (GtranslatorPo *po);
 
 GtranslatorPo         *gtranslator_tab_get_po              (GtranslatorTab *tab);
+
+GtranslatorPanel      *gtranslator_tab_get_panel           (GtranslatorTab *tab);
 
 gint                   gtranslator_tab_get_active_text_tab (GtranslatorTab *tab);
 
