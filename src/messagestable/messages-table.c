@@ -78,6 +78,11 @@ create_messages_table_panel (GtkNotebook *notebook,
 				   table,
 				   _("Messages Table"),
 				   image);
+	
+	/*
+	 * FIXME: Here we should add a conection to showed-message signal
+	 * in tab widget to manage the selections changes in messages table.
+	 */
 
 	gtk_widget_show_all (table);
 }

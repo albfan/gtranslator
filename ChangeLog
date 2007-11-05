@@ -1,3 +1,7 @@
+2007-11-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.ac: Added messages table lib.
+
 2007-10-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac: Applied Sindre Pedersen path that fixes
