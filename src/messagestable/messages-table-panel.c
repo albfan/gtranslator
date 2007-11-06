@@ -42,7 +42,7 @@ G_DEFINE_TYPE(GtranslatorMessagesTablePanel, gtranslator_messages_table_panel, G
 struct _GtranslatorMessagesTablePanelPrivate
 {
 	GtkWidget *treeview;
-	GtkTreeStore *store;
+	GtkListStore *store;
 	
 	GdkColor fuzzy;
 	GdkColor translated;
@@ -87,7 +87,7 @@ gtranslator_messages_table_panel_draw(GtranslatorMessagesTablePanel *panel)
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *selection;
 	
-	priv->store = gtk_tree_store_new (N_COLUMNS,
+	priv->store = gtk_list_store_new (N_COLUMNS,
 					  G_TYPE_STRING,
 					  G_TYPE_STRING,
 					  G_TYPE_STRING,
@@ -209,8 +209,8 @@ gtranslator_messages_table_panel_populate(GtranslatorMessagesTablePanel *table,
 		//Fuzzy
 		if(gtranslator_msg_is_fuzzy(GTR_MSG(messages->data)))
 		{
-			gtk_tree_store_append(table->priv->store, &iter, NULL);
-			gtk_tree_store_set(table->priv->store, &iter,
+			gtk_list_store_append(table->priv->store, &iter);
+			gtk_list_store_set(table->priv->store, &iter,
 					   ID_COLUMN, g_strdup_printf("%d", id),
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
@@ -220,8 +220,8 @@ gtranslator_messages_table_panel_populate(GtranslatorMessagesTablePanel *table,
 		//Translated
 		else if(gtranslator_msg_is_translated(GTR_MSG(messages->data))) 
 		{
-			gtk_tree_store_append(table->priv->store, &iter, NULL);
-			gtk_tree_store_set(table->priv->store, &iter,
+			gtk_list_store_append(table->priv->store, &iter);
+			gtk_list_store_set(table->priv->store, &iter,
 					   ID_COLUMN, g_strdup_printf("%d", id),
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
@@ -230,8 +230,8 @@ gtranslator_messages_table_panel_populate(GtranslatorMessagesTablePanel *table,
 		}
 		//Untranslated
 		else {
-			gtk_tree_store_append(table->priv->store, &iter, NULL);
-			gtk_tree_store_set(table->priv->store, &iter,
+			gtk_list_store_append(table->priv->store, &iter);
+			gtk_list_store_set(table->priv->store, &iter,
 					   ID_COLUMN, g_strdup_printf("%d", id),
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,

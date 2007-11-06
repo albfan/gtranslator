@@ -1,3 +1,8 @@
+2007-11-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* messagestable/messages-table-panel.c: Switched to
+	GtkListStore instead of GtkTreeStore.
+
 2007-11-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* messagestable/Makefile.am: I forgot it.
