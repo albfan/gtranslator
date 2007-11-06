@@ -1,5 +1,17 @@
 2007-11-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* messagestable:
+		* messages-table-panel.c: Now is showed the 
+		messages selected in the messages table.
+		Added application dependencie to get the active window.
+		* Makefile.am: Added reference to toolbareditor.
+	* actions-go.c: 
+	* tab.c: Changed the name of gtranslator_message_go_to func
+	to gtranslator_tab_message_go_to.
+	* application.ch: Added get_active_window func.
+
+2007-11-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* messagestable/messages-table-panel.c: Switched to
 	GtkListStore instead of GtkTreeStore.
 

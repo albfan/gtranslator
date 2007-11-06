@@ -580,13 +580,13 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 
 
 /**
- * gtranslator_message_go_to:
+ * gtranslator_tab_message_go_to:
  * @tab: a #GtranslatorTab
  * @to_go: the #GtranslatorMsg you want to jump
 **/
 void 
-gtranslator_message_go_to(GtranslatorTab *tab,
-			  GList * to_go)
+gtranslator_tab_message_go_to(GtranslatorTab *tab,
+			      GList * to_go)
 {
 	GtranslatorPo *po;
 	static gint pos = 0;

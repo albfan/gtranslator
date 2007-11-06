@@ -2,6 +2,7 @@ INCLUDES =                                                      \
         -I$(top_srcdir)                                         \
         -I$(top_builddir)                                       \
         -I$(top_srcdir)/src                                     \
+	-I$(top_srcdir)/src/toolbareditor                       \
         -I$(top_builddir)/src                                   \
         $(GTRANSLATOR_CFLAGS)                                   \
         $(WARN_CFLAGS)                                          \

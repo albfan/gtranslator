@@ -19,6 +19,7 @@
 #include <config.h>
 #endif
 
+#include "application.h"
 #include "messages-table-panel.h"
 #include "msg.h"
 #include "po.h"
@@ -55,6 +56,7 @@ enum
 	ORIGINAL_COLUMN,
 	TRANSLATION_COLUMN,
 	COLOR_COLUMN,
+	POINTER_COLUMN,
 	N_COLUMNS
 };
 
@@ -79,6 +81,27 @@ gtranslator_tree_size_allocate(GtkTreeView *widget,
 }
 
 static void
+gtranslator_messages_table_selection_changed (GtkTreeSelection *selection,
+					      GtranslatorMessagesTablePanel *panel)
+{
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	GtranslatorTab *tab;
+	GList *msg = NULL;
+	
+	g_return_if_fail(selection != NULL);
+
+	tab = gtranslator_window_get_active_tab(gtranslator_application_get_active_window(GTR_APP));
+
+	if(gtk_tree_selection_get_selected(selection, &model, &iter) == TRUE)
+	{
+		gtk_tree_model_get(model, &iter, POINTER_COLUMN, &msg, -1);
+		if(msg != NULL)
+			gtranslator_tab_message_go_to(tab, msg);
+	}
+}
+
+static void
 gtranslator_messages_table_panel_draw(GtranslatorMessagesTablePanel *panel)
 {
 	GtranslatorMessagesTablePanelPrivate *priv = panel->priv;
@@ -91,7 +114,8 @@ gtranslator_messages_table_panel_draw(GtranslatorMessagesTablePanel *panel)
 					  G_TYPE_STRING,
 					  G_TYPE_STRING,
 					  G_TYPE_STRING,
-					  GDK_TYPE_COLOR);
+					  GDK_TYPE_COLOR,
+					  G_TYPE_POINTER);
 	
 	priv->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL(priv->store));
 	gtk_tree_view_expand_all(GTK_TREE_VIEW(priv->treeview));
@@ -131,9 +155,9 @@ gtranslator_messages_table_panel_draw(GtranslatorMessagesTablePanel *panel)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(priv->treeview));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 
-	/*g_signal_connect (G_OBJECT(selection), "changed", 
-			  G_CALLBACK(gtranslator_control_table_selection_changed), 
-			  dlg);*/
+	g_signal_connect (G_OBJECT(selection), "changed", 
+			  G_CALLBACK(gtranslator_messages_table_selection_changed), 
+			  panel);
 	
 	/*g_signal_connect (G_OBJECT(dlg->priv->treeview), "row-expanded", 
 			  G_CALLBACK(gtranslator_control_table_node_expanded), 
@@ -215,6 +239,7 @@ gtranslator_messages_table_panel_populate(GtranslatorMessagesTablePanel *table,
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
 					   COLOR_COLUMN, &table->priv->fuzzy,
+					   POINTER_COLUMN, messages,
 					   -1);
 		}
 		//Translated
@@ -226,6 +251,7 @@ gtranslator_messages_table_panel_populate(GtranslatorMessagesTablePanel *table,
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
 					   COLOR_COLUMN, &table->priv->translated,
+					   POINTER_COLUMN, messages,
 					   -1);
 		}
 		//Untranslated
@@ -236,6 +262,7 @@ gtranslator_messages_table_panel_populate(GtranslatorMessagesTablePanel *table,
 					   ORIGINAL_COLUMN, msgid,
 					   TRANSLATION_COLUMN, msgstr,
 					   COLOR_COLUMN, &table->priv->untranslated,
+					   POINTER_COLUMN, messages,
 					   -1);
 		}
 

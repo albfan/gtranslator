@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "egg-toolbars-model.h"
+#include "window.h"
 
 G_BEGIN_DECLS
 
@@ -80,6 +81,8 @@ void              gtranslator_application_shutdown            (GtranslatorApplic
 
 GList            *gtranslator_application_get_views           (GtranslatorApplication *app,
 							       gboolean all_views);
+
+GtranslatorWindow *gtranslator_application_get_active_window  (GtranslatorApplication * app);
 
 G_END_DECLS
 

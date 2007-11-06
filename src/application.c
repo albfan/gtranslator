@@ -313,3 +313,9 @@ gtranslator_application_get_views (GtranslatorApplication *app,
 	
 	return res;
 }
+
+GtranslatorWindow *
+gtranslator_application_get_active_window(GtranslatorApplication * app)
+{
+	return GTR_WINDOW(app->priv->active_window);
+}

@@ -89,6 +89,9 @@ GtranslatorView       *gtranslator_tab_get_active_view     (GtranslatorTab *tab)
 GList                 *gtranslator_tab_get_all_views       (GtranslatorTab *tab,
 							    gboolean all_views);
 
+void                   gtranslator_tab_message_go_to       (GtranslatorTab *tab,
+							    GList * to_go);
+
 G_END_DECLS
 
 #endif /* __TAB_H__ */
