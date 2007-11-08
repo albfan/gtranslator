@@ -45,6 +45,8 @@ struct _GtranslatorMessagesTablePanelPrivate
 	GtkWidget *treeview;
 	GtkListStore *store;
 	
+	GtranslatorTab *tab;
+	
 	GdkColor fuzzy;
 	GdkColor translated;
 	GdkColor untranslated;
@@ -86,20 +88,51 @@ gtranslator_messages_table_selection_changed (GtkTreeSelection *selection,
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	GtranslatorTab *tab;
 	GList *msg = NULL;
 	
 	g_return_if_fail(selection != NULL);
-
-	tab = gtranslator_window_get_active_tab(gtranslator_application_get_active_window(GTR_APP));
 
 	if(gtk_tree_selection_get_selected(selection, &model, &iter) == TRUE)
 	{
 		gtk_tree_model_get(model, &iter, POINTER_COLUMN, &msg, -1);
 		if(msg != NULL)
-			gtranslator_tab_message_go_to(tab, msg);
+			gtranslator_tab_message_go_to(panel->priv->tab, msg);
 	}
 }
+
+static void
+showed_message_cb(GtranslatorTab *tab,
+		  GtranslatorMessagesTablePanel *panel)
+{
+	GtkTreeIter iter;
+	GtranslatorPo *po;
+	GList *current_item;
+	GList *item = NULL;
+	GtkTreeSelection *selection;
+	
+	po = gtranslator_tab_get_po(tab);
+	
+	current_item = gtranslator_po_get_current_message(po);
+	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(panel->priv->treeview));
+
+	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(panel->priv->store),
+					 &iter))
+	{
+		do{
+			gtk_tree_model_get(GTK_TREE_MODEL(panel->priv->store),
+					   &iter, POINTER_COLUMN, &item, -1);
+			if(item == current_item)
+			{
+				gtk_tree_selection_select_iter(selection,
+							       &iter);
+				break;
+			}
+			
+		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(panel->priv->store),
+						&iter));
+	}
+}
+
 
 static void
 gtranslator_messages_table_panel_draw(GtranslatorMessagesTablePanel *panel)
@@ -189,6 +222,15 @@ gtranslator_messages_table_panel_init (GtranslatorMessagesTablePanel *panel)
 	gtk_box_pack_start(GTK_BOX(panel), scrolledwindow, TRUE, TRUE, 0);
 	
 	gtk_container_add(GTK_CONTAINER(scrolledwindow), panel->priv->treeview);
+	
+	/* Tab */
+	panel->priv->tab = 
+		gtranslator_window_get_active_tab(gtranslator_application_get_active_window(GTR_APP));
+	
+	g_signal_connect(panel->priv->tab,
+			 "showed-message",
+			 G_CALLBACK(showed_message_cb),
+			 panel);
 }
 
 static void
