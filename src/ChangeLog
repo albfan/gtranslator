@@ -1,5 +1,15 @@
 2007-11-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* messagestable/messages-table-panel.c:
+	  If the message is already showed then is not neccessary
+	  show it again.
+	* prefs-manager.h: Added number_plurals funcs.
+	* tab.c: Added plural forms support and added comments.
+	* msg.c: Fixed a bug in msg_check func that makes
+	gtranslator crash if xerror2 is not setted.
+
+2007-11-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* parse.ch: Removed.
 	* po.c:
 	* tab.c: 

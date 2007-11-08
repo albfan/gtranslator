@@ -179,6 +179,10 @@ const gchar *            gtranslator_prefs_manager_get_authors_name             
 void                     gtranslator_prefs_manager_set_authors_email            (const gchar *email);
 const gchar *            gtranslator_prefs_manager_get_authors_email            (void);
 
+/*number plurals*/
+void                     gtranslator_prefs_manager_set_number_plurals           (gint plurals);
+gint                     gtranslator_prefs_manager_get_number_plurals           (void);
+
 
 #endif  /* __GTR_PREFS_MANAGER_H__ */
 

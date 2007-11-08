@@ -304,7 +304,7 @@ on_gettext_po_xerror2(gint severity,
 		      const gchar *filename2, size_t lineno2, size_t column2,
 		      gint multiline_p2, const gchar *message_text2)
 {
-	
+	g_warning("Error: %s.\n %s", message_text1, message_text2);
 }
 
 
@@ -321,20 +321,23 @@ const gchar *
 gtranslator_msg_check(GtranslatorMsg *msg)
 {
 	struct po_xerror_handler handler;
+	
+	g_return_val_if_fail(msg != NULL, NULL);
+
 	handler.xerror = &on_gettext_po_xerror;
-	//handler.xerror2 = &on_gettext_po_xerror2;
+	handler.xerror2 = &on_gettext_po_xerror2;
 	
 	if(message_error != NULL)
 	{
 		g_free(message_error);
 		message_error = NULL;
 	}
-
+	
 	po_message_check_all(msg->priv->message, msg->priv->iterator, &handler);
 	
 	if(gtranslator_msg_is_fuzzy(msg) || !gtranslator_msg_is_translated(msg))
 		message_error = NULL;
-	
+
 	/*Are there any other way to do this?*/
 	return message_error;
 }

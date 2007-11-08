@@ -32,6 +32,7 @@
 #include "tab.h"
 #include "panel.h"
 #include "po.h"
+#include "prefs-manager.h"
 #include "view.h"
 
 #include <glib.h>
@@ -51,7 +52,6 @@ G_DEFINE_TYPE(GtranslatorTab, gtranslator_tab, GTK_TYPE_VBOX)
 struct _GtranslatorTabPrivate
 {
 	GtranslatorPo *po;
-	//GtrMessagesTable *message_table;
 	
 	GtkWidget *table_pane;
 	GtkWidget *content_pane;
@@ -148,17 +148,17 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		return;
 	}
 	i=1;
-	//while(i < (gint)GtrPreferences.nplurals) {
+	while(i < gtranslator_prefs_manager_get_number_plurals()) {
 		/* Know when to break out of the loop */
 		if(!tab->priv->trans_msgstr[i]) {
-		//	break;
+			break;
 		}
 		
 		/* Have we reached the one we want yet? */
 		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->trans_msgstr[i]));
 		if(textbuffer != buf) {
 			i++;
-		//	continue;
+			continue;
 		}
 		
 		/* Get message as UTF-8 buffer */
@@ -174,7 +174,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		gtranslator_page_dirty(textbuffer, tab);
 		return;
 		
-	//}
+	}
 
 	/* Shouldn't get here */
 	g_return_if_reached();
@@ -229,12 +229,13 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 	const gchar *msgstr_plural;
 	gint i;
 
-	
+	g_return_if_fail(tab != NULL);
+	g_return_if_fail(msg != NULL);
 	/*
 	 * Should show the number of plural forms defined in header
 	 */
-	/*for(i = 0; i < (gint)GtrPreferences.nplurals ; i++)
-	{*/
+	for(i = 0; i < gtranslator_prefs_manager_get_number_plurals(); i++)
+	{
 		msgstr_plural = gtranslator_msg_get_msgstr_plural(msg, i);
 		if(msgstr_plural)
 		{
@@ -243,7 +244,7 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 			gtk_text_buffer_set_text(buf, (gchar*)msgstr_plural, -1);
 			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
 		}
-	//}
+	}
 }
 
 static void
@@ -297,7 +298,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	GtkWidget *status_box;
 	GtkWidget *status_label;
 	GtkTextBuffer *buf;
-	
 	gchar *label;
 	gint i = 0;
 	
@@ -366,7 +366,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Translation widgets
 	 */
 	priv->trans_notebook = gtk_notebook_new();
-	//do{
+	do{
 		label = g_strdup_printf(_("Plural %d"), i+1);
 		priv->trans_msgstr[i] = gtranslator_tab_append_page(label,
 								    priv->trans_notebook,
@@ -375,7 +375,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		g_signal_connect(buf, "end-user-action",
 				 G_CALLBACK(gtranslator_message_translation_update),
 				 tab);
-		
 		/* FIXME: Connect the same func twice is not a good idea */
 		g_signal_connect_after(buf, "changed",
 				 G_CALLBACK(status_widgets), tab);
@@ -383,8 +382,8 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 				       G_CALLBACK(status_widgets), tab);
 		i++;
 		g_free(label);
-	//}while(i < (gint)GtrPreferences.nplurals);
-	
+	}while(i < gtranslator_prefs_manager_get_number_plurals());
+		
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->trans_notebook, TRUE, TRUE, 0);	
 	
 	gtk_paned_pack2(GTK_PANED(priv->table_pane), priv->content_pane, FALSE, FALSE);
@@ -444,6 +443,12 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 
 /***************************** Public funcs ***********************************/
 
+/**
+ * gtranslator_tab_new:
+ * @po: a #GtranslatorPo
+ * 
+ * Return value: a new #GtranslatorTab object
+ **/
 GtranslatorTab *
 gtranslator_tab_new (GtranslatorPo *po)
 {
@@ -459,12 +464,24 @@ gtranslator_tab_new (GtranslatorPo *po)
 	return tab;
 }
 
+/**
+ * gtranslator_tab_get_po:
+ * @tab: a #GtranslatorTab
+ *
+ * Return value: the #GtranslatorPo stored in the #GtranslatorTab
+**/
 GtranslatorPo *
 gtranslator_tab_get_po(GtranslatorTab *tab)
 {
 	return tab->priv->po;
 }
 
+/**
+ * gtranslator_tab_get_panel:
+ * @tab: a #GtranslationTab
+ * 
+ * Return value: the horizontal #GtranslatorPanel of the #GtranslationTab
+**/
 GtranslatorPanel *
 gtranslator_tab_get_panel(GtranslatorTab *tab)
 {
@@ -473,18 +490,36 @@ gtranslator_tab_get_panel(GtranslatorTab *tab)
 	return tab->priv->panel;
 }
 
+/**
+ * gtranslator_tab_get_active_text_tab:
+ * @tab: a #GtranslationTab
+ * 
+ * Return value: the number of the active original text notebook.
+ **/
 gint
 gtranslator_tab_get_active_text_tab(GtranslatorTab *tab)
 {
 	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->text_notebook));
 }
 
+/**
+ * gtranslator_tab_get_active_trans_tab:
+ * @tab: a #GtranslationTab
+ * 
+ * Return value: the number of the active translation notebook.
+ **/
 gint
 gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
 {
 	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->trans_notebook));
 }
 
+/**
+ * gtranslator_tab_get_active_view:
+ * @tab: a #GtranslationTab
+ *
+ * Return value: the active page of the translation notebook.
+**/
 GtranslatorView *
 gtranslator_tab_get_active_view(GtranslatorTab *tab)
 {
@@ -529,6 +564,14 @@ gtranslator_tab_get_all_views(GtranslatorTab *tab,
 	return ret;
 }
 
+/**
+ * gtranslator_tab_show_message:
+ * @tab: a #GtranslationTab
+ * @msg: a #GtranslatorMsg
+ * 
+ * Shows the @msg in the @tab TextViews
+ *
+**/
 void
 gtranslator_tab_show_message(GtranslatorTab *tab,
 			     GtranslatorMsg *msg)
@@ -542,17 +585,18 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 	g_return_if_fail(GTR_IS_TAB(tab));
 	
 	po = priv->po;
-	
 	gtranslator_po_update_current_message(po, msg);
 	msgid = gtranslator_msg_get_msgid(msg);
-	if(msgid) {
+	if(msgid) 
+	{
 		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->text_msgid));
 		gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
 		gtk_text_buffer_set_text(buf, (gchar*)msgid, -1);
 		gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
 	}
 	msgid_plural = gtranslator_msg_get_msgid_plural(msg);
-	if(!msgid_plural) {
+	if(!msgid_plural) 
+	{
 		msgstr = gtranslator_msg_get_msgstr(msg);
 		/*
 		 * Disable notebook tabs
@@ -598,12 +642,12 @@ gtranslator_tab_message_go_to(GtranslatorTab *tab,
 	const gchar *message_error;
 	GtkWidget *message_area;
  
+	g_return_if_fail (tab != NULL);
 	g_return_if_fail (to_go!=NULL);
 		
 	po = tab->priv->po;
 	
 	//gtranslator_message_update();
-	
 	
 	current_msg = gtranslator_po_get_current_message(po);
 	message_error = gtranslator_msg_check(current_msg->data);

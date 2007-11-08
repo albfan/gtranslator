@@ -89,13 +89,18 @@ gtranslator_messages_table_selection_changed (GtkTreeSelection *selection,
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GList *msg = NULL;
+	GList *current_msg = NULL;
+	GtranslatorPo *po;
 	
 	g_return_if_fail(selection != NULL);
 
+	po = gtranslator_tab_get_po(panel->priv->tab);
+	current_msg = gtranslator_po_get_current_message(po);
+	
 	if(gtk_tree_selection_get_selected(selection, &model, &iter) == TRUE)
 	{
 		gtk_tree_model_get(model, &iter, POINTER_COLUMN, &msg, -1);
-		if(msg != NULL)
+		if(msg != NULL && msg != current_msg)
 			gtranslator_tab_message_go_to(panel->priv->tab, msg);
 	}
 }
