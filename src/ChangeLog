@@ -1,5 +1,17 @@
 2007-11-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* parse.ch: Removed.
+	* po.c:
+	* tab.c: 
+	* actions-file.c
+		 Added people to license.
+	* toolbareditor: Sync from egg svn repository.
+	* message-area.c: Sync from gedit svn repository.
+	* message-area.h: 
+	* io-error-message-area.c: Changed GTRANSLATOR to GTR.
+
+2007-11-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* messagestable:
 		* messages-table-panel.c: Now if a new messages is showed
 		the messages table select that message row.

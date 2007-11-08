@@ -1,6 +1,9 @@
 /*
- * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
- * 
+ * Copyright (C) 2007   Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ * 			Fatih Demir <kabalak@kabalak.net>
+ *			Ross Golder <ross@golder.org>
+ *			Gediminas Paulauskas <menesis@kabalak.net>
+ *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or

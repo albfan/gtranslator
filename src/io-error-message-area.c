@@ -84,7 +84,7 @@ set_message_area_text_and_icon (GtranslatorMessageArea   *message_area,
 		gtk_misc_set_alignment (GTK_MISC (secondary_label), 0, 0.5);
 	}
 
-	gtranslator_message_area_set_contents (GTRANSLATOR_MESSAGE_AREA (message_area),
+	gtranslator_message_area_set_contents (GTR_MESSAGE_AREA (message_area),
 				       hbox_content);
 }
 
@@ -110,7 +110,7 @@ create_error_message_area (const gchar *primary_text,
 						"gtk-close", GTK_RESPONSE_CLOSE,
 						NULL);
 
-	set_message_area_text_and_icon (GTRANSLATOR_MESSAGE_AREA (message_area),
+	set_message_area_text_and_icon (GTR_MESSAGE_AREA (message_area),
 					GTK_STOCK_DIALOG_ERROR,
 					primary_text,
 					secondary_text);

@@ -1,5 +1,8 @@
 /*
- * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ * Copyright (C) 2007   Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ *			Fatih Demir <kabalak@kabalak.net>
+ *			Ross Golder <ross@golder.org>
+ *			Gediminas Paulauskas <menesis@kabalak.net>
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -340,13 +343,6 @@ gtranslator_po_get_current_message(GtranslatorPo *po)
 {
 	return po->priv->current;
 }
-
-/*void
-gtranslator_po_set_current_message(GtranslatorPo *po,
-				   GList *list)
-{
-	po->priv->current = list;
-}*/
 
 
 /**

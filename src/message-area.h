@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTRANSLATOR_MESSAGE_AREA_H__
-#define __GTRANSLATOR_MESSAGE_AREA_H__
+#ifndef __GTR_MESSAGE_AREA_H__
+#define __GTR_MESSAGE_AREA_H__
 
 #include <gtk/gtk.h>
 
@@ -33,12 +33,12 @@ typedef struct _GtranslatorMessageArea GtranslatorMessageArea;
 typedef struct _GtranslatorMessageAreaClass GtranslatorMessageAreaClass;
 typedef struct _GtranslatorMessageAreaPrivate GtranslatorMessageAreaPrivate;
 
-#define GTRANSLATOR_TYPE_MESSAGE_AREA            (gtranslator_message_area_get_type())
-#define GTRANSLATOR_MESSAGE_AREA(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), GTRANSLATOR_TYPE_MESSAGE_AREA, GtranslatorMessageArea))
-#define GTRANSLATOR_MESSAGE_AREA_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), GTRANSLATOR_TYPE_MESSAGE_AREA, GtranslatorMessageAreaClass))
-#define GTRANSLATOR_IS_MESSAGE_AREA(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), GTRANSLATOR_TYPE_MESSAGE_AREA))
-#define GTRANSLATOR_IS_MESSAGE_AREA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GTRANSLATOR_TYPE_MESSAGE_AREA))
-#define GTRANSLATOR_MESSAGE_AREA_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), GTRANSLATOR_TYPE_MESSAGE_AREA, GtranslatorMessageAreaClass))
+#define GTR_TYPE_MESSAGE_AREA            (gtranslator_message_area_get_type())
+#define GTR_MESSAGE_AREA(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), GTR_TYPE_MESSAGE_AREA, GtranslatorMessageArea))
+#define GTR_MESSAGE_AREA_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), GTR_TYPE_MESSAGE_AREA, GtranslatorMessageAreaClass))
+#define GTR_IS_MESSAGE_AREA(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), GTR_TYPE_MESSAGE_AREA))
+#define GTR_IS_MESSAGE_AREA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GTR_TYPE_MESSAGE_AREA))
+#define GTR_MESSAGE_AREA_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), GTR_TYPE_MESSAGE_AREA, GtranslatorMessageAreaClass))
 
 struct _GtranslatorMessageArea {
 	GtkHBox parent;
@@ -96,4 +96,4 @@ void		 gtranslator_message_area_response           	(GtranslatorMessageArea *mes
 
 G_END_DECLS
 
-#endif  /* __GTRANSLATOR_MESSAGE_AREA_H__ */
+#endif  /* __GTR_MESSAGE_AREA_H__ */
