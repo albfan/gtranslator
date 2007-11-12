@@ -82,7 +82,7 @@ gtranslator_LDADD = \
 	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la \
 	$(top_srcdir)/src/charmap/libcharmap.la \
 	$(top_srcdir)/src/messagestable/libmessagestable.la \
-	$(top_srcdir)/src/messagestable/libcomment.la \
+	$(top_srcdir)/src/comment/libcomment.la \
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \
 	$(GTKSPELL_LIBS)

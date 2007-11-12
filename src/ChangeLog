@@ -1,5 +1,10 @@
 2007-11-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* glossary-panel.ch: Moved to glossary folder.
+	* Makefile.am: Fixed an error with comment lib.
+
+2007-11-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* comment-panel.ch: Moved to comment folder.
 	* alternate-language.ch: Moved to alternatelanguage folder.
 	* Makefile.am: Removed comment-panel.ch.
