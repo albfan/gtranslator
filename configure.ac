@@ -206,6 +206,7 @@ src/dialogs/Makefile
 src/toolbareditor/Makefile
 src/charmap/Makefile
 src/messagestable/Makefile
+src/comment/Makefile
 ])
 
 dnl ------------------------------------------------------------------

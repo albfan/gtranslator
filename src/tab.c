@@ -24,7 +24,6 @@
 #include <config.h>
 #endif
 
-#include "comment-panel.h"
 #include "draw-spaces.h"
 #include "io-error-message-area.h"
 #include "message-area.h"
@@ -56,7 +55,6 @@ struct _GtranslatorTabPrivate
 	GtkWidget *table_pane;
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
-	GtranslatorCommentPanel *comment;
 	
 	/*Message area*/
 	GtkWidget *message_area;
@@ -398,13 +396,6 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	
 	gtranslator_tab_draw(tab);
 	
-	/* Comment panel */
-	tab->priv->comment = GTR_COMMENT_PANEL(gtranslator_comment_panel_new());
-	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
-					 GTK_ICON_SIZE_SMALL_TOOLBAR);
-	gtranslator_panel_add_item(tab->priv->panel, GTK_WIDGET(tab->priv->comment),
-				   _("Comment"), image);
-	
 	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
 	
 }
@@ -620,10 +611,6 @@ gtranslator_tab_show_message(GtranslatorTab *tab,
 		gtk_text_buffer_set_text(buf, (gchar*)msgid_plural, -1);
 		gtranslator_message_plural_forms(tab, msg);
 	}
-	
-	/* Comment */
-	gtranslator_comment_panel_set_text(tab->priv->comment,
-					   gtranslator_msg_get_extracted_comments(msg));
 }
 
 

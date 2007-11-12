@@ -1,3 +1,10 @@
+2007-11-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* comment-panel.ch: Moved to comment folder.
+	* alternate-language.ch: Moved to alternatelanguage folder.
+	* Makefile.am: Removed comment-panel.ch.
+	* tab.c: Removed comment-panel.h dependencie.
+
 2007-11-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* messagestable/messages-table-panel.c:
