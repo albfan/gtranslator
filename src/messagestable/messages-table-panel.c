@@ -114,6 +114,7 @@ showed_message_cb(GtranslatorTab *tab,
 	GList *current_item;
 	GList *item = NULL;
 	GtkTreeSelection *selection;
+	GtkTreePath *path;
 	
 	po = gtranslator_tab_get_po(tab);
 	
@@ -136,6 +137,14 @@ showed_message_cb(GtranslatorTab *tab,
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(panel->priv->store),
 						&iter));
 	}
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(panel->priv->store),
+				       &iter);
+	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(panel->priv->treeview),
+				     path,
+				     NULL,
+				     FALSE,
+				     0.0, 0.0);
+	gtk_tree_path_free(path);
 }
 
 
@@ -211,6 +220,7 @@ static void
 gtranslator_messages_table_panel_init (GtranslatorMessagesTablePanel *panel)
 {
 	GtkWidget *scrolledwindow;
+	
 	panel->priv = GTR_MESSAGES_TABLE_PANEL_GET_PRIVATE (panel);
 	
 	/* Store the colors */
@@ -226,7 +236,8 @@ gtranslator_messages_table_panel_init (GtranslatorMessagesTablePanel *panel)
 				       GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start(GTK_BOX(panel), scrolledwindow, TRUE, TRUE, 0);
 	
-	gtk_container_add(GTK_CONTAINER(scrolledwindow), panel->priv->treeview);
+	gtk_container_add(GTK_CONTAINER(scrolledwindow),
+			  panel->priv->treeview);
 	
 	/* Tab */
 	panel->priv->tab = 

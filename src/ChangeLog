@@ -1,3 +1,8 @@
+2007-11-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* messagestable/messages-table-panel.c:
+	Fixed scroll problem (Fixes bug #494911).
+
 2007-11-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* glossary-panel.ch: Moved to glossary folder.
