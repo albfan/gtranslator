@@ -1,3 +1,12 @@
+2007-11-16  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* prefs-manager-app.c: Added listener for dot char option.
+	* tab.c: Removed draw-spaces.h dependencie. Now is a dependencie
+	of view.c.
+	 Now the position of the panel is 200.
+	* view.ch: Added draw-spaces dependencie. Added enable_dot_char
+	func to manage draw-spaces.
+
 2007-11-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* messagestable/messages-table-panel.c:

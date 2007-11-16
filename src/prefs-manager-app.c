@@ -50,6 +50,11 @@ static void gtranslator_prefs_manager_syntax_hl_enable_changed(GConfClient *clie
 							       GConfEntry  *entry, 
 							       gpointer     user_data);
 
+static void gtranslator_prefs_manager_dot_char_enable_changed(GConfClient *client,
+							       guint        cnxn_id, 
+							       GConfEntry  *entry, 
+							       gpointer     user_data);
+
 /*
 static void gtranslator_prefs_manager_system_font_changed	(GConfClient *client,
 							 guint        cnxn_id,
@@ -396,8 +401,8 @@ gtranslator_prefs_manager_set_side_panel_active_page (gint id)
 
 	side_panel_active_page = id;
 	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
-			     GTR_STATE_SIDE_PANEL_ACTIVE_PAGE,
-			     id);
+				   GTR_STATE_SIDE_PANEL_ACTIVE_PAGE,
+				   id);
 }
 
 gboolean 
@@ -438,6 +443,11 @@ gtranslator_prefs_manager_app_init (void)
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_HIGHLIGHT,
 				gtranslator_prefs_manager_syntax_hl_enable_changed,
+				NULL, NULL, NULL);
+		
+		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
+				GPM_USE_DOT_CHAR,
+				gtranslator_prefs_manager_dot_char_enable_changed,
 				NULL, NULL, NULL);
 /*
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
@@ -523,9 +533,9 @@ gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 
 static void 
 gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
-						      guint        cnxn_id, 
-						      GConfEntry  *entry, 
-						      gpointer     user_data)
+							 guint        cnxn_id, 
+							 GConfEntry  *entry, 
+							 gpointer     user_data)
 {
 	GList *l;
 	GList *views;
@@ -575,6 +585,40 @@ gtranslator_prefs_manager_syntax_hl_enable_changed (GConfClient *client,
 			g_return_if_fail (GTK_IS_SOURCE_BUFFER (buf));
 
 			gtk_source_buffer_set_highlight_syntax (buf, enable);
+
+			l = l->next;
+		}
+
+		g_list_free (views);
+	}
+}
+
+static void
+gtranslator_prefs_manager_dot_char_enable_changed (GConfClient *client,
+						   guint        cnxn_id,
+						   GConfEntry  *entry,
+						   gpointer     user_data)
+{
+	g_return_if_fail (entry->key != NULL);
+	g_return_if_fail (entry->value != NULL);
+
+	if (strcmp (entry->key, GPM_USE_DOT_CHAR) == 0)
+	{
+		gboolean enable;
+		GList *views;
+		GList *l;
+
+		if (entry->value->type == GCONF_VALUE_BOOL)
+			enable = gconf_value_get_bool (entry->value);
+		else
+			enable = GPM_DEFAULT_USE_DOT_CHAR;
+
+		views = gtranslator_application_get_views (GTR_APP, TRUE);
+		l = views;
+
+		while (l != NULL)
+		{
+			gtranslator_view_enable_dot_char(GTR_VIEW(l->data), enable);
 
 			l = l->next;
 		}

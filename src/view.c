@@ -20,6 +20,7 @@
 #include <config.h>
 #endif
 
+#include "draw-spaces.h"
 #include "prefs-manager.h"
 #include "view.h"
 
@@ -141,6 +142,11 @@ gtranslator_view_init (GtranslatorView *view)
 	//Set syntax highlight according to preferences
 	gtk_source_buffer_set_highlight_syntax(priv->buffer, gtranslator_prefs_manager_get_highlight());
 	
+	//Set dot char according to preferences
+	
+	if(gtranslator_prefs_manager_get_use_dot_char())
+		gtranslator_view_enable_dot_char(view, TRUE);
+	
 	/*
 	 *  Set fonts according to preferences 
 	 */
@@ -225,6 +231,31 @@ gtranslator_view_enable_spell_check(GtranslatorView *view,
 						   FALSE);
 #endif
 	}
+}
+
+/**
+ * gtranslator_view_enable_dot_char:
+ * @view: a #GtranslatorView
+ * @enable: TRUE if you want to enable special chars for white spaces
+ *
+ * Enables special chars for white spaces including \n and \t
+**/
+void
+gtranslator_view_enable_dot_char(GtranslatorView *view,
+				 gboolean enable)
+{
+	g_return_if_fail(GTR_IS_VIEW(view));
+	
+	if(enable)
+		g_signal_connect(view, "event-after",
+				 G_CALLBACK(on_event_after), NULL);
+	else
+		g_signal_handlers_disconnect_by_func(view,
+						     G_CALLBACK(on_event_after),
+						     NULL);
+	
+	/*It's neccessary redraw the widget when you connect or disconnect the signal*/
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void

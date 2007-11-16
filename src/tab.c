@@ -24,7 +24,6 @@
 #include <config.h>
 #endif
 
-#include "draw-spaces.h"
 #include "io-error-message-area.h"
 #include "message-area.h"
 #include "msg.h"
@@ -45,6 +44,8 @@
 					 GtranslatorTabPrivate))
 
 #define MAX_PLURALS 6
+
+#define PANED_WIDTH 200
 
 G_DEFINE_TYPE(GtranslatorTab, gtranslator_tab, GTK_TYPE_VBOX)
 
@@ -203,9 +204,6 @@ gtranslator_tab_append_page(const gchar *tab_label,
 		gtranslator_view_enable_spell_check(GTR_VIEW(widget),
 						    spellcheck);
 	
-	g_signal_connect(widget, "event-after",
-			 G_CALLBACK(on_event_after), NULL);
-	
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll),
 					      widget);
 	
@@ -317,7 +315,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 */
 	priv->table_pane = gtk_hpaned_new();
 	
-	gtk_paned_set_position(GTK_PANED(priv->content_pane), 0);
+	gtk_paned_set_position(GTK_PANED(priv->content_pane), PANED_WIDTH);
 
 	/*
 	 * Pack the comments pane and the main content

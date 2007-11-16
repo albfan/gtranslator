@@ -74,6 +74,9 @@ GtkWidget	*gtranslator_view_new                    (void);
 void             gtranslator_view_enable_spell_check     (GtranslatorView *view,
 							  gboolean enable);
 
+void             gtranslator_view_enable_dot_char        (GtranslatorView *view,
+							  gboolean enable);
+
 void             gtranslator_view_cut_clipboard          (GtranslatorView *view);
 
 void             gtranslator_view_copy_clipboard         (GtranslatorView *view);
