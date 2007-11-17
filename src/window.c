@@ -877,6 +877,9 @@ gtranslator_window_init (GtranslatorWindow *window)
 	/* Messages table */
 	messages_table_activate(window);
 	
+	/* Comment */
+	comment_activate(window);
+	
 }
 
 static void

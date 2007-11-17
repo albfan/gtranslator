@@ -12,7 +12,9 @@ noinst_LTLIBRARIES = \
 
 libcomment_la_SOURCES = \
 	comment-panel.h \
-	comment-panel.c
+	comment-panel.c \
+	comment.c \
+	comment.h
 
 libcomment_la_CFLAGS = \
 	$(GTRANSLATOR_CFLAGS)			\

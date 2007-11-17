@@ -1,3 +1,10 @@
+2007-11-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* comment/comment.ch: Added to manage the comment plugin.
+	* comment/Makefile.am: Added comment.ch.
+	* msg.h: Added get_extracted_comments func.
+	* window.c: Added call to comment_activate func.
+
 2007-11-16  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* prefs-manager-app.c: Added listener for dot char option.
