@@ -4,6 +4,7 @@ INCLUDES =                                                      \
         -I$(top_srcdir)/src                                     \
         -I$(top_builddir)/src                                   \
 	-DDATADIR=\""$(pkgdatadir)"\"				\
+	-DPIXMAPSDIR=\""$(datadir)"/pixmaps/gtranslator\"	\
         $(GTRANSLATOR_CFLAGS)                                   \
         $(WARN_CFLAGS)                                          \
         $(DISABLE_DEPRECATED_CFLAGS)

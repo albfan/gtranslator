@@ -35,7 +35,6 @@
 						 	GTR_TYPE_PREFERENCES_DIALOG,     \
 						 	GtranslatorPreferencesDialogPrivate))
 
-#define PIXMAPSDIR "/usr/local/share/pixmaps/gtranslator"
 
 G_DEFINE_TYPE(GtranslatorPreferencesDialog, gtranslator_preferences_dialog, GTK_TYPE_DIALOG)
 

@@ -653,22 +653,3 @@ gtranslator_tab_message_go_to(GtranslatorTab *tab,
 		return;
 	}
 }
-
-/**
- * gtranslator_tab_enable_spell_check:
- * @tab: a #GtranslatorTab
- * @enable: if is TRUE it enables the spellcheck
- *
- **/
-void
-gtranslator_tab_enable_spell_check(GtranslatorTab *tab,
-				   gboolean enable)
-{
-	gint i;
-	for(i = 0; ; i++)
-	{
-		if(tab->priv->trans_msgstr[i])
-			gtranslator_view_enable_spell_check(GTR_VIEW(tab->priv->trans_msgstr[i]),
-							    enable);
-	}
-}
