@@ -34,15 +34,17 @@
     </menu>
 
     <menu name="ViewMenu" action="View">
-      <menuitem name="ViewBookmarksMenu" action="ViewBookmarks"/>
       <menuitem name="ViewSchemesMenu" action="ViewSchemes"/>
+    </menu>
+
+    <menu name="BookmarksMenu" action="Bookmarks">
+      <menuitem name="BookmarksAddMenu" action="BookmarksAdd"/>
+      <menuitem name="BookmarksEditMenu" action="BookmarksEdit"/>
     </menu>
 
     <menu name="ActionsMenu" action="Actions">
       <menuitem name="ActionsCompileMenu" action="ActionsCompile"/>
       <menuitem name="ActionsRefreshMenu" action="ActionsRefresh"/>
-      <separator/>
-      <menuitem name="ActionsAddBookmarkMenu" action="ActionsAddBookmark"/>
       <separator/>
       <menuitem name="ActionsAutotranslateMenu" action="ActionsAutotranslate"/>
       <separator/>

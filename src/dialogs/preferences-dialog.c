@@ -778,7 +778,7 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 	
 	/*Glade*/
 	
-	ret = gtranslator_utils_get_glade_widgets(DATADIR"/preferences.glade",
+	ret = gtranslator_utils_get_glade_widgets(DATADIR"/preferences-dialog.glade",
 		"main_box",
 		&error_widget,
 		

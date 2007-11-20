@@ -91,6 +91,7 @@ static const GtkActionEntry always_sensitive_entries[] = {
 	{ "File", NULL, N_("_File") },
         { "Edit", NULL, N_("_Edit") },
 	{ "View", NULL, N_("_View") },
+	{ "Bookmarks", NULL, N_("_Bookmarks") },
 	{ "Actions", NULL, N_("_Actions") },
 	{ "Search", NULL, N_("_Search") },
         { "Go", NULL, N_("_Go") },
@@ -177,9 +178,13 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	
 	/* View menu */
-	{ "ViewBookmarks", NULL, N_("_Bookmarks"), NULL,
-          NULL, NULL},
 	{ "ViewSchemes", NULL, N_("_ColorSchemes"), NULL,
+          NULL, NULL},
+	
+	/* Bookmarks menu */
+	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add bookmark"), NULL,
+          N_("Add a bookmark for this message in this po file"), NULL},
+	{ "BookmarksEdit", NULL, N_("_Edit bookmarks"), NULL,
           NULL, NULL},
 	
 	/* Action menu */
@@ -187,8 +192,6 @@ static const GtkActionEntry entries[] = {
           N_("Compile the po file"), NULL },
 	{ "ActionsRefresh", GTK_STOCK_REFRESH, NULL, NULL,
           N_("  "), NULL },
-	{ "ActionsAddBookmark", GTK_STOCK_ADD, N_("_Add bookmark"), NULL,
-          N_("Add a bookmark for this message in this po file"), NULL},
 	  //G_CALLBACK(gtranslator_bookmark_adding_dialog) },
 	{ "ActionsAutotranslate", NULL, N_("Aut_otranslate..."), NULL,
           N_("Autotranslate the file with information from your learn buffer"), NULL},

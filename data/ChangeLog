@@ -1,3 +1,7 @@
+2007-11-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* gtranslator-ui.xml: Added bookmarks menu.
+
 2007-10-14  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* po.lang: Added all neccessary regular expressions.
