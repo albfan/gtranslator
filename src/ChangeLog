@@ -1,3 +1,9 @@
+2007-11-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* history-entry.ch: Added from gedit repository.
+	* update-history-entry.sh: Added to update history entry widget.
+	* window.c: Added string.
+
 2007-11-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dialogs/preferences-dialog.c:

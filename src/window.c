@@ -184,8 +184,8 @@ static const GtkActionEntry entries[] = {
 	/* Bookmarks menu */
 	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add bookmark"), NULL,
           N_("Add a bookmark for this message in this po file"), NULL},
-	{ "BookmarksEdit", NULL, N_("_Edit bookmarks"), NULL,
-          NULL, NULL},
+	{ "BookmarksEdit", GTK_STOCK_EDIT, N_("_Edit bookmarks"), NULL,
+          N_("Edit the stored bookmarks"), NULL},
 	
 	/* Action menu */
 	{ "ActionsCompile", GTK_STOCK_CONVERT, N_("_Compile"), NULL,
@@ -1089,6 +1089,12 @@ gtranslator_window_get_all_views(GtranslatorWindow *window,
 	return views;
 }
 
+/*
+ * TODO: Create a new statusbar widget
+ * where you can set the messages status and
+ * for example if is set the key Insert
+ * Should manage flash messages too.
+ */
 void
 gtranslator_window_update_statusbar(GtranslatorWindow *window)
 {
