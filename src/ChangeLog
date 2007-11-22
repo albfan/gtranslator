@@ -1,5 +1,12 @@
 2007-11-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* dialogs.ch:
+	* replace.ch:
+	* find.ch:
+	  Removed. They aren't neccessary.
+
+2007-11-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* dialogs:
 		* search-dialog.ch: Added search dialog.
 		* Makefile.am: Added search-dialog.ch.
