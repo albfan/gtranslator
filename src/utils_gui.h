@@ -91,4 +91,8 @@ gboolean       gtranslator_utils_get_glade_widgets (const gchar *filename,
 
 gchar **gtranslator_utils_drop_get_uris (GtkSelectionData *selection_data);
 
+gchar *gtranslator_utils_escape_search_text (const gchar* text);
+
+gchar *gtranslator_utils_unescape_search_text (const gchar *text);
+
 #endif

@@ -16,7 +16,9 @@ libdialogs_la_SOURCES = \
 	file-dialogs.c \
 	file-dialogs.h \
 	preferences-dialog.c \
-	preferences-dialog.h
+	preferences-dialog.h \
+	search-dialog.c \
+	search-dialog.h
 
 gladedir = $(pkgdatadir)
 

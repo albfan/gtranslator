@@ -31,7 +31,7 @@
 #ifndef __GTR_MESSAGE_AREA_H__
 #define __GTR_MESSAGE_AREA_H__
 
-#include <gtk/gtk.h>
+#include <gtk/gtkhbox.h>
 
 G_BEGIN_DECLS
 

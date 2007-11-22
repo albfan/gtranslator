@@ -1,5 +1,13 @@
 2007-11-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* dialogs:
+		* search-dialog.ch: Added search dialog.
+		* Makefile.am: Added search-dialog.ch.
+	* utils_gui.ch: Added escape_search_text and unescape_search_text
+	funcs.
+
+2007-11-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* update-history-entry.sh: Now is update-from-gedit.sh
 	 Now updates: message-area, history-entry and panel.
 	* Makefile.am: Added history-entry.ch.
