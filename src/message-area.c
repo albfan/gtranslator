@@ -1,9 +1,8 @@
 /*
  * message-area.c
- * This file is part of gtranslator based in gedit-message-area file
+ * This file is part of gtranslator
  *
- * Copyright (C)	2007 - Ignacio Casal Quinteiro
- * 			2005 - Paolo Maggi
+ * Copyright (C) 2005 - Paolo Maggi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +21,11 @@
  */
 
 /*
- * Modified by the gedit Team, 2005. See the AUTHORS file for a
- * list of people on the gedit Team.
+ * Modified by the gtranslator Team, 2005. See the AUTHORS file for a
+ * list of people on the gtranslator Team.
  * See the ChangeLog files for a list of changes.
  *
- * $Id: gedit-message-area.c 5887 2007-09-07 07:20:19Z pborelli $
+ * $Id: message-area.c 5887 2007-09-07 07:20:19Z pborelli $
  */
 
 /* TODO: Style properties */
@@ -89,14 +88,14 @@ get_response_data (GtkWidget *widget,
 		   gboolean   create)
 {
 	ResponseData *ad = g_object_get_data (G_OBJECT (widget),
-                                       	      "gtranslator-message-area-response-data");
+                                       	      "message-area-response-data");
 
 	if (ad == NULL && create)
 	{
 		ad = g_new (ResponseData, 1);
 
 		g_object_set_data_full (G_OBJECT (widget),
-					"gtranslator-message-area-response-data",
+					"message-area-response-data",
 					ad,
 					g_free);
     	}

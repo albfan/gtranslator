@@ -1,22 +1,31 @@
 /*
- * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
- * 
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * gtranslator-panel.c
+ * This file is part of gtranslator
  *
+ * Copyright (C) 2005 - Paolo Maggi 
  *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *	Based in gedit-panel widget of Paolo Maggi 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, 
+ * Boston, MA 02111-1307, USA.
+ */
+ 
+/*
+ * Modified by the gtranslator Team, 2005. See the AUTHORS file for a 
+ * list of people on the gtranslator Team.  
+ * See the ChangeLog files for a list of changes.
+ *
+ * $Id: gtranslator-panel.c 5796 2007-08-14 17:26:09Z pborelli $
  */
 
 #include "panel.h"
@@ -26,6 +35,8 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "window.h"
+//#include "gtranslator-debug.h"
 
 #define PANEL_ITEM_KEY "GtranslatorPanelItemKey"
 
@@ -62,7 +73,7 @@ enum {
 	ITEM_ADDED,
 	ITEM_REMOVED,
 	CLOSE,
-	//FOCUS_DOCUMENT,
+	FOCUS_DOCUMENT,
 	LAST_SIGNAL
 };
 
@@ -73,9 +84,9 @@ static void	 gtranslator_panel_set_property	(GObject         *object,
 						 const GValue    *value,
 						 GParamSpec      *pspec);
 
-static void	 gtranslator_panel_class_init	(GtranslatorPanelClass *klass);
+static void	 gtranslator_panel_class_init		(GtranslatorPanelClass *klass);
 
-static void	 gtranslator_panel_init 	(GtranslatorPanel *panel);
+static void	 gtranslator_panel_init 		(GtranslatorPanel *panel);
 
 static GObject	*gtranslator_panel_constructor	(GType type,
 						 guint n_construct_properties,
@@ -93,9 +104,9 @@ gtranslator_panel_finalize (GObject *obj)
 
 static void
 gtranslator_panel_get_property (GObject    *object,
-				guint       prop_id,
-				GValue     *value,
-				GParamSpec *pspec)
+			  guint       prop_id,
+			  GValue     *value,
+			  GParamSpec *pspec)
 {
 	GtranslatorPanel *panel = GTR_PANEL (object);
 	
@@ -112,9 +123,9 @@ gtranslator_panel_get_property (GObject    *object,
 
 static void
 gtranslator_panel_set_property (GObject      *object,
-				guint         prop_id,
-				const GValue *value,
-				GParamSpec   *pspec)
+			  guint         prop_id,
+			  const GValue *value,
+			  GParamSpec   *pspec)
 {
 	GtranslatorPanel *panel = GTR_PANEL (object);
 
@@ -135,7 +146,7 @@ gtranslator_panel_close (GtranslatorPanel *panel)
 	gtk_widget_hide (GTK_WIDGET (panel));
 }
 
-/*static void
+static void
 gtranslator_panel_focus_document (GtranslatorPanel *panel)
 {
 	GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (panel));
@@ -147,7 +158,7 @@ gtranslator_panel_focus_document (GtranslatorPanel *panel)
 		if (view != NULL)
 			gtk_widget_grab_focus (GTK_WIDGET (view));
    	}
-}*/
+}
 
 static void
 gtranslator_panel_grab_focus (GtkWidget *w)
@@ -193,7 +204,7 @@ gtranslator_panel_class_init (GtranslatorPanelClass *klass)
 	widget_class->grab_focus = gtranslator_panel_grab_focus;
 
 	klass->close = gtranslator_panel_close;
-	//klass->focus_document = gtranslator_panel_focus_document;
+	klass->focus_document = gtranslator_panel_focus_document;
 
 	signals[ITEM_ADDED] =
 		g_signal_new ("item_added",
@@ -225,14 +236,14 @@ gtranslator_panel_class_init (GtranslatorPanelClass *klass)
 		  	      NULL, NULL,
 		  	      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
-	/*signals[FOCUS_DOCUMENT] =
+	signals[FOCUS_DOCUMENT] =
 		g_signal_new ("focus_document",
 			      G_OBJECT_CLASS_TYPE (klass),
 			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 			      G_STRUCT_OFFSET (GtranslatorPanelClass, focus_document),
 		  	      NULL, NULL,
 		  	      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);					*/
+			      G_TYPE_NONE, 0);					
 	binding_set = gtk_binding_set_by_class (klass);
   
 	gtk_binding_entry_add_signal (binding_set, 
@@ -240,11 +251,11 @@ gtranslator_panel_class_init (GtranslatorPanelClass *klass)
 				      0, 
 				      "close", 
 				      0);
-	/*gtk_binding_entry_add_signal (binding_set, 
+	gtk_binding_entry_add_signal (binding_set, 
 				      GDK_Return, 
 				      GDK_CONTROL_MASK, 
 				      "focus_document", 
-				      0);*/
+				      0);
 }
 
 /* This is ugly, since it supports only known
@@ -356,10 +367,10 @@ sync_title (GtranslatorPanel     *panel,
 }
 
 static void
-notebook_page_changed (GtkNotebook      *notebook,
-                       GtkNotebookPage  *page,
-                       guint             page_num,
-                       GtranslatorPanel *panel)
+notebook_page_changed (GtkNotebook     *notebook,
+                       GtkNotebookPage *page,
+                       guint            page_num,
+                       GtranslatorPanel      *panel)
 {
 	GtkWidget *item;
 	GtranslatorPanelItem *data;
@@ -368,7 +379,7 @@ notebook_page_changed (GtkNotebook      *notebook,
 	g_return_if_fail (item != NULL);
 
 	data = (GtranslatorPanelItem *)g_object_get_data (G_OBJECT (item),
-							  PANEL_ITEM_KEY);
+						    PANEL_ITEM_KEY);
 	g_return_if_fail (data != NULL);
 
 	sync_title (panel, data);
@@ -446,18 +457,13 @@ create_small_button (GtkWidget *image)
 }
 
 static void
-build_notebook_for_panel (GtranslatorPanel *panel,
-			  GtkOrientation orientation)
+build_notebook_for_panel (GtranslatorPanel *panel)
 {
 	/* Create the panel notebook */
 	panel->priv->notebook = gtk_notebook_new ();
 
-	if(orientation == GTK_ORIENTATION_VERTICAL)
-		gtk_notebook_set_tab_pos (GTK_NOTEBOOK (panel->priv->notebook),
-					  GTK_POS_BOTTOM);
-	else
-		gtk_notebook_set_tab_pos (GTK_NOTEBOOK (panel->priv->notebook),
-					  GTK_POS_TOP);
+	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (panel->priv->notebook),
+				  GTK_POS_BOTTOM);
   	gtk_notebook_set_scrollable (GTK_NOTEBOOK (panel->priv->notebook),
   				     TRUE);
   	gtk_notebook_popup_enable (GTK_NOTEBOOK (panel->priv->notebook));
@@ -505,9 +511,9 @@ build_horizontal_panel (GtranslatorPanel *panel)
 			    FALSE, 
 			    0);
 
-	gtk_widget_set_tooltip_text(close_button, _("Hide panel"));
+	gtk_widget_set_tooltip_text (close_button, _("Hide panel"));
 
-	g_signal_connect (G_OBJECT (close_button),
+	g_signal_connect (close_button,
 			  "clicked",
                           G_CALLBACK (close_button_clicked_cb),
                           panel);
@@ -579,13 +585,13 @@ build_vertical_panel (GtranslatorPanel *panel)
 			    FALSE, 
 			    0);
 
-	gtk_widget_set_tooltip_text(close_button, _("Hide panel"));
+	gtk_widget_set_tooltip_text (close_button, _("Hide panel"));
 
-	g_signal_connect (G_OBJECT (close_button), 
+	g_signal_connect (close_button,
 			  "clicked",
                           G_CALLBACK (close_button_clicked_cb),
                           panel);
-                 
+
 	gtk_widget_show_all (title_hbox);
 
 	gtk_box_pack_start (GTK_BOX (panel),
@@ -597,8 +603,8 @@ build_vertical_panel (GtranslatorPanel *panel)
 
 static GObject *
 gtranslator_panel_constructor (GType type,
-			       guint n_construct_properties,
-			       GObjectConstructParam *construct_properties)
+			 guint n_construct_properties,
+			 GObjectConstructParam *construct_properties)
 {
 	
 	/* Invoke parent constructor. */
@@ -612,16 +618,11 @@ gtranslator_panel_constructor (GType type,
 			   (_init has been called previously) */
 	GtranslatorPanel *panel = GTR_PANEL (obj);
 
+	build_notebook_for_panel (panel);
   	if (panel->priv->orientation == GTK_ORIENTATION_HORIZONTAL)
-	{
-		build_notebook_for_panel (panel, GTK_ORIENTATION_HORIZONTAL);
   		build_horizontal_panel (panel);
-	}
 	else
-	{
-		build_notebook_for_panel (panel, GTK_ORIENTATION_VERTICAL);
 		build_vertical_panel (panel);
-	}
 
 	g_signal_connect (panel,
 			  "show",
@@ -667,7 +668,7 @@ build_tab_label (GtranslatorPanel  *panel,
         gtk_misc_set_padding (GTK_MISC (label), 0, 0);
 	gtk_box_pack_start (GTK_BOX (label_hbox), label, TRUE, TRUE, 0);
 
-	gtk_widget_set_tooltip_text(label_ebox, name);
+	gtk_widget_set_tooltip_text (label_ebox, name);
 
 	gtk_widget_show_all (hbox);
 
@@ -683,9 +684,9 @@ build_tab_label (GtranslatorPanel  *panel,
 
 void
 gtranslator_panel_add_item (GtranslatorPanel  *panel, 
-			    GtkWidget   *item, 
-			    const gchar *name,
-			    GtkWidget   *image)
+		      GtkWidget   *item, 
+		      const gchar *name,
+		      GtkWidget   *image)
 {
 	GtranslatorPanelItem *data;
 	GtkWidget *tab_label;
@@ -754,7 +755,7 @@ gtranslator_panel_add_item_with_stock_icon (GtranslatorPanel  *panel,
 
 gboolean
 gtranslator_panel_remove_item (GtranslatorPanel *panel,
-			       GtkWidget  *item)
+			 GtkWidget  *item)
 {
 	GtranslatorPanelItem *data;
 	gint page_num;
@@ -770,7 +771,7 @@ gtranslator_panel_remove_item (GtranslatorPanel *panel,
 		return FALSE;
 		
 	data = (GtranslatorPanelItem *)g_object_get_data (G_OBJECT (item),
-							  PANEL_ITEM_KEY);
+					            PANEL_ITEM_KEY);
 	g_return_val_if_fail (data != NULL, FALSE);
 	
 	g_free (data->name);
@@ -781,7 +782,6 @@ gtranslator_panel_remove_item (GtranslatorPanel *panel,
 		           NULL);
 
 	ebox = g_object_get_data (G_OBJECT (item), "label-ebox");
-	gtk_widget_set_tooltip_text(ebox, NULL);
 	
 	/* ref the item to keep it alive during signal emission */
 	g_object_ref (G_OBJECT (item));
@@ -802,7 +802,7 @@ gtranslator_panel_remove_item (GtranslatorPanel *panel,
 
 gboolean
 gtranslator_panel_activate_item (GtranslatorPanel *panel,
-				 GtkWidget  *item)
+			   GtkWidget  *item)
 {
 	gint page_num;
 
@@ -823,7 +823,7 @@ gtranslator_panel_activate_item (GtranslatorPanel *panel,
 
 gboolean
 gtranslator_panel_item_is_active (GtranslatorPanel *panel,
-				  GtkWidget  *item)
+			    GtkWidget  *item)
 {
 	gint cur_page;
 	gint page_num;
@@ -885,7 +885,7 @@ _gtranslator_panel_get_active_item_id (GtranslatorPanel *panel)
 	 */
 
 	data = (GtranslatorPanelItem *)g_object_get_data (G_OBJECT (item),
-							  PANEL_ITEM_KEY);
+					            PANEL_ITEM_KEY);
 	g_return_val_if_fail (data != NULL, 0);
 
 	return g_str_hash (data->name);
@@ -893,7 +893,7 @@ _gtranslator_panel_get_active_item_id (GtranslatorPanel *panel)
 
 void
 _gtranslator_panel_set_active_item_by_id (GtranslatorPanel *panel,
-					  gint        id)
+				    gint        id)
 {
 	gint n, i;
 

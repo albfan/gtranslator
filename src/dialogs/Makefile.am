@@ -21,7 +21,7 @@ libdialogs_la_SOURCES = \
 gladedir = $(pkgdatadir)
 
 glade_DATA =  \
-		preferences.glade \
+		preferences-dialog.glade \
 		search-dialog.glade
 
 EXTRA_DIST = \

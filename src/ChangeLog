@@ -1,3 +1,10 @@
+2007-11-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* update-history-entry.sh: Now is update-from-gedit.sh
+	 Now updates: message-area, history-entry and panel.
+	* Makefile.am: Added history-entry.ch.
+	* dialogs/Makefile.am: Changed preferences.glade to preferences-dialog.glade
+
 2007-11-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* history-entry.ch: Added from gedit repository.
