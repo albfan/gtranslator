@@ -1,3 +1,7 @@
+2007-11-23  Cosimo Cecchi  <cosimoc@svn.gnome.org>
+
+	* configure.ac: Fix glib-genmarshal.
+
 2007-11-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac: Updated glib-genmarshal variable.

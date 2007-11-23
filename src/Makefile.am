@@ -109,12 +109,10 @@ gtranslator_LDFLAGS = \
 #	
 
 gtranslator-marshal.h: gtranslator-marshal.list $(GLIB_GENMARSHAL)
-        $(GLIB_GENMARSHAL) $< --prefix=gtranslator_marshal  --header > $@ \
-        && echo timestamp
+	$(GLIB_GENMARSHAL) $< --header --prefix=gtranslator_marshal > $@
 
 gtranslator-marshal.c: gtranslator-marshal.list $(GLIB_GENMARSHAL)
-        $(GLIB_GENMARSHAL) $< --prefix=gtranslator_marshal --header --body > $@ \
-        && echo timestamp
+	$(GLIB_GENMARSHAL) $< --body --header --prefix=gtranslator_marshal > $@
 
 gladedir = $(pkgdatadir)
 

@@ -1,3 +1,7 @@
+2007-11-23  Cosimo Cecchi  <cosimoc@svn.gnome.org>
+
+	* Makefile.am: Fix glib-genmarshal.
+
 2007-11-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* gtranslator-marshal.list: Added to create custom closures.
