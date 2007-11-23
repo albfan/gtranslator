@@ -1,3 +1,7 @@
+2007-11-23  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.ac: Updated glib-genmarshal variable.
+
 2007-11-12  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac: Added comment lib.

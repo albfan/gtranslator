@@ -102,11 +102,14 @@ gucharmap >= $LIBGUCHARMAP_REQUIRED
 AC_SUBST(GTRANSLATOR_CFLAGS)
 AC_SUBST(GTRANSLATOR_LIBS)
 
-GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
-AC_SUBST(GLIB_GENMARSHAL)
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
-GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
-AC_SUBST(GLIB_MKENUMS)
+#GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
+#AC_SUBST(GLIB_GENMARSHAL)
+
+#GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
+#AC_SUBST(GLIB_MKENUMS)
 
 dnl -------------------------------------------------------------------
 dnl Whether we use the broken, unsupported gtk+ functions

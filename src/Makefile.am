@@ -35,7 +35,13 @@ bin_PROGRAMS = \
 #	gtranslator-auto-learn \
 #	gtranslator-export-learn-buffer
 
+BUILT_SOURCES =                         \
+        gtranslator-marshal.h                 \
+        gtranslator-marshal.c
+
 gtranslator_SOURCES = \
+	gtranslator-marshal.h \
+	gtranslator-marshal.c \
 	application.c application.h \
 	compile.h \
 	draw-spaces.c draw-spaces.h \
@@ -102,11 +108,20 @@ gtranslator_LDFLAGS = \
 #	export-learn-buffer.c
 #	
 
+gtranslator-marshal.h: gtranslator-marshal.list $(GLIB_GENMARSHAL)
+        $(GLIB_GENMARSHAL) $< --prefix=gtranslator_marshal  --header > $@ \
+        && echo timestamp
+
+gtranslator-marshal.c: gtranslator-marshal.list $(GLIB_GENMARSHAL)
+        $(GLIB_GENMARSHAL) $< --prefix=gtranslator_marshal --header --body > $@ \
+        && echo timestamp
+
 gladedir = $(pkgdatadir)
 
 glade_DATA =  \
        header_dialog.glade 
 
-EXTRA_DIST = ChangeLog $(glade_DATA)
+EXTRA_DIST = ChangeLog $(glade_DATA) gtranslator-marshal.list
 
 
+CLEANFILES = $(BUILT_SOURCES)
