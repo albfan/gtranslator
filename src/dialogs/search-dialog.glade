@@ -66,7 +66,7 @@
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
-                      <widget class="GtkCheckButton" id="orignial_text_checkbutton">
+                      <widget class="GtkCheckButton" id="original_text_checkbutton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -76,7 +76,7 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkCheckButton" id="translation_text_checkbutton">
+                      <widget class="GtkCheckButton" id="translated_text_checkbutton">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>

@@ -20,8 +20,11 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include "draw-spaces.h"
 #include "prefs-manager.h"
+#include "utils_gui.h"
 #include "view.h"
 
 #include <glib.h>
@@ -30,7 +33,8 @@
 #include <gtk/gtk.h>
 
 #include <gtksourceview/gtksourcelanguagemanager.h>
-
+#include <gtksourceview/gtksourceiter.h>
+#include <gtksourceview/gtksourcebuffer.h>
 
 //#undef HAVE_GTKSPELL
 #ifdef HAVE_GTKSPELL
@@ -54,6 +58,9 @@ G_DEFINE_TYPE(GtranslatorView, gtranslator_view, GTK_TYPE_SOURCE_VIEW)
 struct _GtranslatorViewPrivate
 {
 	GtkSourceBuffer *buffer;
+	
+	guint        search_flags;
+	gchar       *search_text;
 	
 #ifdef HAVE_GTKSPELL
 	GtkSpell *spell;
@@ -362,4 +369,343 @@ gtranslator_view_set_font (GtranslatorView *view,
 	gtk_widget_modify_font (GTK_WIDGET (view), font_desc);
 
 	pango_font_description_free (font_desc);	
+}
+
+
+/*
+ * Search funcs
+ */
+void
+gtranslator_view_set_search_text (GtranslatorView *view,
+				const gchar   *text,
+				guint          flags)
+{
+	GtkSourceBuffer *doc;
+	gchar *converted_text;
+	gboolean notify = FALSE;
+	//gboolean update_to_search_region = FALSE;
+	
+	g_return_if_fail (GTR_IS_VIEW (view));
+	g_return_if_fail ((text == NULL) || (view->priv->search_text != text));
+	g_return_if_fail ((text == NULL) || g_utf8_validate (text, -1, NULL));
+
+	//gedit_debug_message (DEBUG_DOCUMENT, "text = %s", text);
+	doc = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+
+	if (text != NULL)
+	{
+		if (*text != '\0')
+		{
+			converted_text = gtranslator_utils_unescape_search_text (text);
+			notify = !gtranslator_view_get_can_search_again (view);
+		}
+		else
+		{
+			converted_text = g_strdup("");
+			notify = gtranslator_view_get_can_search_again (view);
+		}
+		
+		g_free (view->priv->search_text);
+	
+		view->priv->search_text = converted_text;
+		//view->priv->num_of_lines_search_text = compute_num_of_lines (view->priv->search_text);
+		//update_to_search_region = TRUE;
+	}
+	
+	if (!GTR_SEARCH_IS_DONT_SET_FLAGS (flags))
+	{
+		/*if (view->priv->search_flags != flags)
+			update_to_search_region = TRUE;*/
+			
+		view->priv->search_flags = flags;
+
+	}
+
+	/*if (update_to_search_region)
+	{
+		GtkTextIter begin;
+		GtkTextIter end;
+		
+		gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (doc),
+					    &begin,
+					    &end);
+					    
+		to_search_region_range (doc,
+					&begin,
+					&end);
+	}*/
+	
+	if (notify)
+		g_object_notify (G_OBJECT (doc), "can-search-again");
+}
+
+gchar *
+gtranslator_view_get_search_text (GtranslatorView *view,
+				guint         *flags)
+{
+	g_return_val_if_fail (GTR_IS_VIEW (view), NULL);
+
+	if (flags != NULL)
+		*flags = view->priv->search_flags;
+
+	return gtranslator_utils_escape_search_text (view->priv->search_text);
+}
+
+gboolean
+gtranslator_view_get_can_search_again (GtranslatorView *view)
+{
+	g_return_val_if_fail (GTR_IS_VIEW (view), FALSE);
+
+	return ((view->priv->search_text != NULL) && 
+	        (*view->priv->search_text != '\0'));
+}
+
+gboolean
+gtranslator_view_search_forward (GtranslatorView     *view,
+				 const GtkTextIter *start,
+				 const GtkTextIter *end,
+				 GtkTextIter       *match_start,
+				 GtkTextIter       *match_end)
+{
+	GtkSourceBuffer *doc;
+	GtkTextIter iter;
+	GtkSourceSearchFlags search_flags;
+	gboolean found = FALSE;
+	GtkTextIter m_start;
+	GtkTextIter m_end;
+	
+	g_return_val_if_fail (GTR_IS_VIEW (view), FALSE);
+	
+	doc = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	
+	g_return_val_if_fail ((start == NULL) || 
+			      (gtk_text_iter_get_buffer (start) ==  GTK_TEXT_BUFFER (doc)), FALSE);
+	g_return_val_if_fail ((end == NULL) || 
+			      (gtk_text_iter_get_buffer (end) ==  GTK_TEXT_BUFFER (doc)), FALSE);
+		
+	if (view->priv->search_text == NULL)
+	{
+		//gedit_debug_message (DEBUG_DOCUMENT, "doc->priv->search_text == NULL\n");
+		return FALSE;
+	}
+	/*else
+		gedit_debug_message (DEBUG_DOCUMENT, "doc->priv->search_text == \"%s\"\n", doc->priv->search_text);*/
+				      
+	if (start == NULL)
+		gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (doc), &iter);
+	else
+		iter = *start;
+		
+	search_flags = GTK_SOURCE_SEARCH_VISIBLE_ONLY | GTK_SOURCE_SEARCH_TEXT_ONLY;
+
+	if (!GTR_SEARCH_IS_CASE_SENSITIVE (view->priv->search_flags))
+	{
+		search_flags = search_flags | GTK_SOURCE_SEARCH_CASE_INSENSITIVE;
+	}
+		
+	while (!found)
+	{
+		found = gtk_source_iter_forward_search (&iter,
+							view->priv->search_text, 
+							search_flags,
+                        	                	&m_start, 
+                        	                	&m_end,
+                                	               	end);
+      	               	
+		if (found && GTR_SEARCH_IS_ENTIRE_WORD (view->priv->search_flags))
+		{
+			found = gtk_text_iter_starts_word (&m_start) && 
+					gtk_text_iter_ends_word (&m_end);
+
+			if (!found) 
+				iter = m_end;
+		}
+		else
+			break;
+	}
+	
+	if (found && (match_start != NULL))
+		*match_start = m_start;
+	
+	if (found && (match_end != NULL))
+		*match_end = m_end;
+	
+	return found;			    
+}
+						 
+gboolean
+gtranslator_view_search_backward (GtranslatorView     *view,
+				  const GtkTextIter *start,
+				  const GtkTextIter *end,
+				  GtkTextIter       *match_start,
+				  GtkTextIter       *match_end)
+{
+	GtkSourceBuffer *doc;
+	GtkTextIter iter;
+	GtkSourceSearchFlags search_flags;
+	gboolean found = FALSE;
+	GtkTextIter m_start;
+	GtkTextIter m_end;
+	
+	g_return_val_if_fail (GTR_IS_VIEW (view), FALSE);
+	
+	doc = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view)));
+	
+	g_return_val_if_fail ((start == NULL) || 
+			      (gtk_text_iter_get_buffer (start) ==  GTK_TEXT_BUFFER (doc)), FALSE);
+	g_return_val_if_fail ((end == NULL) || 
+			      (gtk_text_iter_get_buffer (end) ==  GTK_TEXT_BUFFER (doc)), FALSE);
+	
+	if (view->priv->search_text == NULL)
+	{
+		//gedit_debug_message (DEBUG_DOCUMENT, "doc->priv->search_text == NULL\n");
+		return FALSE;
+	}
+	/*else
+		gedit_debug_message (DEBUG_DOCUMENT, "doc->priv->search_text == \"%s\"\n", doc->priv->search_text);*/
+				      
+	if (end == NULL)
+		gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (doc), &iter);
+	else
+		iter = *end;
+		
+	search_flags = GTK_SOURCE_SEARCH_VISIBLE_ONLY | GTK_SOURCE_SEARCH_TEXT_ONLY;
+
+	if (!GTR_SEARCH_IS_CASE_SENSITIVE (view->priv->search_flags))
+	{
+		search_flags = search_flags | GTK_SOURCE_SEARCH_CASE_INSENSITIVE;
+	}
+
+	while (!found)
+	{
+		found = gtk_source_iter_backward_search (&iter,
+							 view->priv->search_text, 
+							 search_flags,
+                        	                	 &m_start, 
+                        	                	 &m_end,
+                                	               	 start);
+      	               	
+		if (found && GTR_SEARCH_IS_ENTIRE_WORD (view->priv->search_flags))
+		{
+			found = gtk_text_iter_starts_word (&m_start) && 
+					gtk_text_iter_ends_word (&m_end);
+
+			if (!found) 
+				iter = m_start;
+		}
+		else
+			break;
+	}
+	
+	if (found && (match_start != NULL))
+		*match_start = m_start;
+	
+	if (found && (match_end != NULL))
+		*match_end = m_end;
+	
+	return found;		      
+}
+
+gint 
+gtranslator_view_replace_all (GtranslatorView     *view,
+			      const gchar         *find, 
+			      const gchar         *replace, 
+			      guint                flags)
+{
+	GtkTextIter iter;
+	GtkTextIter m_start;
+	GtkTextIter m_end;
+	GtkSourceSearchFlags search_flags = 0;
+	gboolean found = TRUE;
+	gint cont = 0;
+	gchar *search_text;
+	gchar *replace_text;
+	gint replace_text_len;
+	GtkTextBuffer *buffer;
+
+	g_return_val_if_fail (GTR_IS_VIEW (view), 0);
+	
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (view));
+	
+	g_return_val_if_fail (replace != NULL, 0);
+	g_return_val_if_fail ((find != NULL) || (view->priv->search_text != NULL), 0);
+
+	if (find == NULL)
+		search_text = g_strdup (view->priv->search_text);
+	else
+		search_text = gtranslator_utils_unescape_search_text (find);
+
+	replace_text = gtranslator_utils_unescape_search_text (replace);
+
+	gtk_text_buffer_get_start_iter (buffer, &iter);
+
+	search_flags = GTK_SOURCE_SEARCH_VISIBLE_ONLY | GTK_SOURCE_SEARCH_TEXT_ONLY;
+
+	if (!GTR_SEARCH_IS_CASE_SENSITIVE (flags))
+	{
+		search_flags = search_flags | GTK_SOURCE_SEARCH_CASE_INSENSITIVE;
+	}
+
+	replace_text_len = strlen (replace_text);
+
+	/* disable cursor_moved emission until the end of the
+	 * replace_all so that we don't spend all the time
+	 * updating the position in the statusbar
+	 */
+	//view->priv->stop_cursor_moved_emission = TRUE;
+
+	gtk_text_buffer_begin_user_action (buffer);
+
+	do
+	{
+		found = gtk_source_iter_forward_search (&iter,
+							search_text, 
+							search_flags,
+                        	                	&m_start, 
+                        	                	&m_end,
+                                	               	NULL);
+
+		if (found && GTR_SEARCH_IS_ENTIRE_WORD (flags))
+		{
+			gboolean word;
+
+			word = gtk_text_iter_starts_word (&m_start) && 
+			       gtk_text_iter_ends_word (&m_end);
+
+			if (!word)
+			{
+				iter = m_end;
+				continue;
+			}
+		}
+
+		if (found)
+		{
+			++cont;
+
+			gtk_text_buffer_delete (buffer, 
+						&m_start,
+						&m_end);
+			gtk_text_buffer_insert (buffer,
+						&m_start,
+						replace_text,
+						replace_text_len);
+
+			iter = m_start;
+		}		
+
+	} while (found);
+
+	gtk_text_buffer_end_user_action (buffer);
+
+	/* re-enable cursor_moved emission and notify
+	 * the current position 
+	 */
+	//view->priv->stop_cursor_moved_emission = FALSE;
+	//emit_cursor_moved (GTK_SOURCE_BUFFER(buffer));
+
+	g_free (search_text);
+	g_free (replace_text);
+
+	return cont;
 }

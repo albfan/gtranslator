@@ -95,4 +95,9 @@ gchar *gtranslator_utils_escape_search_text (const gchar* text);
 
 gchar *gtranslator_utils_unescape_search_text (const gchar *text);
 
+gboolean             g_utf8_caselessnmatch         (const gchar *s1,
+						    const gchar *s2,
+						    gssize n1,
+						    gssize n2);
+
 #endif

@@ -1,3 +1,15 @@
+2007-11-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs/search-dialog.c: Fixed some errors.
+	* dialogs/search-dialog.glade: Fixed some name variables.
+	* utils_gui.ch: Added g_utf8_caselessmatch func to normalize.
+	* window.c: Added calls to replace and find funcs in menus.
+	* view.c: Added funcs to manage the search in views.
+	* tab.c: Added po_check_po_file func.
+	* view.h: Added search macros.
+	* Makefile.am: Added actions-search.c
+	* actions-search.c: Added to manage the search.
+
 2007-11-23  Cosimo Cecchi  <cosimoc@svn.gnome.org>
 
 	* Makefile.am: Fix glib-genmarshal.

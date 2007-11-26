@@ -101,6 +101,13 @@ void       gtranslator_message_go_to_prev_untranslated
                                                 (GtkAction *action,
 						 GtranslatorWindow *window);
 
+/*Search*/
+void       _gtranslator_cmd_search_find (GtkAction   *action,
+					 GtranslatorWindow *window);
+
+void       _gtranslator_cmd_search_replace (GtkAction   *action,
+					    GtranslatorWindow *window);
+
 /*Help*/
 void       gtranslator_window_show_home_page    (GtkAction *action,
 						 gpointer useless);

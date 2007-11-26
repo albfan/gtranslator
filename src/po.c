@@ -104,7 +104,7 @@ struct _GtranslatorPoPrivate
 	guint autosave_timeout;
 };
 
-static gboolean parser_errors;
+static gchar *message_error;
 
 static void
 gtranslator_po_init (GtranslatorPo *po)
@@ -214,10 +214,10 @@ gtranslator_po_parse(GtranslatorPo *po,
 	/*
 	 * If there were errors, abandon this page
 	 */
-	if(parser_errors) {
+	/*if(parser_errors) {
 		g_object_unref(po);
 		return;
-	}
+	}*/
 	
 	/*
 	 * Determine the message domains to track
@@ -544,4 +544,54 @@ gtranslator_po_update_translated_count(GtranslatorPo *po)
 	g_list_foreach(po->priv->messages,
 		       (GFunc) determine_translation_status,
 		       po);
+}
+
+
+static void
+on_gettext_po_xerror(gint severity,
+		     po_message_t message,
+		     const gchar *filename, size_t lineno, size_t column,
+		     gint multiline_p, const gchar *message_text)
+{
+	message_error = g_strdup(message_text);
+}
+
+static void
+on_gettext_po_xerror2(gint severity,
+		      po_message_t message1,
+		      const gchar *filename1, size_t lineno1, size_t column1,
+		      gint multiline_p1, const gchar *message_text1,
+		      po_message_t message2,
+		      const gchar *filename2, size_t lineno2, size_t column2,
+		      gint multiline_p2, const gchar *message_text2)
+{
+	message_error = g_strdup_printf("%s.\n %s",message_text1, message_text2);
+}
+
+/**
+ * gtranslator_po_check_po_file:
+ * @po: a #GtranslatorPo
+ *
+ * Test whether an entire file PO file is valid, like msgfmt does it.
+ * Return value: If it is invalid, returns the error.
+ **/
+const gchar *
+gtranslator_po_check_po_file(GtranslatorPo *po)
+{
+	struct po_xerror_handler handler;
+	
+	g_return_val_if_fail(po != NULL, NULL);
+
+	handler.xerror = &on_gettext_po_xerror;
+	handler.xerror2 = &on_gettext_po_xerror2;
+	
+	if(message_error != NULL)
+	{
+		g_free(message_error);
+		message_error = NULL;
+	}
+	
+	po_file_check_all(po->priv->gettext_po_file, &handler);
+
+	return message_error;
 }

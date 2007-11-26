@@ -231,17 +231,17 @@ static const GtkActionEntry entries[] = {
 
 	/* Search menu*/
 	{ "SearchFind", GTK_STOCK_FIND, NULL, "<control>F",
-	  N_("   "), NULL},
-	//  G_CALLBACK (gtranslator_find_dialog) },
+	  N_("Search for text"),
+	  G_CALLBACK(_gtranslator_cmd_search_find) },
 	{ "SearchFindNext", NULL, N_("Search ne_xt"), NULL,
 	  N_("   "), NULL},
 	 // G_CALLBACK (gtranslator_find) },
 	{ "SearchFindPrevious", NULL, N_("Search _previous"), NULL,
 	  N_("   "), NULL},
 	 // G_CALLBACK (gtranslator_find) },
-	{ "SearchReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, NULL,
-	  N_("   "), NULL},
-	 // G_CALLBACK (gtranslator_replace_dialog) },
+	{ "SearchReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, "<control>H",
+	  N_("Search for and replace text"),
+	  G_CALLBACK (_gtranslator_cmd_search_replace) },
 	
 };
 

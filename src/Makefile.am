@@ -45,7 +45,6 @@ gtranslator_SOURCES = \
 	application.c application.h \
 	compile.h \
 	draw-spaces.c draw-spaces.h \
-	find.h \
 	header_stuff.h \
 	languages.c languages.h \
 	main.c \
@@ -83,7 +82,8 @@ gtranslator_SOURCES = \
 	prefs-manager-app.c \
 	prefs-manager-app.h \
 	history-entry.c \
-	history-entry.h
+	history-entry.h \
+	actions-search.c
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \

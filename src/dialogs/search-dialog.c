@@ -3,6 +3,7 @@
  * This file is part of gedit
  *
  * Copyright (C) 2005 Paolo Maggi
+ * 		 2007 Ignacio Casal
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@
 #include "search-dialog.h"
 #include "history-entry.h"
 #include "utils_gui.h"
-//#include "gtranslator-marshal.h"
+#include "gtranslator-marshal.h"
 
 #define GTR_SEARCH_DIALOG_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), \
 						GTR_TYPE_SEARCH_DIALOG,              \
@@ -125,17 +126,6 @@ gtranslator_search_dialog_get_property (GObject    *object,
 	}
 }
 
-void
-gtranslator_search_dialog_present_with_time (GtranslatorSearchDialog *dialog,
-				       guint32            timestamp)
-{
-	g_return_if_fail (GTR_SEARCH_DIALOG (dialog));
-
-	gtk_window_present_with_time (GTK_WINDOW (dialog), timestamp);
-
-	gtk_widget_grab_focus (dialog->priv->search_text_entry);	
-}
-
 static gboolean
 show_replace (GtranslatorSearchDialog *dlg)
 {
@@ -161,7 +151,7 @@ gtranslator_search_dialog_class_init (GtranslatorSearchDialogClass *klass)
 		  	      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  	      G_STRUCT_OFFSET (GtranslatorSearchDialogClass, show_replace),
 			      NULL, NULL,
-			      g_cclosure_marshal_BOOLEAN__FLAGS,
+			      gtranslator_marshal_BOOLEAN__NONE,
 			      G_TYPE_BOOLEAN, 0);
 			      
 	g_object_class_install_property (object_class, PROP_SHOW_REPLACE,
@@ -293,6 +283,8 @@ show_replace_widgets (GtranslatorSearchDialog *dlg,
 {
 	if (show_replace)
 	{
+		gtk_widget_hide(dlg->priv->original_text_checkbutton);
+		gtk_widget_hide(dlg->priv->translated_text_checkbutton);
 		gtk_widget_show (dlg->priv->replace_label);
 		gtk_widget_show (dlg->priv->replace_entry);
 		gtk_widget_show (dlg->priv->replace_all_button);
@@ -304,6 +296,8 @@ show_replace_widgets (GtranslatorSearchDialog *dlg,
 	}
 	else
 	{
+		gtk_widget_show(dlg->priv->original_text_checkbutton);
+		gtk_widget_show(dlg->priv->translated_text_checkbutton);
 		gtk_widget_hide (dlg->priv->replace_label);
 		gtk_widget_hide (dlg->priv->replace_entry);
 		gtk_widget_hide (dlg->priv->replace_all_button);
@@ -340,7 +334,7 @@ gtranslator_search_dialog_init (GtranslatorSearchDialog *dlg)
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dlg)->action_area), 5);
 	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dlg)->action_area), 6);
 
-	ret = gtranslator_utils_get_glade_widgets (DATADIR "search-dialog.glade",
+	ret = gtranslator_utils_get_glade_widgets (DATADIR"/search-dialog.glade",
 					     "search_dialog_content",
 					     &error_widget,
 					     "search_dialog_content", &content,
@@ -407,6 +401,8 @@ gtranslator_search_dialog_init (GtranslatorSearchDialog *dlg)
 	dlg->priv->find_button = gtk_button_new_from_stock (GTK_STOCK_FIND);
 	dlg->priv->replace_all_button = gtk_button_new_with_mnemonic (_("Replace _All"));
 	dlg->priv->replace_button = gtk_button_new_from_stock (GTK_STOCK_FIND_AND_REPLACE);
+	gtk_button_set_label(GTK_BUTTON(dlg->priv->replace_button),
+			     _("_Replace"));
 
 	gtk_dialog_add_action_widget (GTK_DIALOG (dlg),
 				      dlg->priv->replace_all_button,
@@ -460,7 +456,7 @@ gtranslator_search_dialog_init (GtranslatorSearchDialog *dlg)
 
 GtkWidget *
 gtranslator_search_dialog_new (GtkWindow *parent,
-			 gboolean   show_replace)
+			       gboolean   show_replace)
 {
 	GtranslatorSearchDialog *dlg;
 
@@ -475,6 +471,17 @@ gtranslator_search_dialog_new (GtkWindow *parent,
 	return GTK_WIDGET (dlg);
 }
 
+void
+gtranslator_search_dialog_present_with_time (GtranslatorSearchDialog *dialog,
+					     guint32            timestamp)
+{
+	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
+
+	gtk_window_present_with_time (GTK_WINDOW (dialog), timestamp);
+
+	gtk_widget_grab_focus (dialog->priv->search_text_entry);	
+}
+
 gboolean
 gtranslator_search_dialog_get_show_replace (GtranslatorSearchDialog *dialog)
 {
@@ -485,7 +492,7 @@ gtranslator_search_dialog_get_show_replace (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_show_replace (GtranslatorSearchDialog *dialog,
-				      gboolean           show_replace)
+					    gboolean           show_replace)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 
@@ -500,7 +507,7 @@ gtranslator_search_dialog_set_show_replace (GtranslatorSearchDialog *dialog,
 
 void
 gtranslator_search_dialog_set_search_text (GtranslatorSearchDialog *dialog,
-				     const gchar       *text)
+					   const gchar       *text)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 	g_return_if_fail (text != NULL);
@@ -530,7 +537,7 @@ gtranslator_search_dialog_get_search_text (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_replace_text (GtranslatorSearchDialog *dialog,
-				      const gchar       *text)
+					    const gchar       *text)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 	g_return_if_fail (text != NULL);
@@ -567,7 +574,7 @@ gtranslator_search_dialog_get_original_text (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_translated_text (GtranslatorSearchDialog *dialog,
-					     gboolean           match_case)
+					       gboolean           match_case)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 
@@ -585,7 +592,7 @@ gtranslator_search_dialog_get_translated_text (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_match_case (GtranslatorSearchDialog *dialog,
-				    gboolean           match_case)
+					  gboolean           match_case)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 
@@ -603,7 +610,7 @@ gtranslator_search_dialog_get_match_case (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_entire_word (GtranslatorSearchDialog *dialog,
-				     gboolean           entire_word)
+					   gboolean           entire_word)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 
@@ -621,7 +628,7 @@ gtranslator_search_dialog_get_entire_word (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_backwards (GtranslatorSearchDialog *dialog,
-				  gboolean           backwards)
+					 gboolean           backwards)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 
@@ -639,7 +646,7 @@ gtranslator_search_dialog_get_backwards (GtranslatorSearchDialog *dialog)
 
 void
 gtranslator_search_dialog_set_wrap_around (GtranslatorSearchDialog *dialog,
-				     gboolean           wrap_around)
+					   gboolean           wrap_around)
 {
 	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
 
