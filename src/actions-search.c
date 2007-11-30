@@ -39,6 +39,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "actions.h"
+#include "msg.h"
 #include "utils_gui.h"
 #include "view.h"
 #include "window.h"
@@ -176,7 +177,9 @@ phrase_found (GtranslatorWindow *window,
 						       window->priv->generic_message_cid,
 						       " ");*/
 	}
-	g_warning("%d occurrences");
+	g_warning(ngettext("Found and replaced one occurrence",
+			   "Found and replaced %d occurrences",
+			   occurrences));
 }
 
 static void
@@ -190,8 +193,7 @@ phrase_not_found (GtranslatorWindow *window)
 
 static gboolean
 run_search (GtranslatorView   *view,
-	    gboolean     wrap_around,
-	    gboolean     search_backwards)
+	    gboolean follow)
 {
 	GtkSourceBuffer *doc;
 	GtkTextIter start_iter;
@@ -203,46 +205,18 @@ run_search (GtranslatorView   *view,
 	
 	doc = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (view)));
 
-	if (!search_backwards)
-	{
+	if(!follow)
+		gtk_text_buffer_get_start_iter(doc, &start_iter);
+	else
 		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (doc),
 						      NULL,
 						      &start_iter);
-
-		found = gtranslator_view_search_forward (view,
-						       &start_iter,
-						       NULL,
-						       &match_start,
-						       &match_end);
-	}
-	else
-	{
-		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (doc),
-						      &start_iter,
-						      NULL);
-
-		found = gtranslator_view_search_backward (view,
-						        NULL,
-						        &start_iter,
-						        &match_start,
-						        &match_end);
-	}
-
-	if (!found && wrap_around)
-	{
-		if (!search_backwards)
-			found = gtranslator_view_search_forward (view,
-							       NULL,
-							       NULL, /* FIXME: set the end_inter */
-							       &match_start,
-							       &match_end);
-		else
-			found = gtranslator_view_search_backward (view,
-							        NULL, /* FIXME: set the start_inter */
-							        NULL, 
-							        &match_start,
-							        &match_end);
-	}
+		
+	found = gtranslator_view_search_forward (view,
+						 &start_iter,
+						 NULL,
+						 &match_start,
+						 &match_end);
 	
 	if (found)
 	{
@@ -253,87 +227,124 @@ run_search (GtranslatorView   *view,
 						   "selection_bound",
 						   &match_end);
 
-		//gtranslator_view_scroll_to_cursor (view);
 	}
 	else
 	{
 		gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (doc),
 					      &start_iter);
 	}
-
+	
 	return found;
 }
 
-/*static gboolean
-find_in_list(GList *list,
-	     gboolean fuzzy,
-	     gboolean original_text,
-	     gboolean translated_text,
-	     gboolean wrap_around,
-	     gboolean search_backwards)
+static gboolean
+find_in_list(GtranslatorWindow *window,
+	     GList *views,
+	     gboolean fuzzy)
 {
-	GList *l = list;
-	GtranslatorView *view;
+	GtranslatorTab *tab = gtranslator_window_get_active_tab(window);
+	GtranslatorPo *po = gtranslator_tab_get_po(tab);
+	GList *l = gtranslator_po_get_current_message(po);
+	GList *current;
+	GList *viewsaux;
+	current = l;
+
+	viewsaux = views;
 	
-	if(search_backwards)
-	{
-		while(l != NULL)
+	/*
+	 * Variable used to know when start search from the beggining of the view
+	 */
+	static gboolean found = FALSE;
+	
+	do{
+		if(gtranslator_msg_is_fuzzy(GTR_MSG(l->data)) && !fuzzy)
 		{
-			l = l->prev;
-			gtranslator_tab_show_message(tab, l);
-			run_search(view,
+			if(l->next == NULL)
+				l = g_list_first(l);
+			else l = l->next;
+			gtranslator_tab_show_message(tab, GTR_MSG(l->data));
 		}
-	}
+		else{
+			while(viewsaux != NULL)
+			{
+				found = run_search(GTR_VIEW(viewsaux->data), found);
+				if(found)
+					return TRUE;
+				viewsaux = viewsaux->next;
+			}
+			if(l->next == NULL)
+				l = g_list_first(l);
+			else l = l->next;
+			gtranslator_tab_show_message(tab, GTR_MSG(l->data));
+			viewsaux = views;
+		}
+	}while(l != current);
+
+	return FALSE;
 }
-*/
+
 static void
 do_find (GtranslatorSearchDialog *dialog,
 	 GtranslatorWindow       *window)
 {
-	GtranslatorView *active_view;
-	GtkSourceBuffer *doc;
+	GList *views, *list;
 	gchar *search_text;
 	const gchar *entry_text;
+	gboolean original_text;
+	gboolean translated_text;
+	gboolean fuzzy;
 	gboolean match_case;
 	gboolean entire_word;
 	gboolean wrap_around;
-	gboolean search_backwards;	
+	gboolean search_backwards;
 	guint flags = 0;
 	guint old_flags = 0;
 	gboolean found;
 
-	/* TODO: make the dialog insensitive when all the tabs are closed
-	 * and assert here that the view is not NULL */
-	active_view = gtranslator_window_get_active_view (window);
-	if (active_view == NULL)
-		return;
-
-	doc = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
-
+	
 	entry_text = gtranslator_search_dialog_get_search_text (dialog);
 
+	/* Views where find */
+	original_text = gtranslator_search_dialog_get_original_text (dialog);
+	translated_text = gtranslator_search_dialog_get_translated_text (dialog);
+	fuzzy = gtranslator_search_dialog_get_fuzzy (dialog);
+	
+	/* Flags */
 	match_case = gtranslator_search_dialog_get_match_case (dialog);
 	entire_word = gtranslator_search_dialog_get_entire_word (dialog);
 	search_backwards = gtranslator_search_dialog_get_backwards (dialog);
 	wrap_around = gtranslator_search_dialog_get_wrap_around (dialog);
 
+	if(!original_text && !translated_text && !fuzzy)
+		return;
+	
+	/* Get textviews */
+	views = gtranslator_window_get_all_views(window, original_text,
+						 translated_text);
+	
+	g_return_if_fail(views != NULL);
+	
+	list = views;
+	
 	GTR_SEARCH_SET_CASE_SENSITIVE (flags, match_case);
 	GTR_SEARCH_SET_ENTIRE_WORD (flags, entire_word);
-
-	search_text = gtranslator_view_get_search_text (active_view, &old_flags);
-
-	if ((search_text == NULL) ||
-	    (strcmp (search_text, entry_text) != 0) ||
-	    (flags != old_flags))
-	{
-		gtranslator_view_set_search_text (active_view, entry_text, flags);
-	}
-
-	g_free (search_text);
 	
-	found = run_search (active_view,
-			    wrap_around,
-			    search_backwards);
+	while(list != NULL)
+	{
+		search_text = gtranslator_view_get_search_text (GTR_VIEW(list->data), &old_flags);
+
+		if ((search_text == NULL) ||
+	    	(strcmp (search_text, entry_text) != 0) ||
+	    	(flags != old_flags))
+		{
+			gtranslator_view_set_search_text (GTR_VIEW(list->data), entry_text, flags);
+		}
+
+		g_free (search_text);
+		list = list->next;
+	}
+	
+	found = find_in_list (window, views, fuzzy);
 
 	if (found)
 		phrase_found (window, 0);
@@ -344,7 +355,7 @@ do_find (GtranslatorSearchDialog *dialog,
 					   GTR_SEARCH_DIALOG_REPLACE_RESPONSE,
 					   found);
 
-	restore_last_searched_data (dialog, doc);
+	//restore_last_searched_data (dialog, doc);
 }
 
 /* FIXME: move in gtranslator-document.c and share it with gtranslator-view */
@@ -482,7 +493,7 @@ do_replace_all (GtranslatorSearchDialog *dialog,
 	GTR_SEARCH_SET_CASE_SENSITIVE (flags, match_case);
 	GTR_SEARCH_SET_ENTIRE_WORD (flags, entire_word);
 
-	count = gtranslator_view_replace_all (doc, 
+	count = gtranslator_view_replace_all (active_view, 
 					    search_entry_text,
 					    replace_entry_text,
 					    flags);
@@ -534,8 +545,8 @@ search_dialog_destroyed (GtranslatorWindow       *window,
 }
 
 void
-_gtranslator_cmd_search_find (GtkAction   *action,
-			      GtranslatorWindow *window)
+_gtranslator_actions_search_find (GtkAction   *action,
+				  GtranslatorWindow *window)
 {
 	gpointer data;
 	GtkWidget *search_dialog;
@@ -588,7 +599,7 @@ _gtranslator_cmd_search_find (GtkAction   *action,
 	if (selection_exists && find_text != NULL && sel_len < 80)
 	{
 		gtranslator_search_dialog_set_search_text (GTR_SEARCH_DIALOG (search_dialog),
-						     find_text);
+							   find_text);
 		g_free (find_text);
 	}
 	else
@@ -617,7 +628,7 @@ _gtranslator_cmd_search_find (GtkAction   *action,
 }
 
 void
-_gtranslator_cmd_search_replace (GtkAction   *action,
+_gtranslator_actions_search_replace (GtkAction   *action,
 				 GtranslatorWindow *window)
 {
 	gpointer data;
@@ -720,21 +731,19 @@ do_find_again (GtranslatorWindow *window,
 	if (data != NULL)
 		wrap_around = data->wrap_around;					    
 
-	run_search (active_view,
-	   	    wrap_around,
-	   	    backward);
+	//run_search (active_view);
 }				 
 
 void
-_gtranslator_cmd_search_find_next (GtkAction   *action,
-			    GtranslatorWindow *window)
+_gtranslator_actions_search_find_next (GtkAction   *action,
+				       GtranslatorWindow *window)
 {
 	do_find_again (window, FALSE);
 }
 
 void
-_gtranslator_cmd_search_find_prev (GtkAction   *action,
-			    GtranslatorWindow *window)
+_gtranslator_actions_search_find_prev (GtkAction   *action,
+				       GtranslatorWindow *window)
 {
 	do_find_again (window, TRUE);
 }

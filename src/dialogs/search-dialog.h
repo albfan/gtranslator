@@ -80,24 +80,25 @@ enum
  */
 GType 		 gtranslator_search_dialog_get_type 		(void) G_GNUC_CONST;
 
-GtkWidget	*gtranslator_search_dialog_new		(GtkWindow         *parent,
-							 gboolean           show_replace);
+GtkWidget       *gtranslator_search_dialog_new                  (GtkWindow         *parent,
+								 gboolean           show_replace);
 
-void		 gtranslator_search_dialog_present_with_time	(GtranslatorSearchDialog *dialog,
-							 guint32 timestamp);
+void             gtranslator_search_dialog_present_with_time    (GtranslatorSearchDialog *dialog,
+								 guint32 timestamp);
 
 gboolean	 gtranslator_search_dialog_get_show_replace	(GtranslatorSearchDialog *dialog);
 
-void		 gtranslator_search_dialog_set_show_replace	(GtranslatorSearchDialog *dialog,
-							 gboolean           show_replace);
+void             gtranslator_search_dialog_set_show_replace     (GtranslatorSearchDialog *dialog,
+								 gboolean           show_replace);
 
+void             gtranslator_search_dialog_set_search_text      (GtranslatorSearchDialog *dialog,
+								 const gchar       *text);
 
-void		 gtranslator_search_dialog_set_search_text	(GtranslatorSearchDialog *dialog,
-							 const gchar       *text);
 const gchar	*gtranslator_search_dialog_get_search_text	(GtranslatorSearchDialog *dialog);
 
-void		 gtranslator_search_dialog_set_replace_text	(GtranslatorSearchDialog *dialog,
-							 const gchar       *text);
+void             gtranslator_search_dialog_set_replace_text     (GtranslatorSearchDialog *dialog,
+								 const gchar       *text);
+
 const gchar	*gtranslator_search_dialog_get_replace_text	(GtranslatorSearchDialog *dialog);
 
 void             gtranslator_search_dialog_set_original_text    (GtranslatorSearchDialog *dialog,
@@ -110,20 +111,29 @@ void             gtranslator_search_dialog_set_translated_text  (GtranslatorSear
 
 gboolean         gtranslator_search_dialog_get_translated_text  (GtranslatorSearchDialog *dialog);
 
+void             gtranslator_search_dialog_set_fuzzy            (GtranslatorSearchDialog *dialog,
+								 gboolean           match_case);
+
+gboolean         gtranslator_search_dialog_get_fuzzy            (GtranslatorSearchDialog *dialog);
+
 void		 gtranslator_search_dialog_set_match_case	(GtranslatorSearchDialog *dialog,
-							 gboolean           match_case);
+								 gboolean           match_case);
+
 gboolean	 gtranslator_search_dialog_get_match_case	(GtranslatorSearchDialog *dialog);
 
 void		 gtranslator_search_dialog_set_entire_word	(GtranslatorSearchDialog *dialog,
-							 gboolean           entire_word);
+								 gboolean           entire_word);
+
 gboolean	 gtranslator_search_dialog_get_entire_word	(GtranslatorSearchDialog *dialog);
 
 void		 gtranslator_search_dialog_set_backwards	(GtranslatorSearchDialog *dialog,
-							 gboolean           backwards);
+								 gboolean           backwards);
+
 gboolean	 gtranslator_search_dialog_get_backwards	(GtranslatorSearchDialog *dialog);
 
 void		 gtranslator_search_dialog_set_wrap_around	(GtranslatorSearchDialog *dialog,
-							 gboolean           wrap_around);
+								 gboolean           wrap_around);
+
 gboolean	 gtranslator_search_dialog_get_wrap_around	(GtranslatorSearchDialog *dialog);
    
 G_END_DECLS

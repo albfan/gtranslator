@@ -232,7 +232,7 @@ static const GtkActionEntry entries[] = {
 	/* Search menu*/
 	{ "SearchFind", GTK_STOCK_FIND, NULL, "<control>F",
 	  N_("Search for text"),
-	  G_CALLBACK(_gtranslator_cmd_search_find) },
+	  G_CALLBACK(_gtranslator_actions_search_find) },
 	{ "SearchFindNext", NULL, N_("Search ne_xt"), NULL,
 	  N_("   "), NULL},
 	 // G_CALLBACK (gtranslator_find) },
@@ -241,7 +241,7 @@ static const GtkActionEntry entries[] = {
 	 // G_CALLBACK (gtranslator_find) },
 	{ "SearchReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, "<control>H",
 	  N_("Search for and replace text"),
-	  G_CALLBACK (_gtranslator_cmd_search_replace) },
+	  G_CALLBACK (_gtranslator_actions_search_replace) },
 	
 };
 
@@ -1058,7 +1058,8 @@ gtranslator_window_get_active_view(GtranslatorWindow *window)
 /**
  * gtranslator_window_get_all_views:
  * @window: the #GtranslationWindow
- * @all_views: TRUE if you want original TextViews too.
+ * @original: TRUE if you want original TextViews.
+ * @translated: TRUE if you want transtated TextViews.
  *
  * Returns all the views currently present in #GtranslationWindow
  *
@@ -1066,7 +1067,8 @@ gtranslator_window_get_active_view(GtranslatorWindow *window)
  **/
 GList *
 gtranslator_window_get_all_views(GtranslatorWindow *window,
-				 gboolean all_views)
+				 gboolean original,
+				 gboolean translated)
 {
 	gint numtabs;
 	gint i;
@@ -1082,7 +1084,9 @@ gtranslator_window_get_all_views(GtranslatorWindow *window,
 	{
 		tab = gtk_notebook_get_nth_page(GTK_NOTEBOOK(window->priv->notebook),
 						i);
-		views = g_list_concat(views, gtranslator_tab_get_all_views(GTR_TAB(tab), all_views));
+		views = g_list_concat(views, gtranslator_tab_get_all_views(GTR_TAB(tab),
+									   original,
+									   translated));
 		i--;
 	}
 	

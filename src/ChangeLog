@@ -1,3 +1,18 @@
+2007-11-30  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs:
+		search-dialog.ch:
+		search-dialog.glade: Added fuzzy checkbutton.
+	* actions-search.c: Search is now more or less working,
+	now you can check if you want to search in original, translated
+	and fuzzy messages.
+	* application.ch:
+	* tab.ch:
+	* window.ch: 
+		Now in get_all_views funcs you can decide if you 
+	want original, tranlated or both views.
+	* prefs-manager-app.c: Addapted to new get_views func specification.
+
 2007-11-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dialogs/search-dialog.c: Fixed some errors.

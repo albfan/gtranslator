@@ -521,7 +521,8 @@ gtranslator_tab_get_active_view(GtranslatorTab *tab)
 /**
  * gtranslator_tab_get_all_views:
  * @tab: the #GtranslationTab
- * @all_views: TRUE if you want original TextViews too.
+ * @original: TRUE if you want original TextViews.
+ * @translated: TRUE if you want tranlated TextViews.
  *
  * Returns all the views currently present in #GtranslationTab
  *
@@ -529,25 +530,29 @@ gtranslator_tab_get_active_view(GtranslatorTab *tab)
  */
 GList *
 gtranslator_tab_get_all_views(GtranslatorTab *tab,
-			      gboolean all_views)
+			      gboolean original,
+			      gboolean translated)
 {
 	GList *ret = NULL;
 	gint i = 0;
 	
 	g_return_if_fail(GTR_IS_TAB(tab));
 	
-	if(all_views)
+	if(original)
 	{
 		ret = g_list_append(ret, tab->priv->text_msgid);
 		ret = g_list_append(ret, tab->priv->text_msgid_plural);
 	}
 	
-	while(i < MAX_PLURALS)
+	if(translated)
 	{
-		if(tab->priv->trans_msgstr[i])
-			ret = g_list_append(ret, tab->priv->trans_msgstr[i]);
-		else break;
-		i++;
+		while(i < MAX_PLURALS)
+		{
+			if(tab->priv->trans_msgstr[i])
+				ret = g_list_append(ret, tab->priv->trans_msgstr[i]);
+			else break;
+			i++;
+		}
 	}
 	
 	return ret;

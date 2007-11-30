@@ -68,6 +68,7 @@ struct _GtranslatorSearchDialogPrivate
 	GtkWidget *replace_text_entry;
 	GtkWidget *original_text_checkbutton;
 	GtkWidget *translated_text_checkbutton;
+	GtkWidget *fuzzy_checkbutton;
 	GtkWidget *match_case_checkbutton;
 	GtkWidget *entire_word_checkbutton;
 	GtkWidget *backwards_checkbutton;
@@ -343,6 +344,7 @@ gtranslator_search_dialog_init (GtranslatorSearchDialog *dlg)
 					     "replace_with_label", &dlg->priv->replace_label,
 				 	     "original_text_checkbutton", &dlg->priv->original_text_checkbutton,
 					     "translated_text_checkbutton", &dlg->priv->translated_text_checkbutton,
+					     "fuzzy_checkbutton", &dlg->priv->fuzzy_checkbutton,
 					     "match_case_checkbutton", &dlg->priv->match_case_checkbutton,
 					     "entire_word_checkbutton", &dlg->priv->entire_word_checkbutton,
 					     "search_backwards_checkbutton", &dlg->priv->backwards_checkbutton,
@@ -588,6 +590,24 @@ gtranslator_search_dialog_get_translated_text (GtranslatorSearchDialog *dialog)
 	g_return_val_if_fail (GTR_IS_SEARCH_DIALOG (dialog), FALSE);
 
 	return gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->priv->translated_text_checkbutton));
+}
+
+void
+gtranslator_search_dialog_set_fuzzy (GtranslatorSearchDialog *dialog,
+				     gboolean           match_case)
+{
+	g_return_if_fail (GTR_IS_SEARCH_DIALOG (dialog));
+
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->priv->fuzzy_checkbutton),
+				      match_case);
+}
+
+gboolean
+gtranslator_search_dialog_get_fuzzy (GtranslatorSearchDialog *dialog)
+{
+	g_return_val_if_fail (GTR_IS_SEARCH_DIALOG (dialog), FALSE);
+
+	return gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->priv->fuzzy_checkbutton));
 }
 
 void

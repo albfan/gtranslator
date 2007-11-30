@@ -80,7 +80,8 @@ void              gtranslator_application_save_toolbars_model (GtranslatorApplic
 void              gtranslator_application_shutdown            (GtranslatorApplication *app);
 
 GList            *gtranslator_application_get_views           (GtranslatorApplication *app,
-							       gboolean all_views);
+							       gboolean original,
+							       gboolean translated);
 
 GtranslatorWindow *gtranslator_application_get_active_window  (GtranslatorApplication * app);
 

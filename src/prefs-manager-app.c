@@ -516,7 +516,7 @@ gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 
 	g_return_if_fail (font != NULL);
 	
-	views = gtranslator_application_get_views (GTR_APP, TRUE);
+	views = gtranslator_application_get_views (GTR_APP, TRUE, TRUE);
 	l = views;
 
 	while (l != NULL)
@@ -543,7 +543,7 @@ gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
 	g_return_if_fail (entry->key != NULL);
 	g_return_if_fail (entry->value != NULL);
 	
-	l = views = gtranslator_application_get_views(GTR_APP, FALSE);
+	l = views = gtranslator_application_get_views(GTR_APP, FALSE, TRUE);
 	
 	while(l != NULL)
 	{
@@ -576,7 +576,7 @@ gtranslator_prefs_manager_syntax_hl_enable_changed (GConfClient *client,
 		else
 			enable = GPM_DEFAULT_HIGHLIGHT;
 
-		views = gtranslator_application_get_views (GTR_APP, TRUE);
+		views = gtranslator_application_get_views (GTR_APP, TRUE, TRUE);
 		l = views;
 
 		while (l != NULL)
@@ -613,7 +613,7 @@ gtranslator_prefs_manager_dot_char_enable_changed (GConfClient *client,
 		else
 			enable = GPM_DEFAULT_USE_DOT_CHAR;
 
-		views = gtranslator_application_get_views (GTR_APP, TRUE);
+		views = gtranslator_application_get_views (GTR_APP, TRUE, TRUE);
 		l = views;
 
 		while (l != NULL)
