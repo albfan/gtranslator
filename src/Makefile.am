@@ -45,14 +45,12 @@ gtranslator_SOURCES = \
 	application.c application.h \
 	compile.h \
 	draw-spaces.c draw-spaces.h \
-	header_stuff.h \
 	languages.c languages.h \
 	main.c \
 	message-area.c message-area.h \
 	nautilus-string.c nautilus-string.h \
 	notebook.c notebook.h \
 	panel.c panel.h \
-	runtime-config.c runtime-config.h \
 	tab.c tab.h \
 	translator.h \
 	view.c view.h \
@@ -70,8 +68,6 @@ gtranslator_SOURCES = \
 	actions.h \
 	actions-go.c \
 	actions-edit.c \
-	save.c \
-	save.h \
 	io-error-message-area.c \
 	io-error-message-area.h \
 	prefs-manager.c \

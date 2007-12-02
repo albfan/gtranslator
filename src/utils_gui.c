@@ -1,5 +1,8 @@
 /*
- * (C) 2001-2003 	Fatih Demir <kabalak@kabalak.net>
+ * (C) 2001-2007 	Fatih Demir <kabalak@kabalak.net>
+ * 			Ignacio Casal <nacho.resa@gmail.com>
+ *
+ * 	Based in gedit utils funcs.
  *
  * gtranslator is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,87 +20,15 @@
  *
  */
 
-//#include "dialogs.h"
-//#include "gui.h"
-#include "nautilus-string.h"
-//#include "parse.h"
-#include "runtime-config.h"
-#include "utils.h"
 #include "utils_gui.h"
 
-#include <libgnome/gnome-url.h>
+#include <string.h>
 
-#include <libgnomeui/libgnomeui.h>
 #include <libgnomevfs/gnome-vfs.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <glade/glade.h>
-
-
-
-/*
- * Check if the given file is already opened by gtranslator.
- */
-gboolean
-gtranslator_utils_reopen_if_already_open(const gchar *filename)
-{
-	gchar *resultfilename;
-
-	g_return_val_if_fail(filename!=NULL, FALSE);
-
-//	resultfilename=gtranslator_config_get_string("runtime/filename");
-
-	/*
-	 * Test if we've got a filename and then test it for equality with our
-	 *  currently in another instance opened po file.
-	 */
-	if(resultfilename && (!nautilus_strcasecmp(resultfilename, filename)) &&
-		(strlen(resultfilename)==strlen(filename)))
-	{
-		gint reply;
-		//FIXME:  reply = gtranslator_already_open_dialog(NULL, (gpointer)filename);
-		if(reply == GTK_RESPONSE_NO)
-		return FALSE;
-	}
-
-	/*
-	 * Assume we want to open it
-	 */
-	return TRUE;
-}
-
-/*
- * Check for a needed program -- returns FALSE on failure (how logical, not ,-)).
- */
-gboolean gtranslator_utils_check_program(const gchar *program_name,
-	const gint type_int)
-{
-	g_return_val_if_fail(program_name!=NULL, FALSE);
-	
-	if(!g_find_program_in_path(program_name))
-	{
-		gchar *warning_message;
-
-		if(type_int==0)
-		{
-			warning_message=g_strdup_printf(
-				_("The necessary decompression program `%s' is not installed!"), program_name);
-		}
-		else
-		{
-			warning_message=g_strdup_printf(
-				_("The necessary compression program `%s' is not installed!"), program_name);
-		}
-
-		//gnome_app_warning(GNOME_APP(gtranslator_application), warning_message);
-		g_free(warning_message);
-
-		return FALSE;
-	}
-	else
-	{
-		return TRUE;
-	}
-}
+#include <gtk/gtk.h>
 
 
 /**

@@ -31,7 +31,6 @@
 #include "file-dialogs.h"
 #include "notebook.h"
 #include "po.h"
-#include "runtime-config.h"
 #include "tab.h"
 #include "window.h"
 

@@ -1,5 +1,17 @@
 2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* utils.ch: Removed unneccessary funcs.
+	* actions-search.c: Now it remembers lastest options.
+	* utils_gui.ch: Removed unneccsary funcs and dependencies.
+	* actions-file.c: Removed runtime-config dependencie.
+	* runtime-config.ch: Removed.
+	* save.ch: Removed.
+	* main.c: Cleaned and fixed locale problems.
+	* Makefile.am: Removed header_stuff.h, runtime-config.ch
+	and save.ch files.
+
+2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* vfs-handler.ch:
 	* Makefile.am:
 	* main.c:

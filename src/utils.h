@@ -31,24 +31,7 @@
  * Non-GUI utility functions for gtranslator.
  */
 
-/*
- * Really nasty wrapper macros which should expand to really common constructs.
- */
-#ifdef REDUNDANT
-#define g_free(x) g_free((x)); (x)=NULL;
-#endif
-#define GTR_ITER(x) if((x)->next) { (x)=(x)->next; } else { break; }
 
-/*
- * Removes all punctuation characters from the given string.
- */
-gchar *gtranslator_utils_strip_all_punctuation_chars(const gchar *str);
-
-/*
- * Search the "environment path" in "envpath" for a non-NULL value and sets
- *  the "value" correspondingly.
- */
-void gtranslator_utils_get_environment_value(const gchar *envpath, gchar **value);
 
 /*
  * Remove the non-localizeed name of the given language -- if possible.

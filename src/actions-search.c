@@ -59,6 +59,9 @@ struct _LastSearchData
 	gchar *find_text;
 	gchar *replace_text;
 
+	gint original_text:1;
+	gint translated_text:1;
+	gint fuzzy_messages:1;
 	gint match_case :1;
 	gint entire_word :1;
 	gint backwards :1;
@@ -93,6 +96,9 @@ last_search_data_set (LastSearchData    *data,
 		data->replace_text = gtranslator_utils_unescape_search_text (str);
 	}
 
+	data->original_text = gtranslator_search_dialog_get_original_text (dialog);
+	data->translated_text = gtranslator_search_dialog_get_translated_text (dialog);
+	data->fuzzy_messages = gtranslator_search_dialog_get_fuzzy (dialog);
 	data->match_case = gtranslator_search_dialog_get_match_case (dialog);
 	data->entire_word = gtranslator_search_dialog_get_entire_word (dialog);
 	data->backwards = gtranslator_search_dialog_get_backwards (dialog);
@@ -119,30 +125,36 @@ static void
 search_dialog_set_last_options (GtranslatorSearchDialog *dialog,
 			        LastSearchData    *data)
 {
+	gtranslator_search_dialog_set_original_text (dialog, data->original_text);
+	gtranslator_search_dialog_set_translated_text (dialog, data->translated_text);
+	gtranslator_search_dialog_set_fuzzy (dialog, data->fuzzy_messages);
 	gtranslator_search_dialog_set_match_case (dialog, data->match_case);
 	gtranslator_search_dialog_set_entire_word (dialog, data->entire_word);
 	gtranslator_search_dialog_set_backwards (dialog, data->backwards);
 	gtranslator_search_dialog_set_wrap_around (dialog, data->wrap_around);
 }
 
+/*
+ * Used to get the old search data and store the new values.
+ */
 static void
 restore_last_searched_data (GtranslatorSearchDialog *dialog,
-			    GtkSourceBuffer     *doc)
+			    GtranslatorTab *tab)
 {
 	LastSearchData *data;
 
-	data = g_object_get_data (G_OBJECT (doc), GTR_LAST_SEARCH_DATA_KEY);
+	data = g_object_get_data (G_OBJECT (tab), GTR_LAST_SEARCH_DATA_KEY);
 
 	if (data == NULL)
 	{
 		data = g_new0 (LastSearchData, 1);
 		last_search_data_set (data, dialog);
 
-		g_object_set_data (G_OBJECT (doc),
+		g_object_set_data (G_OBJECT (tab),
 				   GTR_LAST_SEARCH_DATA_KEY,
 				   data);
 
-		g_object_weak_ref (G_OBJECT (doc),
+		g_object_weak_ref (G_OBJECT (tab),
 				   (GWeakNotify) last_search_data_free,
 				   data);
 	}
@@ -289,6 +301,7 @@ static void
 do_find (GtranslatorSearchDialog *dialog,
 	 GtranslatorWindow       *window)
 {
+	GtranslatorTab *tab;
 	GList *views, *list;
 	gchar *search_text;
 	const gchar *entry_text;
@@ -303,6 +316,8 @@ do_find (GtranslatorSearchDialog *dialog,
 	guint old_flags = 0;
 	gboolean found;
 
+	/* Used to store search options */
+	tab = gtranslator_window_get_active_tab(window);
 	
 	entry_text = gtranslator_search_dialog_get_search_text (dialog);
 
@@ -357,7 +372,7 @@ do_find (GtranslatorSearchDialog *dialog,
 					   GTR_SEARCH_DIALOG_REPLACE_RESPONSE,
 					   found);
 
-	//restore_last_searched_data (dialog, doc);
+	restore_last_searched_data (dialog, tab);
 }
 
 static void
@@ -439,8 +454,8 @@ static void
 do_replace_all (GtranslatorSearchDialog *dialog,
 		GtranslatorWindow       *window)
 {
+	GtranslatorTab *tab;
 	GtranslatorView *active_view;
-	GtkSourceBuffer *doc;
 	const gchar *search_entry_text;
 	const gchar *replace_entry_text;	
 	gboolean match_case;
@@ -448,11 +463,11 @@ do_replace_all (GtranslatorSearchDialog *dialog,
 	guint flags = 0;
 	gint count;
 
+	tab = gtranslator_window_get_active_tab(window);
+	
 	active_view = gtranslator_window_get_active_view (window);
 	if (active_view == NULL)
 		return;
-
-	doc = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
 
 	search_entry_text = gtranslator_search_dialog_get_search_text (dialog);
 	g_return_if_fail ((search_entry_text) != NULL);
@@ -486,7 +501,7 @@ do_replace_all (GtranslatorSearchDialog *dialog,
 					   GTR_SEARCH_DIALOG_REPLACE_RESPONSE,
 					   FALSE);
 
-	restore_last_searched_data (dialog, doc);
+	restore_last_searched_data (dialog, tab);
 }
 
 static void
@@ -707,7 +722,7 @@ do_find_again (GtranslatorWindow *window,
 		wrap_around = data->wrap_around;					    
 
 	//run_search (active_view);
-}				 
+}
 
 void
 _gtranslator_actions_search_find_next (GtkAction   *action,

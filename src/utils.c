@@ -22,11 +22,8 @@
 #include <config.h>
 #endif
 
-//#include "dialogs.h"
-//#include "gui.h"
 #include "languages.h"
 #include "nautilus-string.h"
-#include "runtime-config.h"
 #include "translator.h"
 #include "utils.h"
 
@@ -50,48 +47,7 @@ GList *lcodes_list=NULL;
 GList *group_emails_list=NULL;
 GList *bits_list=NULL;
 
-/*
- * Strip all punctuation characters out.
- */
-gchar *gtranslator_utils_strip_all_punctuation_chars(const gchar *str)
-{
-	gchar	*stripped_string;
-	gint	 index=0;
-	
-	/*
-	 * Strip out all common punctuation characters which are defined
-	 *  here locally in this array.
-	 */
-	const gchar punctuation_characters[] = 
-	{ 
-		',', '.', ':', ';',
-		'?', '!', '(', ')',
-		'[', ']', '{', '}',
-		'`', '\'', '^', '/',
-		'\\', '<', '>', 1
-	};
 
-	g_return_val_if_fail(str!=NULL, NULL);
-	
-	/*
-	 * First strip out all the 'Ž' characters from the string.
-	 */
-	stripped_string=nautilus_str_strip_chr(str, 'Ž');
-
-	/*
-	 * Now strip out all these special characters to get a more raw
-	 *  string (could result in better results for matching).
-	 */
-	while((gint) punctuation_characters[index]!=1)
-	{
-		stripped_string=nautilus_str_strip_chr(stripped_string,
-			punctuation_characters[index]);
-		
-		index++;
-	}
-
-	return stripped_string;
-}
 
 /*
  * Cruise through the "envpath" string and set the "value" if anything
@@ -231,20 +187,6 @@ void gtranslator_utils_set_language_values_by_language(const gchar *language)
 	}
 }
 
-/*
- * Remove the gtranslator-generated temp.-files.
- */
-void gtranslator_utils_remove_temp_files()
-{
-	/*
-	 * Check for any lungering 'round file rests of any temporary action
-	 *  and remove these rests if any had been found.
-	 */
-	if(g_file_test(gtranslator_runtime_config->temp_filename, G_FILE_TEST_EXISTS))
-	{
-		remove(gtranslator_runtime_config->temp_filename);
-	}
-}
 
 /*
  * Create the ".gtranslator" directory in the users home directory if necessary.
@@ -405,38 +347,6 @@ GList *gtranslator_utils_file_names_from_directory(const gchar *directory,
 }
 
 /*
- * Free the list and it's data safely -- NULL cases should be catched here.
- */
-void gtranslator_utils_free_list(GList *list, gboolean free_contents)
-{
-	if(!list)
-	{
-		/*
-		 * When the list is NULL, don't crash or act, simply
-		 *  return.
-		 */
-		return;
-	}
-	else
-	{
-		/*
-		 * Free the list data as long as possible and desired.
-		 */
-		if(free_contents)
-		{
-			while(list!=NULL)
-			{
-				g_free(list->data);
-				GTR_ITER(list);
-			}
-		}
-
-		g_list_free(list);
-		list=NULL;
-	}
-}
-
-/*
  * Some voodoo-alike functions have been missing in gtranslator, so here we
  *  go: calculates a similarity percentage based on really insane logic.
  */
@@ -513,41 +423,6 @@ gfloat gtranslator_utils_calculate_similarity(const gchar *a, const gchar *b)
 }
 
 /*
- * Check for matching of an entry of the list entry and the string -- returns
- *  '-1' on non-matching, else the position in the list.
- */
-gint gtranslator_utils_stringlist_strcasecmp(GList *list, const gchar *string)
-{
-	gint pos=0;
-	
-	g_return_val_if_fail(list!=NULL, -1);
-	g_return_val_if_fail(string!=NULL, -1);
-
-	/*
-	 * The list should only consist out of gchar's..
-	 */
-	g_return_val_if_fail(sizeof(gchar *) == sizeof(list->data), -1);
-
-	while(list!=NULL)
-	{
-		if(!nautilus_strcasecmp(list->data, string))
-		{
-			return pos;
-		}
-
-		GTR_ITER(list);
-		pos++;
-
-		if(!list)
-		{
-			return -1;
-		}
-	}
-
-	return -1;
-}
-
-/*
  * Set up the lists to use within the combo boxes.
  */
 void gtranslator_utils_language_lists_create(void)
@@ -600,31 +475,6 @@ void gtranslator_utils_language_lists_create(void)
 	bits_list = g_list_sort(bits_list, (GCompareFunc) strcmp);
 }
 
-/*
- * Frees the language list.
- */
-gboolean
-gtranslator_utils_language_lists_free(GtkWidget  * widget,
-				      gpointer useless)
-{
-	list_ref--;
-	
-	/*
-	 * If something needs them, leave.
-	 */
-	if (list_ref != 0) 
-	{
-		return FALSE;
-	}
-	
-	gtranslator_utils_free_list(languages_list, FALSE);
-	gtranslator_utils_free_list(lcodes_list, FALSE);
-	gtranslator_utils_free_list(group_emails_list, FALSE);
-	gtranslator_utils_free_list(encodings_list, FALSE);
-	gtranslator_utils_free_list(bits_list, FALSE);
-	
-	return FALSE;
-}
 
 /* gtranslator_utils_getline
  *
