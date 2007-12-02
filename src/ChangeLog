@@ -1,5 +1,15 @@
 2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* vfs-handler.ch:
+	* Makefile.am:
+	* main.c:
+	  Removed gnome-vfs because it will be deprecated in
+	next glib major release in favor of gio.
+	* utils-gui.ch: Is needed to port this to gio.
+	* dialogs/search-dialog.c: Added default values.
+
+2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* actions.search.c:
 	  Fixed problem in find.
 

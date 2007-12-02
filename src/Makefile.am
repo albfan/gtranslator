@@ -55,7 +55,6 @@ gtranslator_SOURCES = \
 	runtime-config.c runtime-config.h \
 	tab.c tab.h \
 	translator.h \
-	vfs-handle.h \
 	view.c view.h \
 	window.c window.h \
 	po.c \

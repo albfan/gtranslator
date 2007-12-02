@@ -238,6 +238,27 @@ search_entry_changed (GtkComboBox       *combo,
 	}
 }
 
+/*
+ * Function to manage the sensitive of fuzzy checkbutton.
+ */
+static void
+original_translated_checkbutton_toggled(GtkToggleButton *button,
+					GtranslatorSearchDialog *dialog)
+{
+	gboolean original_text;
+	gboolean translated_text;
+	
+	original_text = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dialog->priv->original_text_checkbutton));
+	translated_text = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dialog->priv->translated_text_checkbutton));
+	
+	if(!original_text && !translated_text)
+	{
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog->priv->fuzzy_checkbutton), FALSE);
+		gtk_widget_set_sensitive(dialog->priv->fuzzy_checkbutton, FALSE);
+	}
+	else gtk_widget_set_sensitive(dialog->priv->fuzzy_checkbutton, TRUE);
+}
+
 static void
 response_handler (GtranslatorSearchDialog *dialog,
 		  gint               response_id,
@@ -286,6 +307,12 @@ show_replace_widgets (GtranslatorSearchDialog *dlg,
 	{
 		gtk_widget_hide(dlg->priv->original_text_checkbutton);
 		gtk_widget_hide(dlg->priv->translated_text_checkbutton);
+		
+		/*
+		 * Set the default value of checkbutton
+		 */
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->translated_text_checkbutton), TRUE);
+		
 		gtk_widget_show (dlg->priv->replace_label);
 		gtk_widget_show (dlg->priv->replace_entry);
 		gtk_widget_show (dlg->priv->replace_all_button);
@@ -299,6 +326,13 @@ show_replace_widgets (GtranslatorSearchDialog *dlg,
 	{
 		gtk_widget_show(dlg->priv->original_text_checkbutton);
 		gtk_widget_show(dlg->priv->translated_text_checkbutton);
+		
+		/*
+		 * Set the default value of checkbuttons
+		 */
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->original_text_checkbutton), TRUE);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->translated_text_checkbutton), TRUE);
+		
 		gtk_widget_hide (dlg->priv->replace_label);
 		gtk_widget_hide (dlg->priv->replace_entry);
 		gtk_widget_hide (dlg->priv->replace_all_button);
@@ -448,6 +482,16 @@ gtranslator_search_dialog_init (GtranslatorSearchDialog *dlg)
 	g_signal_connect (dlg->priv->search_entry,
 			  "changed",
 			  G_CALLBACK (search_entry_changed),
+			  dlg);
+	
+	g_signal_connect (dlg->priv->original_text_checkbutton,
+			  "toggled",
+			  G_CALLBACK (original_translated_checkbutton_toggled),
+			  dlg);
+	
+	g_signal_connect (dlg->priv->translated_text_checkbutton,
+			  "toggled",
+			  G_CALLBACK (original_translated_checkbutton_toggled),
 			  dlg);
 
 	g_signal_connect (dlg,

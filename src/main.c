@@ -39,8 +39,6 @@
 
 #include <libgnome/gnome-program.h>
 
-#include <libgnomevfs/gnome-vfs-init.h>
-
 #include <gconf/gconf.h>
 
 /*
@@ -167,14 +165,6 @@ main(gint argc,
 	 * Create the main app-window. 
 	 */
 	gtranslator_application_open_window(GTR_APP);
-
-	/*
-	 * Initialize GnomeVFS right now, if needed.
-	 */
-	if(!gnome_vfs_initialized())
-	{
-		gnome_vfs_init();
-	}
 	
 
 	/*
