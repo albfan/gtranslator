@@ -1,3 +1,15 @@
+2007-12-02  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* dialogs/preferences-dialog.c:
+	* dialogs/preferences-dialog.glade:
+	* prefs-manager.c:
+	* prefs-manager.h:
+	* prefs-manager-app.c:
+	* tab.c:
+	* view.c:
+		Rewrite preferences dialog for ease of navigation and increased HIG
+		compliance/consistency with other GNOME apps.
+
 2007-11-30  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dialogs:

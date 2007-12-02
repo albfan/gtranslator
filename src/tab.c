@@ -200,8 +200,8 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	/*
 	 * FIXME: This should be called parsing the preferences
 	 */
-	if(spellcheck && gtranslator_prefs_manager_get_instant_spell_checking())
-		gtranslator_view_enable_spell_check(GTR_VIEW(widget),
+	if(spellcheck && gtranslator_prefs_manager_get_spellcheck())
+		gtranslator_view_enable_spellcheck(GTR_VIEW(widget),
 						    spellcheck);
 	
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll),

@@ -40,17 +40,17 @@ static void gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 							 GConfEntry  *entry,
 							 gpointer     user_data);
 
-static void gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
+static void gtranslator_prefs_manager_spellcheck_changed (GConfClient *client,
 								  guint        cnxn_id, 
 								  GConfEntry  *entry, 
 								  gpointer     user_data);
 
-static void gtranslator_prefs_manager_syntax_hl_enable_changed(GConfClient *client,
+static void gtranslator_prefs_manager_highlight_changed(GConfClient *client,
 							       guint        cnxn_id, 
 							       GConfEntry  *entry, 
 							       gpointer     user_data);
 
-static void gtranslator_prefs_manager_dot_char_enable_changed(GConfClient *client,
+static void gtranslator_prefs_manager_visible_whitespace_changed(GConfClient *client,
 							       guint        cnxn_id, 
 							       GConfEntry  *entry, 
 							       gpointer     user_data);
@@ -436,18 +436,18 @@ gtranslator_prefs_manager_app_init (void)
 				NULL, NULL, NULL);
 		
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
-				GPM_INSTANT_SPELL_CHECKING,
-				gtranslator_prefs_manager_instant_spellchecking_changed,
+				GPM_SPELLCHECK,
+				gtranslator_prefs_manager_spellcheck_changed,
 				NULL, NULL, NULL);
 		
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
 				GPM_HIGHLIGHT,
-				gtranslator_prefs_manager_syntax_hl_enable_changed,
+				gtranslator_prefs_manager_highlight_changed,
 				NULL, NULL, NULL);
 		
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
-				GPM_USE_DOT_CHAR,
-				gtranslator_prefs_manager_dot_char_enable_changed,
+				GPM_VISIBLE_WHITESPACE,
+				gtranslator_prefs_manager_visible_whitespace_changed,
 				NULL, NULL, NULL);
 /*
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
@@ -490,26 +490,26 @@ gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 	g_return_if_fail (entry->key != NULL);
 	g_return_if_fail (entry->value != NULL);
 
-	if (strcmp (entry->key, GPM_OWN_FONTS) == 0)
+	if (strcmp (entry->key, GPM_USE_CUSTOM_FONT) == 0)
 	{
 		if (entry->value->type == GCONF_VALUE_BOOL)
 			def = gconf_value_get_bool (entry->value);
 		else
-			def = !GPM_DEFAULT_OWN_FONTS;
+			def = !GPM_DEFAULT_USE_CUSTOM_FONT;
 		
 		if (!def)
-			font = g_strdup(GPM_DEFAULT_TEXT_FONT);
+			font = g_strdup(GPM_DEFAULT_EDITOR_FONT);
 		else
-			font = g_strdup(gtranslator_prefs_manager_get_text_font ());
+			font = g_strdup(gtranslator_prefs_manager_get_editor_font ());
 	}
-	else if (strcmp (entry->key, GPM_TEXT_FONT) == 0)
+	else if (strcmp (entry->key, GPM_EDITOR_FONT) == 0)
 	{
 		if (entry->value->type == GCONF_VALUE_STRING)
 			font = g_strdup (gconf_value_get_string (entry->value));
 		else
-			font = g_strdup (GPM_DEFAULT_TEXT_FONT);
+			font = g_strdup (GPM_DEFAULT_EDITOR_FONT);
 				
-		def = gtranslator_prefs_manager_get_own_fonts ();
+		def = gtranslator_prefs_manager_get_use_custom_font ();
 	}
 	else
 		return;
@@ -532,10 +532,10 @@ gtranslator_prefs_manager_editor_font_changed (GConfClient *client,
 
 
 static void 
-gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
-							 guint        cnxn_id, 
-							 GConfEntry  *entry, 
-							 gpointer     user_data)
+gtranslator_prefs_manager_spellcheck_changed (GConfClient *client,
+					      guint        cnxn_id, 
+					      GConfEntry  *entry, 
+					      gpointer     user_data)
 {
 	GList *l;
 	GList *views;
@@ -547,8 +547,8 @@ gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
 	
 	while(l != NULL)
 	{
-		gtranslator_view_enable_spell_check(GTR_VIEW(l->data),
-						    gtranslator_prefs_manager_get_instant_spell_checking());
+		gtranslator_view_enable_spellcheck(GTR_VIEW(l->data),
+						   gtranslator_prefs_manager_get_spellcheck());
 		l = l->next;
 	}
 	g_list_free(views);
@@ -556,10 +556,10 @@ gtranslator_prefs_manager_instant_spellchecking_changed (GConfClient *client,
 
 
 static void
-gtranslator_prefs_manager_syntax_hl_enable_changed (GConfClient *client,
-						    guint        cnxn_id,
-						    GConfEntry  *entry,
-						    gpointer     user_data)
+gtranslator_prefs_manager_highlight_changed (GConfClient *client,
+					     guint        cnxn_id,
+					     GConfEntry  *entry,
+					     gpointer     user_data)
 {
 	g_return_if_fail (entry->key != NULL);
 	g_return_if_fail (entry->value != NULL);
@@ -594,7 +594,7 @@ gtranslator_prefs_manager_syntax_hl_enable_changed (GConfClient *client,
 }
 
 static void
-gtranslator_prefs_manager_dot_char_enable_changed (GConfClient *client,
+gtranslator_prefs_manager_visible_whitespace_changed (GConfClient *client,
 						   guint        cnxn_id,
 						   GConfEntry  *entry,
 						   gpointer     user_data)
@@ -602,7 +602,7 @@ gtranslator_prefs_manager_dot_char_enable_changed (GConfClient *client,
 	g_return_if_fail (entry->key != NULL);
 	g_return_if_fail (entry->value != NULL);
 
-	if (strcmp (entry->key, GPM_USE_DOT_CHAR) == 0)
+	if (strcmp (entry->key, GPM_VISIBLE_WHITESPACE) == 0)
 	{
 		gboolean enable;
 		GList *views;
@@ -611,14 +611,14 @@ gtranslator_prefs_manager_dot_char_enable_changed (GConfClient *client,
 		if (entry->value->type == GCONF_VALUE_BOOL)
 			enable = gconf_value_get_bool (entry->value);
 		else
-			enable = GPM_DEFAULT_USE_DOT_CHAR;
+			enable = GPM_DEFAULT_VISIBLE_WHITESPACE;
 
 		views = gtranslator_application_get_views (GTR_APP, TRUE, TRUE);
 		l = views;
 
 		while (l != NULL)
 		{
-			gtranslator_view_enable_dot_char(GTR_VIEW(l->data), enable);
+			gtranslator_view_enable_visible_whitespace(GTR_VIEW(l->data), enable);
 
 			l = l->next;
 		}

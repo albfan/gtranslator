@@ -151,17 +151,17 @@ gtranslator_view_init (GtranslatorView *view)
 	
 	//Set dot char according to preferences
 	
-	if(gtranslator_prefs_manager_get_use_dot_char())
-		gtranslator_view_enable_dot_char(view, TRUE);
+	if(gtranslator_prefs_manager_get_visible_whitespace())
+		gtranslator_view_enable_visible_whitespace(view, TRUE);
 	
 	/*
 	 *  Set fonts according to preferences 
 	 */
-	if (gtranslator_prefs_manager_get_own_fonts ())
+	if (gtranslator_prefs_manager_get_use_custom_font ())
 	{
 		gchar *editor_font;
 
-		editor_font = g_strdup(gtranslator_prefs_manager_get_text_font ());
+		editor_font = g_strdup(gtranslator_prefs_manager_get_editor_font ());
 
 		gtranslator_view_set_font (view, FALSE, editor_font);
 
@@ -201,14 +201,14 @@ gtranslator_view_new (void)
 
 
 /**
- * gtranslator_view_enable_spell_check:
+ * gtranslator_view_enable_spellcheck:
  * @view: a #GtranslatorView
  * @enable: TRUE if you want enable the spellcheck
  * 
  * Enables the spellcheck
  **/
 void
-gtranslator_view_enable_spell_check(GtranslatorView *view,
+gtranslator_view_enable_spellcheck(GtranslatorView *view,
 				    gboolean enable)
 {
 	if(enable)
@@ -241,14 +241,14 @@ gtranslator_view_enable_spell_check(GtranslatorView *view,
 }
 
 /**
- * gtranslator_view_enable_dot_char:
+ * gtranslator_view_enable_visible_whitespace:
  * @view: a #GtranslatorView
  * @enable: TRUE if you want to enable special chars for white spaces
  *
  * Enables special chars for white spaces including \n and \t
 **/
 void
-gtranslator_view_enable_dot_char(GtranslatorView *view,
+gtranslator_view_enable_visible_whitespace(GtranslatorView *view,
 				 gboolean enable)
 {
 	g_return_if_fail(GTR_IS_VIEW(view));
@@ -359,7 +359,7 @@ gtranslator_view_set_font (GtranslatorView *view,
 	g_return_if_fail (GTR_IS_VIEW (view));
 
 	if (def)
-		font_name = g_strdup(GPM_DEFAULT_TEXT_FONT);
+		font_name = g_strdup(GPM_DEFAULT_EDITOR_FONT);
 
 	g_return_if_fail (font_name != NULL);
 
