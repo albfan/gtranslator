@@ -206,7 +206,7 @@ run_search (GtranslatorView   *view,
 	doc = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (view)));
 
 	if(!follow)
-		gtk_text_buffer_get_start_iter(doc, &start_iter);
+		gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(doc), &start_iter);
 	else
 		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (doc),
 						      NULL,
@@ -358,33 +358,6 @@ do_find (GtranslatorSearchDialog *dialog,
 	//restore_last_searched_data (dialog, doc);
 }
 
-/* FIXME: move in gtranslator-document.c and share it with gtranslator-view */
-static gboolean
-get_selected_text (GtkTextBuffer  *doc,
-		   gchar         **selected_text,
-		   gint           *len)
-{
-	GtkTextIter start, end;
-
-	g_return_val_if_fail (selected_text != NULL, FALSE);
-	g_return_val_if_fail (*selected_text == NULL, FALSE);
-
-	if (!gtk_text_buffer_get_selection_bounds (doc, &start, &end))
-	{
-		if (len != NULL)
-			len = 0;
-
-		return FALSE;
-	}
-
-	*selected_text = gtk_text_buffer_get_slice (doc, &start, &end, TRUE);
-
-	if (len != NULL)
-		*len = g_utf8_strlen (*selected_text, -1);
-
-	return TRUE;
-}
-
 static void
 replace_selected_text (GtkTextBuffer *buffer,
 		       const gchar   *replace)
@@ -428,9 +401,9 @@ do_replace (GtranslatorSearchDialog *dialog,
 
 	unescaped_search_text = gtranslator_utils_unescape_search_text (search_entry_text);
 
-	get_selected_text (gtk_text_view_get_buffer(GTK_TEXT_VIEW (view)), 
-			   &selected_text, 
-			   NULL);
+	gtranslator_view_get_selected_text (view, 
+					    &selected_text, 
+					    NULL);
 
 	match_case = gtranslator_search_dialog_get_match_case (dialog);
 	search_backwards = gtranslator_search_dialog_get_backwards (dialog);
@@ -592,9 +565,9 @@ _gtranslator_actions_search_find (GtkAction   *action,
 	last_search_data = g_object_get_data (G_OBJECT (tab),
 					      GTR_LAST_SEARCH_DATA_KEY);
 
-	selection_exists = get_selected_text (gtk_text_view_get_buffer(GTK_TEXT_VIEW (view)),
-					      &find_text,
-					      &sel_len);
+	selection_exists = gtranslator_view_get_selected_text (view,
+							       &find_text,
+							       &sel_len);
 
 	if (selection_exists && find_text != NULL && sel_len < 80)
 	{
@@ -676,9 +649,9 @@ _gtranslator_actions_search_replace (GtkAction   *action,
 					      GTR_LAST_SEARCH_DATA_KEY);
 
 
-	selection_exists = get_selected_text (gtk_text_view_get_buffer(GTK_TEXT_VIEW (view)),
-					      &find_text,
-					      &sel_len);
+	selection_exists = gtranslator_view_get_selected_text (view,
+							       &find_text,
+							       &sel_len);
 
 	if (selection_exists && find_text != NULL && sel_len < 80)
 	{

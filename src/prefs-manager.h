@@ -90,7 +90,7 @@
 #define GPM_DEFAULT_USE_CUSTOM_FONT       0 /* FALSE */
 #define GPM_DEFAULT_EDITOR_FONT           (const gchar*) "Sans 10"
 
-#define GPM_DEFAULT_UNMARK_FUZZY          0 /* FALSE */
+#define GPM_DEFAULT_UNMARK_FUZZY          1 /* TRUE */
 #define GPM_DEFAULT_KEEP_OBSOLETE         0 /* FALSE */
 #define GPM_DEFAULT_SPELLCHECK            1 /* TRUE */
 

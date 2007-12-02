@@ -1,3 +1,11 @@
+2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-search.c:
+	* view.ch:
+	  Moved get_selected_text func to view.c as gtranslator_view_get_selected_text.
+	* prefs-manager.h: Unmark fuzzy is now true by default.
+	* tab.c: Now detects if unmark fuzzy option is true or false.
+
 2007-12-02  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* dialogs/preferences-dialog.c:

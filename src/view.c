@@ -200,6 +200,36 @@ gtranslator_view_new (void)
 }
 
 
+gboolean
+gtranslator_view_get_selected_text (GtranslatorView *view,
+				    gchar         **selected_text,
+				    gint           *len)
+{
+	GtkTextIter start, end;
+	GtkTextBuffer *doc;
+
+	g_return_val_if_fail (selected_text != NULL, FALSE);
+	g_return_val_if_fail (*selected_text == NULL, FALSE);
+	g_return_val_if_fail (GTR_IS_VIEW(view), FALSE);
+
+	doc = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+	
+	if (!gtk_text_buffer_get_selection_bounds (doc, &start, &end))
+	{
+		if (len != NULL)
+			len = 0;
+
+		return FALSE;
+	}
+
+	*selected_text = gtk_text_buffer_get_slice (doc, &start, &end, TRUE);
+
+	if (len != NULL)
+		*len = g_utf8_strlen (*selected_text, -1);
+
+	return TRUE;
+}
+
 /**
  * gtranslator_view_enable_spellcheck:
  * @view: a #GtranslatorView
@@ -377,8 +407,8 @@ gtranslator_view_set_font (GtranslatorView *view,
  */
 void
 gtranslator_view_set_search_text (GtranslatorView *view,
-				const gchar   *text,
-				guint          flags)
+				  const gchar   *text,
+				  guint          flags)
 {
 	GtkSourceBuffer *doc;
 	gchar *converted_text;

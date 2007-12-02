@@ -80,6 +80,10 @@ GType		 gtranslator_view_register_type          (GTypeModule * module);
 
 GtkWidget	*gtranslator_view_new                    (void);
 
+gboolean         gtranslator_view_get_selected_text      (GtranslatorView *view,
+							  gchar         **selected_text,
+							  gint           *len);
+
 void             gtranslator_view_enable_spell_check     (GtranslatorView *view,
 							  gboolean enable);
 
@@ -95,6 +99,13 @@ void             gtranslator_view_paste_clipboard        (GtranslatorView *view)
 void             gtranslator_view_set_font               (GtranslatorView   *view, 
 							  gboolean     def, 
 							  const gchar *font_name);
+
+void             gtranslator_view_set_search_text        (GtranslatorView *view,
+							  const gchar   *text,
+							  guint          flags);
+
+gchar           *gtranslator_view_get_search_text        (GtranslatorView *view,
+							  guint         *flags);
 
 
 /* Search macros */
