@@ -246,13 +246,15 @@ find_in_list(GtranslatorWindow *window,
 	GtranslatorPo *po = gtranslator_tab_get_po(tab);
 	GList *l = gtranslator_po_get_current_message(po);
 	GList *current;
-	GList *viewsaux;
+	static GList *viewsaux = NULL;
+	
 	current = l;
 
-	viewsaux = views;
+	if(viewsaux == NULL)
+		viewsaux = views;
 	
 	/*
-	 * Variable used to know when start search from the beggining of the view
+	 * Variable used to know when start search in from the beggining of the view
 	 */
 	static gboolean found = FALSE;
 	

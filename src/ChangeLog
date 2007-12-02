@@ -1,5 +1,10 @@
 2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* actions.search.c:
+	  Fixed problem in find.
+
+2007-12-02  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* actions-search.c:
 	* view.ch:
 	  Moved get_selected_text func to view.c as gtranslator_view_get_selected_text.
