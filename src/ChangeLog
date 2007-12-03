@@ -1,5 +1,10 @@
 2007-12-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* dialog/preferences-dialog.glade: Removed some strings
+	marked as translatables. (e.g. "gtk-help")
+
+2007-12-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* actions-help.c: Removed show_home_page func.
 	Now home page is stored in about dialog.
 	* window.c: Removed website menuitem.

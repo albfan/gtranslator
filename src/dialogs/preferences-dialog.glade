@@ -885,7 +885,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-help</property>
+                <property name="label" translatable="no">gtk-help</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
               </widget>
@@ -895,7 +895,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label" translatable="no">gtk-close</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
               </widget>
