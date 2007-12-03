@@ -29,6 +29,7 @@
 #include "po.h"
 #include "tab.h"
 #include "window.h"
+#include "dialogs/header-dialog.h"
 
 
 void
@@ -179,4 +180,9 @@ gtranslator_actions_edit_preferences(GtkAction *action,
 				     GtranslatorWindow *window)
 {
 	gtranslator_show_preferences_dialog(window);
+}
+
+void gtranslator_actions_edit_header(GtkAction *action, GtranslatorWindow *window)
+{
+	gtranslator_show_header_dialog(window);
 }

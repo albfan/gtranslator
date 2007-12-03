@@ -1,3 +1,10 @@
+2007-12-04  Pablo Sanxiao  <psanxiao@gmail.com>
+
+	*header-dialog.h, header_dialog.c: Added GtranslatorHeaderDialog class.
+	*window.c: Added Callback for edit header.
+	*actions.h, actions-edit.c: Added action for edit header.
+	*prefs-manager.h, prefs-manager.c: Added button "take my options" into gconf.
+
 2007-12-03  Pablo Sanxiao  <psanxiao@gmail.com>
 
 	* header.c, header.h: Added Files in order to implement

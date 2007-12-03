@@ -59,6 +59,9 @@
 #define GPM_KEEP_OBSOLETE		GPM_CONTENTS_DIR "/keep_obsolete"
 #define GPM_SPELLCHECK			GPM_CONTENTS_DIR "/spellcheck"
 
+/* Edit Header */
+#define GPM_TAKE_MY_OPTIONS		GPM_PREFS_DIR "/take_my_options"
+
 /* PO header */
 #define GPM_PERSONAL_INFORMATION_DIR	GPM_PREFS_DIR "/po_header/personal_information"
 #define GPM_NAME			GPM_PERSONAL_INFORMATION_DIR "name"
@@ -93,6 +96,9 @@
 #define GPM_DEFAULT_UNMARK_FUZZY          1 /* TRUE */
 #define GPM_DEFAULT_KEEP_OBSOLETE         0 /* FALSE */
 #define GPM_DEFAULT_SPELLCHECK            1 /* TRUE */
+
+/* Edit Header */
+#define GPM_DEFAULT_TAKE_MY_OPTIONS	  0 /*FALSE */
 
 /* PO header */
 #define GPM_DEFAULT_NAME		(const gchar*) ""

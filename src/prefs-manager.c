@@ -257,6 +257,10 @@ gtranslator_prefs_manager_key_is_writable (const gchar* key)
 	return gconf_client_key_is_writable (gtranslator_prefs_manager->gconf_client, key, NULL);
 }
 
+/* Edit Header */
+DEFINE_BOOL_PREF(take_my_options,
+		 GPM_TAKE_MY_OPTIONS,
+		 GPM_DEFAULT_TAKE_MY_OPTIONS)
 
 /* Files */
 DEFINE_BOOL_PREF(warn_if_fuzzy,

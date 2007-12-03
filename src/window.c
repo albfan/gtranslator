@@ -116,7 +116,9 @@ static const GtkActionEntry always_sensitive_entries[] = {
 	{ "EditPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
 	  N_("Edit gtranslator preferences"),
 	  G_CALLBACK (gtranslator_actions_edit_preferences) },
-	
+	{ "EditHeader", GTK_STOCK_PROPERTIES, N_("_Header..."), NULL, NULL,
+	  G_CALLBACK (gtranslator_actions_edit_header) },
+		
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
 	  NULL },
