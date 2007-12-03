@@ -1,3 +1,7 @@
+2007-12-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* gtranslator-ui.xml: Removed website menuitem.
+
 2007-11-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* gtranslator-ui.xml: Added bookmarks menu.

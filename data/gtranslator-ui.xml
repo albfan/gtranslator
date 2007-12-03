@@ -77,7 +77,6 @@
 
     <menu name="HelpMenu" action="Help">
       <menuitem name="HelpContentsMenu" action="HelpContents"/>
-      <menuitem name="HelpWebSiteMenu" action="HelpWebSite"/>
       <menuitem name="HelpAboutMenu" action="HelpAbout"/>
     </menu>
   </menubar>

@@ -120,9 +120,6 @@ static const GtkActionEntry always_sensitive_entries[] = {
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
 	  NULL },
-	{ "HelpWebSite", GTK_STOCK_HOME, N_("_Website"), NULL,
-	  N_("gtranslator's homepage on the web"),
-	  G_CALLBACK(gtranslator_window_show_home_page) },
 	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
 	  G_CALLBACK (gtranslator_about_dialog) },
 };
@@ -903,7 +900,7 @@ gtranslator_window_dispose (GObject *object)
 	}
 	
 	/* Deactivate Panels */
-	impl_deactivate(window);
+	//impl_deactivate(window);
 //dictionary_deactivate(window);
 	
 	G_OBJECT_CLASS (gtranslator_window_parent_class)->dispose (object);
@@ -954,6 +951,7 @@ gtranslator_window_destroy (GtkObject *object)
 
         GTK_OBJECT_CLASS (gtranslator_window_parent_class)->destroy (object);
 }
+
 
 static gboolean 
 gtranslator_window_configure_event (GtkWidget         *widget,
