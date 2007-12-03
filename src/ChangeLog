@@ -1,3 +1,9 @@
+2007-12-03  Pablo Sanxiao  <psanxiao@gmail.com>
+
+	* header.c, header.h: Added Files in order to implement
+	GtranslatorHeader class to use instead of GtrHeader structure.
+	* po.c: Added parse header's fields into GtranslatorHeader.
+
 2007-12-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* dialog/preferences-dialog.glade: Removed some strings

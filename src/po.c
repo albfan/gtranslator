@@ -24,6 +24,7 @@
 #endif
 
 #include "file-dialogs.h"
+#include "header.h"
 #include "po.h"
 #include "msg.h"
 
@@ -102,6 +103,11 @@ struct _GtranslatorPoPrivate
 	 * Autosave timeout timer
 	 */
 	guint autosave_timeout;
+
+	/*
+	 * Header object
+	 */
+	GtranslatorHeader *header;
 };
 
 static gchar *message_error;
@@ -245,7 +251,63 @@ gtranslator_po_parse(GtranslatorPo *po,
 	message = po_next_message(iter);
 	msgstr = po_message_msgstr(message);
 	if(!strncmp(msgstr, "Project-Id-Version: ", 20)) {
-		/* TODO: parse into our header structure */
+		
+		/*Parse into our header structure */
+
+		priv->header = gtranslator_header_new();		
+		
+		gchar *comment, *prj_name, *prj_version, *rmbt, *pot_date, *po_date,
+		      *translator, *tr_email, *language, *lg_email, *mime_version,
+		      *charset, *encoding;
+
+		gchar *space, *space1, *space2;
+		gchar *project = po_header_field(msgstr, "Project-Id-Version");
+		space = strrchr(project, ' ');
+		
+		if (space) {
+			prj_name = g_strndup(project, space - project);
+			prj_version = g_strdup(space + 1);
+		} else {
+			prj_name = g_strdup(project);
+			prj_version = g_strdup("");
+		}
+		
+		rmbt = g_strdup(po_header_field(msgstr, "Report-Msgid-Bugs-To"));
+		pot_date = g_strdup(po_header_field(msgstr, "POT-Creation-Date"));
+		po_date = g_strdup(po_header_field(msgstr, "PO-Revision-Date"));
+
+		gchar *translator_temp = po_header_field(msgstr, "Last-Translator");
+		space1 = strrchr(translator_temp, '<');
+
+		translator = g_strndup(translator_temp, space1 - translator_temp);
+		tr_email = g_strdup(space1 + 1);
+
+		gchar *language_temp = po_header_field(msgstr, "Language-Team");
+		space2 = strrchr(language_temp, '<');
+
+		language = g_strndup(language_temp, space2 - language_temp);
+		lg_email = g_strdup(space2 + 1);
+
+		mime_version = g_strdup(po_header_field(msgstr, "MIME-Version"));
+		charset = g_strdup(po_header_field(msgstr, "Content-Type"));
+		encoding = g_strdup(po_header_field(msgstr, "Content-Transfer-Encoding"));
+	
+		gtranslator_header_set_comment(priv->header, comment);
+		gtranslator_header_set_prj_name(priv->header, prj_name);
+		gtranslator_header_set_prj_version(priv->header, prj_version);
+		gtranslator_header_set_rmbt(priv->header, rmbt);
+		gtranslator_header_set_pot_date(priv->header, pot_date);
+		gtranslator_header_set_po_date(priv->header, po_date);
+		gtranslator_header_set_translator(priv->header, translator);
+		gtranslator_header_set_tr_email(priv->header, tr_email);
+		gtranslator_header_set_language(priv->header, language);
+		gtranslator_header_set_lg_email(priv->header, lg_email);
+		gtranslator_header_set_mime_version(priv->header, mime_version);
+		gtranslator_header_set_charset(priv->header, charset);
+		gtranslator_header_set_encoding(priv->header, encoding);
+		
+		g_free(translator_temp);
+		g_free(language_temp);
 	}
 	else {
 		/* Reset our pointer */

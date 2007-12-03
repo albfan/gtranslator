@@ -78,7 +78,9 @@ gtranslator_SOURCES = \
 	prefs-manager-app.h \
 	history-entry.c \
 	history-entry.h \
-	actions-search.c
+	actions-search.c \
+	header.h \
+	header.c
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \
