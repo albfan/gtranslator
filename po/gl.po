@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-25 23:00+0000\n"
+"POT-Creation-Date: 2007-12-03 15:01+0100\n"
 "PO-Revision-Date: 2007-08-03 00:14+0200\n"
 "Last-Translator: Ignacio Casal Quinteiro <icq@cvs.gnome.org>\n"
 "Language-Team: Galego <proxecto@trasno.net>\n"
@@ -54,24 +54,24 @@ msgstr "Etiqueta"
 msgid "gtranslator highlight"
 msgstr "resaltado de gtranslator"
 
-#: ../src/actions-file.c:227
+#: ../src/actions-file.c:226
 msgid "Open file for translation"
 msgstr "Abrir ficheiro para tradución"
 
-#: ../src/actions-file.c:284
+#: ../src/actions-file.c:283
 #, c-format
 msgid "The file '%s' already exists. Do you want overwrite it?"
 msgstr "O ficheiro '%s' xa existe. Quere substituílo?"
 
-#: ../src/actions-file.c:323
+#: ../src/actions-file.c:322
 msgid "Save file as..."
 msgstr "Gardar ficheiro como..."
 
-#: ../src/actions-file.c:329
+#: ../src/actions-file.c:328
 msgid "Save local copy of file as..."
 msgstr "Gardar copia local do ficheiro como..."
 
-#: ../src/actions-help.c:79
+#: ../src/actions-help.c:67
 msgid ""
 "This program is free software: you can redistribute it and/or modifyit under "
 "the terms of the GNU General Public License as published by the Free "
@@ -83,7 +83,7 @@ msgstr ""
 "Foundation; xa sexa na versión 3 da Licenza como (segundo a súa escolla) en "
 "calquera versión posterior."
 
-#: ../src/actions-help.c:83
+#: ../src/actions-help.c:71
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANMSGILITY or "
@@ -95,7 +95,7 @@ msgstr ""
 "PARA UN PROPÓSITO PARTICULAR. Para máis detalles vexa a Licenza Pública "
 "Xeral de GNU."
 
-#: ../src/actions-help.c:87
+#: ../src/actions-help.c:75
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program.  If not, see <http://www.gnu.org/licenses/>."
@@ -103,13 +103,13 @@ msgstr ""
 "Debeu recibir unha copia da Licenza Pública Xeral de GNU xunto con este "
 "programa.  Se non, vexa <http://www.gnu.org/licenses/>."
 
-#: ../src/actions-help.c:99
+#: ../src/actions-help.c:87
 msgid "gtranslator is a po file editing suite with many bells and whistles."
 msgstr ""
 "gtranslator é unha suite de edición de ficheiros po con moitas aspiracións e "
 "desexos."
 
-#: ../src/actions-help.c:101
+#: ../src/actions-help.c:89
 msgid "(C) 1999-2007 The Free Software Foundation, Inc."
 msgstr "(C) 1999-2007 The Free Software Foundation, Inc."
 
@@ -117,11 +117,15 @@ msgstr "(C) 1999-2007 The Free Software Foundation, Inc."
 #. * Note to translators: put here your name and email so it will show
 #. * up in the "about" box
 #.
-#: ../src/actions-help.c:108
+#: ../src/actions-help.c:96
 msgid "translator-credits"
 msgstr ""
 "Ignacio Casal Quinteiro <nacho.resa@gmail.com>\n"
 "Proxecto Trisquel - http://trisquel.uvigo.es"
+
+#: ../src/actions-help.c:101
+msgid "Gtranslator Web Site"
+msgstr "Sitio web do gtranslator"
 
 #: ../src/alternatelanguage/alternate-language.c:165
 #: ../src/dialogs/file-dialogs.c:66
@@ -181,285 +185,203 @@ msgstr ""
 "Compilación correcta:\n"
 "%s"
 
-#: ../src/dialogs/preferences-dialog.c:287
-msgid "General"
-msgstr "Xeral"
-
-#: ../src/dialogs/preferences-dialog.c:370
-msgid "Autosave"
-msgstr "Autogardar"
-
-#: ../src/dialogs/preferences-dialog.c:429
-msgid "Files"
-msgstr "Ficheiros"
-
-#: ../src/dialogs/preferences-dialog.c:502
-msgid "Text display"
-msgstr "Mostrar texto"
-
-#: ../src/dialogs/preferences-dialog.c:582
-msgid "Contents"
-msgstr "Contidos:"
-
-#: ../src/dialogs/preferences-dialog.c:617
-msgid "Editor"
-msgstr "Editor"
-
-#: ../src/dialogs/preferences-dialog.c:670
-msgid "Personal information"
-msgstr "Información persoal"
-
-#: ../src/dialogs/preferences-dialog.c:705
-msgid "Language settings"
-msgstr "Opcións da lingua"
-
-#: ../src/dialogs/preferences-dialog.c:728
-msgid "PO header"
-msgstr "Cabeceira PO"
-
-#: ../src/dialogs/preferences-dialog.c:763
+#: ../src/dialogs/preferences-dialog.c:494
+#: ../src/dialogs/preferences-dialog.glade.h:35
 msgid "gtranslator Preferences"
 msgstr "Preferencias de gtranslator"
 
 #: ../src/dialogs/preferences-dialog.glade.h:1
-msgid " Categories: "
-msgstr " Categorías: "
-
-#: ../src/dialogs/preferences-dialog.glade.h:2
 msgid "<b>Autosave</b>"
 msgstr "<b>Autogardar</b>"
 
-#: ../src/dialogs/preferences-dialog.glade.h:3
+#: ../src/dialogs/preferences-dialog.glade.h:2
 msgid "<b>Contents</b>"
 msgstr "<b>Contidos</b>"
 
-#: ../src/dialogs/preferences-dialog.glade.h:4
-msgid ""
-"<b>Fuzzy matching</b>\n"
-"Not implemented"
-msgstr ""
-"<b>Coincidencia dubidosa</b>\n"
-"Sen implementar"
-
-#: ../src/dialogs/preferences-dialog.glade.h:6
+#: ../src/dialogs/preferences-dialog.glade.h:3
 msgid "<b>General</b>"
 msgstr "<b>Xeral</b>"
 
-#: ../src/dialogs/preferences-dialog.glade.h:7
-msgid ""
-"<b>General</b>\n"
-"Not implemented"
-msgstr ""
-"<b>Xeral</b>\n"
-"Sen implementar"
-
-#: ../src/dialogs/preferences-dialog.glade.h:9
-msgid "<b>Language settings</b>"
+#: ../src/dialogs/preferences-dialog.glade.h:4
+msgid "<b>Language Settings</b>"
 msgstr "<b>Opcións da lingua</b>"
 
-#: ../src/dialogs/preferences-dialog.glade.h:10
-msgid ""
-"<b>Messages table</b>\n"
-"This should be a plugin"
-msgstr ""
-"<b>Táboa de mensaxes</b>\n"
-"Isto debería ser un complemento"
-
-#: ../src/dialogs/preferences-dialog.glade.h:12
-msgid "<b>Personal Information</b>"
-msgstr "<b>Información persoal</b>"
-
-#: ../src/dialogs/preferences-dialog.glade.h:13
-msgid "<b>Text display</b>"
+#: ../src/dialogs/preferences-dialog.glade.h:5
+msgid "<b>Text Display</b>"
 msgstr "<b>Mostrar texto</b>"
 
+#: ../src/dialogs/preferences-dialog.glade.h:6
+msgid "<b>Translator Information</b>"
+msgstr "<b>Información do tradutor</b>"
+
+#: ../src/dialogs/preferences-dialog.glade.h:7
+msgid "Append a suffix to autosaved _files"
+msgstr "Concatenar un sufixo aos _ficheiros gardados automaticamente"
+
+#: ../src/dialogs/preferences-dialog.glade.h:8
+msgid "Character _set:"
+msgstr "_Conxunto de caracteres:"
+
+#: ../src/dialogs/preferences-dialog.glade.h:9
+msgid "Check _spelling"
+msgstr "Comprobar _ortografía"
+
+#: ../src/dialogs/preferences-dialog.glade.h:10
+msgid "Editor"
+msgstr "Editor"
+
+#: ../src/dialogs/preferences-dialog.glade.h:11
+msgid "Editor _font:"
+msgstr "_Tipo de letra do editor:"
+
+#: ../src/dialogs/preferences-dialog.glade.h:12
+msgid "Files"
+msgstr "Ficheiros"
+
+#: ../src/dialogs/preferences-dialog.glade.h:13
+msgid "Language _code:"
+msgstr "_Código da lingua:"
+
 #: ../src/dialogs/preferences-dialog.glade.h:14
-msgid "Append a suffix to automatically saved files"
-msgstr "Concatenar un sufixo aos ficheiros autogardados"
+msgid "Make _whitespace visible"
+msgstr "Facer visibles os _espazos en branco"
 
 #: ../src/dialogs/preferences-dialog.glade.h:15
-msgid "Apply own fonts"
-msgstr "Aplicar fontes propias"
+msgid "Number of pl_urals:"
+msgstr "Número de pl_urais:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:16
-msgid "Author's email:"
-msgstr "E-mail do autor:"
+msgid "PO Header"
+msgstr "Cabeceira PO"
 
 #: ../src/dialogs/preferences-dialog.glade.h:17
-msgid "Author's name:"
-msgstr "Nome do autor:"
+msgid "Transfer enc_oding:"
+msgstr "_Codificación de transferencia:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:18
-msgid "Automatically learn a newly translated message"
-msgstr "Aprender automaticamente unha mensaxe nova traducida"
+msgid "Use _custom font"
+msgstr "Usar tipo de letra _personalizada"
 
 #: ../src/dialogs/preferences-dialog.glade.h:19
-msgid "Automatically save at regular intervals"
-msgstr "Gardar automaticamente a intervalos regulares"
+msgid "_Autosave files every"
+msgstr "_Gardar automaticamente os ficheiros cada"
 
 #: ../src/dialogs/preferences-dialog.glade.h:20
-msgid "Autosave interval: "
-msgstr "Intervalo de autogardado: "
+msgid "_Delete compiled GMO files"
+msgstr "_Borrar os ficheiros compilados GMO"
 
-#: ../src/dialogs/preferences-dialog.glade.h:21 ../src/header_dialog.glade.h:1
-msgid "Charset:"
-msgstr "Código de Caracteres:"
+#: ../src/dialogs/preferences-dialog.glade.h:21
+msgid "_Email:"
+msgstr "_Correo-e:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:22
-msgid "Collapse all entries by default"
-msgstr "Contraer todas as entradas por omisión"
+msgid "_Highlight message syntax"
+msgstr "_Realzado da sintaxe da mensaxe"
 
 #: ../src/dialogs/preferences-dialog.glade.h:23
-msgid "Delete compiled files (e.g. \"project.gmo\")"
-msgstr "Borrar os ficheiros compilados (e.x. \"proxecto.gmo\")"
+msgid "_Keep obsolete messages"
+msgstr "_Manter mensaxes obsoletas"
 
-#: ../src/dialogs/preferences-dialog.glade.h:24 ../src/header_dialog.glade.h:3
-msgid "Encoding:"
-msgstr "Codificación:"
+#: ../src/dialogs/preferences-dialog.glade.h:24
+msgid "_Language:"
+msgstr "_Lingua:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:25
-msgid "Highlight syntax of the message"
-msgstr "Resaltar a sintaxis das mensaxes"
+msgid "_Name:"
+msgstr "_Nome:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:26
-msgid "Instant spell checking"
-msgstr "Revisión ortográfica instantánea"
+msgid "_Plural forms:"
+msgstr "Formas de _plurais:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:27
-msgid "Keep obsolete messages in the po files"
-msgstr "Manter mensaxes obsoletas nos ficheiros po"
+msgid "_Remove fuzzy status if message is changed"
+msgstr "_Quitar o estado de dubidosa se a mensaxe é modificada"
 
 #: ../src/dialogs/preferences-dialog.glade.h:28
-msgid "Language code:"
-msgstr "Código da lingua:"
+msgid "_Suffix to append:"
+msgstr "_Sufixo a engadir:"
 
-#: ../src/dialogs/preferences-dialog.glade.h:29 ../src/header_dialog.glade.h:4
-msgid "Language group's email:"
-msgstr "E-mail do equipo da lingua:"
+#: ../src/dialogs/preferences-dialog.glade.h:29
+msgid "_Team email:"
+msgstr "Correo-e do _grupo:"
 
-#: ../src/dialogs/preferences-dialog.glade.h:30 ../src/header_dialog.glade.h:5
-msgid "Language:"
-msgstr "Lingua:"
+#: ../src/dialogs/preferences-dialog.glade.h:30
+msgid "_Warn if PO file contains fuzzy translations"
+msgstr "_Avisar se o ficheiro po contén traducións dubidosas"
 
 #: ../src/dialogs/preferences-dialog.glade.h:31
-msgid "Minimal required similarity persentage for fuzzy queries:"
-msgstr "Porcentaxe de similitud mínimo requerido para as consultas dubidosas:"
+msgid "_minutes"
+msgstr "_minutos"
 
 #: ../src/dialogs/preferences-dialog.glade.h:32
-msgid "Number of plurals: "
-msgstr "Número de plurais:"
+msgid "autosave"
+msgstr "gardar automaticamente"
 
 #: ../src/dialogs/preferences-dialog.glade.h:33
-msgid "Plural forms string:"
-msgstr "Cadea de formas plurais:"
+#: ../src/header_dialog.glade.h:16
+msgid "gtk-close"
+msgstr "gtk-close"
 
 #: ../src/dialogs/preferences-dialog.glade.h:34
-msgid "Query the personal learn buffer while autotranslating"
-msgstr ""
-"Consultar tamén o búfer de aprendizaxe persoal mentras se traducen "
-"automaticamente"
+msgid "gtk-help"
+msgstr "gtk-help"
 
-#: ../src/dialogs/preferences-dialog.glade.h:35
-msgid "Remove fuzzy status if message is changed"
-msgstr "Quitar o estado de dubidosa se a mensaxe é modificada"
-
-#: ../src/dialogs/preferences-dialog.glade.h:36
-msgid "Save geometry on exit and restore it on startup"
-msgstr "Gardar a xeometría ó saír e restaurala ó iniciar"
-
-#: ../src/dialogs/preferences-dialog.glade.h:37
-msgid "Show instant comment view in main pane"
-msgstr "Mostrar a vista de comentarios instantáneos no panel principal"
-
-#: ../src/dialogs/preferences-dialog.glade.h:38
-msgid "Show the messages table (requires restart)"
-msgstr "Mostrar a táboa de mensaxes (require reiniciar)"
-
-#: ../src/dialogs/preferences-dialog.glade.h:39
-msgid "Suffix: "
-msgstr "Sufixo: "
-
-#: ../src/dialogs/preferences-dialog.glade.h:40
-msgid "Text font:"
-msgstr "Fonte do texto:"
-
-#: ../src/dialogs/preferences-dialog.glade.h:41
-msgid "The Possibility to remove all translations from a po file"
-msgstr "A posibilidade de borrar todas as traducións dun ficheiro po"
-
-#: ../src/dialogs/preferences-dialog.glade.h:42
-msgid "The Possibility to update a po file from within gtranslator"
-msgstr "A posibilidade de actualizar un ficheiro po desde gtranslator"
-
-#. Translators: With "fuzzy" I mean a more enhanced (and more crappy) logic while searching for appropriate translations for a original string.
-#: ../src/dialogs/preferences-dialog.glade.h:44
-msgid "Use \"fuzzy\" matching routines for learn buffer queries"
-msgstr ""
-"Usar rutinas de coincidencia \"dubidosas\" para as consultas do búfer de "
-"aprendizaxe"
-
-#: ../src/dialogs/preferences-dialog.glade.h:45
-msgid "Use special character to indicate white space"
-msgstr "Usar caracteres especiais para indicar o espazo en branco"
-
-#: ../src/dialogs/preferences-dialog.glade.h:46
-msgid "Warn if po file contains fuzzy translations"
-msgstr "Avisar se o ficheiro po contén traducións dubidosas"
-
-#: ../src/dialogs/preferences-dialog.glade.h:47
-msgid "gtranslator -- font selection/msgid font"
-msgstr "gtranslator -- selección de fonte/fonte de msgid"
-
-#: ../src/dialogs/preferences-dialog.glade.h:48
-msgid "gtranslator -- options"
-msgstr "gtranslator -- opcións"
-
-#: ../src/dialogs/search-dialog.c:295 ../src/dialogs/search-dialog.glade.h:3
+#: ../src/dialogs/search-dialog.c:323 ../src/dialogs/search-dialog.glade.h:4
 msgid "Replace"
-msgstr "Reemprazar"
+msgstr "Substituír"
 
-#: ../src/dialogs/search-dialog.c:308
+#: ../src/dialogs/search-dialog.c:343
 msgid "Find"
 msgstr "Buscar"
 
-#: ../src/dialogs/search-dialog.c:402
+#: ../src/dialogs/search-dialog.c:438
 msgid "Replace _All"
 msgstr "Substituír _todo"
 
-#: ../src/dialogs/search-dialog.glade.h:1
+#: ../src/dialogs/search-dialog.c:441
+msgid "_Replace"
+msgstr "_Substituír"
+
+#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:353
+msgid "Fuzzy"
+msgstr "Dubidosa"
+
+#: ../src/dialogs/search-dialog.glade.h:2
 msgid "Match _entire word only"
 msgstr "Facer coincidir só a palabra _completa"
 
-#: ../src/dialogs/search-dialog.glade.h:2
+#: ../src/dialogs/search-dialog.glade.h:3
 #: ../src/messagestable/messages-table-panel.c:222
 msgid "Original text"
 msgstr "Texto orixinal"
 
-#: ../src/dialogs/search-dialog.glade.h:4
+#: ../src/dialogs/search-dialog.glade.h:5
 msgid "Replace All"
 msgstr "Substituír todo"
 
-#: ../src/dialogs/search-dialog.glade.h:5
+#: ../src/dialogs/search-dialog.glade.h:6
 msgid "Replace _with: "
 msgstr "Substituír _con: "
 
-#: ../src/dialogs/search-dialog.glade.h:6
+#: ../src/dialogs/search-dialog.glade.h:7
 msgid "Search _backwards"
 msgstr "Buscar _anterior"
 
-#: ../src/dialogs/search-dialog.glade.h:7
-msgid "Translation text"
-msgstr "Texto da tradución"
-
 #: ../src/dialogs/search-dialog.glade.h:8
+#: ../src/messagestable/messages-table-panel.c:234
+msgid "Translated text"
+msgstr "Texto traducido"
+
+#: ../src/dialogs/search-dialog.glade.h:9
 msgid "_Match case"
 msgstr "_Coincidir con maiúsculas"
 
-#: ../src/dialogs/search-dialog.glade.h:9
+#: ../src/dialogs/search-dialog.glade.h:10
 msgid "_Search for: "
 msgstr "_Buscar: "
 
-#: ../src/dialogs/search-dialog.glade.h:10
+#: ../src/dialogs/search-dialog.glade.h:11
 msgid "_Wrap around"
 msgstr "_Dar a volta"
 
@@ -511,9 +433,25 @@ msgstr "Estratexias dispoñibles"
 msgid "Dictionary"
 msgstr "Dicionario"
 
+#: ../src/header_dialog.glade.h:1
+msgid "Charset:"
+msgstr "Código de Caracteres:"
+
 #: ../src/header_dialog.glade.h:2
 msgid "Comments:"
 msgstr "Comentarios:"
+
+#: ../src/header_dialog.glade.h:3
+msgid "Encoding:"
+msgstr "Codificación:"
+
+#: ../src/header_dialog.glade.h:4
+msgid "Language group's email:"
+msgstr "E-mail do equipo da lingua:"
+
+#: ../src/header_dialog.glade.h:5
+msgid "Language:"
+msgstr "Lingua:"
 
 #: ../src/header_dialog.glade.h:6
 msgid "Po file revision date:"
@@ -554,10 +492,6 @@ msgstr "Nome do tradutor:"
 #: ../src/header_dialog.glade.h:15
 msgid "Use my options to complete the following entries:"
 msgstr "Usar as miñas opcións para completar as seguintes entradas:"
-
-#: ../src/header_dialog.glade.h:16
-msgid "gtk-close"
-msgstr "gtk-close"
 
 #: ../src/header_dialog.glade.h:17
 msgid "gtranslator -- edit header"
@@ -897,20 +831,12 @@ msgstr "Serie: `%i'"
 msgid "Number of entries: `%i'"
 msgstr "Número de entradas: `%i'"
 
-#: ../src/main.c:66
-msgid "Specify main window geometry"
-msgstr "Especifica a xeometría da ventá principal"
-
-#: ../src/main.c:66
-msgid "GEOMETRY"
-msgstr "XEOMETRÍA"
-
-#: ../src/main.c:115
+#: ../src/main.c:65
 #, c-format
 msgid "Error during GConf initialization: %s."
 msgstr "Erro na inicialización de GConf: %s."
 
-#: ../src/main.c:143
+#: ../src/main.c:86
 #, c-format
 msgid "Error setting the default window icon: %s"
 msgstr "Erro establecendo a icona por defecto da ventá: %s"
@@ -918,10 +844,6 @@ msgstr "Erro establecendo a icona por defecto da ventá: %s"
 #: ../src/messagestable/messages-table-panel.c:210
 msgid "ID"
 msgstr "ID"
-
-#: ../src/messagestable/messages-table-panel.c:234
-msgid "Translated text"
-msgstr "Texto traducido"
 
 #: ../src/messagestable/messages-table.c:79
 msgid "Messages Table"
@@ -943,53 +865,10 @@ msgstr "Ocultar panel"
 msgid "Cannot initialize preferences manager."
 msgstr "Non se pode inicializar o xestor de preferencias."
 
-#: ../src/prefs-manager.c:434
+#: ../src/prefs-manager.c:429
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Esperábase `%s' pero obteuse `%s' para a clave %s"
-
-#.
-#. * Based on a suggestion by Pablo Saratxaga (/thanks pablo!).
-#. *
-#. * Translators: you should translate this foo'sh string into something
-#. *  another than a 'Y' to avoid the usage of the mid dot (U+00B7) in the
-#. *   text displaying routines of gtranslator.
-#.
-#: ../src/runtime-config.c:71
-msgid "Y"
-msgstr "Y"
-
-#.
-#. * Translators: this character is used if the middle dot
-#. *  can't be used under your locale.
-#.
-#: ../src/runtime-config.c:87 ../src/runtime-config.c:92
-msgid "^"
-msgstr "^"
-
-#: ../src/save.c:115
-#, c-format
-msgid "Couldn't save compiled gettext file `%s'!"
-msgstr "Non se puido gardar o ficheiro compilado de gettext '%s'!"
-
-#: ../src/save.c:166
-#, c-format
-msgid "Couldn't save compressed gettext file `%s'!"
-msgstr "Non se puido abrir o ficheiro comprimido de gettext '%s'!"
-
-#.
-#. * The %s format here stands for the used
-#. *  compressions program (gzip, bzip2 etc.)
-#.
-#: ../src/save.c:176
-#, c-format
-msgid "Couldn't save %s'd gettext file `%s'!"
-msgstr "Non se puido gardar '%s' o ficheiro gettext '%s'!"
-
-#: ../src/save.c:249
-#, c-format
-msgid "Couldn't save zip'ed po file `%s'!"
-msgstr "Non se puido abrir o ficheiro po comprimido con zip '%s'!"
 
 #: ../src/sighandling.c:64
 #, c-format
@@ -1012,15 +891,11 @@ msgstr "Estado da tradución:"
 msgid "Translated"
 msgstr "Traducida"
 
-#: ../src/tab.c:353
-msgid "Fuzzy"
-msgstr "Dubidosa"
-
 #: ../src/tab.c:357
 msgid "Untranslated"
 msgstr "Sen Traducir"
 
-#: ../src/tab.c:650
+#: ../src/tab.c:655
 msgid "There is an error in the message:"
 msgstr "Hai un erro na mensaxe:"
 
@@ -1068,75 +943,31 @@ msgstr "Separador"
 msgid "Unknown"
 msgstr "Descoñecido"
 
-#: ../src/utils.c:274 ../src/utils.c:291
+#: ../src/utils.c:216 ../src/utils.c:233
 #, c-format
 msgid "Can't create directory `%s'!"
 msgstr "Non foi posible xerar o directorio `%s'!"
 
-#: ../src/utils_gui.c:83
-#, c-format
-msgid "The necessary decompression program `%s' is not installed!"
-msgstr "O programa necesario para a descompresión`%s' non está instalado! "
-
-#: ../src/utils_gui.c:88
-#, c-format
-msgid "The necessary compression program `%s' is not installed!"
-msgstr "O programa necesario para a compresión `%s' non está instalado!"
-
-#: ../src/utils_gui.c:144
+#: ../src/utils_gui.c:75
 #, c-format
 msgid "Unable to find file %s."
 msgstr "Imposible encontrar o ficheiro %s."
 
-#: ../src/utils_gui.c:148 ../src/utils_gui.c:184
+#: ../src/utils_gui.c:79 ../src/utils_gui.c:115
 msgid "Please check your installation."
 msgstr "Comprobe a súa instalación."
 
-#: ../src/utils_gui.c:180
+#: ../src/utils_gui.c:111
 #, c-format
 msgid "Unable to find the required widgets inside file %s."
 msgstr "Imposible encontrar os widgets necesarios dentro do ficheiro %s."
 
-#: ../src/vfs-handle.c:121
-#, c-format
-msgid "Couldn't create temporary directory `%s'!"
-msgstr "Non foi posible xerar o directorio temporal `%s'!"
-
-#: ../src/vfs-handle.c:149
-#, c-format
-msgid "File `%s' couldn't be found!"
-msgstr "Non se atopou o ficheiro '%s'!"
-
-#: ../src/vfs-handle.c:154
-#, c-format
-msgid "Malformed URI `%s' entered!"
-msgstr "Introduciuse unha URI mal formada `%s'!"
-
-#: ../src/vfs-handle.c:159
-#, c-format
-msgid "Host `%s' couldn't be found!"
-msgstr "Non se puido atopar o servidor `%s'!"
-
-#: ../src/vfs-handle.c:164
-#, c-format
-msgid "Hostname `%s' is not valid!"
-msgstr "Nome de servidor `%s' non válido!"
-
-#: ../src/vfs-handle.c:169
-#, c-format
-msgid "Host `%s' has no address!"
-msgstr "O servidor `%s' non ten enderezo!"
-
-#: ../src/vfs-handle.c:174
-msgid "Transfer interrupted!"
-msgstr "Transferencia interrumpida!"
-
-#: ../src/view.c:82
+#: ../src/view.c:89
 #, c-format
 msgid "gtkspell error: %s\n"
 msgstr "erro de gtkspell: %s\n"
 
-#: ../src/view.c:83
+#: ../src/view.c:90
 #, c-format
 msgid ""
 "GtkSpell was unable to initialize.\n"
@@ -1213,214 +1044,376 @@ msgid "_Contents"
 msgstr "_Contidos"
 
 #: ../src/window.c:123
-msgid "_Website"
-msgstr "Sitio _web"
-
-#: ../src/window.c:124
-msgid "gtranslator's homepage on the web"
-msgstr "Páxina de inicio de gtranslator na web"
-
-#: ../src/window.c:126
 msgid "_About"
 msgstr "_Sobre"
 
-#: ../src/window.c:136
+#: ../src/window.c:133
 msgid "Save the file"
 msgstr "Gardar o ficheiro"
 
-#: ../src/window.c:139
+#: ../src/window.c:136
 msgid "Save the file with another name"
 msgstr "Gardar o ficheiro con outro nome"
 
-#: ../src/window.c:145
+#: ../src/window.c:142
 msgid "Close the current file"
 msgstr "Pechar o ficheiro actual"
 
-#: ../src/window.c:150
+#: ../src/window.c:147
 msgid "Undo last operation"
 msgstr "Desfacer a última operación"
 
-#: ../src/window.c:153
+#: ../src/window.c:150
 msgid "Redo last undo operation"
 msgstr "Refacer a última operación desfeita"
 
-#: ../src/window.c:156
+#: ../src/window.c:153
 msgid "Cut the selected text"
 msgstr "Cortar o texto seleccionado"
 
-#: ../src/window.c:159
+#: ../src/window.c:156
 msgid "Copy the selected text"
 msgstr "Copiar o texto seleccionado"
 
-#: ../src/window.c:162 ../src/window.c:234 ../src/window.c:237
-#: ../src/window.c:240 ../src/window.c:243
+#: ../src/window.c:159 ../src/window.c:234 ../src/window.c:237
 msgid "   "
 msgstr "   "
 
-#: ../src/window.c:165
+#: ../src/window.c:162
 msgid "Clear the translation text box"
 msgstr "Limpar a caixa de texto da tradución"
 
 #. G_CALLBACK (gtranslator_selection_clear) },
-#: ../src/window.c:167
+#: ../src/window.c:164
 msgid "_Header..."
 msgstr "Ca_beceira..."
 
-#: ../src/window.c:168
+#: ../src/window.c:165
 msgid "Edit po file header"
 msgstr "Editar a cabeceira do ficheiro po"
 
 #. G_CALLBACK (gtranslator_header_edit_dialog) },
-#: ../src/window.c:170
+#: ../src/window.c:167
 msgid "C_omment..."
 msgstr "C_omentario..."
 
-#: ../src/window.c:171
+#: ../src/window.c:168
 msgid "Edit message comment"
 msgstr "Editar o comentario da mensaxe"
 
 #. G_CALLBACK (gtranslator_edit_comment_dialog) },
-#: ../src/window.c:173
+#: ../src/window.c:170
 msgid "Copy _message -> translation"
 msgstr "Copiar _mensaxe -> tradución"
 
-#: ../src/window.c:174
+#: ../src/window.c:171
 msgid "Copy the original message contents and paste them as translation"
 msgstr "Copia o contido da mensaxe orixinal e a pega como tradución"
 
-#: ../src/window.c:176
+#: ../src/window.c:173
 msgid "_Fuzzy"
 msgstr "_Dubidosa"
 
-#: ../src/window.c:177
+#: ../src/window.c:174
 msgid "Toggle fuzzy status of a message"
 msgstr "Cambiar a dubidosa o estado da mensaxe"
 
 #. View menu
-#: ../src/window.c:181
+#: ../src/window.c:178
 msgid "_ColorSchemes"
 msgstr "Esquemas de _cor"
 
 #. Bookmarks menu
-#: ../src/window.c:185
+#: ../src/window.c:182
 msgid "_Add bookmark"
 msgstr "_Engadir marcador"
 
-#: ../src/window.c:186
+#: ../src/window.c:183
 msgid "Add a bookmark for this message in this po file"
 msgstr "Engadir un marcador para esta mensaxe neste ficheiro po"
 
-#: ../src/window.c:187
+#: ../src/window.c:184
 msgid "_Edit bookmarks"
 msgstr "_Editar marcadores"
 
-#: ../src/window.c:188
+#: ../src/window.c:185
 msgid "Edit the stored bookmarks"
 msgstr "Editar os marcadores almacenados"
 
 #. Action menu
-#: ../src/window.c:191
+#: ../src/window.c:188
 msgid "_Compile"
 msgstr "_Compilar"
 
-#: ../src/window.c:192
+#: ../src/window.c:189
 msgid "Compile the po file"
 msgstr "Compilar o ficheiro po"
 
-#: ../src/window.c:194
+#: ../src/window.c:191
 msgid "  "
 msgstr "  "
 
 #. G_CALLBACK(gtranslator_bookmark_adding_dialog) },
-#: ../src/window.c:196
+#: ../src/window.c:193
 msgid "Aut_otranslate..."
 msgstr "Traducir aut_omaticamente...."
 
-#: ../src/window.c:197
+#: ../src/window.c:194
 msgid "Autotranslate the file with information from your learn buffer"
 msgstr ""
 "Traducir automaticamente o ficheiro coa información do búfer de aprendizaxe"
 
 #. G_CALLBACK(gtranslator_auto_translation_dialog) },
-#: ../src/window.c:199
+#: ../src/window.c:196
 msgid "Remo_ve all translations..."
 msgstr "Elimina_r todas as traducións..."
 
-#: ../src/window.c:200
+#: ../src/window.c:197
 msgid "Remove all existing translations from the po file"
 msgstr "Eliminar todas as traducións existentes do ficheiro po"
 
-#: ../src/window.c:205
+#: ../src/window.c:202
 msgid "Go to the first message"
 msgstr "Ir á primeira mensaxe"
 
-#: ../src/window.c:208
+#: ../src/window.c:205
 msgid "Move back one message"
 msgstr "Ir unha mensaxe atrás"
 
-#: ../src/window.c:211
+#: ../src/window.c:208
 msgid "Move forward one message"
 msgstr "Ir unha mensaxe adiante"
 
-#: ../src/window.c:214
+#: ../src/window.c:211
 msgid "Go to the last message"
 msgstr "Ir á última mensaxe"
 
-#: ../src/window.c:217
+#: ../src/window.c:214
 msgid "Go to especified message number"
 msgstr "Ir a unha mensaxe especificada"
 
 #. G_CALLBACK (gtranslator_go_to_dialog) },
-#: ../src/window.c:219
+#: ../src/window.c:216
 msgid "Next fuz_zy"
 msgstr "Seguinte _dubidosa"
 
-#: ../src/window.c:220
+#: ../src/window.c:217
 msgid "Go to the next fuzzy message"
 msgstr "Ir á seguinte mensaxe dubidosa"
 
-#: ../src/window.c:222
+#: ../src/window.c:219
 msgid "Previous fuzz_y"
 msgstr "D_ubidosa anterior"
 
-#: ../src/window.c:223
+#: ../src/window.c:220
 msgid "Go to the previous fuzzy message"
 msgstr "Ir á mensaxe dubidosa anterior"
 
-#: ../src/window.c:225
+#: ../src/window.c:222
 msgid "Next _untranslated"
 msgstr "Seguinte _sen traducir"
 
-#: ../src/window.c:226
+#: ../src/window.c:223
 msgid "Go to the next untranslated message"
 msgstr "Ir á seguinte mensaxe sen traducir"
 
-#: ../src/window.c:228
+#: ../src/window.c:225
 msgid "Previ_ous untranslated"
 msgstr "Anterior s_en traducir"
 
-#: ../src/window.c:229
+#: ../src/window.c:226
 msgid "Go to the previous untranslated message"
 msgstr "Ir á anterior mensaxe sen traducir"
 
-#. G_CALLBACK (gtranslator_find_dialog) },
-#: ../src/window.c:236
+#: ../src/window.c:231
+msgid "Search for text"
+msgstr "Buscar texto"
+
+#: ../src/window.c:233
 msgid "Search ne_xt"
 msgstr "_Buscar seguinte"
 
 #. G_CALLBACK (gtranslator_find) },
-#: ../src/window.c:239
+#: ../src/window.c:236
 msgid "Search _previous"
 msgstr "Buscar _anterior"
 
-#: ../src/window.c:588
+#: ../src/window.c:240
+msgid "Search for and replace text"
+msgstr "Buscar e substituír texto"
+
+#: ../src/window.c:585
 msgid "Toolbar Editor"
 msgstr "Editor da barra de ferramentas"
 
-#: ../src/window.c:1116
+#: ../src/window.c:1118
 #, c-format
 msgid "    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"
 msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
+
+#~ msgid "General"
+#~ msgstr "Xeral"
+
+#~ msgid "Text display"
+#~ msgstr "Mostrar texto"
+
+#~ msgid "Contents"
+#~ msgstr "Contidos:"
+
+#~ msgid "Personal information"
+#~ msgstr "Información persoal"
+
+#~ msgid "Language settings"
+#~ msgstr "Opcións da lingua"
+
+#~ msgid " Categories: "
+#~ msgstr " Categorías: "
+
+#~ msgid ""
+#~ "<b>Fuzzy matching</b>\n"
+#~ "Not implemented"
+#~ msgstr ""
+#~ "<b>Coincidencia dubidosa</b>\n"
+#~ "Sen implementar"
+
+#~ msgid ""
+#~ "<b>General</b>\n"
+#~ "Not implemented"
+#~ msgstr ""
+#~ "<b>Xeral</b>\n"
+#~ "Sen implementar"
+
+#~ msgid ""
+#~ "<b>Messages table</b>\n"
+#~ "This should be a plugin"
+#~ msgstr ""
+#~ "<b>Táboa de mensaxes</b>\n"
+#~ "Isto debería ser un complemento"
+
+#~ msgid "Apply own fonts"
+#~ msgstr "Aplicar fontes propias"
+
+#~ msgid "Author's email:"
+#~ msgstr "E-mail do autor:"
+
+#~ msgid "Author's name:"
+#~ msgstr "Nome do autor:"
+
+#~ msgid "Automatically learn a newly translated message"
+#~ msgstr "Aprender automaticamente unha mensaxe nova traducida"
+
+#~ msgid "Automatically save at regular intervals"
+#~ msgstr "Gardar automaticamente a intervalos regulares"
+
+#~ msgid "Collapse all entries by default"
+#~ msgstr "Contraer todas as entradas por omisión"
+
+#~ msgid "Instant spell checking"
+#~ msgstr "Revisión ortográfica instantánea"
+
+#~ msgid "Minimal required similarity persentage for fuzzy queries:"
+#~ msgstr ""
+#~ "Porcentaxe de similitud mínimo requerido para as consultas dubidosas:"
+
+#~ msgid "Query the personal learn buffer while autotranslating"
+#~ msgstr ""
+#~ "Consultar tamén o búfer de aprendizaxe persoal mentras se traducen "
+#~ "automaticamente"
+
+#~ msgid "Save geometry on exit and restore it on startup"
+#~ msgstr "Gardar a xeometría ó saír e restaurala ó iniciar"
+
+#~ msgid "Show instant comment view in main pane"
+#~ msgstr "Mostrar a vista de comentarios instantáneos no panel principal"
+
+#~ msgid "Show the messages table (requires restart)"
+#~ msgstr "Mostrar a táboa de mensaxes (require reiniciar)"
+
+#~ msgid "Suffix: "
+#~ msgstr "Sufixo: "
+
+#~ msgid "Text font:"
+#~ msgstr "Fonte do texto:"
+
+#~ msgid "The Possibility to remove all translations from a po file"
+#~ msgstr "A posibilidade de borrar todas as traducións dun ficheiro po"
+
+#~ msgid "The Possibility to update a po file from within gtranslator"
+#~ msgstr "A posibilidade de actualizar un ficheiro po desde gtranslator"
+
+#~ msgid "Use \"fuzzy\" matching routines for learn buffer queries"
+#~ msgstr ""
+#~ "Usar rutinas de coincidencia \"dubidosas\" para as consultas do búfer de "
+#~ "aprendizaxe"
+
+#~ msgid "Use special character to indicate white space"
+#~ msgstr "Usar caracteres especiais para indicar o espazo en branco"
+
+#~ msgid "gtranslator -- font selection/msgid font"
+#~ msgstr "gtranslator -- selección de fonte/fonte de msgid"
+
+#~ msgid "gtranslator -- options"
+#~ msgstr "gtranslator -- opcións"
+
+#~ msgid "Translation text"
+#~ msgstr "Texto da tradución"
+
+#~ msgid "Specify main window geometry"
+#~ msgstr "Especifica a xeometría da ventá principal"
+
+#~ msgid "GEOMETRY"
+#~ msgstr "XEOMETRÍA"
+
+#~ msgid "Y"
+#~ msgstr "Y"
+
+#~ msgid "^"
+#~ msgstr "^"
+
+#~ msgid "Couldn't save compiled gettext file `%s'!"
+#~ msgstr "Non se puido gardar o ficheiro compilado de gettext '%s'!"
+
+#~ msgid "Couldn't save compressed gettext file `%s'!"
+#~ msgstr "Non se puido abrir o ficheiro comprimido de gettext '%s'!"
+
+#~ msgid "Couldn't save %s'd gettext file `%s'!"
+#~ msgstr "Non se puido gardar '%s' o ficheiro gettext '%s'!"
+
+#~ msgid "Couldn't save zip'ed po file `%s'!"
+#~ msgstr "Non se puido abrir o ficheiro po comprimido con zip '%s'!"
+
+#~ msgid "The necessary decompression program `%s' is not installed!"
+#~ msgstr "O programa necesario para a descompresión`%s' non está instalado! "
+
+#~ msgid "The necessary compression program `%s' is not installed!"
+#~ msgstr "O programa necesario para a compresión `%s' non está instalado!"
+
+#~ msgid "Couldn't create temporary directory `%s'!"
+#~ msgstr "Non foi posible xerar o directorio temporal `%s'!"
+
+#~ msgid "File `%s' couldn't be found!"
+#~ msgstr "Non se atopou o ficheiro '%s'!"
+
+#~ msgid "Malformed URI `%s' entered!"
+#~ msgstr "Introduciuse unha URI mal formada `%s'!"
+
+#~ msgid "Host `%s' couldn't be found!"
+#~ msgstr "Non se puido atopar o servidor `%s'!"
+
+#~ msgid "Hostname `%s' is not valid!"
+#~ msgstr "Nome de servidor `%s' non válido!"
+
+#~ msgid "Host `%s' has no address!"
+#~ msgstr "O servidor `%s' non ten enderezo!"
+
+#~ msgid "Transfer interrupted!"
+#~ msgstr "Transferencia interrumpida!"
+
+#~ msgid "_Website"
+#~ msgstr "Sitio _web"
+
+#~ msgid "gtranslator's homepage on the web"
+#~ msgstr "Páxina de inicio de gtranslator na web"
 
 #~ msgid ""
 #~ "File %s\n"
@@ -1795,9 +1788,6 @@ msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
 
 #~ msgid "_Revert"
 #~ msgstr "_Revertir"
-
-#~ msgid "gtranslator _website"
-#~ msgstr "páxina _web do gtranslator"
 
 #~ msgid "label"
 #~ msgstr "Dicionario"
