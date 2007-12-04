@@ -295,8 +295,8 @@ gtranslator_po_parse(GtranslatorPo *po,
 		
 		if (!space2)
 		{
-			language = gstrdup(language_temp);
-			lg_email = gstrdup("");
+			language = g_strdup(language_temp);
+			lg_email = g_strdup("");
 		}else {
 			language = g_strndup(language_temp, space2 - language_temp);
 			lg_email = g_strdup(space2 + 1);
