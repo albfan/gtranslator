@@ -3,6 +3,7 @@
  *			Fatih Demir <kabalak@kabalak.net>
  *			Ross Golder <ross@golder.org>
  *			Gediminas Paulauskas <menesis@kabalak.net>
+ *			Pablo Sanxiao <psanxiao@gmail.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -262,14 +263,15 @@ gtranslator_po_parse(GtranslatorPo *po,
 
 		gchar *space, *space1, *space2;
 		gchar *project = po_header_field(msgstr, "Project-Id-Version");
-		space = strrchr(project, ' ');
+		space = g_strrstr(project, " ");
 		
-		if (space) {
+		if (!space) 
+		{
+			prj_name = g_strdup(project);
+			prj_version = g_strdup("");			
+		} else {
 			prj_name = g_strndup(project, space - project);
 			prj_version = g_strdup(space + 1);
-		} else {
-			prj_name = g_strdup(project);
-			prj_version = g_strdup("");
 		}
 		
 		rmbt = g_strdup(po_header_field(msgstr, "Report-Msgid-Bugs-To"));
@@ -277,16 +279,28 @@ gtranslator_po_parse(GtranslatorPo *po,
 		po_date = g_strdup(po_header_field(msgstr, "PO-Revision-Date"));
 
 		gchar *translator_temp = po_header_field(msgstr, "Last-Translator");
-		space1 = strrchr(translator_temp, '<');
+		space1 = g_strrstr(translator_temp, " <");
 
-		translator = g_strndup(translator_temp, space1 - translator_temp);
-		tr_email = g_strdup(space1 + 1);
+		if (!space1)
+		{
+			translator = g_strdup(translator_temp);
+			tr_email = g_strdup("");
+		}else {
+			translator = g_strndup(translator_temp, space1 - translator_temp);
+			tr_email = g_strdup(space1 + 1);
+		}
 
 		gchar *language_temp = po_header_field(msgstr, "Language-Team");
-		space2 = strrchr(language_temp, '<');
-
-		language = g_strndup(language_temp, space2 - language_temp);
-		lg_email = g_strdup(space2 + 1);
+		space2 = g_strrstr(language_temp, " <");
+		
+		if (!space2)
+		{
+			language = gstrdup(language_temp);
+			lg_email = gstrdup("");
+		}else {
+			language = g_strndup(language_temp, space2 - language_temp);
+			lg_email = g_strdup(space2 + 1);
+		}
 
 		mime_version = g_strdup(po_header_field(msgstr, "MIME-Version"));
 		charset = g_strdup(po_header_field(msgstr, "Content-Type"));

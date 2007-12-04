@@ -1,5 +1,9 @@
 2007-12-04  Pablo Sanxiao  <psanxiao@gmail.com>
 
+	*po.c: Fixed problem to parse header.
+
+2007-12-04  Pablo Sanxiao  <psanxiao@gmail.com>
+
 	*header-dialog.h, header_dialog.c: Added GtranslatorHeaderDialog class.
 	*window.c: Added Callback for edit header.
 	*actions.h, actions-edit.c: Added action for edit header.
