@@ -84,10 +84,11 @@ gboolean         gtranslator_view_get_selected_text      (GtranslatorView *view,
 							  gchar         **selected_text,
 							  gint           *len);
 
-void             gtranslator_view_enable_spell_check     (GtranslatorView *view,
+void             gtranslator_view_enable_spellcheck      (GtranslatorView *view,
 							  gboolean enable);
 
-void             gtranslator_view_enable_dot_char        (GtranslatorView *view,
+void             gtranslator_view_enable_visible_whitespace
+                                                         (GtranslatorView *view,
 							  gboolean enable);
 
 void             gtranslator_view_cut_clipboard          (GtranslatorView *view);

@@ -72,11 +72,11 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 /* GUI state is serialized to a .desktop file, not in gconf */
 
 #define GTR_STATE_DEFAULT_WINDOW_STATE		0
-#define GTR_STATE_DEFAULT_WINDOW_WIDTH		650
+#define GTR_STATE_DEFAULT_WINDOW_WIDTH		774
 #define GTR_STATE_DEFAULT_WINDOW_HEIGHT		500
 #define GTR_STATE_DEFAULT_SIDE_PANEL_SIZE	200
 
-#define GTR_STATE_FILE_LOCATION ".gnome2/gtranslator"
+#define GTR_STATE_FILE_LOCATION ".config/gtranslator"
 
 #define GTR_STATE_WINDOW_GROUP "window"
 #define GTR_STATE_WINDOW_STATE "state"

@@ -238,7 +238,7 @@ gtranslator_application_open_window (GtranslatorApplication *app)
 	
 	if((state & GDK_WINDOW_STATE_MAXIMIZED) != 0)
 	{
-		gtranslator_prefs_manager_get_window_size(&w, &h);
+		gtranslator_prefs_manager_get_default_window_size(&w, &h);
 		gtk_window_set_default_size (GTK_WINDOW (window), w, h);
                 gtk_window_maximize (GTK_WINDOW (window));
 	}

@@ -1,6 +1,7 @@
 /*
  * (C) 2001-2007 	Fatih Demir <kabalak@kabalak.net>
  * 			Ignacio Casal <nacho.resa@gmail.com>
+ * 			Paolo Maggi 
  *
  * 	Based in gedit utils funcs.
  *

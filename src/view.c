@@ -1,5 +1,10 @@
 /*
  * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ *		 1998, 1999 Alex Roberts, Evan Lawrence
+ * 		 2000  2002 Chema Celorio, Paolo Maggi 
+ * 		 2003  2005 Paolo Maggi  
+ * 
+ * Some funcs based in gedit-view.c file.
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -279,7 +284,7 @@ gtranslator_view_enable_spellcheck(GtranslatorView *view,
 **/
 void
 gtranslator_view_enable_visible_whitespace(GtranslatorView *view,
-				 gboolean enable)
+					   gboolean enable)
 {
 	g_return_if_fail(GTR_IS_VIEW(view));
 	

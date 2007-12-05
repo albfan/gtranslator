@@ -1,5 +1,9 @@
 /*
  * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ *		 2006  Paolo Borelli
+ * 		 2007  Steve Frécinaux
+ *
+ * Based in gedit draw spaces plugin.
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by

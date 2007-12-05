@@ -1,10 +1,12 @@
 /*
- * gedit-search-commands.c
- * This file is part of gedit
+ * This file is part of gtranslator
  *
+ * Copyright (C) 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
  * Copyright (C) 2002-2006 Paolo Maggi
+ *
+ * Based in gedit-commands-search.c
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +22,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/*
- * Modified by the gedit Team, 1998-2006. See the AUTHORS file for a
- * list of people on the gedit Team.
- * See the ChangeLog files for a list of changes.
- *
- * $Id: gedit-commands-search.c 5931 2007-09-25 20:05:40Z pborelli $
  */
 
 #ifdef HAVE_CONFIG_H

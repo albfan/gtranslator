@@ -1,3 +1,19 @@
+2007-12-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* view.h: Fixed indentation.
+	* po.c: Added string.h dependencie.
+	* prefs-manager-app.c: Changed default window size and changed
+	 config place to .config instead of deprecated .gnome2
+	* application.c: Fixed size problem when the window is closed maximized.
+	* view.c:
+	* draw-spaces.c:
+	* charmap/charmap.c:
+	* charmap/charmap-panel.c:
+	* utils_gui.c: 
+	* actions_search.c:
+	* io-error-message-area.c:
+	  Fixed license problems.
+
 2007-12-04  Pablo Sanxiao  <psanxiao@gmail.com>
 
 	*po.c: Fixed problem to parse header.
