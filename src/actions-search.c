@@ -246,7 +246,9 @@ run_search (GtranslatorView   *view,
 static gboolean
 find_in_list(GtranslatorWindow *window,
 	     GList *views,
-	     gboolean fuzzy)
+	     gboolean fuzzy,
+	     gboolean wrap_around,
+	     gboolean search_backwards)
 {
 	GtranslatorTab *tab = gtranslator_window_get_active_tab(window);
 	GtranslatorPo *po = gtranslator_tab_get_po(tab);
@@ -267,9 +269,25 @@ find_in_list(GtranslatorWindow *window,
 	do{
 		if(gtranslator_msg_is_fuzzy(GTR_MSG(l->data)) && !fuzzy)
 		{
-			if(l->next == NULL)
-				l = g_list_first(l);
-			else l = l->next;
+			if(!search_backwards)
+			{
+				if(l->next == NULL)
+				{
+					if(!wrap_around)
+						return;
+					l = g_list_first(l);
+				}
+				else l = l->next;
+			}
+			else{
+				if(l->prev == NULL)
+				{
+					if(!wrap_around)
+						return;
+					l = g_list_last(l);
+				}
+				else l = l->prev;
+			}
 			gtranslator_tab_show_message(tab, GTR_MSG(l->data));
 		}
 		else{
@@ -280,9 +298,25 @@ find_in_list(GtranslatorWindow *window,
 					return TRUE;
 				viewsaux = viewsaux->next;
 			}
-			if(l->next == NULL)
-				l = g_list_first(l);
-			else l = l->next;
+			if(!search_backwards)
+			{
+				if(l->next == NULL)
+				{
+					if(!wrap_around)
+						return;
+					l = g_list_first(l);
+				}
+				else l = l->next;
+			}
+			else{
+				if(l->prev == NULL)
+				{
+					if(!wrap_around)
+						return;
+					l = g_list_last(l);
+				}
+				else l = l->prev;
+			}
 			gtranslator_tab_show_message(tab, GTR_MSG(l->data));
 			viewsaux = views;
 		}
@@ -355,7 +389,8 @@ do_find (GtranslatorSearchDialog *dialog,
 		list = list->next;
 	}
 	
-	found = find_in_list (window, views, fuzzy);
+	found = find_in_list (window, views, fuzzy,
+			      wrap_around, search_backwards);
 
 	if (found)
 		phrase_found (window, 0);
@@ -449,20 +484,29 @@ do_replace_all (GtranslatorSearchDialog *dialog,
 		GtranslatorWindow       *window)
 {
 	GtranslatorTab *tab;
-	GtranslatorView *active_view;
+	GList *views, *l;
+	GList *current_msg, *aux;
 	const gchar *search_entry_text;
 	const gchar *replace_entry_text;	
 	gboolean match_case;
 	gboolean entire_word;
 	guint flags = 0;
-	gint count;
+	gint count = 0;
 
 	tab = gtranslator_window_get_active_tab(window);
 	
-	active_view = gtranslator_window_get_active_view (window);
-	if (active_view == NULL)
-		return;
-
+	/* Get only translated textviews */
+	views = gtranslator_window_get_all_views(window, FALSE,
+						 TRUE);
+	
+	current_msg = gtranslator_po_get_current_message(gtranslator_tab_get_po(tab));
+	
+	g_return_if_fail(views != NULL);
+	g_return_if_fail(current_msg != NULL);
+	
+	l = views;
+	aux = current_msg;
+	
 	search_entry_text = gtranslator_search_dialog_get_search_text (dialog);
 	g_return_if_fail ((search_entry_text) != NULL);
 	g_return_if_fail ((*search_entry_text) != '\0');
@@ -476,11 +520,26 @@ do_replace_all (GtranslatorSearchDialog *dialog,
 
 	GTR_SEARCH_SET_CASE_SENSITIVE (flags, match_case);
 	GTR_SEARCH_SET_ENTIRE_WORD (flags, entire_word);
-
-	count = gtranslator_view_replace_all (active_view, 
-					    search_entry_text,
-					    replace_entry_text,
-					    flags);
+	
+	
+	do
+	{
+		while(l)
+		{
+			count += gtranslator_view_replace_all (GTR_VIEW(l->data), 
+							      search_entry_text,
+							      replace_entry_text,
+							      flags);
+			l = l->next;
+		}
+		
+		l = views;
+		
+		if(aux->next == NULL)
+			aux = g_list_first(aux);
+		else aux = aux->next;
+		gtranslator_tab_show_message(tab, GTR_MSG(aux->data));
+	}while(current_msg != aux);
 
 	if (count > 0)
 	{

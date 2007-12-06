@@ -1,3 +1,9 @@
+2007-12-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-search.c: I think the search engine is working.
+	It search with any flag you want and it replaces perfect
+	one occurrence or all occurrences in the messages list.
+
 2007-12-05  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* view.h: Fixed indentation.
