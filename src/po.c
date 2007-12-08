@@ -202,6 +202,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 		/*gchar absol[MAXPATHLEN + 1];
 		realpath(filename, absol);
 		priv->filename = g_strdup(absol);*/
+		priv->filename = g_build_filename(filename);
 	}
 	else
 	{
@@ -216,6 +217,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			GTR_PARSER_ERROR_GETTEXT,
 			_("Failed opening file '%s': %s"),
 			priv->filename, strerror(errno));*/
+		g_warning("Failed opening file '%s'", priv->filename);
 		g_object_unref(po);
 		return;
 	}
@@ -236,6 +238,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			GTR_PARSER_ERROR,
 			GTR_PARSER_ERROR_GETTEXT,
 			_("Gettext returned a null message domain list."));*/
+		g_warning(_("Gettext returned a null message domain list."));
 		g_object_unref(po);
 		return;
 	}
@@ -335,6 +338,10 @@ gtranslator_po_parse(GtranslatorPo *po,
 	 */
 	while((message = po_next_message(iter)))
 	{
+		/*FIXME: We have to change this:
+		 * we have to add a gtranslator_msg_is_obsolete fund msg.c
+		 * and detect if we want obsoletes messages in show message
+		 */
 		if(!po_message_is_obsolete(message))
 		{
 			/* Unpack into a GtrMsg */
@@ -350,6 +357,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			GTR_PARSER_ERROR,
 			GTR_PARSER_ERROR_OTHER,
 			_("No messages obtained from parser."));*/
+		g_warning(_("No messages obtained from parser."));
 		g_object_unref(po);
 		return;
 	}
