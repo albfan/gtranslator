@@ -64,8 +64,8 @@
 
 /* PO header */
 #define GPM_PERSONAL_INFORMATION_DIR	GPM_PREFS_DIR "/po_header/personal_information"
-#define GPM_NAME			GPM_PERSONAL_INFORMATION_DIR "name"
-#define GPM_EMAIL			GPM_PERSONAL_INFORMATION_DIR "email"
+#define GPM_NAME			GPM_PERSONAL_INFORMATION_DIR "/name"
+#define GPM_EMAIL			GPM_PERSONAL_INFORMATION_DIR "/email"
 
 #define GPM_LANGUAGE_SETTINGS_DIR	GPM_PREFS_DIR "/po_header/language_settings"
 #define GPM_LANGUAGE			GPM_LANGUAGE_SETTINGS_DIR "/language"

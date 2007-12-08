@@ -1,3 +1,7 @@
+2007-12-08  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* prefs-manager.h: Fix gconf key paths.
+
 2007-12-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* po.c: Added some warnings on gtranslator_po_parse func.
