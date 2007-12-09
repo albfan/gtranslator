@@ -176,10 +176,6 @@ static const GtkActionEntry entries[] = {
 	  N_("Toggle fuzzy status of a message"),
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	
-	/* View menu */
-	{ "ViewSchemes", NULL, N_("_ColorSchemes"), NULL,
-          NULL, NULL},
-	
 	/* Bookmarks menu */
 	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add bookmark"), NULL,
           N_("Add a bookmark for this message in this po file"), NULL},

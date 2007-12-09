@@ -1,3 +1,7 @@
+2007-12-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* window.c: Removed scheme colors menu entry.
+
 2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* prefs-manager.h: Correct macro name.

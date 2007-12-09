@@ -35,8 +35,6 @@
 
     <menu name="ViewMenu" action="View">
       <menuitem name="ViewSidePaneMenu" action="ViewSidePane"/>
-      <separator/>
-      <menuitem name="ViewSchemesMenu" action="ViewSchemes"/>
     </menu>
 
     <menu name="BookmarksMenu" action="Bookmarks">
