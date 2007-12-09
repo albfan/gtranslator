@@ -14,6 +14,8 @@ src/comment/comment-panel.c
 src/comment/comment.c
 src/compile.c
 src/dialogs/file-dialogs.c
+src/dialogs/header-dialog.c
+src/dialogs/header-dialog.glade
 src/dialogs/preferences-dialog.c
 src/dialogs/preferences-dialog.glade
 src/dialogs/search-dialog.c
@@ -29,6 +31,7 @@ src/messagestable/messages-table-panel.c
 src/messagestable/messages-table.c
 src/notebook.c
 src/panel.c
+src/po.c
 src/prefs-manager.c
 src/sighandling.c
 src/tab.c
