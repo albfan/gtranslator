@@ -76,6 +76,10 @@
 #define GPM_NUMBER_PLURALS		GPM_LANGUAGE_SETTINGS_DIR "/number_plurals"
 #define GPM_PLURALS			GPM_LANGUAGE_SETTINGS_DIR "/plurals"
 
+/* Interface */
+#define GPM_INTERFACE_DIR		GPM_BASE_KEY "/interface"
+#define GPM_SIDE_PANE_VISIBLE		GPM_INTERFACE_DIR "/side_pane_visible"
+
 /* Fallback default values. Keep in sync with gtranslator.schemas */
 
 /* Files */
@@ -111,6 +115,9 @@
 #define GPM_LG_EMAIL			GPM_LANGUAGE_SETTINGS_DIR "/lg_email"*/
 #define GPM_DEFAULT_NUMBER_PLURALS	2
 #define GPM_DEFAULT_PLURALS		(const gchar*) ""
+
+/* Interface */
+#define GPM_DEFAULT_SIDE_PANE_VISIBLE	1
 
 /** LIFE CYCLE MANAGEMENT FUNCTIONS **/
 
@@ -186,6 +193,9 @@ const gchar *            gtranslator_prefs_manager_get_email                    
 void                     gtranslator_prefs_manager_set_number_plurals           (gint plurals);
 gint                     gtranslator_prefs_manager_get_number_plurals           (void);
 
+/* Side pane visibility */
+void			gtranslator_prefs_manager_set_side_pane_visible		(gboolean side_pane_visible);
+gboolean		gtranslator_prefs_manager_get_side_pane_visible		(void);
 
 #endif  /* __GTR_PREFS_MANAGER_H__ */
 

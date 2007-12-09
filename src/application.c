@@ -254,8 +254,8 @@ gtranslator_application_open_window (GtranslatorApplication *app)
 	
 	g_signal_connect(window, "destroy",
 			 G_CALLBACK(on_window_destroy_cb), GTR_APP);
-	
-	gtk_widget_show_all(GTK_WIDGET(window));
+
+	gtk_widget_show(GTK_WIDGET(window));	
 }
 				     
 

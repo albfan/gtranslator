@@ -68,6 +68,7 @@ gtranslator_SOURCES = \
 	actions.h \
 	actions-go.c \
 	actions-edit.c \
+	actions-view.c \
 	io-error-message-area.c \
 	io-error-message-area.h \
 	prefs-manager.c \

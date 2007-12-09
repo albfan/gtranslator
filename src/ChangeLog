@@ -1,3 +1,13 @@
+2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* src/Makefile.am:
+	* src/actions.h:
+	* src/actions-view.c:
+	* src/prefs-manager.{ch}:
+	* src/application.c:
+	* src/window.c:
+		Add persistent side pane visibility and corresponding menu item.
+
 2007-12-08  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* prefs-manager.h: Fix gconf key paths.

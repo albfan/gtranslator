@@ -244,6 +244,11 @@ static const GtkActionEntry entries[] = {
 	
 };
 
+static const GtkToggleActionEntry toggle_entries[] = {
+	{ "ViewSidePane", NULL, N_("Side _Pane"), "F9",
+	  N_("Show or hide the side pane in the current window"),
+	  G_CALLBACK (gtranslator_actions_view_show_side_pane), FALSE }
+};
 
 void
 set_sensitive_according_to_message(GtranslatorWindow *window,
@@ -681,6 +686,24 @@ drag_data_received_cb (GtkWidget        *widget,
 }
 
 static void
+side_pane_visibility_changed (GtkWidget		*side_pane,
+			      GtranslatorWindow *window)
+{
+	gboolean visible;
+	GtkAction *action;
+
+	visible = GTK_WIDGET_VISIBLE (side_pane);
+
+	gtranslator_prefs_manager_set_side_pane_visible (visible);
+
+	action = gtk_action_group_get_action (window->priv->always_sensitive_action_group,
+	                                      "ViewSidePane");
+
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)) != visible)
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), visible);
+}
+
+static void
 gtranslator_window_draw (GtranslatorWindow *window)
 {
 	GtkWidget *hbox; //Statusbar and progressbar
@@ -711,7 +734,10 @@ gtranslator_window_draw (GtranslatorWindow *window)
 				      always_sensitive_entries,
 				      G_N_ELEMENTS(always_sensitive_entries),
 				      window);
-	
+
+	gtk_action_group_add_toggle_actions (priv->always_sensitive_action_group, toggle_entries,
+				      G_N_ELEMENTS (toggle_entries), window);
+
 	gtk_ui_manager_insert_action_group (priv->ui_manager,
 					    priv->always_sensitive_action_group, 0);
 	
@@ -791,8 +817,19 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	 */
 	priv->sidebar = gtranslator_panel_new(GTK_ORIENTATION_VERTICAL);
 	gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
-	gtk_widget_show(priv->sidebar);
-	
+
+	g_signal_connect_after (priv->sidebar,
+				"show",
+				G_CALLBACK (side_pane_visibility_changed),
+				window);
+	g_signal_connect_after (priv->sidebar,
+				"hide",
+				G_CALLBACK (side_pane_visibility_changed),
+				window);
+
+	if (gtranslator_prefs_manager_get_side_pane_visible ())
+		gtk_widget_show(priv->sidebar);
+
 	/*
 	 * notebook
 	 */

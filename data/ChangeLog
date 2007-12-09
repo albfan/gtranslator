@@ -1,3 +1,8 @@
+2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* gtranslator-ui.xml: Add persistent side pane visibility and
+		corresponding menu item.
+
 2007-12-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* gtranslator-ui.xml: Removed website menuitem.
