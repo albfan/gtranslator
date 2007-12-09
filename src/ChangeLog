@@ -1,11 +1,15 @@
 2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
 
-	* src/Makefile.am:
-	* src/actions.h:
-	* src/actions-view.c:
-	* src/prefs-manager.{ch}:
-	* src/application.c:
-	* src/window.c:
+	* prefs-manager.h: Correct macro name.
+
+2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* Makefile.am:
+	* actions.h:
+	* actions-view.c:
+	* prefs-manager.{ch}:
+	* application.c:
+	* window.c:
 		Add persistent side pane visibility and corresponding menu item.
 
 2007-12-08  Seán de Búrca  <sdeburca@svn.gnome.org>
