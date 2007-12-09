@@ -1,3 +1,8 @@
+2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* charmap/charmap.c: Make sure the panel is a GObject before we try to
+		unreference it.
+
 2007-12-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* statusbar.ch: Added to manage statusbar funcs.
