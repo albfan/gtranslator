@@ -1,0 +1,87 @@
+/*
+ * Copyright (C) 2005 - Paolo Borelli
+ * 		 2007 - Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, 
+ * Boston, MA 02111-1307, USA.
+ */
+ 
+#ifndef GTR_STATUSBAR_H
+#define GTR_STATUSBAR_H
+
+#include <gtk/gtkstatusbar.h>
+#include "window.h"
+
+G_BEGIN_DECLS
+
+#define GTR_TYPE_STATUSBAR		(gtranslator_statusbar_get_type ())
+#define GTR_STATUSBAR(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), GTR_TYPE_STATUSBAR, GtranslatorStatusbar))
+#define GTR_STATUSBAR_CLASS(k)	(G_TYPE_CHECK_CLASS_CAST((k), GTR_TYPE_STATUSBAR, GtranslatorStatusbarClass))
+#define GTR_IS_STATUSBAR(o)		(G_TYPE_CHECK_INSTANCE_TYPE ((o), GTR_TYPE_STATUSBAR))
+#define GTR_IS_STATUSBAR_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_STATUSBAR))
+#define GTR_STATUSBAR_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_STATUSBAR, GtranslatorStatusbarClass))
+
+typedef struct _GtranslatorStatusbar		GtranslatorStatusbar;
+typedef struct _GtranslatorStatusbarPrivate	GtranslatorStatusbarPrivate;
+typedef struct _GtranslatorStatusbarClass	GtranslatorStatusbarClass;
+
+struct _GtranslatorStatusbar
+{
+        GtkStatusbar parent;
+
+	/* <private/> */
+        GtranslatorStatusbarPrivate *priv;
+};
+
+struct _GtranslatorStatusbarClass
+{
+        GtkStatusbarClass parent_class;
+};
+
+GType		 gtranslator_statusbar_get_type		(void) G_GNUC_CONST;
+
+GtkWidget	*gtranslator_statusbar_new			(void);
+
+/* FIXME: status is not defined in any .h */
+#define GtranslatorStatus gint
+void		 gtranslator_statusbar_set_overwrite		(GtranslatorStatusbar   *statusbar,
+								 gboolean          overwrite);
+
+void		 gtranslator_statusbar_set_cursor_position	(GtranslatorStatusbar   *statusbar,
+								 gint              line,
+								 gint              col);
+
+void		 gtranslator_statusbar_clear_overwrite  	(GtranslatorStatusbar   *statusbar);
+
+void		 gtranslator_statusbar_flash_message		(GtranslatorStatusbar   *statusbar,
+							 	 guint             context_id,
+							 	 const gchar      *format,
+							 	 ...) G_GNUC_PRINTF(3, 4);
+/* FIXME: these would be nice for plugins...
+void		 gtranslator_statusbar_add_widget		(GtranslatorStatusbar   *statusbar,
+							 GtkWidget        *widget);
+void		 gtranslator_statusbar_remove_widget		(GtranslatorStatusbar   *statusbar,
+							 GtkWidget        *widget);
+*/
+
+/*
+ * Non exported functions
+ */
+void		_gtranslator_statusbar_set_has_resize_grip	(GtranslatorStatusbar   *statusbar,
+								 gboolean          show);
+
+G_END_DECLS
+
+#endif

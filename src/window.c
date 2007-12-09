@@ -29,6 +29,7 @@
 #include "tab.h"
 #include "panel.h"
 #include "po.h"
+#include "statusbar.h"
 #include "utils_gui.h"
 #include "window.h"
 
@@ -63,11 +64,15 @@ struct _GtranslatorWindowPrivate
 	GtkActionGroup *action_group;
 	
 	GtkWidget *notebook;
+	GtranslatorTab *active_tab;
+	
 	GtkWidget *sidebar;
 	gint sidebar_size;
 	
 	GtkWidget *statusbar;
-	gint context_id;
+	guint generic_message_cid;
+	guint tip_message_cid;
+	
 	GtkWidget *progressbar;
 	
 	GtkUIManager *ui_manager;
@@ -351,19 +356,107 @@ set_sensitive_according_to_window(GtranslatorWindow *window)
 				       
 }
 
+
+static GtranslatorWindow *
+get_drop_window (GtkWidget *widget)
+{
+	GtkWidget *target_window;
+
+	target_window = gtk_widget_get_toplevel (widget);
+	g_return_val_if_fail (GTR_IS_WINDOW (target_window), NULL);
+	
+	return GTR_WINDOW (target_window);
+}
+
+static void
+load_uris_from_drop (GtranslatorWindow  *window,
+		     gchar       **uri_list)
+{
+	GSList *uris = NULL;
+	gint i;
+	
+	if (uri_list == NULL)
+		return;
+	
+	for (i = 0; uri_list[i] != NULL; ++i)
+	{
+		uris = g_slist_prepend (uris, uri_list[i]);
+	}
+
+	uris = g_slist_reverse (uris);
+	gtranslator_actions_load_uris (window,
+				      uris);
+
+	g_slist_free (uris);
+}
+
+/* Handle drops on the GtranslatorWindow */
+static void
+drag_data_received_cb (GtkWidget        *widget,
+		       GdkDragContext   *context,
+		       gint              x,
+		       gint              y,
+		       GtkSelectionData *selection_data,
+		       guint             info,
+		       guint             time,
+		       gpointer          data)
+{
+	GtranslatorWindow *window;
+	gchar **uri_list;
+
+	window = get_drop_window (widget);
+	
+	if (window == NULL)
+		return;
+
+	if (info == TARGET_URI_LIST)
+	{
+		uri_list = gtranslator_utils_drop_get_uris(selection_data);
+		load_uris_from_drop (window, uri_list);
+		g_strfreev (uri_list);
+	}
+}
+
+static void
+update_overwrite_mode_statusbar (GtkTextView *view, 
+				 GtranslatorWindow *window)
+{
+	if (view != GTK_TEXT_VIEW (gtranslator_window_get_active_view (window)))
+		return;
+		
+	/* Note that we have to use !gtk_text_view_get_overwrite since we
+	   are in the in the signal handler of "toggle overwrite" that is
+	   G_SIGNAL_RUN_LAST
+	*/
+	gtranslator_statusbar_set_overwrite (
+			GTR_STATUSBAR (window->priv->statusbar),
+			!gtk_text_view_get_overwrite (view));
+}
+
 static void
 notebook_switch_page(GtkNotebook *nb,
 		     GtkNotebookPage *page,
 		     gint page_num,
 		     GtranslatorWindow *window)
 {
-	GtranslatorTab *current_tab;
+	GtranslatorTab *tab;
+	GtranslatorView *view;
 	
-	current_tab = gtranslator_window_get_active_tab(window);
+	tab = GTR_TAB (gtk_notebook_get_nth_page (nb, page_num));
+	if (tab == window->priv->active_tab)
+		return;
 	
-	set_sensitive_according_to_tab(window, current_tab);
+	window->priv->active_tab = tab;
+	view = gtranslator_tab_get_active_view (tab);
 	
-	gtranslator_window_update_statusbar(window);
+	set_sensitive_according_to_tab(window, tab);
+	
+	
+	/* sync the statusbar */
+	gtranslator_statusbar_set_overwrite (GTR_STATUSBAR (window->priv->statusbar),
+					     gtk_text_view_get_overwrite (GTK_TEXT_VIEW (view)));
+	
+	//gtranslator_window_update_statusbar(window);
 }
 
 static void
@@ -418,25 +511,36 @@ notebook_tab_added(GtkNotebook *notebook,
 		   guint        page_num,
 		   GtranslatorWindow *window)
 {
-	GtranslatorView *view;
+	GList *views;
 	GtranslatorTab *tab = GTR_TAB(child);
 	GtkTextBuffer *buffer;
 	
 	g_return_if_fail(GTR_IS_TAB(tab));
 	
-	view = gtranslator_tab_get_active_view(tab);
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+	views = gtranslator_tab_get_all_views(tab, FALSE, TRUE);
+	
+	while(views)
+	{
+		buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(views->data));
 	
 	
-	g_signal_connect(GTK_SOURCE_BUFFER(buffer),
-			 "notify::can-undo",
-			 G_CALLBACK(can_undo),
-			 window);
+		g_signal_connect(GTK_SOURCE_BUFFER(buffer),
+				 "notify::can-undo",
+				 G_CALLBACK(can_undo),
+				 window);
 	
-	g_signal_connect(GTK_SOURCE_BUFFER(buffer),
-			 "notify::can-redo",
-			 G_CALLBACK(can_redo),
-			 window);
+		g_signal_connect(GTK_SOURCE_BUFFER(buffer),
+				 "notify::can-redo",
+				 G_CALLBACK(can_redo),
+				 window);
+		
+		g_signal_connect (views->data,
+				  "toggle_overwrite",
+				  G_CALLBACK (update_overwrite_mode_statusbar),
+				  window);
+		
+		views = views->next;
+	}
 }
 
 void
@@ -621,66 +725,6 @@ window_sidebar_position_change_cb(GObject    *gobject,
 	window->priv->sidebar_size = gtk_paned_get_position(GTK_PANED(gobject));
 }
 
-static GtranslatorWindow *
-get_drop_window (GtkWidget *widget)
-{
-	GtkWidget *target_window;
-
-	target_window = gtk_widget_get_toplevel (widget);
-	g_return_val_if_fail (GTR_IS_WINDOW (target_window), NULL);
-	
-	return GTR_WINDOW (target_window);
-}
-
-static void
-load_uris_from_drop (GtranslatorWindow  *window,
-		     gchar       **uri_list)
-{
-	GSList *uris = NULL;
-	gint i;
-	
-	if (uri_list == NULL)
-		return;
-	
-	for (i = 0; uri_list[i] != NULL; ++i)
-	{
-		uris = g_slist_prepend (uris, uri_list[i]);
-	}
-
-	uris = g_slist_reverse (uris);
-	gtranslator_actions_load_uris (window,
-				      uris);
-
-	g_slist_free (uris);
-}
-
-/* Handle drops on the GtranslatorWindow */
-static void
-drag_data_received_cb (GtkWidget        *widget,
-		       GdkDragContext   *context,
-		       gint              x,
-		       gint              y,
-		       GtkSelectionData *selection_data,
-		       guint             info,
-		       guint             time,
-		       gpointer          data)
-{
-	GtranslatorWindow *window;
-	gchar **uri_list;
-
-	window = get_drop_window (widget);
-	
-	if (window == NULL)
-		return;
-
-	if (info == TARGET_URI_LIST)
-	{
-		uri_list = gtranslator_utils_drop_get_uris(selection_data);
-		load_uris_from_drop (window, uri_list);
-		g_strfreev (uri_list);
-	}
-}
-
 static void
 side_pane_visibility_changed (GtkWidget		*side_pane,
 			      GtranslatorWindow *window)
@@ -856,10 +900,19 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	/*
 	 * statusbar
 	 */
-	priv->statusbar = gtk_statusbar_new();
-	priv->context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(priv->statusbar),
-							"status_message");
-	gtk_box_pack_start( GTK_BOX(hbox), priv->statusbar, TRUE, TRUE, 0);
+	window->priv->statusbar = gtranslator_statusbar_new ();
+
+	window->priv->generic_message_cid = gtk_statusbar_get_context_id
+		(GTK_STATUSBAR (window->priv->statusbar), "generic_message");
+	window->priv->tip_message_cid = gtk_statusbar_get_context_id
+		(GTK_STATUSBAR (window->priv->statusbar), "tip_message");
+
+	gtk_box_pack_end (GTK_BOX (hbox),
+			  window->priv->statusbar,
+			  FALSE, 
+			  TRUE, 
+			  0);
+	
 	gtk_widget_show(priv->statusbar);
 }
 
@@ -1131,7 +1184,7 @@ gtranslator_window_get_all_views(GtranslatorWindow *window,
  * where you can set the messages status and
  * for example if is set the key Insert
  * Should manage flash messages too.
- */
+ *//*
 void
 gtranslator_window_update_statusbar(GtranslatorWindow *window)
 {
@@ -1160,7 +1213,7 @@ gtranslator_window_update_statusbar(GtranslatorWindow *window)
 			   window->priv->context_id,
 			   msg);
 	g_free(msg);			 
-}
+}*/
 
 /*
  * Update the progress bar

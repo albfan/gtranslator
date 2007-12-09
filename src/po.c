@@ -133,7 +133,6 @@ gtranslator_po_finalize (GObject *object)
 	
 	g_free(po->priv->filename);
 	g_free(po->priv->obsolete);
-	po_message_iterator_free(po->priv->iter);
 	
 	G_OBJECT_CLASS (gtranslator_po_parent_class)->finalize (object);
 }

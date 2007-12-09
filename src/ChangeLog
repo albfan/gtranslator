@@ -1,5 +1,16 @@
 2007-12-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* statusbar.ch: Added to manage statusbar funcs.
+	* Makefile.am: Added statusbar.ch.
+	* po.c: Removed free of iterator.
+	* actions-file:
+	* actions-go:
+	  Commented _window_update_statusbar func.
+	* window.c: Added statusbar widget.
+	Now statusbar shows if INS or OVR is set.
+
+2007-12-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* window.c: Removed scheme colors menu entry.
 
 2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>
