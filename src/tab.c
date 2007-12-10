@@ -286,6 +286,13 @@ set_message_area (GtranslatorTab  *tab,
                                    (gpointer *)&tab->priv->message_area);
 }
 
+static void
+message_table_size_changed (GObject		*tab_gobject,
+			    GParamSpec		*arg1,
+			    GtranslatorTab	*tab)
+{
+	gtranslator_prefs_manager_set_msg_table_size(gtk_paned_get_position(GTK_PANED(tab_gobject)));
+}
 
 static void
 gtranslator_tab_draw (GtranslatorTab *tab)
@@ -301,11 +308,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	
 	
 	/*
-	 * Content pane
-	 */
-	priv->content_pane = gtk_vpaned_new();
-	
-	/*
 	 * Panel
 	 */
 	priv->panel = GTR_PANEL(gtranslator_panel_new(GTK_ORIENTATION_HORIZONTAL));
@@ -315,7 +317,15 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 */
 	priv->table_pane = gtk_hpaned_new();
 	
-	gtk_paned_set_position(GTK_PANED(priv->content_pane), PANED_WIDTH);
+	/*
+	 * Content pane; this is where the message table and message area go
+	 */
+	priv->content_pane = gtk_vpaned_new();
+	gtk_paned_set_position(GTK_PANED(priv->content_pane), gtranslator_prefs_manager_get_msg_table_size());
+	g_signal_connect (priv->content_pane,
+			  "notify::position",
+			  G_CALLBACK (message_table_size_changed),
+			  tab);
 
 	/*
 	 * Pack the comments pane and the main content

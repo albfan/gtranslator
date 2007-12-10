@@ -72,9 +72,10 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 /* GUI state is serialized to a .desktop file, not in gconf */
 
 #define GTR_STATE_DEFAULT_WINDOW_STATE		0
-#define GTR_STATE_DEFAULT_WINDOW_WIDTH		774
+#define GTR_STATE_DEFAULT_WINDOW_WIDTH		775
 #define GTR_STATE_DEFAULT_WINDOW_HEIGHT		500
 #define GTR_STATE_DEFAULT_SIDE_PANEL_SIZE	200
+#define GTR_STATE_DEFAULT_MSG_TABLE_SIZE	325
 
 #define GTR_STATE_FILE_LOCATION ".config/gtranslator"
 
@@ -84,12 +85,14 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_WINDOW_WIDTH "width"
 #define GTR_STATE_SIDE_PANEL_SIZE "side_panel_size"
 #define GTR_STATE_SIDE_PANEL_ACTIVE_PAGE "side_panel_active_page"
+#define GTR_STATE_MSG_TABLE_SIZE "msg_table_size"
 
 static gint window_state = -1;
 static gint window_height = -1;
 static gint window_width = -1;
 static gint side_panel_size = -1;
 static gint side_panel_active_page = 0;
+static gint msg_table_size = -1;
 
 static GKeyFile *
 get_gtranslator_state_file ()
@@ -411,6 +414,46 @@ gtranslator_prefs_manager_side_panel_active_page_can_set (void)
 	return TRUE;
 }
 
+/* Messages table */
+gint
+gtranslator_prefs_manager_get_msg_table_size (void)
+{
+	if (msg_table_size == -1)
+	{
+		gtranslator_state_get_int (GTR_STATE_WINDOW_GROUP,
+					   GTR_STATE_MSG_TABLE_SIZE,
+					   GTR_STATE_DEFAULT_MSG_TABLE_SIZE,
+					   &msg_table_size);
+	}
+
+	return msg_table_size;
+}
+
+gint
+gtranslator_prefs_manager_get_default_msg_table_size (void)
+{
+	return GTR_STATE_DEFAULT_MSG_TABLE_SIZE;
+}
+
+void
+gtranslator_prefs_manager_set_msg_table_size (gint new_table_size)
+{
+	g_return_if_fail (new_table_size > -1);
+
+	if (msg_table_size == new_table_size)
+		return;
+
+	msg_table_size = new_table_size;
+	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
+				   GTR_STATE_MSG_TABLE_SIZE,
+				   new_table_size);
+}
+
+gboolean
+gtranslator_prefs_manager_msg_table_size_can_set (void)
+{
+	return TRUE;
+}
 
 /* Normal prefs are stored in GConf */
 
