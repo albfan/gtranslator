@@ -313,11 +313,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	priv->panel = GTR_PANEL(gtranslator_panel_new(GTK_ORIENTATION_HORIZONTAL));
 	
 	/*
-	 * Table pane
-	 */
-	priv->table_pane = gtk_hpaned_new();
-	
-	/*
 	 * Content pane; this is where the message table and message area go
 	 */
 	priv->content_pane = gtk_vpaned_new();
@@ -392,7 +387,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->trans_notebook, TRUE, TRUE, 0);	
 	
-	gtk_paned_pack2(GTK_PANED(priv->table_pane), priv->content_pane, FALSE, FALSE);
+	gtk_box_pack_start(GTK_BOX(tab), priv->content_pane, TRUE, TRUE, 0);
 }
 
 static void
@@ -403,9 +398,6 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	tab->priv = GTR_TAB_GET_PRIVATE (tab);
 	
 	gtranslator_tab_draw(tab);
-	
-	gtk_box_pack_start(GTK_BOX(tab), tab->priv->table_pane, TRUE, TRUE, 0);
-	
 }
 
 static void
