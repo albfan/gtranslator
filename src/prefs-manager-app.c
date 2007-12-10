@@ -75,7 +75,7 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_DEFAULT_WINDOW_WIDTH		775
 #define GTR_STATE_DEFAULT_WINDOW_HEIGHT		500
 #define GTR_STATE_DEFAULT_SIDE_PANEL_SIZE	200
-#define GTR_STATE_DEFAULT_MSG_TABLE_SIZE	325
+#define GTR_STATE_DEFAULT_CONTENT_PANE_POS	325
 
 #define GTR_STATE_FILE_LOCATION ".config/gtranslator"
 
@@ -85,14 +85,14 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_WINDOW_WIDTH "width"
 #define GTR_STATE_SIDE_PANEL_SIZE "side_panel_size"
 #define GTR_STATE_SIDE_PANEL_ACTIVE_PAGE "side_panel_active_page"
-#define GTR_STATE_MSG_TABLE_SIZE "msg_table_size"
+#define GTR_STATE_CONTENT_PANE_POS "content_pane_pos"
 
 static gint window_state = -1;
 static gint window_height = -1;
 static gint window_width = -1;
 static gint side_panel_size = -1;
 static gint side_panel_active_page = 0;
-static gint msg_table_size = -1;
+static gint content_pane_pos = -1;
 
 static GKeyFile *
 get_gtranslator_state_file ()
@@ -416,43 +416,37 @@ gtranslator_prefs_manager_side_panel_active_page_can_set (void)
 
 /* Messages table */
 gint
-gtranslator_prefs_manager_get_msg_table_size (void)
+gtranslator_prefs_manager_get_content_pane_pos (void)
 {
-	if (msg_table_size == -1)
+	if (content_pane_pos == -1)
 	{
 		gtranslator_state_get_int (GTR_STATE_WINDOW_GROUP,
-					   GTR_STATE_MSG_TABLE_SIZE,
-					   GTR_STATE_DEFAULT_MSG_TABLE_SIZE,
-					   &msg_table_size);
+					   GTR_STATE_CONTENT_PANE_POS,
+					   GTR_STATE_DEFAULT_CONTENT_PANE_POS,
+					   &content_pane_pos);
 	}
 
-	return msg_table_size;
+	return content_pane_pos;
 }
 
 gint
-gtranslator_prefs_manager_get_default_msg_table_size (void)
+gtranslator_prefs_manager_get_default_content_pane_pos (void)
 {
-	return GTR_STATE_DEFAULT_MSG_TABLE_SIZE;
+	return GTR_STATE_DEFAULT_CONTENT_PANE_POS;
 }
 
 void
-gtranslator_prefs_manager_set_msg_table_size (gint new_table_size)
+gtranslator_prefs_manager_set_content_pane_pos (gint new_pane_pos)
 {
-	g_return_if_fail (new_table_size > -1);
+	g_return_if_fail (new_pane_pos > -1);
 
-	if (msg_table_size == new_table_size)
+	if (content_pane_pos == new_pane_pos)
 		return;
 
-	msg_table_size = new_table_size;
+	content_pane_pos = new_pane_pos;
 	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
-				   GTR_STATE_MSG_TABLE_SIZE,
-				   new_table_size);
-}
-
-gboolean
-gtranslator_prefs_manager_msg_table_size_can_set (void)
-{
-	return TRUE;
+				   GTR_STATE_CONTENT_PANE_POS,
+				   new_pane_pos);
 }
 
 /* Normal prefs are stored in GConf */

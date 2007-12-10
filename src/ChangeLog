@@ -1,5 +1,11 @@
 2007-12-10  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* prefs-manager-app.c:
+	* tab.c:
+		General cleanup.
+
+2007-12-10  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* tab.c: Remove unnecessary element.
 
 2007-12-09  Seán de Búrca  <sdeburca@svn.gnome.org>

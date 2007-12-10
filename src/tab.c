@@ -45,8 +45,6 @@
 
 #define MAX_PLURALS 6
 
-#define PANED_WIDTH 200
-
 G_DEFINE_TYPE(GtranslatorTab, gtranslator_tab, GTK_TYPE_VBOX)
 
 struct _GtranslatorTabPrivate
@@ -82,22 +80,6 @@ enum
 };
 
 static guint signals[LAST_SIGNAL];
-
-static void
-gtranslator_page_dirty(GtkTextBuffer *textbuffer,
-		       GtranslatorTab *tab) 
-{
-	g_assert(tab != NULL);
-	
-	//page->po->file_changed = TRUE;
-	
-	// TODO: make notebook tab go red with an asterisk to mark an unsaved page
-	
-	//Enable save and revert items
-	/*gtk_widget_set_sensitive(gtranslator_menuitems->save, TRUE);
-	gtk_widget_set_sensitive(gtranslator_menuitems->revert, TRUE);
-	gtk_widget_set_sensitive(gtranslator_menuitems->t_save, TRUE);*/
-}
 
 /*
  * Write the change back to the gettext PO instance in memory and
@@ -141,9 +123,6 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 			//free(check);
 		}
 		g_free(translation);
-		
-		/* Activate 'save', 'revert' etc. */
-		gtranslator_page_dirty(textbuffer, tab);
 		return;
 	}
 	i=1;
@@ -168,9 +147,6 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		
 		/* Write back to PO file in memory */
 		gtranslator_msg_set_msgstr_plural(msg, i, translation);
-
-		/* Activate 'save', 'revert' etc. */
-		gtranslator_page_dirty(textbuffer, tab);
 		return;
 		
 	}
@@ -287,11 +263,11 @@ set_message_area (GtranslatorTab  *tab,
 }
 
 static void
-message_table_size_changed (GObject		*tab_gobject,
-			    GParamSpec		*arg1,
-			    GtranslatorTab	*tab)
+content_pane_position_changed (GObject		*tab_gobject,
+			       GParamSpec	*arg1,
+			       GtranslatorTab	*tab)
 {
-	gtranslator_prefs_manager_set_msg_table_size(gtk_paned_get_position(GTK_PANED(tab_gobject)));
+	gtranslator_prefs_manager_set_content_pane_pos(gtk_paned_get_position(GTK_PANED(tab_gobject)));
 }
 
 static void
@@ -316,10 +292,10 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Content pane; this is where the message table and message area go
 	 */
 	priv->content_pane = gtk_vpaned_new();
-	gtk_paned_set_position(GTK_PANED(priv->content_pane), gtranslator_prefs_manager_get_msg_table_size());
+	gtk_paned_set_position(GTK_PANED(priv->content_pane), gtranslator_prefs_manager_get_content_pane_pos());
 	g_signal_connect (priv->content_pane,
 			  "notify::position",
-			  G_CALLBACK (message_table_size_changed),
+			  G_CALLBACK (content_pane_position_changed),
 			  tab);
 
 	/*
