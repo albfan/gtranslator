@@ -34,6 +34,7 @@ src/panel.c
 src/po.c
 src/prefs-manager.c
 src/sighandling.c
+src/statusbar.c
 src/tab.c
 src/toolbareditor/egg-editable-toolbar.c
 src/toolbareditor/egg-toolbar-editor.c
