@@ -40,12 +40,10 @@
         <context id="hotkey" style-ref="def:special-char">
           <match>[&amp;_][a-zA-Z]</match>
         </context>
-        <context style-ref="special-variable">
-          <match>\%\([a-zA-Z]+[a-zA-Z0-9]*\)</match>
-        </context>
         <context style-ref="tag">
 	  <match>&lt;[a-zA-Z\=\"\/ ]+&gt;</match>
 	</context>
+        <context ref="python:format" style-ref="special-variable"/>
         <context ref="c:printf"/>
       </include>
     </context>

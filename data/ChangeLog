@@ -1,3 +1,7 @@
+2007-12-11  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* po.lang: Fixed mapping to python variables.
+
 2007-12-09  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* gtranslator-ui.xml: Removed scheme colors menu entry.
