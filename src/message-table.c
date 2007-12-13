@@ -42,9 +42,9 @@
 
 G_DEFINE_TYPE(GtranslatorMessageTable, gtranslator_message_table, GTK_TYPE_VBOX)
 
-#define TABLE_FUZZY_COLOR "#aaaaaa"
-#define TABLE_UNTRANSLATED_COLOR "#4e76a8"
-#define TABLE_TRANSLATED_COLOR "#000000"
+#define TABLE_FUZZY_COLOR "#ff0000"
+#define TABLE_UNTRANSLATED_COLOR "#a7453e"
+#define TABLE_TRANSLATED_COLOR "#00ff00"
 
 struct _GtranslatorMessageTablePrivate
 {
