@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "msg.h"
 #include "panel.h"
 #include "po.h"
 #include "view.h"
@@ -64,7 +65,9 @@ struct _GtranslatorTabClass
 {
 	GtkVBoxClass parent_class;
 	
-	void (* showed_message) (GtranslatorTab *tab);
+	void (* showed_message)  (GtranslatorTab *tab);
+	void (* message_changed) (GtranslatorTab *tab,
+				  GtranslatorMsg *msg);
 };
 
 /*

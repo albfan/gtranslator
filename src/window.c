@@ -356,6 +356,43 @@ set_sensitive_according_to_window(GtranslatorWindow *window)
 				       
 }
 
+/*
+ * FIXME: This needs improve.
+ */
+static void
+gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
+						  GtranslatorMsg *message,
+						  GtranslatorWindow *window)
+{
+	GtranslatorPo *po;
+	gchar *msg;
+	gint pos, message_count, fuzzy, untranslated;
+	
+	g_warning("eo");
+	
+	po = gtranslator_tab_get_po(tab);
+	
+	message_count = gtranslator_po_get_messages_count(po);
+	pos = gtranslator_po_get_message_position(po);
+	fuzzy = gtranslator_po_get_fuzzy_count(po);
+	untranslated = gtranslator_po_get_untranslated_count(po);
+		
+	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"), 
+			      pos+1, message_count, fuzzy, untranslated);
+	
+	/*gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
+			  0);
+	
+	gtk_statusbar_push(GTK_STATUSBAR(window->priv->statusbar),
+			   0,
+			   msg);*/
+	gtranslator_statusbar_flash_message(GTR_STATUSBAR(window->priv->statusbar),
+					    window->priv->generic_message_cid,
+					    "Saving file '%s'\342\200\246");
+	
+	
+	g_free(msg);			 
+}
 
 static GtranslatorWindow *
 get_drop_window (GtkWidget *widget)
@@ -456,7 +493,8 @@ notebook_switch_page(GtkNotebook *nb,
 	gtranslator_statusbar_set_overwrite (GTR_STATUSBAR (window->priv->statusbar),
 					     gtk_text_view_get_overwrite (GTK_TEXT_VIEW (view)));
 	
-	//gtranslator_window_update_statusbar(window);
+	gtranslator_window_update_statusbar_message_count(tab,NULL, window);
+					    
 }
 
 static void
@@ -541,6 +579,12 @@ notebook_tab_added(GtkNotebook *notebook,
 		
 		views = views->next;
 	}
+	
+	g_signal_connect (child,
+			  "message_changed",
+			  G_CALLBACK(gtranslator_window_update_statusbar_message_count),
+			  window);
+				     
 }
 
 void
@@ -1053,6 +1097,29 @@ gtranslator_window_configure_event (GtkWidget         *widget,
         return GTK_WIDGET_CLASS (gtranslator_window_parent_class)->configure_event (widget, event);
 }
 
+static gboolean
+gtranslator_window_window_state_event (GtkWidget           *widget,
+				       GdkEventWindowState *event)
+{
+	GtranslatorWindow *window = GTR_WINDOW (widget);
+
+	window->priv->window_state = event->new_window_state;
+
+	if (event->changed_mask &
+	    (GDK_WINDOW_STATE_MAXIMIZED | GDK_WINDOW_STATE_FULLSCREEN))
+	{
+		gboolean show;
+
+		show = !(event->new_window_state &
+			(GDK_WINDOW_STATE_MAXIMIZED | GDK_WINDOW_STATE_FULLSCREEN));
+
+		_gtranslator_statusbar_set_has_resize_grip (GTR_STATUSBAR (window->priv->statusbar),
+						      show);
+	}
+
+	return FALSE;
+}
+
 static void
 gtranslator_window_class_init (GtranslatorWindowClass *klass)
 {
@@ -1068,6 +1135,7 @@ gtranslator_window_class_init (GtranslatorWindowClass *klass)
 	gobject_class->destroy = gtranslator_window_destroy;
 	
 	widget_class->configure_event = gtranslator_window_configure_event;
+	widget_class->window_state_event = gtranslator_window_window_state_event;
 }
 
 /***************************** Public funcs ***********************************/
@@ -1178,42 +1246,6 @@ gtranslator_window_get_all_views(GtranslatorWindow *window,
 	
 	return views;
 }
-
-/*
- * TODO: Create a new statusbar widget
- * where you can set the messages status and
- * for example if is set the key Insert
- * Should manage flash messages too.
- *//*
-void
-gtranslator_window_update_statusbar(GtranslatorWindow *window)
-{
-	GtranslatorTab *tab;
-	GtranslatorPo *po;
-	gchar *msg;
-	gint pos, message_count, fuzzy, untranslated;
-	GList *current_msg;
-	
-	tab = gtranslator_window_get_active_tab(window);
-	po = gtranslator_tab_get_po(tab);
-	current_msg = gtranslator_po_get_current_message(po);
-	
-	message_count = gtranslator_po_get_messages_count(po);
-	pos = gtranslator_po_get_message_position(po);
-	fuzzy = gtranslator_po_get_fuzzy_count(po);
-	untranslated = gtranslator_po_get_untranslated_count(po);
-	
-	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"), 
-			      pos+1, message_count, fuzzy, untranslated);
-	
-	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
-			  window->priv->context_id);
-	
-	gtk_statusbar_push(GTK_STATUSBAR(window->priv->statusbar),
-			   window->priv->context_id,
-			   msg);
-	g_free(msg);			 
-}*/
 
 /*
  * Update the progress bar

@@ -76,6 +76,7 @@ struct _GtranslatorTabPrivate
 enum
 {
 	SHOWED_MESSAGE,
+	MESSAGE_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -105,7 +106,7 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 	
 	if(gtranslator_msg_is_fuzzy(msg) && gtranslator_prefs_manager_get_unmark_fuzzy())
 		gtranslator_msg_set_fuzzy(msg, FALSE);
-		
+	
 	if(textbuffer == buf)
 	{
 		/* Get message as UTF-8 buffer */
@@ -220,19 +221,35 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 }
 
 static void
-status_widgets(GtkTextBuffer *buffer,
-	       GtranslatorTab *tab)
+emit_message_changed_signal(GtkTextBuffer *buf,
+			    GtranslatorTab *tab)
 {
-	GList *msg = gtranslator_po_get_current_message(tab->priv->po);
+	GList *msg; 
 	
-	if(gtranslator_msg_is_fuzzy(msg->data))
+	msg = gtranslator_po_get_current_message(tab->priv->po);
+	
+	g_signal_emit(G_OBJECT(tab), signals[MESSAGE_CHANGED], 0, msg->data); 
+}
+
+static void
+status_widgets(GtranslatorTab *tab,
+	       GtranslatorMsg *msg)
+{
+	g_return_if_fail(msg != NULL);
+	
+	if(gtranslator_msg_is_fuzzy(msg))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->fuzzy), TRUE);
 	
-	else if(gtranslator_msg_is_translated(msg->data))
+	else if(gtranslator_msg_is_translated(msg))
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->translated), TRUE);
 	
 	else
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->untranslated), TRUE);
+	
+	/*
+	 * We need update the message count too
+	 */
+	gtranslator_po_update_translated_count(tab->priv->po);
 
 }
 
@@ -352,11 +369,10 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		g_signal_connect(buf, "end-user-action",
 				 G_CALLBACK(gtranslator_message_translation_update),
 				 tab);
-		/* FIXME: Connect the same func twice is not a good idea */
-		g_signal_connect_after(buf, "changed",
-				 G_CALLBACK(status_widgets), tab);
-		g_signal_connect_after(buf, "end-user-action",
-				       G_CALLBACK(status_widgets), tab);
+		
+		g_signal_connect_after(buf, "end_user_action",
+				 G_CALLBACK(emit_message_changed_signal),
+				 tab);
 		i++;
 		g_free(label);
 	}while(i < gtranslator_prefs_manager_get_number_plurals());
@@ -395,6 +411,8 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 
 	g_type_class_add_private (klass, sizeof (GtranslatorTabPrivate));
 
+	klass->message_changed = status_widgets;
+	
 	object_class->finalize = gtranslator_tab_finalize;
 	
 	
@@ -406,6 +424,16 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 		  	      NULL, NULL,
 		  	      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
+	
+	signals[MESSAGE_CHANGED] =
+		g_signal_new("message-changed",
+			     G_OBJECT_CLASS_TYPE (klass),
+			     G_SIGNAL_RUN_LAST,
+			     G_STRUCT_OFFSET (GtranslatorTabClass, message_changed),
+			     NULL, NULL,
+			     g_cclosure_marshal_VOID__POINTER,
+			     G_TYPE_NONE, 1,
+			     G_TYPE_POINTER);
 }
 
 /***************************** Public funcs ***********************************/

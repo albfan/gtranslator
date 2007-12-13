@@ -1,3 +1,9 @@
+2007-12-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* action-edit.c: Added message_changed emission.
+	* tab.ch: Added message_changed signal.
+	* window.c: Added message_changed signal to update statusbar.
+
 2007-12-10  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* prefs-manager-app.c:

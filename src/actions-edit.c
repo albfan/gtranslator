@@ -171,8 +171,10 @@ gtranslator_message_status_toggle_fuzzy(GtkAction *action,
 	else
 		gtranslator_msg_set_fuzzy(msg->data, TRUE);
 	
-	/*FIXME: I think this is ugly */
-	g_signal_emit_by_name(buf, "changed", NULL);					
+	/*
+	 * Emit that message was changed.
+	 */
+	g_signal_emit_by_name(current, "message_changed", msg->data);					
 }
 
 void
