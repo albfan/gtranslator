@@ -76,6 +76,11 @@ po_message_t      gtranslator_msg_get_message          (GtranslatorMsg *msg);
 void              gtranslator_msg_set_message          (GtranslatorMsg *msg,
 							po_message_t message);
 
+GtkTreeRowReference	*gtranslator_msg_get_row_reference	(GtranslatorMsg *msg);
+
+void			gtranslator_msg_set_row_reference	(GtranslatorMsg *msg,
+								 GtkTreeRowReference *row_reference);
+
 gboolean          gtranslator_msg_is_translated        (GtranslatorMsg *msg);
 
 gboolean          gtranslator_msg_is_fuzzy             (GtranslatorMsg *msg);

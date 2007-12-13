@@ -1,3 +1,14 @@
+2007-12-13  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* Makefile.am:
+	* messagestable/:
+	* message-table.{ch}:
+	* msg.{ch}:
+	* tab.c:
+	* window.c:
+		Merge message table into main code and update upon msgstr
+		change.
+
 2007-12-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* action-edit.c: Added message_changed emission.

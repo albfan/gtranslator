@@ -43,6 +43,8 @@ struct _GtranslatorMsgPrivate
 	po_message_iterator_t iterator;
 	
 	po_message_t message;
+
+	GtkTreeRowReference *row_reference;
 };
 
 static gchar *message_error = NULL;
@@ -111,6 +113,32 @@ gtranslator_msg_set_message(GtranslatorMsg *msg,
 			    po_message_t message)
 {
 	msg->priv->message = message;
+}
+
+/**
+ * gtranslator_msg_get_row_reference:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: the GtkTreeRowReference corresponding to the message's place in the message table
+ **/
+GtkTreeRowReference *
+gtranslator_msg_get_row_reference(GtranslatorMsg *msg)
+{
+	return msg->priv->row_reference;
+}
+
+/**
+ * gtranslator_msg_set_row_reference:
+ * @msg: a #GtranslatorMsg
+ * @tree_iter: the GtkTreeRowReference corresponding to position in the message table
+ *
+ * Sets the GtkTreeRowReference from the messages table for the given message
+ **/
+void
+gtranslator_msg_set_row_reference(GtranslatorMsg *msg,
+				  GtkTreeRowReference *row_reference)
+{
+	msg->priv->row_reference = row_reference;
 }
 
 /**

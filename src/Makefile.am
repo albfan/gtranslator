@@ -5,7 +5,6 @@
 SUBDIRS = toolbareditor \
 	  dialogs \
 	  charmap \
-	  messagestable \
 	  comment
 
 INCLUDES = \
@@ -14,7 +13,6 @@ INCLUDES = \
 	-I$(top_srcdir)/src/dialogs				\
 	-I$(top_srcdir)/src/toolbareditor			\
 	-I$(top_srcdir)/src/charmap				\
-	-I$(top_srcdir)/src/messagestable			\
 	-I$(top_srcdir)/src/comment				\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
 	-DPREFIX=\""$(prefix)"\"                                \
@@ -48,6 +46,7 @@ gtranslator_SOURCES = \
 	languages.c languages.h \
 	main.c \
 	message-area.c message-area.h \
+	message-table.c message-table.h \
 	nautilus-string.c nautilus-string.h \
 	notebook.c notebook.h \
 	panel.c panel.h \
@@ -89,7 +88,6 @@ gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \
 	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la \
 	$(top_srcdir)/src/charmap/libcharmap.la \
-	$(top_srcdir)/src/messagestable/libmessagestable.la \
 	$(top_srcdir)/src/comment/libcomment.la \
 	$(INTLLIBS) \
 	$(GTRANSLATOR_LIBS) \

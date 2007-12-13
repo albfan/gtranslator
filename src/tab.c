@@ -26,6 +26,7 @@
 
 #include "io-error-message-area.h"
 #include "message-area.h"
+#include "message-table.h"
 #include "msg.h"
 #include "tab.h"
 #include "panel.h"
@@ -54,6 +55,7 @@ struct _GtranslatorTabPrivate
 	GtkWidget *table_pane;
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
+	GtkWidget *message_table;
 	
 	/*Message area*/
 	GtkWidget *message_area;
@@ -112,6 +114,10 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		/* Get message as UTF-8 buffer */
 		gtk_text_buffer_get_bounds(textbuffer, &start, &end);
 		translation = gtk_text_buffer_get_text(textbuffer, &start, &end, TRUE);
+
+		gtranslator_message_table_update_translation(GTR_MESSAGE_TABLE(tab->priv->message_table),
+							     msg,
+							     translation);
 		
 		/* TODO: convert to file's own encoding if not UTF-8 */
 		
@@ -143,6 +149,11 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		/* Get message as UTF-8 buffer */
 		gtk_text_buffer_get_bounds(textbuffer, &start, &end);
 		translation = gtk_text_buffer_get_text(textbuffer, &start, &end, TRUE);
+
+		if (i == 0)
+			gtranslator_message_table_update_translation(GTR_MESSAGE_TABLE(tab->priv->message_table),
+								     msg,
+								     translation);
 		
 		/* TODO: convert to file's own encoding if not UTF-8 */
 		
@@ -290,6 +301,7 @@ content_pane_position_changed (GObject		*tab_gobject,
 static void
 gtranslator_tab_draw (GtranslatorTab *tab)
 {
+	GtkWidget *image;
 	GtkWidget *vertical_box;
 	GtkWidget *status_box;
 	GtkWidget *status_label;
@@ -304,6 +316,19 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Panel
 	 */
 	priv->panel = GTR_PANEL(gtranslator_panel_new(GTK_ORIENTATION_HORIZONTAL));
+
+	/*
+	 * Message table
+	 */
+	priv->message_table = gtranslator_message_table_new(GTK_WIDGET(tab));
+
+	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
+					 GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+	gtranslator_panel_add_item(priv->panel,
+				   priv->message_table,
+				   _("Message Table"),
+				   image);
 	
 	/*
 	 * Content pane; this is where the message table and message area go
@@ -454,6 +479,8 @@ gtranslator_tab_new (GtranslatorPo *po)
 	tab = g_object_new (GTR_TYPE_TAB, NULL);
 	
 	tab->priv->po = po;
+	gtranslator_message_table_populate(GTR_MESSAGE_TABLE(tab->priv->message_table),
+					   gtranslator_po_get_messages(tab->priv->po));
 	
 	gtk_widget_show_all(GTK_WIDGET(tab));
 	return tab;
