@@ -1,3 +1,7 @@
+2007-12-13  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* configure.ac: Removed messagestable directory.
+
 2007-11-23  Cosimo Cecchi  <cosimoc@svn.gnome.org>
 
 	* configure.ac: Fix glib-genmarshal.
