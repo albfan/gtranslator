@@ -27,8 +27,7 @@ src/header_stuff.c
 src/languages.c
 src/learn.c
 src/main.c
-src/messagestable/messages-table-panel.c
-src/messagestable/messages-table.c
+src/message-table.c
 src/notebook.c
 src/panel.c
 src/po.c
