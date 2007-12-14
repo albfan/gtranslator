@@ -1,3 +1,10 @@
+2007-12-14  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* message-table.c:
+	* window.c:
+	* comment/comment-panel.c:
+		Clarify and HIGify text.
+
 2007-12-13  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* Makefile.am:

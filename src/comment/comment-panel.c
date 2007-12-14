@@ -64,7 +64,7 @@ gtranslator_comment_panel_draw(GtranslatorCommentPanel *panel)
 	priv->comment=GTK_LABEL(gtk_label_new(""));
 	gtk_container_add(GTK_CONTAINER(comments_viewport), GTK_WIDGET(priv->comment));
 	
-	priv->edit_button=gtk_button_new_with_label(_("Edit comment"));
+	priv->edit_button=gtk_button_new_with_label(_("Edit Comment"));
 	gtk_widget_set_sensitive(priv->edit_button, FALSE);
 	gtk_box_pack_end(GTK_BOX(panel), priv->edit_button,
 			 FALSE, FALSE, 0);

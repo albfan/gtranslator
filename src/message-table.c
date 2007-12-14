@@ -225,7 +225,7 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	renderer = gtk_cell_renderer_text_new();
 	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	
-	column = gtk_tree_view_column_new_with_attributes(_("Original text"),
+	column = gtk_tree_view_column_new_with_attributes(_("Original Text"),
 							  renderer,
 							  "text", ORIGINAL_COLUMN,
 							  "foreground-gdk", COLOR_COLUMN,
@@ -237,7 +237,7 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	renderer=gtk_cell_renderer_text_new();
 	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	
-	column = gtk_tree_view_column_new_with_attributes(_("Translated text"),
+	column = gtk_tree_view_column_new_with_attributes(_("Translated Text"),
 							  renderer,
 							  "text", TRANSLATION_COLUMN,
 							  "foreground-gdk", COLOR_COLUMN,
