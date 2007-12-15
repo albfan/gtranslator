@@ -1,5 +1,9 @@
 2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* statusbar.c: Commit for help.
+
+2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* tab.ch: status_widgets have to be updated when the message
 	is showed too.
 	Fixed showed-message signal bug and now emits the showed message

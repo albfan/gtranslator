@@ -33,13 +33,8 @@
 struct _GtranslatorStatusbarPrivate
 {
 	GtkWidget     *overwrite_mode_statusbar;
-
-	GtkWidget     *state_frame;
-	GtkWidget     *load_image;
-	GtkWidget     *save_image;
-
-	GtkWidget     *error_frame;
-	GtkWidget     *error_event_box;
+	
+	GtkWidget *label;
 
 	/* tmp flash timeout data */
 	guint          flash_timeout;
@@ -91,12 +86,10 @@ gtranslator_statusbar_class_init (GtranslatorStatusbarClass *klass)
 static void
 gtranslator_statusbar_init (GtranslatorStatusbar *statusbar)
 {
-	GtkWidget *hbox;
-	GtkWidget *error_image;
 
 	statusbar->priv = GTR_STATUSBAR_GET_PRIVATE (statusbar);
 
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (statusbar), FALSE);
+	/*gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (statusbar), FALSE);
 
 	statusbar->priv->overwrite_mode_statusbar = gtk_statusbar_new ();
 	gtk_widget_show (statusbar->priv->overwrite_mode_statusbar);
@@ -108,54 +101,33 @@ gtranslator_statusbar_init (GtranslatorStatusbar *statusbar)
 					   TRUE);
 	gtk_box_pack_end (GTK_BOX (statusbar),
 			  statusbar->priv->overwrite_mode_statusbar,
-			  FALSE, TRUE, 0);
-
-	statusbar->priv->state_frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (statusbar->priv->state_frame), GTK_SHADOW_IN);
-
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (statusbar->priv->state_frame), hbox);
-
-	statusbar->priv->load_image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
-	statusbar->priv->save_image = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU);
-
-	gtk_widget_show (hbox);
-
-	gtk_box_pack_start (GTK_BOX (hbox),
-			    statusbar->priv->load_image,
-			    FALSE, TRUE, 4);
-	gtk_box_pack_start (GTK_BOX (hbox),
-			    statusbar->priv->save_image,
-			    FALSE, TRUE, 4);
-
-	gtk_box_pack_start (GTK_BOX (statusbar),
-			    statusbar->priv->state_frame,
-			    FALSE, TRUE, 0);
-
-	statusbar->priv->error_frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (statusbar->priv->error_frame), GTK_SHADOW_IN);
-
-	error_image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_MENU);
-	gtk_misc_set_padding (GTK_MISC (error_image), 4, 0);
-	gtk_widget_show (error_image);
-
-	statusbar->priv->error_event_box = gtk_event_box_new ();
-	gtk_event_box_set_visible_window  (GTK_EVENT_BOX (statusbar->priv->error_event_box),
-					   FALSE);
-	gtk_widget_show (statusbar->priv->error_event_box);
-
-	gtk_container_add (GTK_CONTAINER (statusbar->priv->error_frame),
-			   statusbar->priv->error_event_box);
-	gtk_container_add (GTK_CONTAINER (statusbar->priv->error_event_box),
-			   error_image);
-
-	gtk_box_pack_start (GTK_BOX (statusbar),
-			    statusbar->priv->error_frame,
-			    FALSE, TRUE, 0);
-
-	gtk_box_reorder_child (GTK_BOX (statusbar),
-			       statusbar->priv->error_frame,
-			       0);
+			  FALSE, TRUE, 0);*/
+	
+	/***************************/
+	GtkWidget *frame;
+	GtkShadowType shadow_type;
+	
+	gtk_widget_style_get (GTK_WIDGET (statusbar), "shadow-type", &shadow_type, NULL);
+	
+	frame = gtk_frame_new (NULL);
+	gtk_frame_set_shadow_type (GTK_FRAME(frame), shadow_type);
+	gtk_widget_show (frame);
+	
+	gtk_widget_set_size_request (frame,
+				     80,
+				     10);
+	
+	statusbar->priv->label = gtk_label_new ("");
+	gtk_label_set_single_line_mode (GTK_LABEL (statusbar->priv->label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (statusbar->priv->label), 0.0, 0.5);
+	/*g_signal_connect (statusbar->priv->label, "notify::selectable",
+			  G_CALLBACK (label_selectable_changed), statusbar);*/
+	//gtk_label_set_ellipsize (GTK_LABEL (statusbar->priv->label), PANGO_ELLIPSIZE_END);
+	gtk_container_add (GTK_CONTAINER (frame), statusbar->priv->label);
+	gtk_widget_show (statusbar->priv->label);
+	
+	gtk_box_pack_start(GTK_BOX(statusbar), frame, FALSE, FALSE, 0);
+	
 }
 
 /**
@@ -211,20 +183,11 @@ void
 gtranslator_statusbar_set_overwrite (GtranslatorStatusbar *statusbar,
 				     gboolean        overwrite)
 {
-	gchar *msg;
-
 	g_return_if_fail (GTR_IS_STATUSBAR (statusbar));
 
-	gtk_statusbar_pop (GTK_STATUSBAR (statusbar->priv->overwrite_mode_statusbar), 0);
-
 	if (overwrite)
-		msg = g_strdup (_("  OVR"));
-	else
-		msg = g_strdup (_("  INS"));
-
-	gtk_statusbar_push (GTK_STATUSBAR (statusbar->priv->overwrite_mode_statusbar), 0, msg);
-
-      	g_free (msg);
+		gtk_label_set_text(GTK_LABEL(statusbar->priv->label), _("  OVR"));
+	else gtk_label_set_text(GTK_LABEL(statusbar->priv->label), _("  INS"));
 }
 
 void
