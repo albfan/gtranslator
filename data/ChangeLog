@@ -1,3 +1,8 @@
+2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* colorschemes:
+	* Makefile.am: Removed colorschemes.
+
 2007-12-11  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* po.lang: Fixed mapping to python variables.
