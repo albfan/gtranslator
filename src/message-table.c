@@ -150,38 +150,23 @@ gtranslator_message_table_selection_changed (GtkTreeSelection *selection,
 
 static void
 showed_message_cb (GtranslatorTab *tab,
+		   GtranslatorMsg *msg,
 		   GtranslatorMessageTable *table)
 {
-	GtkTreeIter iter;
-	GtranslatorPo *po;
-	GList *current_item;
-	GList *item = NULL;
-	GtkTreeSelection *selection;
 	GtkTreePath *path;
-	
-	po = gtranslator_tab_get_po(tab);
-	
-	current_item = gtranslator_po_get_current_message(po);
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+			   
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(table->priv->treeview));
+	
+	path = gtk_tree_row_reference_get_path(gtranslator_msg_get_row_reference(msg));
 
-	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(table->priv->store),
-					 &iter))
-	{
-		do{
-			gtk_tree_model_get(GTK_TREE_MODEL(table->priv->store),
-					   &iter, POINTER_COLUMN, &item, -1);
-			if(item == current_item)
-			{
-				gtk_tree_selection_select_iter(selection,
-							       &iter);
-				break;
-			}
-			
-		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(table->priv->store),
-						&iter));
-	}
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(table->priv->store),
-				       &iter);
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(table->priv->store),
+				&iter,
+				path);
+			   
+	gtk_tree_selection_select_iter(selection, &iter);
+				       
 	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(table->priv->treeview),
 				     path,
 				     NULL,

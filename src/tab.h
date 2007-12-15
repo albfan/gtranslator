@@ -65,7 +65,8 @@ struct _GtranslatorTabClass
 {
 	GtkVBoxClass parent_class;
 	
-	void (* showed_message)  (GtranslatorTab *tab);
+	void (* showed_message)  (GtranslatorTab *tab,
+				  GtranslatorMsg *msg);
 	void (* message_changed) (GtranslatorTab *tab,
 				  GtranslatorMsg *msg);
 };

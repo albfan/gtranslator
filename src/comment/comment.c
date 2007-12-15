@@ -54,16 +54,11 @@ gtranslator_comment_finalize (GObject *object)
 
 static void
 showed_message_cb(GtranslatorTab *tab,
+		  GtranslatorMsg *msg,
 		  GtranslatorCommentPanel *panel)
 {
-	GtranslatorPo *po;
-	GList *msg;
-	
-	po = gtranslator_tab_get_po(tab);
-	msg = gtranslator_po_get_current_message(po);
-	
 	gtranslator_comment_panel_set_text(panel,
-					   gtranslator_msg_get_extracted_comments(GTR_MSG(msg->data)));
+					   gtranslator_msg_get_extracted_comments(msg));
 }
 
 static void

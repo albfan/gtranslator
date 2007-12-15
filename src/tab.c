@@ -437,6 +437,7 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 	g_type_class_add_private (klass, sizeof (GtranslatorTabPrivate));
 
 	klass->message_changed = status_widgets;
+	klass->showed_message = status_widgets;
 	
 	object_class->finalize = gtranslator_tab_finalize;
 	
@@ -444,11 +445,12 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 	signals[SHOWED_MESSAGE] = 
 		g_signal_new("showed-message",
 			     G_OBJECT_CLASS_TYPE (klass),
-			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (GtranslatorTabClass, showed_message),
-		  	      NULL, NULL,
-		  	      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
+			     G_SIGNAL_RUN_LAST,
+			     G_STRUCT_OFFSET (GtranslatorTabClass, showed_message),
+			     NULL, NULL,
+			     g_cclosure_marshal_VOID__POINTER,
+			     G_TYPE_NONE, 1,
+			     G_TYPE_POINTER);
 	
 	signals[MESSAGE_CHANGED] =
 		g_signal_new("message-changed",
@@ -670,18 +672,12 @@ gtranslator_tab_message_go_to(GtranslatorTab *tab,
 		
 	po = tab->priv->po;
 	
-	//gtranslator_message_update();
-	
 	current_msg = gtranslator_po_get_current_message(po);
 	message_error = gtranslator_msg_check(current_msg->data);
 	if(message_error == NULL)
 	{
 		gtranslator_tab_show_message(tab, to_go->data);
 		set_message_area(tab, NULL);
-		/*This is a good place to send a showed message signal
-		 * This signal would be useful for message table plugin for example
-		*/
-		g_signal_emit(G_OBJECT(tab), signals[SHOWED_MESSAGE], 0); 
 	}
 	else
 	{
@@ -690,4 +686,9 @@ gtranslator_tab_message_go_to(GtranslatorTab *tab,
 		set_message_area(tab, message_area);
 		return;
 	}
+	
+	/*
+	 * Emitting showed-message signal
+	 */
+	g_signal_emit(G_OBJECT(tab), signals[SHOWED_MESSAGE], 0, GTR_MSG(to_go->data)); 
 }

@@ -1,3 +1,13 @@
+2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* tab.ch: status_widgets have to be updated when the message
+	is showed too.
+	Fixed showed-message signal bug and now emits the showed message
+	too.
+	* message-table.c
+	* comment/comment.c:
+	  Changed showed-message func to the new specification.
+
 2007-12-14  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* message-table.c:
