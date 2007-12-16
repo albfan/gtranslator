@@ -1,3 +1,17 @@
+2007-12-16  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-search.c:
+	* actions-file.c:
+	* actions-edit.c:
+	* tab.c:
+	gtranslator_tab_show_message is a private method now, so
+	we have to use gtranslator_tab_message_go_to instead.
+
+	window.c: Fixed problem with statusbar. Now it shows
+	the status of the message.
+	* statusbar.ch: Fixed some isuess the overwrite mode.
+	Now works fine. (Fixes bug #498834).
+
 2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* statusbar.c: Commit for help.

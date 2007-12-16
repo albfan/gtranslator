@@ -231,6 +231,64 @@ gtranslator_message_plural_forms(GtranslatorTab *tab,
 	}
 }
 
+/*
+ * gtranslator_tab_show_message:
+ * @tab: a #GtranslationTab
+ * @msg: a #GtranslatorMsg
+ * 
+ * Shows the @msg in the @tab TextViews
+ *
+ */
+static void
+gtranslator_tab_show_message(GtranslatorTab *tab,
+			     GtranslatorMsg *msg)
+{
+	GtranslatorTabPrivate *priv = tab->priv;
+	GtranslatorPo *po;
+	GtkTextBuffer *buf;
+	const gchar *msgid, *msgid_plural;
+	const gchar *msgstr, *msgstr_plural;
+	
+	g_return_if_fail(GTR_IS_TAB(tab));
+	
+	po = priv->po;
+	gtranslator_po_update_current_message(po, msg);
+	msgid = gtranslator_msg_get_msgid(msg);
+	if(msgid) 
+	{
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->text_msgid));
+		gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+		gtk_text_buffer_set_text(buf, (gchar*)msgid, -1);
+		gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+	}
+	msgid_plural = gtranslator_msg_get_msgid_plural(msg);
+	if(!msgid_plural) 
+	{
+		msgstr = gtranslator_msg_get_msgstr(msg);
+		/*
+		 * Disable notebook tabs
+		 */
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->text_notebook), FALSE);
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->text_notebook), 0);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->trans_notebook), FALSE);
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->trans_notebook), 0);
+		if(msgstr) 
+		{
+			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[0]));
+			gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+			gtk_text_buffer_set_text(buf, (gchar*)msgstr, -1);
+			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
+		}
+	}
+	else {
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tab->priv->text_notebook), TRUE);
+		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tab->priv->trans_notebook), TRUE);
+		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->text_msgid_plural));
+		gtk_text_buffer_set_text(buf, (gchar*)msgid_plural, -1);
+		gtranslator_message_plural_forms(tab, msg);
+	}
+}
+
 static void
 emit_message_changed_signal(GtkTextBuffer *buf,
 			    GtranslatorTab *tab)
@@ -591,64 +649,6 @@ gtranslator_tab_get_all_views(GtranslatorTab *tab,
 	}
 	
 	return ret;
-}
-
-/**
- * gtranslator_tab_show_message:
- * @tab: a #GtranslationTab
- * @msg: a #GtranslatorMsg
- * 
- * Shows the @msg in the @tab TextViews
- *
-**/
-void
-gtranslator_tab_show_message(GtranslatorTab *tab,
-			     GtranslatorMsg *msg)
-{
-	GtranslatorTabPrivate *priv = tab->priv;
-	GtranslatorPo *po;
-	GtkTextBuffer *buf;
-	const gchar *msgid, *msgid_plural;
-	const gchar *msgstr, *msgstr_plural;
-	
-	g_return_if_fail(GTR_IS_TAB(tab));
-	
-	po = priv->po;
-	gtranslator_po_update_current_message(po, msg);
-	msgid = gtranslator_msg_get_msgid(msg);
-	if(msgid) 
-	{
-		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->text_msgid));
-		gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
-		gtk_text_buffer_set_text(buf, (gchar*)msgid, -1);
-		gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
-	}
-	msgid_plural = gtranslator_msg_get_msgid_plural(msg);
-	if(!msgid_plural) 
-	{
-		msgstr = gtranslator_msg_get_msgstr(msg);
-		/*
-		 * Disable notebook tabs
-		 */
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->text_notebook), FALSE);
-		gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->text_notebook), 0);
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(priv->trans_notebook), FALSE);
-		gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->trans_notebook), 0);
-		if(msgstr) 
-		{
-			buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(priv->trans_msgstr[0]));
-			gtk_source_buffer_begin_not_undoable_action(GTK_SOURCE_BUFFER(buf));
-			gtk_text_buffer_set_text(buf, (gchar*)msgstr, -1);
-			gtk_source_buffer_end_not_undoable_action(GTK_SOURCE_BUFFER(buf));
-		}
-	}
-	else {
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tab->priv->text_notebook), TRUE);
-		gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tab->priv->trans_notebook), TRUE);
-		buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tab->priv->text_msgid_plural));
-		gtk_text_buffer_set_text(buf, (gchar*)msgid_plural, -1);
-		gtranslator_message_plural_forms(tab, msg);
-	}
 }
 
 

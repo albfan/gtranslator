@@ -22,7 +22,6 @@
 #define GTR_STATUSBAR_H
 
 #include <gtk/gtkstatusbar.h>
-#include "window.h"
 
 G_BEGIN_DECLS
 
@@ -54,14 +53,9 @@ GType		 gtranslator_statusbar_get_type		(void) G_GNUC_CONST;
 
 GtkWidget	*gtranslator_statusbar_new			(void);
 
-/* FIXME: status is not defined in any .h */
-#define GtranslatorStatus gint
+
 void		 gtranslator_statusbar_set_overwrite		(GtranslatorStatusbar   *statusbar,
 								 gboolean          overwrite);
-
-void		 gtranslator_statusbar_set_cursor_position	(GtranslatorStatusbar   *statusbar,
-								 gint              line,
-								 gint              col);
 
 void		 gtranslator_statusbar_clear_overwrite  	(GtranslatorStatusbar   *statusbar);
 
@@ -69,19 +63,6 @@ void		 gtranslator_statusbar_flash_message		(GtranslatorStatusbar   *statusbar,
 							 	 guint             context_id,
 							 	 const gchar      *format,
 							 	 ...) G_GNUC_PRINTF(3, 4);
-/* FIXME: these would be nice for plugins...
-void		 gtranslator_statusbar_add_widget		(GtranslatorStatusbar   *statusbar,
-							 GtkWidget        *widget);
-void		 gtranslator_statusbar_remove_widget		(GtranslatorStatusbar   *statusbar,
-							 GtkWidget        *widget);
-*/
-
-/*
- * Non exported functions
- */
-void		_gtranslator_statusbar_set_has_resize_grip	(GtranslatorStatusbar   *statusbar,
-								 gboolean          show);
-
 G_END_DECLS
 
 #endif

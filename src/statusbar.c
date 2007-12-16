@@ -23,6 +23,7 @@
 #endif
 
 #include <string.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
@@ -32,9 +33,7 @@
 
 struct _GtranslatorStatusbarPrivate
 {
-	GtkWidget     *overwrite_mode_statusbar;
-	
-	GtkWidget *label;
+	GtkWidget     *overwrite_mode_label;
 
 	/* tmp flash timeout data */
 	guint          flash_timeout;
@@ -43,23 +42,6 @@ struct _GtranslatorStatusbarPrivate
 };
 
 G_DEFINE_TYPE(GtranslatorStatusbar, gtranslator_statusbar, GTK_TYPE_STATUSBAR)
-
-static void
-gtranslator_statusbar_notify (GObject    *object,
-			      GParamSpec *pspec)
-{
-	/* don't allow gtk_statusbar_set_has_resize_grip to mess with us.
-	 * See _gtranslator_statusbar_set_has_resize_grip for an explanation.
-	 */
-	if (strcmp (g_param_spec_get_name (pspec), "has-resize-grip") == 0)
-	{
-		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (object), FALSE);
-		return;
-	}
-
-	if (G_OBJECT_CLASS (gtranslator_statusbar_parent_class)->notify)
-		G_OBJECT_CLASS (gtranslator_statusbar_parent_class)->notify (object, pspec);
-}
 
 static void
 gtranslator_statusbar_finalize (GObject *object)
@@ -77,7 +59,6 @@ gtranslator_statusbar_class_init (GtranslatorStatusbarClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->notify = gtranslator_statusbar_notify;
 	object_class->finalize = gtranslator_statusbar_finalize;
 
 	g_type_class_add_private (object_class, sizeof (GtranslatorStatusbarPrivate));
@@ -86,26 +67,11 @@ gtranslator_statusbar_class_init (GtranslatorStatusbarClass *klass)
 static void
 gtranslator_statusbar_init (GtranslatorStatusbar *statusbar)
 {
-
-	statusbar->priv = GTR_STATUSBAR_GET_PRIVATE (statusbar);
-
-	/*gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (statusbar), FALSE);
-
-	statusbar->priv->overwrite_mode_statusbar = gtk_statusbar_new ();
-	gtk_widget_show (statusbar->priv->overwrite_mode_statusbar);
-	gtk_widget_set_size_request (statusbar->priv->overwrite_mode_statusbar,
-				     80,
-				     10);
-
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (statusbar->priv->overwrite_mode_statusbar),
-					   TRUE);
-	gtk_box_pack_end (GTK_BOX (statusbar),
-			  statusbar->priv->overwrite_mode_statusbar,
-			  FALSE, TRUE, 0);*/
 	
-	/***************************/
 	GtkWidget *frame;
 	GtkShadowType shadow_type;
+
+	statusbar->priv = GTR_STATUSBAR_GET_PRIVATE (statusbar);
 	
 	gtk_widget_style_get (GTK_WIDGET (statusbar), "shadow-type", &shadow_type, NULL);
 	
@@ -113,18 +79,15 @@ gtranslator_statusbar_init (GtranslatorStatusbar *statusbar)
 	gtk_frame_set_shadow_type (GTK_FRAME(frame), shadow_type);
 	gtk_widget_show (frame);
 	
-	gtk_widget_set_size_request (frame,
-				     80,
-				     10);
+	statusbar->priv->overwrite_mode_label = gtk_label_new ("");
+	gtk_label_set_single_line_mode (GTK_LABEL (statusbar->priv->overwrite_mode_label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (statusbar->priv->overwrite_mode_label), 0.0, 0.5);
+	gtk_label_set_width_chars(GTK_LABEL(statusbar->priv->overwrite_mode_label),
+				  MAX(g_utf8_strlen(_("INS"), -1)+1, g_utf8_strlen(_("OVR"), -1)+1));
+						    
 	
-	statusbar->priv->label = gtk_label_new ("");
-	gtk_label_set_single_line_mode (GTK_LABEL (statusbar->priv->label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (statusbar->priv->label), 0.0, 0.5);
-	/*g_signal_connect (statusbar->priv->label, "notify::selectable",
-			  G_CALLBACK (label_selectable_changed), statusbar);*/
-	//gtk_label_set_ellipsize (GTK_LABEL (statusbar->priv->label), PANGO_ELLIPSIZE_END);
-	gtk_container_add (GTK_CONTAINER (frame), statusbar->priv->label);
-	gtk_widget_show (statusbar->priv->label);
+	gtk_container_add (GTK_CONTAINER (frame), statusbar->priv->overwrite_mode_label);
+	gtk_widget_show (statusbar->priv->overwrite_mode_label);
 	
 	gtk_box_pack_start(GTK_BOX(statusbar), frame, FALSE, FALSE, 0);
 	
@@ -144,35 +107,6 @@ gtranslator_statusbar_new (void)
 }
 
 /**
- * gtranslator_set_has_resize_grip:
- * @statusbar: a #GtranslatorStatusbar
- * @show: if the resize grip is shown
- *
- * Sets if a resize grip showld be shown.
- *
- **/
- /*
-  * I don't like this much, in a perfect world it would have been
-  * possible to override the parent property and use
-  * gtk_statusbar_set_has_resize_grip. Unfortunately this is not
-  * possible and it's not even possible to intercept the notify signal
-  * since the parent property should always be set to false thus when
-  * using set_resize_grip (FALSE) the property doesn't change and the
-  * notification is not emitted.
-  * For now just add this private method; if needed we can turn it into
-  * a property.
-  */
-void
-_gtranslator_statusbar_set_has_resize_grip (GtranslatorStatusbar *bar,
-				      gboolean        show)
-{
-	g_return_if_fail (GTR_IS_STATUSBAR (bar));
-
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (bar->priv->overwrite_mode_statusbar),
-					   show);
-}
-
-/**
  * gtranslator_statusbar_set_overwrite:
  * @statusbar: a #GtranslatorStatusbar
  * @overwrite: if the overwrite mode is set
@@ -186,8 +120,8 @@ gtranslator_statusbar_set_overwrite (GtranslatorStatusbar *statusbar,
 	g_return_if_fail (GTR_IS_STATUSBAR (statusbar));
 
 	if (overwrite)
-		gtk_label_set_text(GTK_LABEL(statusbar->priv->label), _("  OVR"));
-	else gtk_label_set_text(GTK_LABEL(statusbar->priv->label), _("  INS"));
+		gtk_label_set_text(GTK_LABEL(statusbar->priv->overwrite_mode_label), _("OVR"));
+	else gtk_label_set_text(GTK_LABEL(statusbar->priv->overwrite_mode_label), _("INS"));
 }
 
 void
@@ -195,7 +129,7 @@ gtranslator_statusbar_clear_overwrite (GtranslatorStatusbar *statusbar)
 {
 	g_return_if_fail (GTR_IS_STATUSBAR (statusbar));
 
-	gtk_statusbar_pop (GTK_STATUSBAR (statusbar->priv->overwrite_mode_statusbar), 0);
+	gtk_label_set_text(GTK_LABEL(statusbar->priv->overwrite_mode_label), "");
 }
 
 static gboolean

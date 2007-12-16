@@ -59,8 +59,10 @@ gtranslator_open(const gchar *filename,
 	po = gtranslator_po_new();
 	gtranslator_po_parse(po, filename, error);
 
-	
-	//missing something like if error return FALSE
+	/*
+	 * Update statusbar
+	 */
+	gtranslator_po_update_translated_count(po);
 
 	/*
 	 * If not a crash/temporary file, add to the history.
@@ -76,10 +78,8 @@ gtranslator_open(const gchar *filename,
 	 * Show the current message.
 	 */
 	current = gtranslator_po_get_current_message(po);
-	gtranslator_tab_show_message(tab, current->data);
+	gtranslator_tab_message_go_to(tab, current);
 	
-	gtranslator_po_update_translated_count(po);
-//	gtranslator_window_update_statusbar(window);
 	gtranslator_window_update_progress_bar(window);
 	
 	return TRUE;

@@ -367,8 +367,6 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 	gchar *msg;
 	gint pos, message_count, fuzzy, untranslated;
 	
-	g_warning("eo");
-	
 	po = gtranslator_tab_get_po(tab);
 	
 	message_count = gtranslator_po_get_messages_count(po);
@@ -379,16 +377,12 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"), 
 			      pos+1, message_count, fuzzy, untranslated);
 	
-	/*gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
+	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
 			  0);
 	
 	gtk_statusbar_push(GTK_STATUSBAR(window->priv->statusbar),
 			   0,
-			   msg);*/
-	gtranslator_statusbar_flash_message(GTR_STATUSBAR(window->priv->statusbar),
-					    window->priv->generic_message_cid,
-					    "Saving file \342\200\246");
-	
+			   msg);
 	
 	g_free(msg);			 
 }
@@ -579,10 +573,10 @@ notebook_tab_added(GtkNotebook *notebook,
 		views = views->next;
 	}
 	
-	g_signal_connect (child,
-			  "message_changed",
-			  G_CALLBACK(gtranslator_window_update_statusbar_message_count),
-			  window);
+	g_signal_connect_after (child,
+				"message_changed",
+				G_CALLBACK(gtranslator_window_update_statusbar_message_count),
+				window);
 				     
 }
 
@@ -952,7 +946,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 
 	gtk_box_pack_end (GTK_BOX (hbox),
 			  window->priv->statusbar,
-			  FALSE, 
+			  TRUE, 
 			  TRUE, 
 			  0);
 	
@@ -1093,29 +1087,6 @@ gtranslator_window_configure_event (GtkWidget         *widget,
         return GTK_WIDGET_CLASS (gtranslator_window_parent_class)->configure_event (widget, event);
 }
 
-static gboolean
-gtranslator_window_window_state_event (GtkWidget           *widget,
-				       GdkEventWindowState *event)
-{
-	GtranslatorWindow *window = GTR_WINDOW (widget);
-
-	window->priv->window_state = event->new_window_state;
-
-	if (event->changed_mask &
-	    (GDK_WINDOW_STATE_MAXIMIZED | GDK_WINDOW_STATE_FULLSCREEN))
-	{
-		gboolean show;
-
-		show = !(event->new_window_state &
-			(GDK_WINDOW_STATE_MAXIMIZED | GDK_WINDOW_STATE_FULLSCREEN));
-
-		_gtranslator_statusbar_set_has_resize_grip (GTR_STATUSBAR (window->priv->statusbar),
-						      show);
-	}
-
-	return FALSE;
-}
-
 static void
 gtranslator_window_class_init (GtranslatorWindowClass *klass)
 {
@@ -1131,7 +1102,6 @@ gtranslator_window_class_init (GtranslatorWindowClass *klass)
 	gobject_class->destroy = gtranslator_window_destroy;
 	
 	widget_class->configure_event = gtranslator_window_configure_event;
-	widget_class->window_state_event = gtranslator_window_window_state_event;
 }
 
 /***************************** Public funcs ***********************************/

@@ -144,7 +144,7 @@ gtranslator_message_copy_to_translation(GtkAction *action,
 	
 	/*Is needed to reshow the message unless i make something like emit 
 	  a signal in msg.c when the message is modified*/
-	gtranslator_tab_show_message(current, msg->data);
+	gtranslator_tab_message_go_to(current, msg);
 }
 
 /*
