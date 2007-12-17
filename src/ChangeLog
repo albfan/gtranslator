@@ -1,3 +1,7 @@
+2007-12-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs/bookmarks-dialog.glade: Added bookmarks dialog.
+
 2007-12-16  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* actions-search.c:
