@@ -57,8 +57,15 @@ showed_message_cb(GtranslatorTab *tab,
 		  GtranslatorMsg *msg,
 		  GtranslatorCommentPanel *panel)
 {
-	gtranslator_comment_panel_set_text(panel,
-					   gtranslator_msg_get_extracted_comments(msg));
+	gchar *comment;
+	
+	comment = g_strdup_printf("%s\n%s",
+				  gtranslator_msg_get_extracted_comments(msg),
+				  gtranslator_msg_get_comment(msg));
+
+	gtranslator_comment_panel_set_text(panel, comment);
+	
+	g_free(comment);
 }
 
 static void

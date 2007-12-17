@@ -184,7 +184,16 @@ gtranslator_actions_edit_preferences(GtkAction *action,
 	gtranslator_show_preferences_dialog(window);
 }
 
-void gtranslator_actions_edit_header(GtkAction *action, GtranslatorWindow *window)
+void
+gtranslator_actions_edit_header(GtkAction *action,
+				GtranslatorWindow *window)
 {
 	gtranslator_show_header_dialog(window);
+}
+
+void
+gtranslator_edit_message_comment(GtkAction *action,
+				 GtranslatorWindow *window)
+{	
+	gtranslator_show_comment_dialog(window);
 }

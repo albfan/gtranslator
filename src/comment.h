@@ -67,10 +67,11 @@ GType		 gtranslator_comment_panel_get_type	   (void) G_GNUC_CONST;
 
 GType		 gtranslator_comment_panel_register_type   (GTypeModule * module);
 
-GtkWidget	*gtranslator_comment_panel_new	           (void);
+GtkWidget	*gtranslator_comment_panel_new	           (GtkWidget *tab);
 
 void             gtranslator_comment_panel_set_text        (GtranslatorCommentPanel *panel,
-							    const gchar *text);
+							    const gchar *extracted_comments,
+							    const gchar *comments);
 
 G_END_DECLS
 

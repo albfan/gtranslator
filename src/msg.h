@@ -106,6 +106,9 @@ void              gtranslator_msg_set_msgstr_plural    (GtranslatorMsg *msg,
 
 const gchar      *gtranslator_msg_get_comment          (GtranslatorMsg *msg);
 
+void              gtranslator_msg_set_comment          (GtranslatorMsg *msg,
+							const gchar *comment);
+
 const gchar      *gtranslator_msg_get_extracted_comments
                                                        (GtranslatorMsg *msg);
 

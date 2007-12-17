@@ -19,7 +19,8 @@
 #include <config.h>
 #endif
 
-#include "comment-panel.h"
+#include "comment.h"
+#include "tab.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -37,9 +38,18 @@ G_DEFINE_TYPE(GtranslatorCommentPanel, gtranslator_comment_panel, GTK_TYPE_VBOX)
 struct _GtranslatorCommentPanelPrivate
 {
 	GtkLabel *comment;
-	GtkWidget *edit_button;
+	GtranslatorTab *tab;
 };
 
+static void
+showed_message_cb(GtranslatorTab *tab,
+		  GtranslatorMsg *msg,
+		  GtranslatorCommentPanel *panel)
+{
+	gtranslator_comment_panel_set_text(panel,
+					   gtranslator_msg_get_extracted_comments(msg),
+					   gtranslator_msg_get_comment(msg));
+}
 
 static void
 gtranslator_comment_panel_draw(GtranslatorCommentPanel *panel)
@@ -63,11 +73,6 @@ gtranslator_comment_panel_draw(GtranslatorCommentPanel *panel)
 	
 	priv->comment=GTK_LABEL(gtk_label_new(""));
 	gtk_container_add(GTK_CONTAINER(comments_viewport), GTK_WIDGET(priv->comment));
-	
-	priv->edit_button=gtk_button_new_with_label(_("Edit Comment"));
-	gtk_widget_set_sensitive(priv->edit_button, FALSE);
-	gtk_box_pack_end(GTK_BOX(panel), priv->edit_button,
-			 FALSE, FALSE, 0);
 }
 
 
@@ -96,15 +101,33 @@ gtranslator_comment_panel_class_init (GtranslatorCommentPanelClass *klass)
 }
 
 GtkWidget *
-gtranslator_comment_panel_new (void)
+gtranslator_comment_panel_new (GtkWidget *tab)
 {
-	return GTK_WIDGET (g_object_new (GTR_TYPE_COMMENT_PANEL, NULL));
+	GtranslatorCommentPanel *comment;
+	comment = g_object_new (GTR_TYPE_COMMENT_PANEL, NULL);
+	
+	comment->priv->tab = GTR_TAB(tab);
+	g_signal_connect(tab,
+			 "showed-message",
+			 G_CALLBACK(showed_message_cb),
+			 comment);
+	
+	return GTK_WIDGET(comment);
 }
 
 void
 gtranslator_comment_panel_set_text(GtranslatorCommentPanel *panel,
-				   const gchar *text)
+				   const gchar *extracted_comments,
+				   const gchar *comments)
 {
+	gchar *comment;
+	
+	comment = g_strdup_printf("%s\n%s",
+				  extracted_comments,
+				  comments);
+	
 	gtk_label_set_text(panel->priv->comment,
-			   text);
+			   comment);
+	
+	g_free(comment);
 }

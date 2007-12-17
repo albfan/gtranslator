@@ -66,6 +66,9 @@ void       gtranslator_actions_edit_paste       (GtkAction   *action,
 void 	   gtranslator_actions_edit_header 	(GtkAction *action,
 						 GtranslatorWindow *window);
 
+void       gtranslator_edit_message_comment     (GtkAction *action,
+						 GtranslatorWindow *window);
+
 void       gtranslator_message_copy_to_translation
                                                 (GtkAction *action,
 						 GtranslatorWindow *window);

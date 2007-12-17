@@ -3,25 +3,18 @@ INCLUDES =                                                      \
         -I$(top_builddir)                                       \
         -I$(top_srcdir)/src                                     \
         -I$(top_builddir)/src                                   \
+	-DDATADIR=\""$(pkgdatadir)"\"                           \
         $(GTRANSLATOR_CFLAGS)                                   \
         $(WARN_CFLAGS)                                          \
         $(DISABLE_DEPRECATED_CFLAGS)
 
-noinst_LTLIBRARIES = \
-	libcomment.la
+gladedir = $(pkgdatadir)
 
-libcomment_la_SOURCES = \
-	comment-panel.h \
-	comment-panel.c \
-	comment.c \
-	comment.h
+glade_DATA =  \
+		comment-dialog.glade
 
-libcomment_la_CFLAGS = \
-	$(GTRANSLATOR_CFLAGS)			\
-	$(WARN_CFLAGS)				\
-	$(DISABLE_DEPRECATED)			\
-	-DCURSOR_DIR=\"$(pkgdatadir)\"		\
-	$(AM_CFLAGS)
+EXTRA_DIST = \
+		$(glade_DATA)
 
 ## File created by the gnome-build tools
 

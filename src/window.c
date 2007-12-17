@@ -171,8 +171,8 @@ static const GtkActionEntry entries[] = {
 	  N_("Edit PO file header"), NULL},
 	  //G_CALLBACK (gtranslator_header_edit_dialog) },
 	{ "EditComment", GTK_STOCK_INDEX, N_("C_omment..."), NULL,
-	  N_("Edit message comment"), NULL},
-	  //G_CALLBACK (gtranslator_edit_comment_dialog) },
+	  N_("Edit message comment"), 
+	  G_CALLBACK (gtranslator_edit_message_comment) },
 	{ "EditMessage2Trans", NULL, N_("Copy _Message to Translation"), "<control>space",
 	  N_("Copy original message contents to the translation field"),
 	  G_CALLBACK (gtranslator_message_copy_to_translation) },
@@ -998,9 +998,6 @@ gtranslator_window_init (GtranslatorWindow *window)
 	
 	/* Dictionary panel */
 	//dictionary_activate(window);
-	
-	/* Comment */
-	comment_activate(window);
 	
 }
 

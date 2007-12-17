@@ -24,6 +24,7 @@
 #include <config.h>
 #endif
 
+#include "comment.h"
 #include "io-error-message-area.h"
 #include "message-area.h"
 #include "message-table.h"
@@ -56,6 +57,7 @@ struct _GtranslatorTabPrivate
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
 	GtkWidget *message_table;
+	GtkWidget *comment;
 	
 	/*Message area*/
 	GtkWidget *message_area;
@@ -389,6 +391,19 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 				   image);
 	
 	/*
+	 * Comment
+	 */
+	priv->comment = gtranslator_comment_panel_new(GTK_WIDGET(tab));
+
+	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
+					 GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+	gtranslator_panel_add_item(priv->panel,
+				   priv->comment,
+				   _("Comment"),
+				   image);
+	
+	/*
 	 * Content pane; this is where the message table and message area go
 	 */
 	priv->content_pane = gtk_vpaned_new();
@@ -594,6 +609,12 @@ gint
 gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
 {
 	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->trans_notebook));
+}
+
+GtranslatorCommentPanel *
+gtranslator_tab_get_comment_panel(GtranslatorTab *tab)
+{
+	return tab->priv->comment;
 }
 
 /**

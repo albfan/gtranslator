@@ -302,6 +302,22 @@ gtranslator_msg_get_comment(GtranslatorMsg *msg)
 }
 
 /**
+ * gtranslator_msg_set_comment:
+ * @msg: a #GtranslatorMsg
+ * @comment: the comment to set for a message
+ * 
+ * Change the comments for a message.
+ * comments should be a multiline string, 
+ * ending in a newline, or empty.
+ **/
+void
+gtranslator_msg_set_comment(GtranslatorMsg *msg,
+			    const gchar *comment)
+{
+	po_message_set_comments(msg->priv->message, comment);
+}
+
+/**
  * gtranslator_msg_get_extracted_comments:
  * @msg: a #GtranslatorMsg
  *
