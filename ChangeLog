@@ -1,3 +1,7 @@
+2007-12-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.ac: Removed comment directory.
+
 2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac: Removed scheme colors.
