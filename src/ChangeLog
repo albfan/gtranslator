@@ -1,5 +1,9 @@
 2007-12-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* comment: Removed comment folder.
+
+2007-12-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* dialogs/comment-dialog.ch:
 	* dialogs/comment-dialog.glade:
 	* dialogs/Makefile.am:
