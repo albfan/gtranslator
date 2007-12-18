@@ -134,7 +134,7 @@ gtranslator_comment_dialog_init (GtranslatorCommentDialog *dlg)
 	}
 	
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dlg)->vbox),
-			    dlg->priv->main_box, FALSE, FALSE, 0);
+			    dlg->priv->main_box, TRUE, TRUE, 0);
 	
 	gtk_container_set_border_width (GTK_CONTAINER (dlg->priv->main_box), 5);
 	

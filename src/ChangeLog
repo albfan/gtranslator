@@ -1,3 +1,9 @@
+2007-12-18  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs/comment-dialog.glade:
+	* dialogs/comment-dialog.c: 
+	Added shadow and a label to the dialog.
+
 2007-12-17  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* comment: Removed comment folder.
