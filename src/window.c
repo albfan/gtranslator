@@ -669,7 +669,12 @@ gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
 	gtranslator_open (path, window, &error);
 	if(error)
 	{
-		gtranslator_recent_remove (window, path);
+		/*
+		 * FIXME: We need a dialog here
+		 */
+		g_printf(error->message);
+		if(error->code == GTR_PO_ERROR_FILENAME)
+			gtranslator_recent_remove (window, path);
 	}
 
 	g_free (uri);

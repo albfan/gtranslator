@@ -30,6 +30,7 @@
 #include "msg.h"
 
 #include <string.h>
+#include <errno.h>
 
 #include <glib.h>
 #include <glib-object.h>
@@ -113,7 +114,7 @@ struct _GtranslatorPoPrivate
 	GtranslatorHeader *header;
 };
 
-static gchar *message_error;
+static gchar *message_error = NULL;
 
 static void
 gtranslator_po_init (GtranslatorPo *po)
@@ -145,6 +146,39 @@ gtranslator_po_class_init (GtranslatorPoClass *klass)
 	g_type_class_add_private (klass, sizeof (GtranslatorPoPrivate));
 
 	object_class->finalize = gtranslator_po_finalize;
+}
+
+/*
+ * Functions for errors handling.
+ */
+GQuark 
+gtranslator_po_error_quark (void)
+{
+	static GQuark quark = 0;
+	if (!quark)
+		quark = g_quark_from_static_string ("gtranslator_po_parser_error");
+	return quark;
+}
+
+static void
+on_gettext_po_xerror(gint severity,
+		     po_message_t message,
+		     const gchar *filename, size_t lineno, size_t column,
+		     gint multiline_p, const gchar *message_text)
+{
+	message_error = g_strdup(message_text);
+}
+
+static void
+on_gettext_po_xerror2(gint severity,
+		      po_message_t message1,
+		      const gchar *filename1, size_t lineno1, size_t column1,
+		      gint multiline_p1, const gchar *message_text1,
+		      po_message_t message2,
+		      const gchar *filename2, size_t lineno2, size_t column2,
+		      gint multiline_p2, const gchar *message_text2)
+{
+	message_error = g_strdup_printf("%s.\n %s",message_text1, message_text2);
 }
 
 /***************************** Public funcs ***********************************/
@@ -179,7 +213,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 {
 	GtranslatorPoPrivate *priv = po->priv;
 	GtranslatorMsg *msg;
-	po_xerror_handler_t gettext_error_handler;
+	struct po_xerror_handler handler;
 	po_message_t message;
 	po_message_iterator_t iter;
 	const gchar *msgstr;
@@ -188,56 +222,62 @@ gtranslator_po_parse(GtranslatorPo *po,
 	gint i = 0;
 	
 	g_return_if_fail(filename!=NULL);
+	g_return_if_fail(GTR_IS_PO(po));
 
 	base=g_path_get_basename(filename);
 	g_return_if_fail(base[0]!='\0');
 	g_free(base);
 	
 	/*
+	 * Initialice the handler error.
+	 */
+	handler.xerror = &on_gettext_po_xerror;
+	handler.xerror2 = &on_gettext_po_xerror2;
+	
+	if(message_error != NULL)
+	{
+		g_free(message_error);
+		message_error = NULL;
+	}
+
+	/*
 	 * Get absolute filename.
 	 */
 	if (!g_path_is_absolute(filename)) 
-	{
-		/*gchar absol[MAXPATHLEN + 1];
-		realpath(filename, absol);
-		priv->filename = g_strdup(absol);*/
 		priv->filename = g_build_filename(filename);
-	}
 	else
-	{
 		priv->filename = g_strdup(filename);
-	}
 	
-	po->priv->gettext_po_file = po_file_read(priv->filename,
-						 gettext_error_handler);
-	if(priv->gettext_po_file == NULL) {
-		/*g_set_error(error,
-			GTR_PARSER_ERROR,
-			GTR_PARSER_ERROR_GETTEXT,
-			_("Failed opening file '%s': %s"),
-			priv->filename, strerror(errno));*/
-		g_warning("Failed opening file '%s'", priv->filename);
+	priv->gettext_po_file = po_file_read(priv->filename,
+					     &handler);
+	if(priv->gettext_po_file == NULL)
+	{
+		g_set_error(error,
+			    GTR_PO_ERROR,
+			    GTR_PO_ERROR_FILENAME,
+			    _("Failed opening file '%s': %s"),
+			    priv->filename, g_strerror(errno));
 		g_object_unref(po);
 		return;
 	}
 	
-	/*
-	 * If there were errors, abandon this page
-	 */
-	/*if(parser_errors) {
+	if(message_error != NULL) {
+		g_set_error(error,
+			    GTR_PO_ERROR,
+			    GTR_PO_ERROR_GETTEXT,
+			    message_error);
 		g_object_unref(po);
 		return;
-	}*/
+	}
 	
 	/*
 	 * Determine the message domains to track
 	 */
 	if(!(domains = po_file_domains(priv->gettext_po_file))) {
-		/*g_set_error(error,
-			GTR_PARSER_ERROR,
-			GTR_PARSER_ERROR_GETTEXT,
-			_("Gettext returned a null message domain list."));*/
-		g_warning(_("Gettext returned a null message domain list."));
+		g_set_error(error,
+			    GTR_PO_ERROR,
+			    GTR_PO_ERROR_GETTEXT,
+			    _("Gettext returned a null message domain list."));
 		g_object_unref(po);
 		return;
 	}
@@ -352,11 +392,10 @@ gtranslator_po_parse(GtranslatorPo *po,
 		}
 	}
 	if(priv->messages == NULL) {
-		/*g_set_error(error,
-			GTR_PARSER_ERROR,
-			GTR_PARSER_ERROR_OTHER,
-			_("No messages obtained from parser."));*/
-		g_warning(_("No messages obtained from parser."));
+		g_set_error(error,
+			    GTR_PO_ERROR,
+			    GTR_PO_ERROR_OTHER,
+			    _("No messages obtained from parser."));
 		g_object_unref(po);
 		return;
 	}
@@ -629,28 +668,6 @@ gtranslator_po_update_translated_count(GtranslatorPo *po)
 	g_list_foreach(po->priv->messages,
 		       (GFunc) determine_translation_status,
 		       po);
-}
-
-
-static void
-on_gettext_po_xerror(gint severity,
-		     po_message_t message,
-		     const gchar *filename, size_t lineno, size_t column,
-		     gint multiline_p, const gchar *message_text)
-{
-	message_error = g_strdup(message_text);
-}
-
-static void
-on_gettext_po_xerror2(gint severity,
-		      po_message_t message1,
-		      const gchar *filename1, size_t lineno1, size_t column1,
-		      gint multiline_p1, const gchar *message_text1,
-		      po_message_t message2,
-		      const gchar *filename2, size_t lineno2, size_t column2,
-		      gint multiline_p2, const gchar *message_text2)
-{
-	message_error = g_strdup_printf("%s.\n %s",message_text1, message_text2);
 }
 
 /**

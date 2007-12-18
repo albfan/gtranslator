@@ -64,9 +64,20 @@ struct _GtranslatorPoClass
 	GObjectClass parent_class;
 };
 
+#define GTR_PO_ERROR gtranslator_po_error_quark()
+
+enum
+{
+	GTR_PO_ERROR_GETTEXT,
+	GTR_PO_ERROR_FILENAME,
+	GTR_PO_ERROR_OTHER,
+};
+
 /*
  * Public methods
  */
+GQuark           gtranslator_po_error_quark            (void);
+
 GType		 gtranslator_po_get_type	       (void) G_GNUC_CONST;
 
 GType		 gtranslator_po_register_type	       (GTypeModule * module);

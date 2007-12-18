@@ -58,6 +58,9 @@ gtranslator_open(const gchar *filename,
 	 */
 	po = gtranslator_po_new();
 	gtranslator_po_parse(po, filename, error);
+	
+	if(*error != NULL)
+		return FALSE;
 
 	/*
 	 * Update statusbar
@@ -166,8 +169,11 @@ gtranslator_po_parse_file_from_dialog(GtkWidget * dialog,
 	 */
 	if(!gtranslator_open(po_file, window, &error)) {
 		if(error) {
+			/*
+			 * FIXME: We need a dialog to show
+			 * this kind of errors
+			 */
 			g_printf("%s\n", error->message);
-			//gtranslator_show_message(error->message, NULL);
 			g_error_free(error);
 		}
 	}
@@ -508,7 +514,8 @@ load_file_list(GtranslatorWindow *window,
 {
 	GSList        *uris_to_load = NULL;
 	const GSList  *l;
-	GError *error;
+	GError *error = NULL;
+	gchar *path;
 	
 	g_return_if_fail ((uris != NULL) && (uris->data != NULL));
 		
@@ -563,17 +570,29 @@ load_file_list(GtranslatorWindow *window,
 	
 	while (uris_to_load != NULL)
 	{
-		gchar *path;
 		g_return_if_fail (uris_to_load->data != NULL);
 
 		path = g_filename_from_uri((const gchar *)uris_to_load->data,
 					   NULL, NULL);
-		gtranslator_open(path,
-				 window,
-				 &error);
+		if(!gtranslator_open(path, window, &error))
+			break;
 		
 		g_free(path);
 		uris_to_load = g_slist_next (uris_to_load);
+	}
+	
+	/*
+	 * Now if there are any error we have to manage it
+	 * and free the path
+	 */
+	if(error != NULL)
+	{
+		g_free(path);
+		/*
+		 * FIXME: We need to show the error in a dialog.
+		 */
+		g_printf(_("Error: %s"), error->message);
+		g_error_free(error);
 	}
 	
 	/* Free uris_to_load. Note that l points to the first element of uris_to_load */
