@@ -10,9 +10,10 @@ src/actions-help.c
 src/alternatelanguage/alternate-language.c
 src/bookmark.c
 src/charmap/charmap.c
-src/comment/comment-panel.c
-src/comment/comment.c
 src/compile.c
+src/dialogs/bookmarks-dialog.glade
+src/dialogs/comment-dialog.c
+src/dialogs/comment-dialog.glade
 src/dialogs/file-dialogs.c
 src/dialogs/header-dialog.c
 src/dialogs/header-dialog.glade

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-15 13:32+0100\n"
+"POT-Creation-Date: 2007-12-18 20:55+0100\n"
 "PO-Revision-Date: 2007-08-03 00:14+0200\n"
 "Last-Translator: Ignacio Casal Quinteiro <icq@cvs.gnome.org>\n"
 "Language-Team: Galego <proxecto@trasno.net>\n"
@@ -54,22 +54,30 @@ msgstr "Etiqueta"
 msgid "gtranslator highlight"
 msgstr "resaltado de gtranslator"
 
-#: ../src/actions-file.c:226
+#: ../src/actions-file.c:232
 msgid "Open file for translation"
 msgstr "Abrir ficheiro para tradución"
 
-#: ../src/actions-file.c:283
+#: ../src/actions-file.c:289
 #, c-format
 msgid "The file '%s' already exists. Do you want overwrite it?"
 msgstr "O ficheiro '%s' xa existe. Quere substituílo?"
 
-#: ../src/actions-file.c:322
+#: ../src/actions-file.c:328
 msgid "Save file as..."
 msgstr "Gardar ficheiro como..."
 
-#: ../src/actions-file.c:328
+#: ../src/actions-file.c:334
 msgid "Save local copy of file as..."
 msgstr "Gardar copia local do ficheiro como..."
+
+#.
+#. * FIXME: We need to show the error in a dialog.
+#.
+#: ../src/actions-file.c:594
+#, c-format
+msgid "Error: %s"
+msgstr "Erro: %s"
 
 #: ../src/actions-help.c:67
 msgid ""
@@ -146,7 +154,7 @@ msgstr "Todos os ficheiros"
 msgid "Open alternate PO file"
 msgstr "Abrir un ficheiro po alternativo"
 
-#: ../src/alternatelanguage/alternate-language.c:236 ../src/tab.c:389
+#: ../src/alternatelanguage/alternate-language.c:236 ../src/tab.c:462
 #, c-format
 msgid "Plural %d"
 msgstr "Plural %d"
@@ -159,14 +167,6 @@ msgstr "Abrir %s (%s)"
 #: ../src/charmap/charmap.c:253
 msgid "Character Map"
 msgstr "Mapa de caracteres"
-
-#: ../src/comment/comment-panel.c:67
-msgid "Edit Comment"
-msgstr "Editar comentario"
-
-#: ../src/comment/comment.c:93
-msgid "Comment"
-msgstr "Comentario"
 
 #: ../src/compile.c:84
 msgid "An error occurred while msgfmt was executed:\n"
@@ -184,6 +184,43 @@ msgid ""
 msgstr ""
 "Compilación correcta:\n"
 "%s"
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:1
+msgid "<b>Bookmarks</b>"
+msgstr "<b>Marcadores</b>"
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:2
+msgid "<b>Localization</b>"
+msgstr "<b>Localización</b>"
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:3
+msgid "<b>Name</b>"
+msgstr "<b>Nome</b>"
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:4
+#: ../src/dialogs/header-dialog.glade.h:16 ../src/header_dialog.glade.h:16
+msgid "gtk-close"
+msgstr "gtk-close"
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:5
+msgid "gtk-remove"
+msgstr "gtk-remove"
+
+#: ../src/dialogs/comment-dialog.c:100
+msgid "gtranslator Comment"
+msgstr "gtranslator Comentario"
+
+#: ../src/dialogs/comment-dialog.glade.h:1
+msgid "<b>Write your comments bellow:</b>"
+msgstr "<b>Escriba os seus comentarios embaixo:</b>"
+
+#: ../src/dialogs/comment-dialog.glade.h:2
+msgid "gtk-cancel"
+msgstr "gtk-cancel"
+
+#: ../src/dialogs/comment-dialog.glade.h:3
+msgid "gtk-ok"
+msgstr "gtk-ok"
 
 #: ../src/dialogs/header-dialog.c:100
 msgid "gtranslator Edit Header"
@@ -248,10 +285,6 @@ msgstr "Nome do tradutor:"
 #: ../src/dialogs/header-dialog.glade.h:15 ../src/header_dialog.glade.h:15
 msgid "Use my options to complete the following entries:"
 msgstr "Usar as miñas opcións para completar as seguintes entradas:"
-
-#: ../src/dialogs/header-dialog.glade.h:16 ../src/header_dialog.glade.h:16
-msgid "gtk-close"
-msgstr "gtk-close"
 
 #: ../src/dialogs/header-dialog.glade.h:17 ../src/header_dialog.glade.h:17
 msgid "gtranslator -- edit header"
@@ -406,7 +439,7 @@ msgstr "Substituír _todo"
 msgid "_Replace"
 msgstr "_Substituír"
 
-#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:376
+#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:449
 msgid "Fuzzy"
 msgstr "Dubidosa"
 
@@ -838,15 +871,15 @@ msgstr "Erro na inicialización de GConf: %s."
 msgid "Error setting the default window icon: %s"
 msgstr "Erro establecendo a icona por defecto da ventá: %s"
 
-#: ../src/message-table.c:216
+#: ../src/message-table.c:201
 msgid "ID"
 msgstr "ID"
 
-#: ../src/message-table.c:228
+#: ../src/message-table.c:213
 msgid "Original Text"
 msgstr "Texto orixinal"
 
-#: ../src/message-table.c:240
+#: ../src/message-table.c:225
 msgid "Translated Text"
 msgstr "Texto traducido"
 
@@ -862,19 +895,18 @@ msgstr "Baleiro"
 msgid "Hide panel"
 msgstr "Ocultar panel"
 
-#. g_set_error(error,
-#. GTR_PARSER_ERROR,
-#. GTR_PARSER_ERROR_GETTEXT,
-#. _("Gettext returned a null message domain list."));
-#: ../src/po.c:240
+#: ../src/po.c:258
+#, c-format
+msgid "Failed opening file '%s': %s"
+msgstr "Fallou ao abrir o ficheiro '%s': %s"
+
+#: ../src/po.c:280
+#, c-format
 msgid "Gettext returned a null message domain list."
 msgstr "Gettext devolveu unha lista de dominios de mensaxe nula."
 
-#. g_set_error(error,
-#. GTR_PARSER_ERROR,
-#. GTR_PARSER_ERROR_OTHER,
-#. _("No messages obtained from parser."));
-#: ../src/po.c:359
+#: ../src/po.c:398
+#, c-format
 msgid "No messages obtained from parser."
 msgstr "Non se obtuveron mensaxes do analizador."
 
@@ -892,39 +924,43 @@ msgstr "Esperábase `%s' pero obteuse `%s' para a clave %s"
 msgid "Saving file failed: %s"
 msgstr "Fallou o gardado do ficheiro: %s"
 
-#: ../src/statusbar.c:221
-msgid "  OVR"
-msgstr "  SOB"
+#: ../src/statusbar.c:86 ../src/statusbar.c:124
+msgid "INS"
+msgstr "INS"
 
-#: ../src/statusbar.c:223
-msgid "  INS"
-msgstr "  INS"
+#: ../src/statusbar.c:86 ../src/statusbar.c:123
+msgid "OVR"
+msgstr "SOB"
 
-#: ../src/tab.c:330
+#: ../src/tab.c:390
 msgid "Message Table"
 msgstr "Táboa de mensaxes"
 
-#: ../src/tab.c:354
+#: ../src/tab.c:403
+msgid "Comment"
+msgstr "Comentario"
+
+#: ../src/tab.c:427
 msgid "Singular"
 msgstr "Singular"
 
-#: ../src/tab.c:358
+#: ../src/tab.c:431
 msgid "Plural"
 msgstr "Plural"
 
-#: ../src/tab.c:369
+#: ../src/tab.c:442
 msgid "Translation status:"
 msgstr "Estado da tradución:"
 
-#: ../src/tab.c:372
+#: ../src/tab.c:445
 msgid "Translated"
 msgstr "Traducida"
 
-#: ../src/tab.c:380
+#: ../src/tab.c:453
 msgid "Untranslated"
 msgstr "Sen Traducir"
 
-#: ../src/tab.c:688
+#: ../src/tab.c:705
 msgid "There is an error in the message:"
 msgstr "Hai un erro na mensaxe:"
 
@@ -1126,7 +1162,6 @@ msgstr "C_omentario..."
 msgid "Edit message comment"
 msgstr "Editar o comentario da mensaxe"
 
-#. G_CALLBACK (gtranslator_edit_comment_dialog) },
 #: ../src/window.c:176
 msgid "Copy _Message to Translation"
 msgstr "Copiar _mensaxe a tradución"
@@ -1270,14 +1305,17 @@ msgstr "_Panel lateral"
 msgid "Show or hide the side pane in the current window"
 msgstr "Mostrar ou ocultar o panel lateral na ventá actual"
 
-#: ../src/window.c:379
+#: ../src/window.c:377
 #, c-format
 msgid "    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"
 msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
 
-#: ../src/window.c:735
+#: ../src/window.c:734
 msgid "Toolbar Editor"
 msgstr "Editor da barra de ferramentas"
+
+#~ msgid "Edit Comment"
+#~ msgstr "Editar comentario"
 
 #~ msgid "Open from _URI..."
 #~ msgstr "Abrir desde _URI..."
@@ -1301,9 +1339,6 @@ msgstr "Editor da barra de ferramentas"
 
 #~ msgid "_ColorSchemes"
 #~ msgstr "Esquemas de _cor"
-
-#~ msgid "gtk-help"
-#~ msgstr "gtk-help"
 
 #~ msgid "General"
 #~ msgstr "Xeral"
@@ -1476,9 +1511,6 @@ msgstr "Editor da barra de ferramentas"
 #~ "O ficheiro %s\n"
 #~ "foi modificado. ¿Gardar?"
 
-#~ msgid "gtranslator -- edit comment"
-#~ msgstr "gtranslator -- editar comentario"
-
 #~ msgid "Comment:"
 #~ msgstr "Comentario:"
 
@@ -1630,9 +1662,6 @@ msgstr "Editor da barra de ferramentas"
 
 #~ msgid "Parser output"
 #~ msgstr "Saída do analizador"
-
-#~ msgid "Failed opening file '%s': %s"
-#~ msgstr "Fallou ao abrir o ficheiro '%s': %s"
 
 #~ msgid "gtranslator -- %s"
 #~ msgstr "gtranslator -- %s"
@@ -1794,9 +1823,6 @@ msgstr "Editor da barra de ferramentas"
 
 #~ msgid "Couldn't open '%s': %s\n"
 #~ msgstr "Non se puido abrir o ficheiro '%s': %s\n"
-
-#~ msgid "<b>Translation memories</b>"
-#~ msgstr "<b>Memorias de tradución</b>"
 
 #~ msgid "Current comment"
 #~ msgstr "Comentario actual"
