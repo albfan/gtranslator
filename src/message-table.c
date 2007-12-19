@@ -175,6 +175,36 @@ showed_message_cb (GtranslatorTab *tab,
 	gtk_tree_path_free(path);
 }
 
+static void
+message_changed_cb (GtranslatorTab *tab,
+		    GtranslatorMsg *msg,
+		    GtranslatorMessageTable *table)
+{
+	GdkColor *status_color;
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	GtkTreeRowReference *row;
+	GtkTreeIter iter;
+
+	/* Set appropriate color for row */
+	if (gtranslator_msg_is_fuzzy(msg))
+		status_color = &table->priv->fuzzy;
+	else if(gtranslator_msg_is_translated(msg))
+		status_color = &table->priv->translated;
+	else
+		status_color = &table->priv->untranslated;
+
+	row = gtranslator_msg_get_row_reference(msg);
+	model = gtk_tree_row_reference_get_model(row);
+	path = gtk_tree_row_reference_get_path(row);
+	gtk_tree_model_get_iter(model, &iter, path);
+
+	gtk_list_store_set(table->priv->store, &iter,
+			   TRANSLATION_COLUMN, gtranslator_msg_get_msgstr(msg),
+			   COLOR_COLUMN, status_color,
+			   -1);
+}
+
 
 static void
 gtranslator_message_table_draw (GtranslatorMessageTable *table)
@@ -293,6 +323,11 @@ gtranslator_message_table_new (GtkWidget *tab)
 			 "showed-message",
 			 G_CALLBACK(showed_message_cb),
 			 obj);
+	g_signal_connect(obj->priv->tab,
+			 "message-changed",
+			 G_CALLBACK(message_changed_cb),
+			 obj);
+	
 	return GTK_WIDGET(obj);
 }
 
@@ -343,31 +378,4 @@ gtranslator_message_table_populate(GtranslatorMessageTable *table,
 		id++;
 		messages = g_list_next(messages);
 	}
-}
-
-void
-gtranslator_message_table_update_translation (GtranslatorMessageTable *table,
-					      GtranslatorMsg *msg,
-					      gchar *translation) {
-	GdkColor *status_color;
-	GtkTreeModel *model;
-	GtkTreePath *path;
-	GtkTreeRowReference *row;
-	GtkTreeIter iter;
-
-	/* Set appropriate color for row */
-	if (!strcmp(translation,""))
-		status_color = &table->priv->untranslated;
-	else
-		status_color = &table->priv->translated;
-
-	row = gtranslator_msg_get_row_reference(msg);
-	model = gtk_tree_row_reference_get_model(row);
-	path = gtk_tree_row_reference_get_path(row);
-	gtk_tree_model_get_iter(model, &iter, path);
-
-	gtk_list_store_set(table->priv->store, &iter,
-			   TRANSLATION_COLUMN, translation,
-			   COLOR_COLUMN, status_color,
-			   -1);
 }

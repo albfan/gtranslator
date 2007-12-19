@@ -116,10 +116,6 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		/* Get message as UTF-8 buffer */
 		gtk_text_buffer_get_bounds(textbuffer, &start, &end);
 		translation = gtk_text_buffer_get_text(textbuffer, &start, &end, TRUE);
-
-		gtranslator_message_table_update_translation(GTR_MESSAGE_TABLE(tab->priv->message_table),
-							     msg,
-							     translation);
 		
 		/* TODO: convert to file's own encoding if not UTF-8 */
 		
@@ -151,11 +147,6 @@ gtranslator_message_translation_update(GtkTextBuffer *textbuffer,
 		/* Get message as UTF-8 buffer */
 		gtk_text_buffer_get_bounds(textbuffer, &start, &end);
 		translation = gtk_text_buffer_get_text(textbuffer, &start, &end, TRUE);
-
-		if (i == 0)
-			gtranslator_message_table_update_translation(GTR_MESSAGE_TABLE(tab->priv->message_table),
-								     msg,
-								     translation);
 		
 		/* TODO: convert to file's own encoding if not UTF-8 */
 		
