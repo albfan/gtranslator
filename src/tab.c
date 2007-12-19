@@ -611,10 +611,16 @@ gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
 	return gtk_notebook_get_current_page(GTK_NOTEBOOK(tab->priv->trans_notebook));
 }
 
+/**
+ * gtranslator_tab_get_comment_panel:
+ * @tab: a #GtranslatorTab
+ *
+ * Return value: the comment panel
+ */
 GtranslatorCommentPanel *
 gtranslator_tab_get_comment_panel(GtranslatorTab *tab)
 {
-	return tab->priv->comment;
+	return GTR_COMMENT_PANEL(tab->priv->comment);
 }
 
 /**
