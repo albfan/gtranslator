@@ -8,6 +8,7 @@ data/desktop/gtranslator.desktop.in
 src/actions-file.c
 src/actions-help.c
 src/alternatelanguage/alternate-language.c
+src/alternatelanguage/alternate-language-panel.c
 src/bookmark.c
 src/charmap/charmap.c
 src/compile.c

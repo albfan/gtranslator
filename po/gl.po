@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-18 20:55+0100\n"
+"POT-Creation-Date: 2007-12-19 22:12+0100\n"
 "PO-Revision-Date: 2007-08-03 00:14+0200\n"
 "Last-Translator: Ignacio Casal Quinteiro <icq@cvs.gnome.org>\n"
 "Language-Team: Galego <proxecto@trasno.net>\n"
@@ -54,30 +54,22 @@ msgstr "Etiqueta"
 msgid "gtranslator highlight"
 msgstr "resaltado de gtranslator"
 
-#: ../src/actions-file.c:232
+#: ../src/actions-file.c:238
 msgid "Open file for translation"
 msgstr "Abrir ficheiro para tradución"
 
-#: ../src/actions-file.c:289
+#: ../src/actions-file.c:295
 #, c-format
 msgid "The file '%s' already exists. Do you want overwrite it?"
 msgstr "O ficheiro '%s' xa existe. Quere substituílo?"
 
-#: ../src/actions-file.c:328
+#: ../src/actions-file.c:334
 msgid "Save file as..."
 msgstr "Gardar ficheiro como..."
 
-#: ../src/actions-file.c:334
+#: ../src/actions-file.c:340
 msgid "Save local copy of file as..."
 msgstr "Gardar copia local do ficheiro como..."
-
-#.
-#. * FIXME: We need to show the error in a dialog.
-#.
-#: ../src/actions-file.c:594
-#, c-format
-msgid "Error: %s"
-msgstr "Erro: %s"
 
 #: ../src/actions-help.c:67
 msgid ""
@@ -135,29 +127,25 @@ msgstr ""
 msgid "Gtranslator Web Site"
 msgstr "Sitio web do gtranslator"
 
-#: ../src/alternatelanguage/alternate-language.c:165
-#: ../src/dialogs/file-dialogs.c:66
-msgid "Gettext translation"
-msgstr "Tradución Gettext"
+#: ../src/alternatelanguage/alternate-language.c:76
+msgid "Alternate Language"
+msgstr "Lingua alternativa"
 
-#: ../src/alternatelanguage/alternate-language.c:170
-#: ../src/dialogs/file-dialogs.c:71
-msgid "Gettext translation template"
-msgstr "Modelo de tradución Gettext"
+#: ../src/alternatelanguage/alternate-language-panel.c:89
+msgid "Message not found"
+msgstr "Mensaxe non atopada"
 
-#: ../src/alternatelanguage/alternate-language.c:175
-#: ../src/dialogs/file-dialogs.c:76
-msgid "All files"
-msgstr "Todos os ficheiros"
+#: ../src/alternatelanguage/alternate-language-panel.c:177
+msgid "Open file for alternate language"
+msgstr "Abrir ficheiro para lingua alternativa"
 
-#: ../src/alternatelanguage/alternate-language.c:216
-msgid "Open alternate PO file"
-msgstr "Abrir un ficheiro po alternativo"
+#: ../src/alternatelanguage/alternate-language-panel.c:190
+msgid "File closed"
+msgstr "Ficheiro pechado"
 
-#: ../src/alternatelanguage/alternate-language.c:236 ../src/tab.c:462
-#, c-format
-msgid "Plural %d"
-msgstr "Plural %d"
+#: ../src/alternatelanguage/alternate-language-panel.c:247
+msgid "There isn't any file loaded"
+msgstr "Non hai ningún ficheiro cargado"
 
 #: ../src/bookmark.c:581
 #, c-format
@@ -197,15 +185,6 @@ msgstr "<b>Localización</b>"
 msgid "<b>Name</b>"
 msgstr "<b>Nome</b>"
 
-#: ../src/dialogs/bookmarks-dialog.glade.h:4
-#: ../src/dialogs/header-dialog.glade.h:16 ../src/header_dialog.glade.h:16
-msgid "gtk-close"
-msgstr "gtk-close"
-
-#: ../src/dialogs/bookmarks-dialog.glade.h:5
-msgid "gtk-remove"
-msgstr "gtk-remove"
-
 #: ../src/dialogs/comment-dialog.c:100
 msgid "gtranslator Comment"
 msgstr "gtranslator Comentario"
@@ -214,79 +193,84 @@ msgstr "gtranslator Comentario"
 msgid "<b>Write your comments bellow:</b>"
 msgstr "<b>Escriba os seus comentarios embaixo:</b>"
 
-#: ../src/dialogs/comment-dialog.glade.h:2
-msgid "gtk-cancel"
-msgstr "gtk-cancel"
+#: ../src/dialogs/file-dialogs.c:66
+msgid "Gettext translation"
+msgstr "Tradución Gettext"
 
-#: ../src/dialogs/comment-dialog.glade.h:3
-msgid "gtk-ok"
-msgstr "gtk-ok"
+#: ../src/dialogs/file-dialogs.c:71
+msgid "Gettext translation template"
+msgstr "Modelo de tradución Gettext"
+
+#: ../src/dialogs/file-dialogs.c:76
+msgid "All files"
+msgstr "Todos os ficheiros"
 
 #: ../src/dialogs/header-dialog.c:100
 msgid "gtranslator Edit Header"
 msgstr "gtranslator -- Editar cabeceira"
 
-#: ../src/dialogs/header-dialog.glade.h:1 ../src/header_dialog.glade.h:1
-msgid "Charset:"
-msgstr "Código de caracteres:"
+#: ../src/dialogs/header-dialog.glade.h:1
+msgid "Char_set:"
+msgstr "Código de caractere_s:"
 
-#: ../src/dialogs/header-dialog.glade.h:2 ../src/header_dialog.glade.h:2
-msgid "Comments:"
-msgstr "Comentarios:"
+#: ../src/dialogs/header-dialog.glade.h:2
+msgid "Co_mment"
+msgstr "Co_mentario"
 
-#: ../src/dialogs/header-dialog.glade.h:3 ../src/header_dialog.glade.h:3
-msgid "Encoding:"
-msgstr "Codificación:"
+#: ../src/dialogs/header-dialog.glade.h:3
+msgid "Enc_oding:"
+msgstr "C_odificación:"
 
-#: ../src/dialogs/header-dialog.glade.h:4 ../src/header_dialog.glade.h:4
-msgid "Language group's email:"
-msgstr "E-mail do equipo da lingua:"
+#: ../src/dialogs/header-dialog.glade.h:4
+msgid "Language gro_up email:"
+msgstr "E-mail do eq_uipo da lingua:"
 
-#: ../src/dialogs/header-dialog.glade.h:5 ../src/header_dialog.glade.h:5
-msgid "Language:"
-msgstr "Lingua:"
+#: ../src/dialogs/header-dialog.glade.h:5
+msgid "Po file _revision date:"
+msgstr "Data de _revisión do ficheiro po:"
 
-#: ../src/dialogs/header-dialog.glade.h:6 ../src/header_dialog.glade.h:6
-msgid "Po file revision date:"
-msgstr "Data de revisión do ficheiro po:"
+#: ../src/dialogs/header-dialog.glade.h:6
+msgid "Pot _file creation date:"
+msgstr "Data de creación do _ficheiro pot:"
 
-#: ../src/dialogs/header-dialog.glade.h:7 ../src/header_dialog.glade.h:7
-msgid "Pot file creation date:"
-msgstr "Data de creación do ficheiro pot:"
-
-#: ../src/dialogs/header-dialog.glade.h:8 ../src/header_dialog.glade.h:8
+#: ../src/dialogs/header-dialog.glade.h:7 ../src/header_dialog.glade.h:8
 msgid "Project"
 msgstr "Proxecto"
 
-#: ../src/dialogs/header-dialog.glade.h:9 ../src/header_dialog.glade.h:9
-msgid "Project name:"
-msgstr "Nome do proxecto:"
+#: ../src/dialogs/header-dialog.glade.h:8
+msgid "Project _name:"
+msgstr "_Nome do proxecto:"
 
-#: ../src/dialogs/header-dialog.glade.h:10 ../src/header_dialog.glade.h:10
-msgid "Project version:"
-msgstr "Versión do proxecto:"
+#: ../src/dialogs/header-dialog.glade.h:9
+msgid "Project _version:"
+msgstr "_Versión do proxecto:"
 
-#: ../src/dialogs/header-dialog.glade.h:11 ../src/header_dialog.glade.h:11
-msgid "Report message string bugs to:"
-msgstr "Informar de erros nas cadeas de mensaxes a:"
+#: ../src/dialogs/header-dialog.glade.h:10
+msgid "Report message _bugs to:"
+msgstr "_Informar de erros de mensaxes a:"
 
-#: ../src/dialogs/header-dialog.glade.h:12 ../src/header_dialog.glade.h:12
+#: ../src/dialogs/header-dialog.glade.h:11 ../src/header_dialog.glade.h:12
 msgid "Translator and Language"
 msgstr "Tradutor e Lingua"
 
-#: ../src/dialogs/header-dialog.glade.h:13 ../src/header_dialog.glade.h:13
-msgid "Translator's e-mail:"
-msgstr "E-mail do tradutor:"
+#: ../src/dialogs/header-dialog.glade.h:12
+msgid "Translator's _email:"
+msgstr "_E-mail do tradutor:"
 
-#: ../src/dialogs/header-dialog.glade.h:14 ../src/header_dialog.glade.h:14
-msgid "Translator's name:"
-msgstr "Nome do tradutor:"
+#: ../src/dialogs/header-dialog.glade.h:13
+msgid "Translator's _name:"
+msgstr "_Nome do tradutor:"
 
-#: ../src/dialogs/header-dialog.glade.h:15 ../src/header_dialog.glade.h:15
+#: ../src/dialogs/header-dialog.glade.h:14 ../src/header_dialog.glade.h:15
 msgid "Use my options to complete the following entries:"
 msgstr "Usar as miñas opcións para completar as seguintes entradas:"
 
-#: ../src/dialogs/header-dialog.glade.h:17 ../src/header_dialog.glade.h:17
+#: ../src/dialogs/header-dialog.glade.h:15
+#: ../src/dialogs/preferences-dialog.glade.h:24
+msgid "_Language:"
+msgstr "_Lingua:"
+
+#: ../src/dialogs/header-dialog.glade.h:16 ../src/header_dialog.glade.h:17
 msgid "gtranslator -- edit header"
 msgstr "gtranslator -- editar cabeceira"
 
@@ -387,10 +371,6 @@ msgstr "_Realzado da sintaxe da mensaxe"
 msgid "_Keep obsolete messages"
 msgstr "_Manter mensaxes obsoletas"
 
-#: ../src/dialogs/preferences-dialog.glade.h:24
-msgid "_Language:"
-msgstr "_Lingua:"
-
 #: ../src/dialogs/preferences-dialog.glade.h:25
 msgid "_Name:"
 msgstr "_Nome:"
@@ -439,7 +419,7 @@ msgstr "Substituír _todo"
 msgid "_Replace"
 msgstr "_Substituír"
 
-#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:449
+#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:437
 msgid "Fuzzy"
 msgstr "Dubidosa"
 
@@ -526,6 +506,58 @@ msgstr "Estratexias dispoñibles"
 #: ../src/dictionary/dictionary.c:61
 msgid "Dictionary"
 msgstr "Dicionario"
+
+#: ../src/header_dialog.glade.h:1
+msgid "Charset:"
+msgstr "Código de caracteres:"
+
+#: ../src/header_dialog.glade.h:2
+msgid "Comments:"
+msgstr "Comentarios:"
+
+#: ../src/header_dialog.glade.h:3
+msgid "Encoding:"
+msgstr "Codificación:"
+
+#: ../src/header_dialog.glade.h:4
+msgid "Language group's email:"
+msgstr "E-mail do equipo da lingua:"
+
+#: ../src/header_dialog.glade.h:5
+msgid "Language:"
+msgstr "Lingua:"
+
+#: ../src/header_dialog.glade.h:6
+msgid "Po file revision date:"
+msgstr "Data de revisión do ficheiro po:"
+
+#: ../src/header_dialog.glade.h:7
+msgid "Pot file creation date:"
+msgstr "Data de creación do ficheiro pot:"
+
+#: ../src/header_dialog.glade.h:9
+msgid "Project name:"
+msgstr "Nome do proxecto:"
+
+#: ../src/header_dialog.glade.h:10
+msgid "Project version:"
+msgstr "Versión do proxecto:"
+
+#: ../src/header_dialog.glade.h:11
+msgid "Report message string bugs to:"
+msgstr "Informar de erros nas cadeas de mensaxes a:"
+
+#: ../src/header_dialog.glade.h:13
+msgid "Translator's e-mail:"
+msgstr "E-mail do tradutor:"
+
+#: ../src/header_dialog.glade.h:14
+msgid "Translator's name:"
+msgstr "Nome do tradutor:"
+
+#: ../src/header_dialog.glade.h:16
+msgid "gtk-close"
+msgstr "gtk-close"
 
 #: ../src/header_stuff.c:128
 msgid "No header for this file/domain"
@@ -871,15 +903,15 @@ msgstr "Erro na inicialización de GConf: %s."
 msgid "Error setting the default window icon: %s"
 msgstr "Erro establecendo a icona por defecto da ventá: %s"
 
-#: ../src/message-table.c:201
+#: ../src/message-table.c:231
 msgid "ID"
 msgstr "ID"
 
-#: ../src/message-table.c:213
+#: ../src/message-table.c:243
 msgid "Original Text"
 msgstr "Texto orixinal"
 
-#: ../src/message-table.c:225
+#: ../src/message-table.c:255
 msgid "Translated Text"
 msgstr "Texto traducido"
 
@@ -900,12 +932,12 @@ msgstr "Ocultar panel"
 msgid "Failed opening file '%s': %s"
 msgstr "Fallou ao abrir o ficheiro '%s': %s"
 
-#: ../src/po.c:280
+#: ../src/po.c:284
 #, c-format
 msgid "Gettext returned a null message domain list."
 msgstr "Gettext devolveu unha lista de dominios de mensaxe nula."
 
-#: ../src/po.c:398
+#: ../src/po.c:402
 #, c-format
 msgid "No messages obtained from parser."
 msgstr "Non se obtuveron mensaxes do analizador."
@@ -932,35 +964,40 @@ msgstr "INS"
 msgid "OVR"
 msgstr "SOB"
 
-#: ../src/tab.c:390
+#: ../src/tab.c:378
 msgid "Message Table"
 msgstr "Táboa de mensaxes"
 
-#: ../src/tab.c:403
+#: ../src/tab.c:391
 msgid "Comment"
 msgstr "Comentario"
 
-#: ../src/tab.c:427
+#: ../src/tab.c:415
 msgid "Singular"
 msgstr "Singular"
 
-#: ../src/tab.c:431
+#: ../src/tab.c:419
 msgid "Plural"
 msgstr "Plural"
 
-#: ../src/tab.c:442
+#: ../src/tab.c:430
 msgid "Translation status:"
 msgstr "Estado da tradución:"
 
-#: ../src/tab.c:445
+#: ../src/tab.c:433
 msgid "Translated"
 msgstr "Traducida"
 
-#: ../src/tab.c:453
+#: ../src/tab.c:441
 msgid "Untranslated"
 msgstr "Sen Traducir"
 
-#: ../src/tab.c:705
+#: ../src/tab.c:450
+#, c-format
+msgid "Plural %d"
+msgstr "Plural %d"
+
+#: ../src/tab.c:699
 msgid "There is an error in the message:"
 msgstr "Hai un erro na mensaxe:"
 
@@ -1041,119 +1078,114 @@ msgstr ""
 "GtkSpell non foi capaz de inicializarse\n"
 " %s"
 
-#: ../src/window.c:95
+#: ../src/window.c:96
 msgid "_File"
 msgstr "_Ficheiro"
 
-#: ../src/window.c:96
+#: ../src/window.c:97
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/window.c:97
+#: ../src/window.c:98
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/window.c:98
+#: ../src/window.c:99
 msgid "_Bookmarks"
 msgstr "_Marcadores"
 
-#: ../src/window.c:99
+#: ../src/window.c:100
 msgid "_Actions"
 msgstr "_Accións"
 
-#: ../src/window.c:100
+#: ../src/window.c:101
 msgid "_Search"
 msgstr "_Buscar"
 
-#: ../src/window.c:101
+#: ../src/window.c:102
 msgid "_Go"
 msgstr "_Ir"
 
-#: ../src/window.c:102
+#: ../src/window.c:103
 msgid "_Help"
 msgstr "A_xuda"
 
-#: ../src/window.c:106
+#: ../src/window.c:107
 msgid "Open a PO file"
 msgstr "Abrir un ficheiro PO"
 
-#: ../src/window.c:108
+#: ../src/window.c:109
 msgid "Open _Location..."
 msgstr "Abrir _localización..."
 
-#: ../src/window.c:109
+#: ../src/window.c:110
 msgid "Open a PO file from a given URI"
 msgstr "Abrir un ficheiro PO desde unha URI"
 
 #. G_CALLBACK (gtranslator_open_uri_dialog) },
-#: ../src/window.c:111
+#: ../src/window.c:112
 msgid "_Recent Files"
 msgstr "Ficheiros _recentes"
 
-#: ../src/window.c:114
+#: ../src/window.c:115
 msgid "Quit the program"
 msgstr "Saír do programa"
 
 #. Edit menu
-#: ../src/window.c:118
+#: ../src/window.c:119
 msgid "T_oolbar"
 msgstr "Barra de _ferramentas"
 
-#: ../src/window.c:121
+#: ../src/window.c:122
 msgid "Edit gtranslator preferences"
 msgstr "Editar as preferencias de gtranslator"
 
 #. G_CALLBACK (gtranslator_selection_clear) },
-#: ../src/window.c:123 ../src/window.c:170
+#: ../src/window.c:124 ../src/window.c:171
 msgid "_Header..."
 msgstr "Ca_beceira..."
 
 #. Help menu
-#: ../src/window.c:127
+#: ../src/window.c:128
 msgid "_Contents"
 msgstr "_Contidos"
 
-#: ../src/window.c:139
+#: ../src/window.c:140
 msgid "Save the current file"
 msgstr "Pechar o ficheiro actual"
 
-#: ../src/window.c:142
+#: ../src/window.c:143
 msgid "Save the current file with another name"
 msgstr "Gardar o ficheiro actual con outro nome"
 
-#: ../src/window.c:148
+#: ../src/window.c:149
 msgid "Close the current file"
 msgstr "Pechar o ficheiro actual"
 
-#: ../src/window.c:153
+#: ../src/window.c:154
 msgid "Undo last operation"
 msgstr "Desfacer a última operación"
 
-#: ../src/window.c:156
+#: ../src/window.c:157
 msgid "Redo last undone operation"
 msgstr "Refacer a última operación desfeita"
 
-#: ../src/window.c:159
+#: ../src/window.c:160
 msgid "Cut the selected text"
 msgstr "Cortar o texto seleccionado"
 
-#: ../src/window.c:162
+#: ../src/window.c:163
 msgid "Copy the selected text"
 msgstr "Copiar o texto seleccionado"
 
-#: ../src/window.c:165 ../src/window.c:236 ../src/window.c:239
+#: ../src/window.c:166 ../src/window.c:236 ../src/window.c:239
 msgid "   "
 msgstr "   "
 
-#: ../src/window.c:168
+#: ../src/window.c:169
 msgid "Clear the selected translation"
 msgstr "Limpar a tradución seleccionada"
 
-#: ../src/window.c:171
-msgid "Edit PO file header"
-msgstr "Editar a cabeceira do ficheiro PO"
-
-#. G_CALLBACK (gtranslator_header_edit_dialog) },
 #: ../src/window.c:173
 msgid "C_omment..."
 msgstr "C_omentario..."
@@ -1313,6 +1345,24 @@ msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
 #: ../src/window.c:734
 msgid "Toolbar Editor"
 msgstr "Editor da barra de ferramentas"
+
+#~ msgid "Error: %s"
+#~ msgstr "Erro: %s"
+
+#~ msgid "Open alternate PO file"
+#~ msgstr "Abrir un ficheiro po alternativo"
+
+#~ msgid "gtk-remove"
+#~ msgstr "gtk-remove"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-cancel"
+
+#~ msgid "gtk-ok"
+#~ msgstr "gtk-ok"
+
+#~ msgid "Edit PO file header"
+#~ msgstr "Editar a cabeceira do ficheiro PO"
 
 #~ msgid "Edit Comment"
 #~ msgstr "Editar comentario"
