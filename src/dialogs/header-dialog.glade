@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.0 on Wed Oct 31 12:37:44 2007 -->
+<!--*- mode: xml -*-->
 <glade-interface>
   <widget class="GtkDialog" id="e_header">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -14,19 +14,17 @@
     <child internal-child="vbox">
       <widget class="GtkVBox" id="main_box">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="spacing">2</property>
         <child>
           <widget class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <child>
               <widget class="GtkTable" id="table1">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="n_rows">6</property>
-                <property name="n_columns">2</property>
+                <property name="n_columns">3</property>
+                <property name="row_spacing">6</property>
                 <child>
                   <widget class="GtkTextView" id="prj_comment">
                     <property name="visible">True</property>
@@ -34,143 +32,256 @@
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkEntry" id="rmbt">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkEntry" id="po_date">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkEntry" id="pot_date">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkEntry" id="prj_version">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkEntry" id="prj_name">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label26">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">12</property>
+                    <property name="label" translatable="yes">Report message _bugs to:</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">rmbt</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label25">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">12</property>
+                    <property name="label" translatable="yes">Po file _revision date:</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">po_date</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label24">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">12</property>
+                    <property name="label" translatable="yes">Pot _file creation date:</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">pot_date</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label23">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">12</property>
+                    <property name="label" translatable="yes">Project _version:</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">prj_version</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label22">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">12</property>
+                    <property name="label" translatable="yes">Project _name:</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">prj_name</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label8">
+                  <widget class="GtkLabel" id="label21">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Report message string bugs to:</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">12</property>
+                    <property name="label" translatable="yes">Co_mment</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">prj_comment</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label20">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
                   </widget>
                   <packing>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label7">
+                  <widget class="GtkLabel" id="label19">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Po file revision date:</property>
+                    <property name="xalign">0</property>
                   </widget>
                   <packing>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label6">
+                  <widget class="GtkLabel" id="label18">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Pot file creation date:</property>
+                    <property name="xalign">0</property>
                   </widget>
                   <packing>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label5">
+                  <widget class="GtkLabel" id="label17">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Project version:</property>
+                    <property name="xalign">0</property>
                   </widget>
                   <packing>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label4">
+                  <widget class="GtkLabel" id="label16">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Project name:</property>
+                    <property name="xalign">0</property>
                   </widget>
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label3">
+                  <widget class="GtkLabel" id="label15">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Comments:</property>
+                    <property name="xalign">0</property>
                   </widget>
+                  <packing>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
+                  </packing>
                 </child>
               </widget>
             </child>
             <child>
               <widget class="GtkLabel" id="label1">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">Project</property>
               </widget>
               <packing>
@@ -181,186 +292,288 @@
             <child>
               <widget class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <child>
                   <widget class="GtkCheckButton" id="take_my_options">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="label" translatable="yes">Use my options to complete the following entries:</property>
+                    <property name="use_underline">True</property>
                     <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                   </widget>
+                  <packing>
+                    <property name="padding">6</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="lang_page">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="n_rows">6</property>
-                    <property name="n_columns">2</property>
-                    <property name="column_spacing">2</property>
-                    <property name="row_spacing">2</property>
+                    <property name="n_columns">3</property>
+                    <property name="row_spacing">6</property>
                     <child>
-                      <widget class="GtkComboBoxEntry" id="enc_combo">
+                      <widget class="GtkComboBoxEntry" id="encoding_combo">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <child internal-child="entry">
-                          <widget class="GtkEntry" id="enc_combo_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                          <widget class="GtkEntry" id="encoding_entry">
                           </widget>
                         </child>
                       </widget>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
                         <property name="top_attach">5</property>
                         <property name="bottom_attach">6</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
                       <widget class="GtkComboBoxEntry" id="charset_combo">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <child internal-child="entry">
-                          <widget class="GtkEntry" id="charset_combo_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                          <widget class="GtkEntry" id="charset_entry">
                           </widget>
                         </child>
                       </widget>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
                         <property name="top_attach">4</property>
                         <property name="bottom_attach">5</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkComboBoxEntry" id="lg_combo">
+                      <widget class="GtkComboBoxEntry" id="language_email_combo">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <child internal-child="entry">
-                          <widget class="GtkEntry" id="lg_combo_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                          <widget class="GtkEntry" id="language_email_entry">
                           </widget>
                         </child>
                       </widget>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
                         <property name="top_attach">3</property>
                         <property name="bottom_attach">4</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkComboBoxEntry" id="language_combo">
+                      <widget class="GtkComboBoxEntry" id="language_name_combo">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <child internal-child="entry">
-                          <widget class="GtkEntry" id="language_combo_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                          <widget class="GtkEntry" id="language_name_entry">
                           </widget>
                         </child>
                       </widget>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
                       <widget class="GtkEntry" id="tr_email">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="y_options"></property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkEntry" id="tr_name">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                        <property name="y_options"></property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label38">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">12</property>
+                        <property name="label" translatable="yes">Enc_oding:</property>
+                        <property name="use_underline">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">5</property>
+                        <property name="bottom_attach">6</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label37">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">12</property>
+                        <property name="label" translatable="yes">Char_set:</property>
+                        <property name="use_underline">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">4</property>
+                        <property name="bottom_attach">5</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label36">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">12</property>
+                        <property name="label" translatable="yes">Language gro_up email:</property>
+                        <property name="use_underline">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label35">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">12</property>
+                        <property name="label" translatable="yes">_Language:</property>
+                        <property name="use_underline">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label34">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">12</property>
+                        <property name="label" translatable="yes">Translator's _email:</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">tr_email</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEntry" id="translator">
+                      <widget class="GtkLabel" id="label33">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">12</property>
+                        <property name="label" translatable="yes">Translator's _name:</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">tr_name</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label14">
+                      <widget class="GtkLabel" id="label32">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Encoding:</property>
+                        <property name="xalign">0</property>
                       </widget>
                       <packing>
                         <property name="top_attach">5</property>
                         <property name="bottom_attach">6</property>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label13">
+                      <widget class="GtkLabel" id="label31">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Charset:</property>
+                        <property name="xalign">0</property>
                       </widget>
                       <packing>
                         <property name="top_attach">4</property>
                         <property name="bottom_attach">5</property>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label12">
+                      <widget class="GtkLabel" id="label30">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Language group's email:</property>
+                        <property name="xalign">0</property>
                       </widget>
                       <packing>
                         <property name="top_attach">3</property>
                         <property name="bottom_attach">4</property>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label11">
+                      <widget class="GtkLabel" id="label29">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Language:</property>
+                        <property name="xalign">0</property>
                       </widget>
                       <packing>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label10">
+                      <widget class="GtkLabel" id="label28">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Translator's e-mail:</property>
+                        <property name="xalign">0</property>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label9">
+                      <widget class="GtkLabel" id="label27">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">Translator's name:</property>
+                        <property name="xalign">0</property>
                       </widget>
+                      <packing>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
@@ -375,7 +588,6 @@
             <child>
               <widget class="GtkLabel" id="label2">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">Translator and Language</property>
               </widget>
               <packing>
@@ -392,15 +604,12 @@
         <child internal-child="action_area">
           <widget class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
               <widget class="GtkButton" id="button1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
               </widget>

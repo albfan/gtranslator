@@ -123,14 +123,14 @@ static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
 		"rmbt", &dlg->priv->rmbt,
 		"prj_comment", &dlg->priv->prj_comment,
 		"take_my_options", &dlg->priv->take_my_options,
-		"translator", &dlg->priv->translator,
+		"tr_name", &dlg->priv->translator,
 		"tr_email", &dlg->priv->tr_email,
 		"pot_date", &dlg->priv->pot_date,
 		"po_date", &dlg->priv->po_date,
-		"language_combo", &dlg->priv->language_combo,
+		"language_name_combo", &dlg->priv->language_combo,
 		"charset_combo", &dlg->priv->charset_combo, 
-		"enc_combo", &dlg->priv->enc_combo,
-		"lg_combo", &dlg->priv->lg_combo,
+		"encoding_combo", &dlg->priv->enc_combo,
+		"language_email_combo", &dlg->priv->lg_combo,
 		NULL);
 
 	if(!ret)

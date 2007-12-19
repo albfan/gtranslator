@@ -167,9 +167,8 @@ static const GtkActionEntry entries[] = {
 	{ "EditClear", GTK_STOCK_CLEAR, NULL, NULL,
 	  N_("Clear the selected translation"), NULL},
 	//  G_CALLBACK (gtranslator_selection_clear) },
-	{ "EditHeader", GTK_STOCK_PROPERTIES, N_("_Header..."), NULL,
-	  N_("Edit PO file header"), NULL},
-	  //G_CALLBACK (gtranslator_header_edit_dialog) },
+	{ "EditHeader", GTK_STOCK_PROPERTIES, N_("_Header..."), NULL, NULL,
+	  G_CALLBACK (gtranslator_actions_edit_header) },
 	{ "EditComment", GTK_STOCK_INDEX, N_("C_omment..."), NULL,
 	  N_("Edit message comment"), 
 	  G_CALLBACK (gtranslator_edit_message_comment) },
@@ -670,13 +669,9 @@ gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
 	if(error)
 	{
 		/*
-		 * We have to show the error in a dialog
+		 * FIXME: We need a dialog here
 		 */
-		gtk_message_dialog_new(GTK_WINDOW(window),
-				       GTK_DIALOG_DESTROY_WITH_PARENT,
-				       GTK_MESSAGE_ERROR,
-				       GTK_BUTTONS_CLOSE,
-				       error->message);
+		g_printf(error->message);
 		if(error->code == GTR_PO_ERROR_FILENAME)
 			gtranslator_recent_remove (window, path);
 	}
