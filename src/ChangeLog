@@ -1,3 +1,13 @@
+2007-12-19  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* alternatelanguage/*
+	Added this plugin. I now the interface need more work
+	but it is working, i think perfect.
+	* window.c: Added alternatelanguage plugin.
+	* actions-file.c: Added g_free call.
+	* Makfile.am: Added alternatelanguage lib.
+	* po.c: Added comment.
+
 2007-12-19  Pablo Sanxiao  <psanxiao@gmail.com>
 
 	* header-dialog.c, header-dialog.glade:

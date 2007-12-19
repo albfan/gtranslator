@@ -182,6 +182,8 @@ gtranslator_po_parse_file_from_dialog(GtkWidget * dialog,
 		}
 	}
 
+	g_free(po_file);
+	
 	/*
 	 * Destroy the dialog 
 	 */

@@ -21,6 +21,7 @@
 #endif
 
 #include "actions.h"
+#include "alternate-language.h"
 #include "application.h"
 #include "charmap.h"
 //#include "dictionary.h"
@@ -1002,6 +1003,9 @@ gtranslator_window_init (GtranslatorWindow *window)
 	
 	/* Dictionary panel */
 	//dictionary_activate(window);
+	
+	/* Alterante language */
+	alternate_lang_activate(window);
 	
 }
 

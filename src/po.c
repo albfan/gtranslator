@@ -261,6 +261,10 @@ gtranslator_po_parse(GtranslatorPo *po,
 		return;
 	}
 	
+	/*
+	 * FIXME: We need some test for this:
+	 * maybe shouldn't be returned here.
+	 */
 	if(message_error != NULL) {
 		g_set_error(error,
 			    GTR_PO_ERROR,
