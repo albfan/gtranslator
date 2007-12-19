@@ -178,9 +178,6 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	
 	widget = gtranslator_view_new();
 	
-	/*
-	 * FIXME: This should be called parsing the preferences
-	 */
 	if(spellcheck && gtranslator_prefs_manager_get_spellcheck())
 		gtranslator_view_enable_spellcheck(GTR_VIEW(widget),
 						    spellcheck);

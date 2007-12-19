@@ -168,12 +168,16 @@ gtranslator_po_parse_file_from_dialog(GtkWidget * dialog,
 	 * Open the file via our centralized opening function.
 	 */
 	if(!gtranslator_open(po_file, window, &error)) {
-		if(error) {
+		if(error) 
+		{
 			/*
-			 * FIXME: We need a dialog to show
-			 * this kind of errors
+			 * We have to show the error in a dialog
 			 */
-			g_printf("%s\n", error->message);
+			gtk_message_dialog_new(GTK_WINDOW(window),
+					       GTK_DIALOG_DESTROY_WITH_PARENT,
+					       GTK_MESSAGE_ERROR,
+					       GTK_BUTTONS_CLOSE,
+					       error->message);
 			g_error_free(error);
 		}
 	}
@@ -589,9 +593,13 @@ load_file_list(GtranslatorWindow *window,
 	{
 		g_free(path);
 		/*
-		 * FIXME: We need to show the error in a dialog.
+		 * We have to show the error in a dialog
 		 */
-		g_printf(_("Error: %s"), error->message);
+		gtk_message_dialog_new(GTK_WINDOW(window),
+				       GTK_DIALOG_DESTROY_WITH_PARENT,
+				       GTK_MESSAGE_ERROR,
+				       GTK_BUTTONS_CLOSE,
+				       error->message);
 		g_error_free(error);
 	}
 	
