@@ -139,7 +139,7 @@ static const GtkActionEntry entries[] = {
        	{ "FileSave", GTK_STOCK_SAVE, NULL, "<control>S",
 	  N_("Save the current file"),
 	  G_CALLBACK (gtranslator_save_current_file_dialog) },
-	{ "FileSaveAs", GTK_STOCK_SAVE_AS, NULL, NULL,
+	{ "FileSaveAs", GTK_STOCK_SAVE_AS, NULL, "<shift><control>S",
 	  N_("Save the current file with another name"), 
 	  G_CALLBACK (gtranslator_save_file_as_dialog) },
 	/*{ "FileRevert", GTK_STOCK_REVERT_TO_SAVED, N_("_Revert"), NULL,
@@ -153,7 +153,7 @@ static const GtkActionEntry entries[] = {
         { "EditUndo", GTK_STOCK_UNDO, NULL, "<control>Z", 
 	  N_("Undo last operation"),
 	  G_CALLBACK(gtranslator_actions_edit_undo) },
-	{ "EditRedo", GTK_STOCK_REDO, NULL, NULL,
+	{ "EditRedo", GTK_STOCK_REDO, NULL, "<shift><control>Z",
 	  N_("Redo last undone operation"),
 	  G_CALLBACK(gtranslator_actions_edit_redo) },
 	{ "EditCut", GTK_STOCK_CUT, NULL, "<control>X",
@@ -181,9 +181,9 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	
 	/* Bookmarks menu */
-	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), NULL,
+	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
           N_("Add a bookmark to the current message"), NULL},
-	{ "BookmarksEdit", GTK_STOCK_EDIT, N_("_Edit Bookmarks"), NULL,
+	{ "BookmarksEdit", GTK_STOCK_EDIT, N_("_Edit Bookmarks"), "<control>B",
           N_("Edit stored bookmarks"), NULL},
 	
 	/* Action menu */
@@ -203,10 +203,10 @@ static const GtkActionEntry entries[] = {
         { "GoFirst", GTK_STOCK_GOTO_FIRST, NULL, NULL,
           N_("Go to the first message"),
           G_CALLBACK (gtranslator_message_go_to_first) },
-	{ "GoPrevious", GTK_STOCK_GO_BACK, NULL, NULL,
+	{ "GoPrevious", GTK_STOCK_GO_BACK, NULL, "<alt>Left",
           N_("Move back one message"),
           G_CALLBACK (gtranslator_message_go_to_previous) },
-	{ "GoForward", GTK_STOCK_GO_FORWARD, NULL, NULL,
+	{ "GoForward", GTK_STOCK_GO_FORWARD, NULL, "<alt>Right",
           N_("Move forward one message"),
           G_CALLBACK (gtranslator_message_go_to_next) },
 	{ "GoLast", GTK_STOCK_GOTO_LAST, NULL, NULL,

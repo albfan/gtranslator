@@ -1,5 +1,9 @@
 2007-12-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* window.c: Added a few key bindings following hig book.
+
+2007-12-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* po.h: Removed useless comment.
 	* actions-edit.c: Added user-action func in undo and redo funcs.
 	* Makefile.am: Removed header_dialog.glade.
