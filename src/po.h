@@ -24,8 +24,6 @@
 #include <gtk/gtk.h>
 #include <gettext-po.h>
 
-//#include "window.h"
-
 G_BEGIN_DECLS
 
 /*

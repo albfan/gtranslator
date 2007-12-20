@@ -114,12 +114,7 @@ gtranslator-marshal.h: gtranslator-marshal.list $(GLIB_GENMARSHAL)
 gtranslator-marshal.c: gtranslator-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --header --prefix=gtranslator_marshal > $@
 
-gladedir = $(pkgdatadir)
-
-glade_DATA =  \
-       header_dialog.glade 
-
-EXTRA_DIST = ChangeLog $(glade_DATA) gtranslator-marshal.list
+EXTRA_DIST = ChangeLog gtranslator-marshal.list
 
 
 CLEANFILES = $(BUILT_SOURCES)

@@ -44,7 +44,9 @@ gtranslator_actions_edit_undo (GtkAction   *action,
 
 	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
 
+	gtk_text_buffer_begin_user_action(GTK_TEXT_BUFFER(active_document));
 	gtk_source_buffer_undo (active_document);
+	gtk_text_buffer_end_user_action(GTK_TEXT_BUFFER(active_document));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -61,7 +63,9 @@ gtranslator_actions_edit_redo (GtkAction   *action,
 
 	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
 
+	gtk_text_buffer_begin_user_action(GTK_TEXT_BUFFER(active_document));
 	gtk_source_buffer_redo (active_document);
+	gtk_text_buffer_end_user_action(GTK_TEXT_BUFFER(active_document));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
