@@ -577,7 +577,10 @@ notebook_tab_added(GtkNotebook *notebook,
 				"message_changed",
 				G_CALLBACK(gtranslator_window_update_statusbar_message_count),
 				window);
-				     
+	g_signal_connect_after (child,
+				"showed_message",
+				G_CALLBACK(gtranslator_window_update_statusbar_message_count),
+				window);
 }
 
 void

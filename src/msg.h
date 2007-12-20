@@ -62,6 +62,13 @@ struct _GtranslatorMsgClass
 	GObjectClass parent_class;
 };
 
+typedef enum
+{
+	GTR_MSG_STATUS_UNTRANSLATED,
+	GTR_MSG_STATUS_TRANSLATED,
+	GTR_MSG_STATUS_FUZZY
+} GtranslatorMsgStatus;
+
 /*
  * Public methods
  */
@@ -87,6 +94,12 @@ gboolean          gtranslator_msg_is_fuzzy             (GtranslatorMsg *msg);
 
 void              gtranslator_msg_set_fuzzy            (GtranslatorMsg *msg,
 							gboolean fuzzy);
+
+void              gtranslator_msg_set_status           (GtranslatorMsg *msg,
+							GtranslatorMsgStatus status);
+
+GtranslatorMsgStatus
+                  gtranslator_msg_get_status           (GtranslatorMsg *msg);
 
 const gchar      *gtranslator_msg_get_msgid            (GtranslatorMsg *msg);
 

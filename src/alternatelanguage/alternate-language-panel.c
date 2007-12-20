@@ -74,7 +74,7 @@ search_message(GtranslatorAlternateLangPanel *panel,
 	do
 	{
 		string = gtranslator_msg_get_msgid(l->data);
-		if(strcmp(string, msgid) == 0)
+		if(g_utf8_collate(string, msgid) == 0)
 		{
 			gtranslator_alternate_lang_panel_set_text(panel,
 								  gtranslator_msg_get_msgstr(l->data));

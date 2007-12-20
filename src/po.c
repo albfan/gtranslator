@@ -116,6 +116,33 @@ struct _GtranslatorPoPrivate
 
 static gchar *message_error = NULL;
 
+/*
+ * A helper function simply increments the "translated" variable of the
+ *  po-file.
+ */
+static void 
+determine_translation_status(GtranslatorMsg *msg,
+			     GtranslatorPo *po)
+{
+	if(gtranslator_msg_is_fuzzy(msg))
+		po->priv->fuzzy++;
+	else if(gtranslator_msg_is_translated(msg))
+		po->priv->translated++;
+}
+
+/*
+ * Update the count of the completed translated entries.
+ */
+static void 
+gtranslator_po_update_translated_count(GtranslatorPo *po)
+{
+	po->priv->translated = 0;
+	po->priv->fuzzy = 0;
+	g_list_foreach(po->priv->messages,
+		       (GFunc) determine_translation_status,
+		       po);
+}
+
 static void
 gtranslator_po_init (GtranslatorPo *po)
 {
@@ -391,6 +418,13 @@ gtranslator_po_parse(GtranslatorPo *po,
 			msg = gtranslator_msg_new(iter);
 			gtranslator_msg_set_message(msg, message);
   
+			/* Set the status */
+			if(gtranslator_msg_is_fuzzy(msg))
+				gtranslator_msg_set_status(msg, GTR_MSG_STATUS_FUZZY);
+			else if(gtranslator_msg_is_translated(msg))
+				gtranslator_msg_set_status(msg, GTR_MSG_STATUS_TRANSLATED);
+			else gtranslator_msg_set_status(msg, GTR_MSG_STATUS_UNTRANSLATED);
+			
 			/* Build up messages */
 			priv->messages = g_list_append(priv->messages, msg);
 		}
@@ -408,6 +442,8 @@ gtranslator_po_parse(GtranslatorPo *po,
 	 * Set the current message to the first message.
 	 */
 	priv->current = g_list_first(priv->messages);
+	
+	gtranslator_po_update_translated_count(po);
 }
 
 /**
@@ -621,10 +657,32 @@ gtranslator_po_get_translated_count(GtranslatorPo *po)
 	return po->priv->translated;
 }
 
+void
+gtranslator_po_increase_decrease_translated(GtranslatorPo *po,
+					    gboolean increase)
+{
+	g_return_if_fail(GTR_IS_PO(po));
+	
+	if(increase)
+		po->priv->translated++;
+	else po->priv->translated--;
+}
+
 gint
 gtranslator_po_get_fuzzy_count(GtranslatorPo *po)
 {
 	return po->priv->fuzzy;
+}
+
+void
+gtranslator_po_increase_decrease_fuzzy(GtranslatorPo *po,
+				       gboolean increase)
+{
+	g_return_if_fail(GTR_IS_PO(po));
+	
+	if(increase)
+		po->priv->fuzzy++;
+	else po->priv->fuzzy--;
 }
 
 gint
@@ -644,34 +702,6 @@ gtranslator_po_get_message_position(GtranslatorPo *po)
 {
 	return g_list_position(po->priv->messages,
 			       po->priv->current);
-}
-
-
-/*
- * A helper function simply increments the "translated" variable of the
- *  po-file.
- */
-static void 
-determine_translation_status(GtranslatorMsg *msg,
-			     GtranslatorPo *po)
-{
-	if(gtranslator_msg_is_fuzzy(msg))
-		po->priv->fuzzy++;
-	else if(gtranslator_msg_is_translated(msg))
-		po->priv->translated++;
-}
-
-/*
- * Update the count of the completed translated entries.
- */
-void 
-gtranslator_po_update_translated_count(GtranslatorPo *po)
-{
-	po->priv->translated = 0;
-	po->priv->fuzzy = 0;
-	g_list_foreach(po->priv->messages,
-		       (GFunc) determine_translation_status,
-		       po);
 }
 
 /**

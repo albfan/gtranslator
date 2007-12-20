@@ -1,3 +1,17 @@
+2007-12-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* alternatelanguage/alternate-language-panel.c:
+	Fixed search. Now compares with utf8 support.
+
+	* actions-file.c:
+	* tab.c:
+	* window.c:
+	* po.c:
+	* msg.c:
+	Now the message status is stored indiviually so
+	now is not neccessary parse all the list to get
+	the global status.
+
 2007-12-19  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* alternatelanguage/*

@@ -63,11 +63,6 @@ gtranslator_open(const gchar *filename,
 		return FALSE;
 
 	/*
-	 * Update statusbar
-	 */
-	gtranslator_po_update_translated_count(po);
-
-	/*
 	 * If not a crash/temporary file, add to the history.
 	 */
 	gtranslator_recent_add(window, filename);

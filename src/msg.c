@@ -38,11 +38,11 @@ G_DEFINE_TYPE(GtranslatorMsg, gtranslator_msg, G_TYPE_OBJECT)
 
 struct _GtranslatorMsgPrivate
 {
-	//Missing comment
-	//Header too??
 	po_message_iterator_t iterator;
 	
 	po_message_t message;
+	
+	GtranslatorMsgStatus status;
 
 	GtkTreeRowReference *row_reference;
 };
@@ -196,6 +196,31 @@ gtranslator_msg_set_fuzzy(GtranslatorMsg *msg,
 	po_message_set_fuzzy(msg->priv->message, fuzzy);
 }
 
+/**
+ * gtranslator_msg_set_status:
+ * @msg: a #GtranslatorMsg
+ * @status: a #GtranslatorMsgStatus
+ * 
+ * Sets the status for a message.
+ */
+void
+gtranslator_msg_set_status(GtranslatorMsg *msg,
+			   GtranslatorMsgStatus status)
+{
+	msg->priv->status = status;
+}
+
+/**
+ * gtranslator_msg_get_status:
+ * @msg: a #GtranslatorMsg
+ * 
+ * Return value: the message's status.
+ */
+GtranslatorMsgStatus
+gtranslator_msg_get_status(GtranslatorMsg *msg)
+{
+	return msg->priv->status;
+}
 
 /**
  * gtranslator_msg_get_msgid:

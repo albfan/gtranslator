@@ -291,6 +291,55 @@ emit_message_changed_signal(GtkTextBuffer *buf,
 }
 
 static void
+update_status(GtranslatorTab *tab,
+	      GtranslatorMsg *msg,
+	      gpointer useless)
+{
+	GtranslatorMsgStatus status;
+	
+	status = gtranslator_msg_get_status(msg);
+
+	if((status == GTR_MSG_STATUS_FUZZY) && !gtranslator_msg_is_fuzzy(msg))
+	{
+		gtranslator_po_increase_decrease_fuzzy(tab->priv->po, FALSE);
+		if(gtranslator_msg_is_translated(msg))
+		{
+			status = GTR_MSG_STATUS_TRANSLATED;
+			gtranslator_po_increase_decrease_translated(tab->priv->po, TRUE);
+		}
+		else {
+			status = GTR_MSG_STATUS_UNTRANSLATED;
+			gtranslator_po_increase_decrease_translated(tab->priv->po, FALSE);
+		}
+	}
+	else if((status == GTR_MSG_STATUS_TRANSLATED) && !gtranslator_msg_is_translated(msg))
+	{
+		status = GTR_MSG_STATUS_UNTRANSLATED;
+		gtranslator_po_increase_decrease_translated(tab->priv->po, FALSE);
+	}
+	else if((status == GTR_MSG_STATUS_TRANSLATED) && gtranslator_msg_is_fuzzy(msg))
+	{
+		status = GTR_MSG_STATUS_FUZZY;
+		gtranslator_po_increase_decrease_translated(tab->priv->po, FALSE);
+		gtranslator_po_increase_decrease_fuzzy(tab->priv->po, TRUE);
+	}
+	else if((status == GTR_MSG_STATUS_UNTRANSLATED) && gtranslator_msg_is_translated(msg))
+	{
+		if(gtranslator_msg_is_fuzzy(msg))
+		{
+			status = GTR_MSG_STATUS_FUZZY;
+			gtranslator_po_increase_decrease_fuzzy(tab->priv->po, TRUE);
+		}
+		else {
+			status = GTR_MSG_STATUS_TRANSLATED;
+			gtranslator_po_increase_decrease_translated(tab->priv->po, TRUE);
+		}
+	}
+
+	gtranslator_msg_set_status(msg, status);
+}
+
+static void
 status_widgets(GtranslatorTab *tab,
 	       GtranslatorMsg *msg)
 {
@@ -304,12 +353,6 @@ status_widgets(GtranslatorTab *tab,
 	
 	else
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->untranslated), TRUE);
-	
-	/*
-	 * We need update the message count too
-	 */
-	gtranslator_po_update_translated_count(tab->priv->po);
-
 }
 
 
@@ -358,7 +401,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	gint i = 0;
 	
 	GtranslatorTabPrivate *priv = tab->priv;
-	
 	
 	/*
 	 * Panel
@@ -474,6 +516,9 @@ gtranslator_tab_init (GtranslatorTab *tab)
 	GtkWidget *image;
 	
 	tab->priv = GTR_TAB_GET_PRIVATE (tab);
+	
+	g_signal_connect(tab, "message-changed",
+			 G_CALLBACK(update_status), NULL);
 	
 	gtranslator_tab_draw(tab);
 }
