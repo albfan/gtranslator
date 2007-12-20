@@ -24,7 +24,6 @@ src/dialogs/search-dialog.c
 src/dialogs/search-dialog.glade
 src/dictionary/dict-panel.c
 src/dictionary/dictionary.c
-src/header_dialog.glade
 src/header_stuff.c
 src/languages.c
 src/learn.c

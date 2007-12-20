@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-19 22:12+0100\n"
+"POT-Creation-Date: 2007-12-20 17:35+0100\n"
 "PO-Revision-Date: 2007-08-03 00:14+0200\n"
 "Last-Translator: Ignacio Casal Quinteiro <icq@cvs.gnome.org>\n"
 "Language-Team: Galego <proxecto@trasno.net>\n"
@@ -54,20 +54,20 @@ msgstr "Etiqueta"
 msgid "gtranslator highlight"
 msgstr "resaltado de gtranslator"
 
-#: ../src/actions-file.c:238
+#: ../src/actions-file.c:233
 msgid "Open file for translation"
 msgstr "Abrir ficheiro para tradución"
 
-#: ../src/actions-file.c:295
+#: ../src/actions-file.c:290
 #, c-format
 msgid "The file '%s' already exists. Do you want overwrite it?"
 msgstr "O ficheiro '%s' xa existe. Quere substituílo?"
 
-#: ../src/actions-file.c:334
+#: ../src/actions-file.c:329
 msgid "Save file as..."
 msgstr "Gardar ficheiro como..."
 
-#: ../src/actions-file.c:340
+#: ../src/actions-file.c:335
 msgid "Save local copy of file as..."
 msgstr "Gardar copia local do ficheiro como..."
 
@@ -233,7 +233,7 @@ msgstr "Data de _revisión do ficheiro po:"
 msgid "Pot _file creation date:"
 msgstr "Data de creación do _ficheiro pot:"
 
-#: ../src/dialogs/header-dialog.glade.h:7 ../src/header_dialog.glade.h:8
+#: ../src/dialogs/header-dialog.glade.h:7
 msgid "Project"
 msgstr "Proxecto"
 
@@ -249,7 +249,7 @@ msgstr "_Versión do proxecto:"
 msgid "Report message _bugs to:"
 msgstr "_Informar de erros de mensaxes a:"
 
-#: ../src/dialogs/header-dialog.glade.h:11 ../src/header_dialog.glade.h:12
+#: ../src/dialogs/header-dialog.glade.h:11
 msgid "Translator and Language"
 msgstr "Tradutor e Lingua"
 
@@ -261,7 +261,7 @@ msgstr "_E-mail do tradutor:"
 msgid "Translator's _name:"
 msgstr "_Nome do tradutor:"
 
-#: ../src/dialogs/header-dialog.glade.h:14 ../src/header_dialog.glade.h:15
+#: ../src/dialogs/header-dialog.glade.h:14
 msgid "Use my options to complete the following entries:"
 msgstr "Usar as miñas opcións para completar as seguintes entradas:"
 
@@ -270,7 +270,7 @@ msgstr "Usar as miñas opcións para completar as seguintes entradas:"
 msgid "_Language:"
 msgstr "_Lingua:"
 
-#: ../src/dialogs/header-dialog.glade.h:16 ../src/header_dialog.glade.h:17
+#: ../src/dialogs/header-dialog.glade.h:16
 msgid "gtranslator -- edit header"
 msgstr "gtranslator -- editar cabeceira"
 
@@ -419,7 +419,7 @@ msgstr "Substituír _todo"
 msgid "_Replace"
 msgstr "_Substituír"
 
-#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:437
+#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:479
 msgid "Fuzzy"
 msgstr "Dubidosa"
 
@@ -506,58 +506,6 @@ msgstr "Estratexias dispoñibles"
 #: ../src/dictionary/dictionary.c:61
 msgid "Dictionary"
 msgstr "Dicionario"
-
-#: ../src/header_dialog.glade.h:1
-msgid "Charset:"
-msgstr "Código de caracteres:"
-
-#: ../src/header_dialog.glade.h:2
-msgid "Comments:"
-msgstr "Comentarios:"
-
-#: ../src/header_dialog.glade.h:3
-msgid "Encoding:"
-msgstr "Codificación:"
-
-#: ../src/header_dialog.glade.h:4
-msgid "Language group's email:"
-msgstr "E-mail do equipo da lingua:"
-
-#: ../src/header_dialog.glade.h:5
-msgid "Language:"
-msgstr "Lingua:"
-
-#: ../src/header_dialog.glade.h:6
-msgid "Po file revision date:"
-msgstr "Data de revisión do ficheiro po:"
-
-#: ../src/header_dialog.glade.h:7
-msgid "Pot file creation date:"
-msgstr "Data de creación do ficheiro pot:"
-
-#: ../src/header_dialog.glade.h:9
-msgid "Project name:"
-msgstr "Nome do proxecto:"
-
-#: ../src/header_dialog.glade.h:10
-msgid "Project version:"
-msgstr "Versión do proxecto:"
-
-#: ../src/header_dialog.glade.h:11
-msgid "Report message string bugs to:"
-msgstr "Informar de erros nas cadeas de mensaxes a:"
-
-#: ../src/header_dialog.glade.h:13
-msgid "Translator's e-mail:"
-msgstr "E-mail do tradutor:"
-
-#: ../src/header_dialog.glade.h:14
-msgid "Translator's name:"
-msgstr "Nome do tradutor:"
-
-#: ../src/header_dialog.glade.h:16
-msgid "gtk-close"
-msgstr "gtk-close"
 
 #: ../src/header_stuff.c:128
 msgid "No header for this file/domain"
@@ -927,17 +875,17 @@ msgstr "Baleiro"
 msgid "Hide panel"
 msgstr "Ocultar panel"
 
-#: ../src/po.c:258
+#: ../src/po.c:285
 #, c-format
 msgid "Failed opening file '%s': %s"
 msgstr "Fallou ao abrir o ficheiro '%s': %s"
 
-#: ../src/po.c:284
+#: ../src/po.c:311
 #, c-format
 msgid "Gettext returned a null message domain list."
 msgstr "Gettext devolveu unha lista de dominios de mensaxe nula."
 
-#: ../src/po.c:402
+#: ../src/po.c:436
 #, c-format
 msgid "No messages obtained from parser."
 msgstr "Non se obtuveron mensaxes do analizador."
@@ -964,40 +912,40 @@ msgstr "INS"
 msgid "OVR"
 msgstr "SOB"
 
-#: ../src/tab.c:378
+#: ../src/tab.c:420
 msgid "Message Table"
 msgstr "Táboa de mensaxes"
 
-#: ../src/tab.c:391
+#: ../src/tab.c:433
 msgid "Comment"
 msgstr "Comentario"
 
-#: ../src/tab.c:415
+#: ../src/tab.c:457
 msgid "Singular"
 msgstr "Singular"
 
-#: ../src/tab.c:419
+#: ../src/tab.c:461
 msgid "Plural"
 msgstr "Plural"
 
-#: ../src/tab.c:430
+#: ../src/tab.c:472
 msgid "Translation status:"
 msgstr "Estado da tradución:"
 
-#: ../src/tab.c:433
+#: ../src/tab.c:475
 msgid "Translated"
 msgstr "Traducida"
 
-#: ../src/tab.c:441
+#: ../src/tab.c:483
 msgid "Untranslated"
 msgstr "Sen Traducir"
 
-#: ../src/tab.c:450
+#: ../src/tab.c:492
 #, c-format
 msgid "Plural %d"
 msgstr "Plural %d"
 
-#: ../src/tab.c:699
+#: ../src/tab.c:744
 msgid "There is an error in the message:"
 msgstr "Hai un erro na mensaxe:"
 
@@ -1342,9 +1290,48 @@ msgstr "Mostrar ou ocultar o panel lateral na ventá actual"
 msgid "    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"
 msgstr "    Actual: %d    Total: %d    Dubidosas: %d    Sen traducir: %d"
 
-#: ../src/window.c:734
+#: ../src/window.c:737
 msgid "Toolbar Editor"
 msgstr "Editor da barra de ferramentas"
+
+#~ msgid "Charset:"
+#~ msgstr "Código de caracteres:"
+
+#~ msgid "Comments:"
+#~ msgstr "Comentarios:"
+
+#~ msgid "Encoding:"
+#~ msgstr "Codificación:"
+
+#~ msgid "Language group's email:"
+#~ msgstr "E-mail do equipo da lingua:"
+
+#~ msgid "Language:"
+#~ msgstr "Lingua:"
+
+#~ msgid "Po file revision date:"
+#~ msgstr "Data de revisión do ficheiro po:"
+
+#~ msgid "Pot file creation date:"
+#~ msgstr "Data de creación do ficheiro pot:"
+
+#~ msgid "Project name:"
+#~ msgstr "Nome do proxecto:"
+
+#~ msgid "Project version:"
+#~ msgstr "Versión do proxecto:"
+
+#~ msgid "Report message string bugs to:"
+#~ msgstr "Informar de erros nas cadeas de mensaxes a:"
+
+#~ msgid "Translator's e-mail:"
+#~ msgstr "E-mail do tradutor:"
+
+#~ msgid "Translator's name:"
+#~ msgstr "Nome do tradutor:"
+
+#~ msgid "gtk-close"
+#~ msgstr "gtk-close"
 
 #~ msgid "Error: %s"
 #~ msgstr "Erro: %s"
