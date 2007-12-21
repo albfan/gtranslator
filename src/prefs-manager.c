@@ -32,7 +32,6 @@
 #include <glib/gi18n.h>
 #include <gconf/gconf-value.h>
 #include <gconf/gconf-client.h>
-//#include <gconf/gconf.h>
 
 #include <gtk/gtk.h>
 
@@ -338,6 +337,10 @@ DEFINE_STRING_PREF(plurals,
 DEFINE_BOOL_PREF (side_pane_visible,
 		  GPM_SIDE_PANE_VISIBLE,
 		  GPM_DEFAULT_SIDE_PANE_VISIBLE)
+
+DEFINE_BOOL_PREF (side_pane_position,
+		  GPM_SIDE_PANE_POSITION,
+		  GPM_DEFAULT_SIDE_PANE_POSITION)
 
 /* The following functions are taken from gconf-client.c 
  * and partially modified. 

@@ -1,3 +1,11 @@
+2007-12-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* dialogs/preferences-dialog.c/glade:
+	* prefs-manager.ch:
+	* window.c:
+	Now you can choose if you want the side panel in the right
+	or in the left. (Fixes bug #502917)
+
 2007-12-20  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* window.c: Added a few key bindings following hig book.

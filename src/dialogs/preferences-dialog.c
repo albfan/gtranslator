@@ -78,6 +78,10 @@ struct _GtranslatorPreferencesDialogPrivate
 	GtkWidget *team_email_comboentry;
 	GtkWidget *plurals_entry;
 	GtkWidget *number_plurals_spinbutton;
+	
+	/*Inteface*/
+	GtkWidget *left_radiobutton;
+	GtkWidget *right_radiobutton;
 };
 
 static GdkPixbuf *
@@ -465,6 +469,50 @@ setup_po_header_pages(GtranslatorPreferencesDialog *dlg)
 }
 
 
+/***************Interface pages****************/
+
+static void
+right_radio_button_toggled(GtkToggleButton *button,
+			   GtranslatorPreferencesDialog *dlg)
+{
+	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->right_radiobutton));
+
+	gtranslator_prefs_manager_set_side_pane_position(TRUE);
+}
+
+static void
+left_radio_button_toggled(GtkToggleButton *button,
+			  GtranslatorPreferencesDialog *dlg)
+{
+	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->left_radiobutton));
+
+	gtranslator_prefs_manager_set_side_pane_position(FALSE);
+}
+
+static void
+setup_interface_pages(GtranslatorPreferencesDialog *dlg)
+{
+	gboolean pos; //FALSE: left
+	
+	/*Setup initial value*/
+	pos = gtranslator_prefs_manager_get_side_pane_position();
+	
+	if(pos)
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->right_radiobutton),
+					     pos);
+	else gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->left_radiobutton),
+					  pos);
+	
+	/*Connect signals*/
+	g_signal_connect(dlg->priv->left_radiobutton, "toggled",
+			 G_CALLBACK(left_radio_button_toggled),
+			 dlg);
+	g_signal_connect(dlg->priv->right_radiobutton, "toggled",
+			 G_CALLBACK(right_radio_button_toggled),
+			 dlg);
+}
+
+
 static void
 dialog_response_handler (GtkDialog *dlg, 
 			 gint       res_id)
@@ -545,6 +593,9 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 		"team_email_comboentry", &dlg->priv->team_email_comboentry,
 		"number_plurals_spinbutton", &dlg->priv->number_plurals_spinbutton,
 		"plurals_entry", &dlg->priv->plurals_entry,
+						  
+		"left_radiobutton", &dlg->priv->left_radiobutton,
+		"right_radiobutton", &dlg->priv->right_radiobutton,
 		NULL);
 	
 	if(!ret)
@@ -566,6 +617,7 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 	setup_files_pages(dlg);
 	setup_editor_pages(dlg);
 	setup_po_header_pages(dlg);
+	setup_interface_pages(dlg);
 }
 
 static void

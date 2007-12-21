@@ -901,7 +901,9 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	 * sidebar
 	 */
 	priv->sidebar = gtranslator_panel_new(GTK_ORIENTATION_VERTICAL);
-	gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
+	if(!gtranslator_prefs_manager_get_side_pane_position())
+		gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
+	else gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
 
 	g_signal_connect_after (priv->sidebar,
 				"show",
@@ -924,7 +926,9 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	g_signal_connect(priv->notebook, "page-added",
 			 G_CALLBACK(notebook_tab_added), window);
 	
-	gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
+	if(!gtranslator_prefs_manager_get_side_pane_position())
+		gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
+	else gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
 	gtk_widget_show(priv->notebook);
 
 

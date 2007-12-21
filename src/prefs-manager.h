@@ -25,7 +25,6 @@
 #ifndef __GTR_PREFS_MANAGER_H__
 #define __GTR_PREFS_MANAGER_H__
 
-//#include "application.h"
 #include <glib.h>
 
 #define GTR_BASE_KEY			"/apps/gtranslator"
@@ -42,9 +41,6 @@
 #define GPM_AUTOSAVE_INTERVAL		GPM_AUTOSAVE_DIR "/autosave_interval"
 #define GPM_APPEND_SUFFIX		GPM_AUTOSAVE_DIR "/append_suffix"
 #define GPM_AUTOSAVE_SUFFIX		GPM_AUTOSAVE_DIR "/autosave_suffix"
-
-/*With the new recent files implementation this is not neccessary*/
-//#define GPM_RECENT_DIR			GPM_PREFS_DIR "/files/recent_files"
 
 /* Editor */
 #define GPM_TEXT_DISPLAY_DIR		GPM_PREFS_DIR "/editor/text_display"
@@ -79,6 +75,7 @@
 /* Interface */
 #define GPM_INTERFACE_DIR		GTR_BASE_KEY "/interface"
 #define GPM_SIDE_PANE_VISIBLE		GPM_INTERFACE_DIR "/side_pane_visible"
+#define GPM_SIDE_PANE_POSITION		GPM_INTERFACE_DIR "/side_pane_position"
 
 /* Fallback default values. Keep in sync with gtranslator.schemas */
 
@@ -118,6 +115,7 @@
 
 /* Interface */
 #define GPM_DEFAULT_SIDE_PANE_VISIBLE	1
+#define GPM_DEFAULT_SIDE_PANE_POSITION	0 //0 Left - 1 Right
 
 /** LIFE CYCLE MANAGEMENT FUNCTIONS **/
 
@@ -196,6 +194,10 @@ gint                     gtranslator_prefs_manager_get_number_plurals           
 /* Side pane visibility */
 void			gtranslator_prefs_manager_set_side_pane_visible		(gboolean side_pane_visible);
 gboolean		gtranslator_prefs_manager_get_side_pane_visible		(void);
+
+/* Side pane position */
+void                    gtranslator_prefs_manager_set_side_pane_position        (gboolean position);
+gboolean                gtranslator_prefs_manager_get_side_pane_position        (void);
 
 #endif  /* __GTR_PREFS_MANAGER_H__ */
 
