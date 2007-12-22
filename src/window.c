@@ -176,7 +176,7 @@ static const GtkActionEntry entries[] = {
 	{ "EditMessage2Trans", NULL, N_("Copy _Message to Translation"), "<control>space",
 	  N_("Copy original message contents to the translation field"),
 	  G_CALLBACK (gtranslator_message_copy_to_translation) },
-	{ "EditFuzzy", NULL, N_("Toggle _Fuzzy"), "<control>U",
+	{ "EditFuzzy", NULL, N_("Toggle _Fuzzy Status"), "<control>U",
 	  N_("Toggle fuzzy status of a message"),
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	
@@ -374,7 +374,7 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 	fuzzy = gtranslator_po_get_fuzzy_count(po);
 	untranslated = gtranslator_po_get_untranslated_count(po);
 		
-	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"), 
+	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzy: %d    Untranslated: %d"), 
 			      pos+1, message_count, fuzzy, untranslated);
 	
 	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),

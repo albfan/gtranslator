@@ -97,7 +97,7 @@ gtranslator_comment_dialog_init (GtranslatorCommentDialog *dlg)
 				GTK_RESPONSE_CLOSE,
 				NULL);
 	
-	gtk_window_set_title (GTK_WINDOW (dlg), _("gtranslator Comment"));
+	gtk_window_set_title (GTK_WINDOW (dlg), _("Edit Comment"));
 	gtk_window_set_default_size(GTK_WINDOW(dlg), 300, 200);
 	gtk_window_set_resizable (GTK_WINDOW (dlg), TRUE);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dlg), FALSE);

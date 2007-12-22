@@ -4,7 +4,7 @@
 <glade-interface>
   <widget class="GtkDialog" id="preferences_dialog">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">gtranslator Preferences</property>
+    <property name="title" translatable="yes">Gtranslator Preferences</property>
     <property name="resizable">False</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>

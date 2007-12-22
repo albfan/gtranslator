@@ -935,7 +935,7 @@ toolbar_visibility_refresh (EggEditableToolbar *etoolbar)
        * produce duplicates, but don't worry about it. If your language
        * normally has a mnemonic at the start, please use the _. If not,
        * please remove. */
-      action_label = g_strdup_printf (_("Show “_%s”"), tmp);
+      action_label = g_strdup_printf (_("Show \"_%s\""), tmp);
       g_free (tmp);
       
       sprintf(action_name, "ToolbarToggle%d", i);

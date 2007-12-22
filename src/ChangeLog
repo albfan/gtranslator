@@ -1,5 +1,15 @@
 2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* dialogs/comment-dialog.c:
+	* dialogs/header-dialog.c:
+	* dialogs/preferences-dialog.{c,glade}:
+	* toolbareditor/egg-editable-toolbar.c:
+	* actions-help.c:
+	* window.c:
+		Cleanup strings.
+
+2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* header.{c,h}:
 	* notebook.c:
 	* po.{c,h}:

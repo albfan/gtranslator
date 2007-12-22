@@ -43,13 +43,13 @@ gtranslator_about_dialog(GtkAction *action,
 	const gchar *authors[] = {
 		"Present Developers",
 		"---------------------------------------------------------",
-		"Ross Golder <ross@golder.org>",
-		"Ignacio Casal <nacho.resa@gmail.com>",
+		"Ignacio Casal Quinteiro <nacho.resa@gmail.com>",
+		"Seán de Búrca <leftmostcat@gmail.com>",
 		"",
 		"Past Developers",
 		"---------------------------------------------------------",
+		"Ross Golder <ross@golder.org>",
 		"Fatih Demir <kabalak@kabalak.net>",
-		"---------------------------------------------------------",
 		"Gediminas Paulauskas <menesis@delfi.lt>",
 		"Thomas Ziehmer <thomas@kabalak.net>",
 		"Peeter Vois <peeter@kabalak.net>",
@@ -70,7 +70,7 @@ gtranslator_about_dialog(GtkAction *action,
 		   "(at your option) any later version."),
 		N_("This program is distributed in the hope that it will be useful, "
 		   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		   "MERCHANMSGILITY or FITNESS FOR A PARTICULAR PURMSGSE.  See the "
+		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
 		   "GNU General Public License for more details."),
 		N_("You should have received a copy of the GNU General Public License "
 		   "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
@@ -79,27 +79,28 @@ gtranslator_about_dialog(GtkAction *action,
 
 	license_trans = g_strconcat (_(license[0]), "\n\n",
 	                             _(license[1]), "\n\n",
-         	                     _(license[2]), "\n\n",
+         	                     _(license[2]),
                 	             NULL);                          
 
 	
 	gtk_show_about_dialog (GTK_WINDOW (window),
-                         "comments", _("gtranslator is a po file editing suite with many bells and whistles."),
-                         "version", VERSION,
-                         "copyright", _("(C) 1999-2007 The Free Software Foundation, Inc."),
-                         "authors", authors,
-                         "documenters", documenters,
-                         /*
-                          * Note to translators: put here your name and email so it will show
-                          * up in the "about" box
-                          */
-                         "translator-credits", _("translator-credits"),
-                         "logo-icon-name", "gtranslator",
-                         "license", license_trans,
-                         "wrap-license", TRUE,
-			 "website", "http://gtranslator.sourceforge.net",
-			 "website-label", _("Gtranslator Web Site"),
-                         NULL);
+		"comments", _("Translation file editing suite to assist in localization of applications."),
+		"authors", authors,
+		"copyright", _("Copyright © 1999-2007 The Free Software Foundation, Inc."),
+		"documenters", documenters,
+		/*
+		 * Note to translators: put here your name and email so it will show
+		 * up in the "about" box
+		 */
+		"license", license_trans,
+		"logo-icon-name", "gtranslator",
+		"title", _("About Gtranslator"),
+		"translator-credits", _("translator-credits"),
+		"version", VERSION,
+		"website", "http://gtranslator.sourceforge.net",
+		"wrap-license", TRUE,
+		"website-label", _("Gtranslator Web Site"),
+		NULL);
 
 	g_free (license_trans);
 }

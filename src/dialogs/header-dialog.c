@@ -97,7 +97,7 @@ static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
 				GTK_RESPONSE_CLOSE,
 				NULL);
 	
-	gtk_window_set_title (GTK_WINDOW (dlg), _("gtranslator Edit Header"));
+	gtk_window_set_title (GTK_WINDOW (dlg), _("Edit Header"));
 	gtk_window_set_resizable (GTK_WINDOW (dlg), FALSE);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dlg), FALSE);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dlg), TRUE);
