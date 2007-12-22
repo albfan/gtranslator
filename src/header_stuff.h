@@ -59,8 +59,6 @@ typedef struct {
 	
 } GtrHeader;
 
-#define GTR_HEADER(x) ((GtrHeader *)x)
-
 /*
  * These converts header between the string used by gettext's po_header_field
  * and a GtrHeader structure
