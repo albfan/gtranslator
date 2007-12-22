@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtranslator HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-14 00:10-0700\n"
+"POT-Creation-Date: 2007-12-22 12:49-0700\n"
 "PO-Revision-Date: 2007-12-14 00:10-0700\n"
 "Last-Translator: Seán de Búrca <leftmostcat@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -17,17 +17,17 @@ msgstr ""
 
 #: ../data/desktop/gtranslator.desktop.in.in.h:1
 #: ../data/desktop/gtranslator.desktop.in.h:1
-msgid "Translate programs to your own language"
-msgstr ""
+msgid "Gtranslator PO Editor"
+msgstr "Eagarthóir PO Gtranslator"
 
 #: ../data/desktop/gtranslator.desktop.in.in.h:2
 #: ../data/desktop/gtranslator.desktop.in.h:2
-msgid "gtranslator PO file editor"
+msgid "Translate and localize applications and libraries"
 msgstr ""
 
 #: ../data/po.lang.h:1
 msgid "Others"
-msgstr ""
+msgstr "Eile"
 
 #: ../data/po.lang.h:2
 msgid "Special variable"
@@ -41,20 +41,20 @@ msgstr ""
 msgid "gtranslator highlight"
 msgstr ""
 
-#: ../src/actions-file.c:226
+#: ../src/actions-file.c:233
 msgid "Open file for translation"
 msgstr ""
 
-#: ../src/actions-file.c:283
+#: ../src/actions-file.c:290
 #, c-format
 msgid "The file '%s' already exists. Do you want overwrite it?"
 msgstr ""
 
-#: ../src/actions-file.c:322
+#: ../src/actions-file.c:329
 msgid "Save file as..."
 msgstr ""
 
-#: ../src/actions-file.c:328
+#: ../src/actions-file.c:335
 msgid "Save local copy of file as..."
 msgstr ""
 
@@ -69,8 +69,8 @@ msgstr ""
 #: ../src/actions-help.c:71
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANMSGILITY or "
-"FITNESS FOR A PARTICULAR PURMSGSE.  See the GNU General Public License for "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 msgstr ""
 
@@ -81,67 +81,56 @@ msgid ""
 msgstr ""
 
 #: ../src/actions-help.c:87
-msgid "gtranslator is a po file editing suite with many bells and whistles."
+msgid ""
+"Translation file editing suite to assist in localization of applications."
 msgstr ""
 
 #: ../src/actions-help.c:89
-msgid "(C) 1999-2007 The Free Software Foundation, Inc."
-msgstr ""
+msgid "Copyright © 1999-2007 The Free Software Foundation, Inc."
+msgstr "Cóipcheart © 1999-2007 Free Software Foundation, Inc."
 
-#.
-#. * Note to translators: put here your name and email so it will show
-#. * up in the "about" box
-#.
-#: ../src/actions-help.c:96
+#: ../src/actions-help.c:97
+msgid "About Gtranslator"
+msgstr "Maidir le Gtranslator"
+
+#: ../src/actions-help.c:98
 msgid "translator-credits"
 msgstr ""
 "Paul Duffy <dubhthach@frink.nuigalway.ie>\n"
 "Seán de Búrca <leftmostcat@gmail.com>"
 
-#: ../src/actions-help.c:101
+#: ../src/actions-help.c:102
 msgid "Gtranslator Web Site"
+msgstr "Suíomh Gréasáin Gtranslator"
+
+#: ../src/alternatelanguage/alternate-language.c:76
+msgid "Alternate Language"
+msgstr "Teanga Malartach"
+
+#: ../src/alternatelanguage/alternate-language-panel.c:89
+msgid "Message not found"
 msgstr ""
 
-#: ../src/alternatelanguage/alternate-language.c:165
-#: ../src/dialogs/file-dialogs.c:66
-msgid "Gettext translation"
+#: ../src/alternatelanguage/alternate-language-panel.c:177
+msgid "Open file for alternate language"
 msgstr ""
 
-#: ../src/alternatelanguage/alternate-language.c:170
-#: ../src/dialogs/file-dialogs.c:71
-msgid "Gettext translation template"
-msgstr ""
+#: ../src/alternatelanguage/alternate-language-panel.c:190
+msgid "File closed"
+msgstr "Comhad dúnta"
 
-#: ../src/alternatelanguage/alternate-language.c:175
-#: ../src/dialogs/file-dialogs.c:76
-msgid "All files"
-msgstr ""
-
-#: ../src/alternatelanguage/alternate-language.c:216
-msgid "Open alternate PO file"
-msgstr ""
-
-#: ../src/alternatelanguage/alternate-language.c:236 ../src/tab.c:389
-#, c-format
-msgid "Plural %d"
+#: ../src/alternatelanguage/alternate-language-panel.c:247
+msgid "There isn't any file loaded"
 msgstr ""
 
 #: ../src/bookmark.c:581
 #, c-format
 msgid "Open %s (%s)"
-msgstr ""
+msgstr "Oscail %s (%s)"
 
 #: ../src/charmap/charmap.c:253
 msgid "Character Map"
-msgstr ""
-
-#: ../src/comment/comment-panel.c:67
-msgid "Edit comment"
-msgstr ""
-
-#: ../src/comment/comment.c:93
-msgid "Comment"
-msgstr ""
+msgstr "Mapa Carachtar"
 
 #: ../src/compile.c:84
 msgid "An error occurred while msgfmt was executed:\n"
@@ -158,230 +147,275 @@ msgid ""
 "%s"
 msgstr ""
 
+#: ../src/dialogs/bookmarks-dialog.glade.h:1
+msgid "<b>Bookmarks</b>"
+msgstr "<b>Leabharmharcanna</b>"
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:2
+msgid "<b>Localization</b>"
+msgstr ""
+
+#: ../src/dialogs/bookmarks-dialog.glade.h:3
+msgid "<b>Name</b>"
+msgstr "<b>Ainm</b>"
+
+#: ../src/dialogs/comment-dialog.c:100
+msgid "Edit Comment"
+msgstr "Cuir Nóta in Eagar"
+
+#: ../src/dialogs/comment-dialog.glade.h:1
+msgid "<b>Write your comments bellow:</b>"
+msgstr ""
+
+#: ../src/dialogs/file-dialogs.c:66
+msgid "Gettext translation"
+msgstr "Aistriúchán Gettext"
+
+#: ../src/dialogs/file-dialogs.c:71
+msgid "Gettext translation template"
+msgstr ""
+
+#: ../src/dialogs/file-dialogs.c:76
+msgid "All files"
+msgstr "Gach comhad"
+
 #: ../src/dialogs/header-dialog.c:100
-msgid "gtranslator Edit Header"
+msgid "Edit Header"
+msgstr "Cuir Ceanntásc in Eagar"
+
+#: ../src/dialogs/header-dialog.glade.h:1
+msgid "Char_set:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:1 ../src/header_dialog.glade.h:1
-msgid "Charset:"
+#: ../src/dialogs/header-dialog.glade.h:2
+msgid "Co_mment"
+msgstr "_Nóta"
+
+#: ../src/dialogs/header-dialog.glade.h:3
+msgid "Enc_oding:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:2 ../src/header_dialog.glade.h:2
-msgid "Comments:"
+#: ../src/dialogs/header-dialog.glade.h:4
+msgid "Language gro_up email:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:3 ../src/header_dialog.glade.h:3
-msgid "Encoding:"
+#: ../src/dialogs/header-dialog.glade.h:5
+msgid "Po file _revision date:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:4 ../src/header_dialog.glade.h:4
-msgid "Language group's email:"
+#: ../src/dialogs/header-dialog.glade.h:6
+msgid "Pot _file creation date:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:5 ../src/header_dialog.glade.h:5
-msgid "Language:"
-msgstr ""
-
-#: ../src/dialogs/header-dialog.glade.h:6 ../src/header_dialog.glade.h:6
-msgid "Po file revision date:"
-msgstr ""
-
-#: ../src/dialogs/header-dialog.glade.h:7 ../src/header_dialog.glade.h:7
-msgid "Pot file creation date:"
-msgstr ""
-
-#: ../src/dialogs/header-dialog.glade.h:8 ../src/header_dialog.glade.h:8
+#: ../src/dialogs/header-dialog.glade.h:7
 msgid "Project"
+msgstr "Tionscadal"
+
+#: ../src/dialogs/header-dialog.glade.h:8
+msgid "Project _name:"
+msgstr "_Ainm tionscadail"
+
+#: ../src/dialogs/header-dialog.glade.h:9
+msgid "Project _version:"
+msgstr "_Leagan tionscadail:"
+
+#: ../src/dialogs/header-dialog.glade.h:10
+msgid "Report message _bugs to:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:9 ../src/header_dialog.glade.h:9
-msgid "Project name:"
-msgstr ""
-
-#: ../src/dialogs/header-dialog.glade.h:10 ../src/header_dialog.glade.h:10
-msgid "Project version:"
-msgstr ""
-
-#: ../src/dialogs/header-dialog.glade.h:11 ../src/header_dialog.glade.h:11
-msgid "Report message string bugs to:"
-msgstr ""
-
-#: ../src/dialogs/header-dialog.glade.h:12 ../src/header_dialog.glade.h:12
+#: ../src/dialogs/header-dialog.glade.h:11
 msgid "Translator and Language"
-msgstr ""
+msgstr "Aistritheoir agus Teanga"
 
-#: ../src/dialogs/header-dialog.glade.h:13 ../src/header_dialog.glade.h:13
-msgid "Translator's e-mail:"
-msgstr ""
+#: ../src/dialogs/header-dialog.glade.h:12
+msgid "Translator's _email:"
+msgstr "_Ríomhphost aistritheora:"
 
-#: ../src/dialogs/header-dialog.glade.h:14 ../src/header_dialog.glade.h:14
-msgid "Translator's name:"
-msgstr ""
+#: ../src/dialogs/header-dialog.glade.h:13
+msgid "Translator's _name:"
+msgstr "_Ainm aistritheora:"
 
-#: ../src/dialogs/header-dialog.glade.h:15 ../src/header_dialog.glade.h:15
+#: ../src/dialogs/header-dialog.glade.h:14
 msgid "Use my options to complete the following entries:"
 msgstr ""
 
-#: ../src/dialogs/header-dialog.glade.h:16 ../src/header_dialog.glade.h:16
-msgid "gtk-close"
-msgstr ""
+#: ../src/dialogs/header-dialog.glade.h:15
+#: ../src/dialogs/preferences-dialog.glade.h:30
+msgid "_Language:"
+msgstr "_Teanga:"
 
-#: ../src/dialogs/header-dialog.glade.h:17 ../src/header_dialog.glade.h:17
+#: ../src/dialogs/header-dialog.glade.h:16
 msgid "gtranslator -- edit header"
 msgstr ""
 
-#: ../src/dialogs/preferences-dialog.c:494
-#: ../src/dialogs/preferences-dialog.glade.h:33
-msgid "gtranslator Preferences"
-msgstr ""
+#: ../src/dialogs/preferences-dialog.c:542
+#: ../src/dialogs/preferences-dialog.glade.h:15
+msgid "Gtranslator Preferences"
+msgstr "Sainroghanna Gtranslator"
 
 #: ../src/dialogs/preferences-dialog.glade.h:1
-msgid "<b>Autosave</b>"
-msgstr ""
+msgid "    "
+msgstr "    "
 
 #: ../src/dialogs/preferences-dialog.glade.h:2
-msgid "<b>Contents</b>"
-msgstr ""
+msgid "<b>Autosave</b>"
+msgstr "<b>Uathshábháil</b>"
 
 #: ../src/dialogs/preferences-dialog.glade.h:3
+msgid "<b>Contents</b>"
+msgstr "<b>Inneachar</b>"
+
+#: ../src/dialogs/preferences-dialog.glade.h:4
 msgid "<b>General</b>"
 msgstr "<b>Ginearálta</b>"
 
-#: ../src/dialogs/preferences-dialog.glade.h:4
-msgid "<b>Language Settings</b>"
-msgstr ""
-
 #: ../src/dialogs/preferences-dialog.glade.h:5
-msgid "<b>Text Display</b>"
-msgstr ""
+msgid "<b>Language Settings</b>"
+msgstr "<b>Socruithe Teanga</b>"
 
 #: ../src/dialogs/preferences-dialog.glade.h:6
-msgid "<b>Translator Information</b>"
+msgid "<b>Side pane position:</b>"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:7
+msgid "<b>Text Display</b>"
+msgstr "<b>Taispeáint Téacs</b>"
+
+#: ../src/dialogs/preferences-dialog.glade.h:8
+msgid "<b>Translator Information</b>"
+msgstr "<b>Eolas Aistritheora</b>"
+
+#: ../src/dialogs/preferences-dialog.glade.h:9
 msgid "Append a suffix to autosaved _files"
 msgstr ""
 
-#: ../src/dialogs/preferences-dialog.glade.h:8
+#: ../src/dialogs/preferences-dialog.glade.h:10
 msgid "Character _set:"
 msgstr ""
 
-#: ../src/dialogs/preferences-dialog.glade.h:9
+#: ../src/dialogs/preferences-dialog.glade.h:11
 msgid "Check _spelling"
 msgstr ""
 
-#: ../src/dialogs/preferences-dialog.glade.h:10
+#: ../src/dialogs/preferences-dialog.glade.h:12
 msgid "Editor"
-msgstr ""
+msgstr "Eagarthóir"
 
-#: ../src/dialogs/preferences-dialog.glade.h:11
+#: ../src/dialogs/preferences-dialog.glade.h:13
 msgid "Editor _font:"
 msgstr ""
 
-#: ../src/dialogs/preferences-dialog.glade.h:12
-msgid "Files"
-msgstr ""
-
-#: ../src/dialogs/preferences-dialog.glade.h:13
-msgid "Language _code:"
-msgstr ""
-
 #: ../src/dialogs/preferences-dialog.glade.h:14
-msgid "Make _whitespace visible"
-msgstr ""
-
-#: ../src/dialogs/preferences-dialog.glade.h:15
-msgid "Number of pl_urals:"
-msgstr ""
+msgid "Files"
+msgstr "Comhaid"
 
 #: ../src/dialogs/preferences-dialog.glade.h:16
-msgid "PO Header"
+msgid "Interface"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:17
-msgid "Transfer enc_oding:"
+msgid "Language _code:"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:18
-msgid "Use _custom font"
-msgstr ""
+msgid "Left"
+msgstr "Ar Chlé"
 
 #: ../src/dialogs/preferences-dialog.glade.h:19
-msgid "_Autosave files every"
+msgid "Make _whitespace visible"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:20
-msgid "_Delete compiled GMO files"
+msgid "Number of pl_urals:"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:21
-msgid "_Email:"
-msgstr ""
+msgid "PO Header"
+msgstr "Ceanntásc PO"
 
 #: ../src/dialogs/preferences-dialog.glade.h:22
-msgid "_Highlight message syntax"
-msgstr ""
+msgid "Right"
+msgstr "Ar Dheis"
 
 #: ../src/dialogs/preferences-dialog.glade.h:23
-msgid "_Keep obsolete messages"
+msgid "Transfer enc_oding:"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:24
-msgid "_Language:"
+msgid "Use _custom font"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:25
-msgid "_Name:"
+msgid "_Autosave files every"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:26
-msgid "_Plural forms:"
+msgid "_Delete compiled GMO files"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:27
-msgid "_Remove fuzzy status if message is changed"
-msgstr ""
+msgid "_Email:"
+msgstr "_Ríomhphost:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:28
-msgid "_Suffix to append:"
+msgid "_Highlight message syntax"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:29
-msgid "_Team email:"
-msgstr ""
-
-#: ../src/dialogs/preferences-dialog.glade.h:30
-msgid "_Warn if PO file contains fuzzy translations"
+msgid "_Keep obsolete messages"
 msgstr ""
 
 #: ../src/dialogs/preferences-dialog.glade.h:31
-msgid "_minutes"
-msgstr ""
+msgid "_Name:"
+msgstr "_Ainm:"
 
 #: ../src/dialogs/preferences-dialog.glade.h:32
+msgid "_Plural forms:"
+msgstr ""
+
+#: ../src/dialogs/preferences-dialog.glade.h:33
+msgid "_Remove fuzzy status if message is changed"
+msgstr ""
+
+#: ../src/dialogs/preferences-dialog.glade.h:34
+msgid "_Suffix to append:"
+msgstr ""
+
+#: ../src/dialogs/preferences-dialog.glade.h:35
+msgid "_Team email:"
+msgstr ""
+
+#: ../src/dialogs/preferences-dialog.glade.h:36
+msgid "_Warn if PO file contains fuzzy translations"
+msgstr ""
+
+#: ../src/dialogs/preferences-dialog.glade.h:37
+msgid "_minutes"
+msgstr "_nóiméad"
+
+#: ../src/dialogs/preferences-dialog.glade.h:38
 msgid "autosave"
 msgstr ""
 
 #: ../src/dialogs/search-dialog.c:323 ../src/dialogs/search-dialog.glade.h:4
 msgid "Replace"
-msgstr ""
+msgstr "Ionadaigh"
 
 #: ../src/dialogs/search-dialog.c:343
 msgid "Find"
-msgstr ""
+msgstr "Aimsigh"
 
 #: ../src/dialogs/search-dialog.c:438
 msgid "Replace _All"
-msgstr ""
+msgstr "Ionadaigh _Gach"
 
 #: ../src/dialogs/search-dialog.c:441
 msgid "_Replace"
-msgstr ""
+msgstr "_Ionadaigh"
 
-#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:376
+#: ../src/dialogs/search-dialog.glade.h:1 ../src/tab.c:479
 msgid "Fuzzy"
-msgstr ""
+msgstr "Doiléir"
 
 #: ../src/dialogs/search-dialog.glade.h:2
 msgid "Match _entire word only"
@@ -628,9 +662,8 @@ msgid "Korean"
 msgstr "Córéis"
 
 #: ../src/languages.c:197
-#, fuzzy
 msgid "Kurdish"
-msgstr "Tuircis"
+msgstr "Coirdis"
 
 #: ../src/languages.c:201
 msgid "Latvian"
@@ -811,15 +844,15 @@ msgstr ""
 msgid "Error setting the default window icon: %s"
 msgstr ""
 
-#: ../src/message-table.c:216
+#: ../src/message-table.c:231
 msgid "ID"
 msgstr "CA"
 
-#: ../src/message-table.c:228
+#: ../src/message-table.c:243
 msgid "Original Text"
 msgstr "Buntéacs"
 
-#: ../src/message-table.c:240
+#: ../src/message-table.c:255
 msgid "Translated Text"
 msgstr "Téacs Aistrithe"
 
@@ -835,27 +868,24 @@ msgstr "Folamh"
 msgid "Hide panel"
 msgstr "Folaigh painéal"
 
-#. g_set_error(error,
-#. GTR_PARSER_ERROR,
-#. GTR_PARSER_ERROR_GETTEXT,
-#. _("Gettext returned a null message domain list."));
-#: ../src/po.c:240
+#: ../src/po.c:284
+#, c-format
+msgid "Failed opening file '%s': %s"
+msgstr ""
+
+#: ../src/po.c:310
 msgid "Gettext returned a null message domain list."
 msgstr ""
 
-#. g_set_error(error,
-#. GTR_PARSER_ERROR,
-#. GTR_PARSER_ERROR_OTHER,
-#. _("No messages obtained from parser."));
-#: ../src/po.c:359
+#: ../src/po.c:424
 msgid "No messages obtained from parser."
 msgstr ""
 
-#: ../src/prefs-manager.c:134
+#: ../src/prefs-manager.c:133
 msgid "Cannot initialize preferences manager."
 msgstr ""
 
-#: ../src/prefs-manager.c:438
+#: ../src/prefs-manager.c:441
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr ""
@@ -865,39 +895,48 @@ msgstr ""
 msgid "Saving file failed: %s"
 msgstr ""
 
-#: ../src/statusbar.c:221
-msgid "  OVR"
-msgstr ""
+#: ../src/statusbar.c:86 ../src/statusbar.c:124
+msgid "INS"
+msgstr "IONS"
 
-#: ../src/statusbar.c:223
-msgid "  INS"
-msgstr ""
+#: ../src/statusbar.c:86 ../src/statusbar.c:123
+msgid "OVR"
+msgstr "FOR"
 
-#: ../src/tab.c:330
+#: ../src/tab.c:420
 msgid "Message Table"
-msgstr ""
+msgstr "Tábla Teachtaireachtaí"
 
-#: ../src/tab.c:354
+#: ../src/tab.c:433
+msgid "Comment"
+msgstr "Nóta"
+
+#: ../src/tab.c:457
 msgid "Singular"
 msgstr ""
 
-#: ../src/tab.c:358
+#: ../src/tab.c:461
 msgid "Plural"
 msgstr ""
 
-#: ../src/tab.c:369
+#: ../src/tab.c:472
 msgid "Translation status:"
-msgstr ""
+msgstr "Stádas aistrithe:"
 
-#: ../src/tab.c:372
+#: ../src/tab.c:475
 msgid "Translated"
 msgstr "Aistrithe"
 
-#: ../src/tab.c:380
+#: ../src/tab.c:483
 msgid "Untranslated"
 msgstr "Neamhaistrithe"
 
-#: ../src/tab.c:688
+#: ../src/tab.c:492
+#, c-format
+msgid "Plural %d"
+msgstr ""
+
+#: ../src/tab.c:744
 msgid "There is an error in the message:"
 msgstr ""
 
@@ -910,8 +949,8 @@ msgstr ""
 #. * please remove.
 #: ../src/toolbareditor/egg-editable-toolbar.c:938
 #, c-format
-msgid "Show “_%s”"
-msgstr ""
+msgid "Show \"_%s\""
+msgstr "Taispeáin \"_%s\""
 
 #: ../src/toolbareditor/egg-editable-toolbar.c:1401
 msgid "_Move on Toolbar"
@@ -931,7 +970,7 @@ msgstr ""
 
 #: ../src/toolbareditor/egg-editable-toolbar.c:1405
 msgid "_Delete Toolbar"
-msgstr ""
+msgstr "_Scrios Barra Uirlisí"
 
 #: ../src/toolbareditor/egg-editable-toolbar.c:1406
 msgid "Remove the selected toolbar"
@@ -939,7 +978,7 @@ msgstr ""
 
 #: ../src/toolbareditor/egg-toolbar-editor.c:491
 msgid "Separator"
-msgstr ""
+msgstr "Deighilteoir"
 
 #: ../src/translator.c:339
 msgid "Unknown"
@@ -976,138 +1015,132 @@ msgid ""
 " %s"
 msgstr ""
 
-#: ../src/window.c:95
+#: ../src/window.c:96
 msgid "_File"
 msgstr "_Comhad"
 
-#: ../src/window.c:96
+#: ../src/window.c:97
 msgid "_Edit"
 msgstr "_Eagar"
 
-#: ../src/window.c:97
+#: ../src/window.c:98
 msgid "_View"
 msgstr "_Amharc"
 
-#: ../src/window.c:98
+#: ../src/window.c:99
 msgid "_Bookmarks"
 msgstr "_Leabharmharcanna"
 
-#: ../src/window.c:99
+#: ../src/window.c:100
 msgid "_Actions"
 msgstr "_Gníomhartha"
 
-#: ../src/window.c:100
+#: ../src/window.c:101
 msgid "_Search"
 msgstr "_Cuardaigh"
 
-#: ../src/window.c:101
+#: ../src/window.c:102
 msgid "_Go"
 msgstr "_Téigh"
 
-#: ../src/window.c:102
+#: ../src/window.c:103
 msgid "_Help"
 msgstr "Cab_hair"
 
-#: ../src/window.c:106
+#: ../src/window.c:107
 msgid "Open a PO file"
 msgstr "Oscail comhad PO"
 
-#: ../src/window.c:108
+#: ../src/window.c:109
 msgid "Open _Location..."
 msgstr "Oscail _Suíomh..."
 
-#: ../src/window.c:109
+#: ../src/window.c:110
 msgid "Open a PO file from a given URI"
 msgstr ""
 
 #. G_CALLBACK (gtranslator_open_uri_dialog) },
-#: ../src/window.c:111
+#: ../src/window.c:112
 msgid "_Recent Files"
 msgstr "Comhaid is _Déanaí"
 
-#: ../src/window.c:114
+#: ../src/window.c:115
 msgid "Quit the program"
 msgstr "Scoir an feidhmchlár"
 
 #. Edit menu
-#: ../src/window.c:118
+#: ../src/window.c:119
 msgid "T_oolbar"
-msgstr ""
+msgstr "_Barra Uirlisí"
 
-#: ../src/window.c:121
+#: ../src/window.c:122
 msgid "Edit gtranslator preferences"
-msgstr ""
+msgstr "Cuir sainroghanna gtranslator in eagar"
 
 #. G_CALLBACK (gtranslator_selection_clear) },
-#: ../src/window.c:123 ../src/window.c:170
+#: ../src/window.c:124 ../src/window.c:171
 msgid "_Header..."
-msgstr "_Ceanntásc..."
+msgstr "C_eanntásc..."
 
 #. Help menu
-#: ../src/window.c:127
+#: ../src/window.c:128
 msgid "_Contents"
 msgstr "_Inneachar"
 
-#: ../src/window.c:139
+#: ../src/window.c:140
 msgid "Save the current file"
 msgstr ""
 
-#: ../src/window.c:142
+#: ../src/window.c:143
 msgid "Save the current file with another name"
 msgstr ""
 
-#: ../src/window.c:148
+#: ../src/window.c:149
 msgid "Close the current file"
 msgstr ""
 
-#: ../src/window.c:153
+#: ../src/window.c:154
 msgid "Undo last operation"
 msgstr ""
 
-#: ../src/window.c:156
+#: ../src/window.c:157
 msgid "Redo last undone operation"
 msgstr ""
 
-#: ../src/window.c:159
+#: ../src/window.c:160
 msgid "Cut the selected text"
 msgstr ""
 
-#: ../src/window.c:162
+#: ../src/window.c:163
 msgid "Copy the selected text"
 msgstr ""
 
-#: ../src/window.c:165 ../src/window.c:236 ../src/window.c:239
+#: ../src/window.c:166 ../src/window.c:236 ../src/window.c:239
 msgid "   "
 msgstr "   "
 
-#: ../src/window.c:168
+#: ../src/window.c:169
 msgid "Clear the selected translation"
 msgstr ""
 
-#: ../src/window.c:171
-msgid "Edit PO file header"
-msgstr ""
-
-#. G_CALLBACK (gtranslator_header_edit_dialog) },
 #: ../src/window.c:173
 msgid "C_omment..."
-msgstr ""
+msgstr "_Nóta..."
 
 #: ../src/window.c:174
 msgid "Edit message comment"
 msgstr ""
 
-#. G_CALLBACK (gtranslator_edit_comment_dialog) },
 #: ../src/window.c:176
 msgid "Copy _Message to Translation"
-msgstr ""
+msgstr "Cóipeáil _Teachtaireacht go Aistriúchán"
 
 #: ../src/window.c:177
 msgid "Copy original message contents to the translation field"
 msgstr ""
 
 #: ../src/window.c:179
-msgid "Toggle _Fuzzy"
+msgid "Toggle _Fuzzy Status"
 msgstr ""
 
 #: ../src/window.c:180
@@ -1234,17 +1267,17 @@ msgstr ""
 
 #: ../src/window.c:248
 msgid "Side _Pane"
-msgstr ""
+msgstr "_Pána Taoibh"
 
 #: ../src/window.c:249
 msgid "Show or hide the side pane in the current window"
 msgstr ""
 
-#: ../src/window.c:379
+#: ../src/window.c:377
 #, c-format
-msgid "    Current: %d    Total: %d    Fuzzies: %d    Untranslated: %d"
-msgstr ""
+msgid "    Current: %d    Total: %d    Fuzzy: %d    Untranslated: %d"
+msgstr "    Reatha: %d    Iomlán: %d    Doiléir: %d    Neamhaistrithe: %d"
 
-#: ../src/window.c:735
+#: ../src/window.c:737
 msgid "Toolbar Editor"
 msgstr ""
