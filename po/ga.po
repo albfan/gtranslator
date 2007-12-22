@@ -23,7 +23,7 @@ msgstr "Eagarthóir PO Gtranslator"
 #: ../data/desktop/gtranslator.desktop.in.in.h:2
 #: ../data/desktop/gtranslator.desktop.in.h:2
 msgid "Translate and localize applications and libraries"
-msgstr ""
+msgstr "Aistrigh agus logánaigh feidhmchláir agus leabharlanna"
 
 #: ../data/po.lang.h:1
 msgid "Others"
