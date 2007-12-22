@@ -1,3 +1,7 @@
+2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* desktop/gtranslator.desktop.in.in: Clean up strings.
+
 2007-12-15  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* colorschemes:
