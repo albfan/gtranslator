@@ -1,5 +1,12 @@
 2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* header.{c,h}:
+	* notebook.c:
+	* po.{c,h}:
+		Set tab name when opening file.
+
+2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* header_stuff.h: Remove redefine.
 
 2007-12-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>

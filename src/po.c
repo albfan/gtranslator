@@ -25,7 +25,6 @@
 #endif
 
 #include "file-dialogs.h"
-#include "header.h"
 #include "po.h"
 #include "msg.h"
 
@@ -332,22 +331,12 @@ gtranslator_po_parse(GtranslatorPo *po,
 
 		priv->header = gtranslator_header_new();		
 		
-		gchar *comment, *prj_name, *prj_version, *rmbt, *pot_date, *po_date,
+		gchar *comment, *project_id_version, *rmbt, *pot_date, *po_date,
 		      *translator, *tr_email, *language, *lg_email, *mime_version,
 		      *charset, *encoding;
 
-		gchar *space, *space1, *space2;
-		gchar *project = po_header_field(msgstr, "Project-Id-Version");
-		space = g_strrstr(project, " ");
-		
-		if (!space) 
-		{
-			prj_name = g_strdup(project);
-			prj_version = g_strdup("");			
-		} else {
-			prj_name = g_strndup(project, space - project);
-			prj_version = g_strdup(space + 1);
-		}
+		gchar *space1, *space2;
+		project_id_version = po_header_field(msgstr, "Project-Id-Version");
 		
 		rmbt = g_strdup(po_header_field(msgstr, "Report-Msgid-Bugs-To"));
 		pot_date = g_strdup(po_header_field(msgstr, "POT-Creation-Date"));
@@ -382,8 +371,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 		encoding = g_strdup(po_header_field(msgstr, "Content-Transfer-Encoding"));
 	
 		gtranslator_header_set_comment(priv->header, comment);
-		gtranslator_header_set_prj_name(priv->header, prj_name);
-		gtranslator_header_set_prj_version(priv->header, prj_version);
+		gtranslator_header_set_project_id_version(priv->header, project_id_version);
 		gtranslator_header_set_rmbt(priv->header, rmbt);
 		gtranslator_header_set_pot_date(priv->header, pot_date);
 		gtranslator_header_set_po_date(priv->header, po_date);
@@ -650,6 +638,11 @@ gtranslator_po_get_prev_untrans(GtranslatorPo *po)
 	return NULL;
 }
 
+GtranslatorHeader *
+gtranslator_po_get_header(GtranslatorPo *po)
+{
+	return po->priv->header;
+}
 
 gint
 gtranslator_po_get_translated_count(GtranslatorPo *po)

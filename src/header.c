@@ -33,14 +33,9 @@ struct _GtranslatorHeaderPrivate
 	gchar *comment;
 	
 	/*
-	 * Project Name
+	 * Project-ID-Version
 	 */
-	gchar *prj_name;
-	
-	/*
-	 * Project Version
-	 */
-	gchar *prj_version;
+	gchar *project_id_version;
 
 	/*
 	 * Report msgid bugs to
@@ -102,8 +97,7 @@ static void gtranslator_header_finalize (GObject *object)
 	GtranslatorHeader *header = GTR_HEADER(object);
 	
 	g_free(header->priv->comment);
-	g_free(header->priv->prj_name);
-	g_free(header->priv->prj_version);
+	g_free(header->priv->project_id_version);
 	g_free(header->priv->rmbt);
 	g_free(header->priv->pot_date);
 	g_free(header->priv->po_date);
@@ -153,28 +147,16 @@ void gtranslator_header_set_comment (GtranslatorHeader *header, gchar *data)
 	header->priv->comment = g_strdup(data);
 }
 
-gchar *gtranslator_header_get_prj_name (GtranslatorHeader *header)
+gchar *gtranslator_header_get_project_id_version (GtranslatorHeader *header)
 {
-	return header->priv->prj_name;
+	return header->priv->project_id_version;
 }
 
-void gtranslator_header_set_prj_name (GtranslatorHeader *header, gchar *data)
+void gtranslator_header_set_project_id_version (GtranslatorHeader *header, gchar *data)
 {
-	if(header->priv->prj_name)
-		g_free(header->priv->prj_name);
-	header->priv->prj_name = g_strdup(data);
-}
-
-gchar *gtranslator_header_get_prj_version (GtranslatorHeader *header)
-{
-	return header->priv->prj_version;
-}
-
-void gtranslator_header_set_prj_version (GtranslatorHeader *header, gchar *data)
-{
-	if(header->priv->prj_version)
-		g_free(header->priv->prj_version);
-	header->priv->prj_version = g_strdup(data);
+	if(header->priv->project_id_version)
+		g_free(header->priv->project_id_version);
+	header->priv->project_id_version = g_strdup(data);
 }
 
 gchar *gtranslator_header_get_rmbt (GtranslatorHeader *header)

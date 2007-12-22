@@ -71,11 +71,8 @@ GtranslatorHeader
 gchar		*gtranslator_header_get_comment		(GtranslatorHeader *header);
 void		 gtranslator_header_set_comment		(GtranslatorHeader *header, gchar *data);
 
-gchar		*gtranslator_header_get_prj_name	(GtranslatorHeader *header);
-void		 gtranslator_header_set_prj_name	(GtranslatorHeader *header, gchar *data);
-
-gchar		*gtranslator_header_get_prj_version	(GtranslatorHeader *header);
-void		 gtranslator_header_set_prj_version	(GtranslatorHeader *header, gchar *data);
+gchar		*gtranslator_header_get_project_id_version	(GtranslatorHeader *header);
+void		 gtranslator_header_set_project_id_version	(GtranslatorHeader *header, gchar *data);
 
 gchar		*gtranslator_header_get_rmbt		(GtranslatorHeader *header);
 void		 gtranslator_header_set_rmbt		(GtranslatorHeader *header, gchar *data);

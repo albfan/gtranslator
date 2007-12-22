@@ -130,6 +130,25 @@ build_tab_label (GtranslatorNotebook *nb,
 }
 
 static void
+set_label_name(GtranslatorTab *tab,
+	       GtkWidget *hbox)
+{
+	GtkWidget *label;
+	GtranslatorHeader *header;
+	GtranslatorPo *po;
+	gchar *str;
+
+	label = GTK_WIDGET(g_object_get_data(G_OBJECT (hbox), "label"));
+	po = gtranslator_tab_get_po(tab);
+	header = gtranslator_po_get_header(po);
+
+	str = gtranslator_header_get_project_id_version(header);
+	g_return_if_fail(str != NULL);
+
+	gtk_label_set_text(GTK_LABEL(label), str);
+}
+
+static void
 gtranslator_notebook_init (GtranslatorNotebook *notebook)
 {
 	notebook->priv = GTR_NOTEBOOK_GET_PRIVATE (notebook);
@@ -172,7 +191,10 @@ gtranslator_notebook_add_page(GtranslatorNotebook *notebook,
 	g_return_if_fail(GTR_IS_NOTEBOOK(notebook));
 	g_return_if_fail(GTR_IS_TAB(tab));
 	
-	label = build_tab_label(notebook, GTR_TAB(tab));
+	label = build_tab_label(notebook, tab);
+
+	set_label_name(tab, label);
+
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
 				 GTK_WIDGET(tab), label);
 	priv->pages = g_list_append(priv->pages, tab);

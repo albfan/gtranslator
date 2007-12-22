@@ -24,6 +24,8 @@
 #include <gtk/gtk.h>
 #include <gettext-po.h>
 
+#include "header.h"
+
 G_BEGIN_DECLS
 
 /*
@@ -109,6 +111,7 @@ GList           *gtranslator_po_get_next_untrans       (GtranslatorPo *po);
 
 GList           *gtranslator_po_get_prev_untrans       (GtranslatorPo *po);
 
+GtranslatorHeader	*gtranslator_po_get_header	(GtranslatorPo *po);
 
 G_END_DECLS
 
