@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtranslator HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-22 12:49-0700\n"
+"POT-Creation-Date: 2007-12-22 13:03-0700\n"
 "PO-Revision-Date: 2007-12-14 00:10-0700\n"
 "Last-Translator: Seán de Búrca <leftmostcat@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -82,8 +82,11 @@ msgstr ""
 
 #: ../src/actions-help.c:87
 msgid ""
-"Translation file editing suite to assist in localization of applications."
+"Translation file editing suite for localization of applications and "
+"libraries."
 msgstr ""
+"Sraith eagarthóireacht chomhaid aistrithe le logánú feidhmchlár agus "
+"leabharlann."
 
 #: ../src/actions-help.c:89
 msgid "Copyright © 1999-2007 The Free Software Foundation, Inc."
@@ -1037,7 +1040,7 @@ msgstr "_Gníomhartha"
 
 #: ../src/window.c:101
 msgid "_Search"
-msgstr "_Cuardaigh"
+msgstr "Cuar_daigh"
 
 #: ../src/window.c:102
 msgid "_Go"
