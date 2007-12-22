@@ -84,7 +84,7 @@ gtranslator_about_dialog(GtkAction *action,
 
 	
 	gtk_show_about_dialog (GTK_WINDOW (window),
-		"comments", _("Translation file editing suite to assist in localization of applications."),
+		"comments", _("Translation file editing suite for localization of applications and libraries."),
 		"authors", authors,
 		"copyright", _("Copyright © 1999-2007 The Free Software Foundation, Inc."),
 		"documenters", documenters,

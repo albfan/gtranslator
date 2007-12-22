@@ -1,5 +1,9 @@
 2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* actions-help.c: More cleaning.
+
+2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* dialogs/comment-dialog.c:
 	* dialogs/header-dialog.c:
 	* dialogs/preferences-dialog.{c,glade}:
