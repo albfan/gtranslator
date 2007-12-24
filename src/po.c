@@ -548,17 +548,14 @@ GList *
 gtranslator_po_get_next_fuzzy(GtranslatorPo *po)
 {
 	GList *msg;
-	
-	msg = g_list_next(po->priv->current);
-	
-	do{
-		if(msg == NULL)
-			return NULL;
-		if(gtranslator_msg_is_fuzzy(msg->data))
+
+	msg = po->priv->current;
+	while (msg = g_list_next(msg))
+	{
+		if (gtranslator_msg_is_fuzzy(msg->data))
 			return msg;
-		msg = g_list_next(msg);
-	}while(msg != g_list_last(po->priv->current));
-	
+	}
+
 	return NULL;
 }
 
@@ -573,17 +570,14 @@ GList *
 gtranslator_po_get_prev_fuzzy(GtranslatorPo *po)
 {
 	GList *msg;
-	
-	msg = g_list_previous(po->priv->current);
-	
-	do{
-		if(msg == NULL)
-			return NULL;
-		if(gtranslator_msg_is_fuzzy(msg->data))
+
+	msg = po->priv->current;
+	while (msg = g_list_previous(msg))
+	{
+		if (gtranslator_msg_is_fuzzy(msg->data))
 			return msg;
-		msg = g_list_previous(msg);
-	}while(msg != g_list_first(po->priv->current));
-	
+	}
+
 	return NULL;
 }
 
@@ -598,17 +592,14 @@ GList *
 gtranslator_po_get_next_untrans(GtranslatorPo *po)
 {
 	GList *msg;
-	
-	msg = g_list_next(po->priv->current);
-	
-	do{
-		if(msg == NULL)
-			return NULL;
+
+	msg = po->priv->current;
+	while (msg = g_list_next(msg))
+	{
 		if(!gtranslator_msg_is_translated(msg->data))
 			return msg;
-		msg = g_list_next(msg);
-	}while(msg != g_list_last(po->priv->current));
-	
+	}
+
 	return NULL;
 }
 
@@ -624,17 +615,14 @@ GList *
 gtranslator_po_get_prev_untrans(GtranslatorPo *po)
 {
 	GList *msg;
-	
-	msg = g_list_previous(po->priv->current);
-	
-	do{
-		if(msg == NULL)
-			return NULL;
+
+	msg = po->priv->current;
+	while (msg = g_list_previous(msg))
+	{
 		if(!gtranslator_msg_is_translated(msg->data))
 			return msg;
-		msg = g_list_previous(msg);
-	}while(msg != g_list_first(po->priv->current));
-	
+	}
+
 	return NULL;
 }
 

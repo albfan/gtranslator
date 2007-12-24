@@ -1,3 +1,7 @@
+2007-12-24  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* po.c: Fix previous/next fuzzy/untranslated behavior.
+
 2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* actions-help.c: More cleaning.
