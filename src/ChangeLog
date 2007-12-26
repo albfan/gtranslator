@@ -1,5 +1,9 @@
 2007-12-25  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* tab.c: Don't show notebook borders if we have no tabs.
+
+2007-12-25  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* dialogs/comment-dialog.c:
 	* comment.{c,h}:
 	* prefs-manager-app.{c,h}:

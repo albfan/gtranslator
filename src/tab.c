@@ -467,6 +467,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Orignal text widgets
 	 */
 	priv->text_notebook = gtk_notebook_new();
+	gtk_notebook_set_show_border(GTK_NOTEBOOK(priv->text_notebook), FALSE);
 	priv->text_msgid = gtranslator_tab_append_page(_("Singular"),
 						       priv->text_notebook,
 						       FALSE);
@@ -501,6 +502,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Translation widgets
 	 */
 	priv->trans_notebook = gtk_notebook_new();
+	gtk_notebook_set_show_border(GTK_NOTEBOOK(priv->trans_notebook), FALSE);
 	do{
 		label = g_strdup_printf(_("Plural %d"), i+1);
 		priv->trans_msgstr[i] = gtranslator_tab_append_page(label,
