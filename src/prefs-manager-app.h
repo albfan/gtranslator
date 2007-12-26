@@ -58,5 +58,10 @@ gint		 gtranslator_prefs_manager_get_side_panel_active_page (void);
 void 		 gtranslator_prefs_manager_set_side_panel_active_page (gint id);
 gboolean	 gtranslator_prefs_manager_side_panel_active_page_can_set (void);
 
+/* Comment pane */
+gint             gtranslator_prefs_manager_get_comment_pane_pos (void);
+gint             gtranslator_prefs_manager_get_default_comment_pane_pos (void);
+void             gtranslator_prefs_manager_set_comment_pane_pos (gint new_pane_pos);
+
 
 #endif /* __GTR_PREFS_MANAGER_APP_H__ */

@@ -67,9 +67,7 @@ comment_changed_cb (GtkTextBuffer *buffer,
 	
 	gtranslator_msg_set_comment(msg->data, text);
 
-	gtranslator_comment_panel_set_text(comment,
-					   gtranslator_msg_get_extracted_comments(msg->data),
-					   text);
+	gtranslator_comment_panel_set_comments(comment, text);
 }
 		    
 

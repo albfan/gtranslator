@@ -76,6 +76,7 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_DEFAULT_WINDOW_HEIGHT		500
 #define GTR_STATE_DEFAULT_SIDE_PANEL_SIZE	200
 #define GTR_STATE_DEFAULT_CONTENT_PANE_POS	325
+#define GTR_STATE_DEFAULT_COMMENT_PANE_POS	525
 
 #define GTR_STATE_FILE_LOCATION ".config/gtranslator"
 
@@ -86,6 +87,7 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_SIDE_PANEL_SIZE "side_panel_size"
 #define GTR_STATE_SIDE_PANEL_ACTIVE_PAGE "side_panel_active_page"
 #define GTR_STATE_CONTENT_PANE_POS "content_pane_pos"
+#define GTR_STATE_COMMENT_PANE_POS "comment_pane_pos"
 
 static gint window_state = -1;
 static gint window_height = -1;
@@ -93,6 +95,7 @@ static gint window_width = -1;
 static gint side_panel_size = -1;
 static gint side_panel_active_page = 0;
 static gint content_pane_pos = -1;
+static gint comment_pane_pos = -1;
 
 static GKeyFile *
 get_gtranslator_state_file ()
@@ -414,7 +417,7 @@ gtranslator_prefs_manager_side_panel_active_page_can_set (void)
 	return TRUE;
 }
 
-/* Messages table */
+/* Content pane */
 gint
 gtranslator_prefs_manager_get_content_pane_pos (void)
 {
@@ -446,6 +449,41 @@ gtranslator_prefs_manager_set_content_pane_pos (gint new_pane_pos)
 	content_pane_pos = new_pane_pos;
 	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
 				   GTR_STATE_CONTENT_PANE_POS,
+				   new_pane_pos);
+}
+
+/* Comment pane */
+gint
+gtranslator_prefs_manager_get_comment_pane_pos (void)
+{
+	if (comment_pane_pos == -1)
+	{
+		gtranslator_state_get_int (GTR_STATE_WINDOW_GROUP,
+					   GTR_STATE_COMMENT_PANE_POS,
+					   GTR_STATE_DEFAULT_COMMENT_PANE_POS,
+					   &comment_pane_pos);
+	}
+
+	return comment_pane_pos;
+}
+
+gint
+gtranslator_prefs_manager_get_default_comment_pane_pos (void)
+{
+	return GTR_STATE_DEFAULT_COMMENT_PANE_POS;
+}
+
+void
+gtranslator_prefs_manager_set_comment_pane_pos (gint new_pane_pos)
+{
+	g_return_if_fail (new_pane_pos > -1);
+
+	if (comment_pane_pos == new_pane_pos)
+		return;
+
+	comment_pane_pos = new_pane_pos;
+	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
+				   GTR_STATE_COMMENT_PANE_POS,
 				   new_pane_pos);
 }
 

@@ -57,6 +57,8 @@ struct _GtranslatorTabPrivate
 	GtkWidget *content_pane;
 	GtranslatorPanel *panel;
 	GtkWidget *message_table;
+
+	GtkWidget *comment_pane;
 	GtkWidget *comment;
 	
 	/*Message area*/
@@ -382,6 +384,14 @@ set_message_area (GtranslatorTab  *tab,
 }
 
 static void
+comment_pane_position_changed (GObject		*tab_gobject,
+			       GParamSpec	*arg1,
+			       GtranslatorTab	*tab)
+{
+	gtranslator_prefs_manager_set_comment_pane_pos(gtk_paned_get_position(GTK_PANED(tab_gobject)));
+}
+
+static void
 content_pane_position_changed (GObject		*tab_gobject,
 			       GParamSpec	*arg1,
 			       GtranslatorTab	*tab)
@@ -421,17 +431,20 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 				   image);
 	
 	/*
+	 * Comment pane
+	 */
+	priv->comment_pane = gtk_hpaned_new();
+	gtk_paned_set_position(GTK_PANED(priv->comment_pane), gtranslator_prefs_manager_get_comment_pane_pos());
+	g_signal_connect (priv->comment_pane,
+			  "notify::position",
+			  G_CALLBACK (comment_pane_position_changed),
+			  tab);
+
+	/*
 	 * Comment
 	 */
 	priv->comment = gtranslator_comment_panel_new(GTK_WIDGET(tab));
-
-	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
-					 GTK_ICON_SIZE_SMALL_TOOLBAR);
-
-	gtranslator_panel_add_item(priv->panel,
-				   priv->comment,
-				   _("Comment"),
-				   image);
+	gtk_paned_pack2(GTK_PANED(priv->comment_pane), priv->comment, TRUE, TRUE);
 	
 	/*
 	 * Content pane; this is where the message table and message area go
@@ -448,7 +461,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 */
 	vertical_box=gtk_vbox_new(FALSE, 0);
 	gtk_paned_pack1(GTK_PANED(priv->content_pane), GTK_WIDGET(priv->panel), TRUE, FALSE);
-	gtk_paned_pack2(GTK_PANED(priv->content_pane), vertical_box, FALSE, TRUE);
+	gtk_paned_pack2(GTK_PANED(priv->content_pane), priv->comment_pane, FALSE, TRUE);
 	
 	/*
 	 * Orignal text widgets
@@ -504,8 +517,10 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 		i++;
 		g_free(label);
 	}while(i < gtranslator_prefs_manager_get_number_plurals());
-		
+
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->trans_notebook, TRUE, TRUE, 0);	
+
+	gtk_paned_pack1(GTK_PANED(priv->comment_pane), vertical_box, FALSE, FALSE);
 	
 	gtk_box_pack_start(GTK_BOX(tab), priv->content_pane, TRUE, TRUE, 0);
 }

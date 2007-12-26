@@ -37,7 +37,9 @@ G_DEFINE_TYPE(GtranslatorCommentPanel, gtranslator_comment_panel, GTK_TYPE_VBOX)
 
 struct _GtranslatorCommentPanelPrivate
 {
-	GtkLabel *comment;
+	GtkWidget *extracted_comments;
+	GtkWidget *comments;
+
 	GtranslatorTab *tab;
 };
 
@@ -46,9 +48,11 @@ showed_message_cb(GtranslatorTab *tab,
 		  GtranslatorMsg *msg,
 		  GtranslatorCommentPanel *panel)
 {
-	gtranslator_comment_panel_set_text(panel,
-					   gtranslator_msg_get_extracted_comments(msg),
-					   gtranslator_msg_get_comment(msg));
+	gtranslator_comment_panel_set_extracted_comments(panel,
+							 gtranslator_msg_get_extracted_comments(msg));
+
+	gtranslator_comment_panel_set_comments(panel,
+					       gtranslator_msg_get_comment(msg));
 }
 
 static void
@@ -56,23 +60,42 @@ gtranslator_comment_panel_draw(GtranslatorCommentPanel *panel)
 {
 	GtranslatorCommentPanelPrivate *priv = panel->priv;
 	GtkWidget *comments_scrolled_window;
-	GtkWidget *comments_viewport;
 	
 	/*
-	 * Set up the scrolling window for the comments display
+	 * Set up the scrolling window for the extracted comments display
 	 */	
 	comments_scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(comments_scrolled_window),
 				       GTK_POLICY_AUTOMATIC,
 				       GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(comments_scrolled_window),
+					    GTK_SHADOW_IN);
 	gtk_box_pack_start(GTK_BOX(panel), comments_scrolled_window, TRUE, TRUE, 0);
-	
-	comments_viewport = gtk_viewport_new(NULL, NULL);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(comments_scrolled_window),
-					      comments_viewport);
-	
-	priv->comment=GTK_LABEL(gtk_label_new(""));
-	gtk_container_add(GTK_CONTAINER(comments_viewport), GTK_WIDGET(priv->comment));
+
+	/*
+	 * Extracted comments
+	 */	
+	priv->extracted_comments = gtk_text_view_new();
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(priv->extracted_comments), FALSE);
+	gtk_container_add(GTK_CONTAINER(comments_scrolled_window), GTK_WIDGET(priv->extracted_comments));
+
+	/*
+	 * Set up the scrolling window for the extracted comments display
+	 */	
+	comments_scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(comments_scrolled_window),
+				       GTK_POLICY_AUTOMATIC,
+				       GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(comments_scrolled_window),
+					    GTK_SHADOW_IN);
+	gtk_box_pack_start(GTK_BOX(panel), comments_scrolled_window, TRUE, TRUE, 0);
+
+	/*
+	 * Comments
+	 */
+	priv->comments = gtk_text_view_new();
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(priv->comments), FALSE);
+	gtk_container_add(GTK_CONTAINER(comments_scrolled_window), GTK_WIDGET(priv->comments));
 }
 
 
@@ -116,18 +139,23 @@ gtranslator_comment_panel_new (GtkWidget *tab)
 }
 
 void
-gtranslator_comment_panel_set_text(GtranslatorCommentPanel *panel,
-				   const gchar *extracted_comments,
-				   const gchar *comments)
+gtranslator_comment_panel_set_comments(GtranslatorCommentPanel *panel,
+				       const gchar *comments)
 {
-	gchar *comment;
+	GtkTextBuffer *buf;
+
+	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(panel->priv->comments));
 	
-	comment = g_strdup_printf("%s\n%s",
-				  extracted_comments,
-				  comments);
+	gtk_text_buffer_set_text(buf, comments, -1);
+}
+
+void
+gtranslator_comment_panel_set_extracted_comments(GtranslatorCommentPanel *panel,
+					         const gchar *extracted_comments)
+{
+	GtkTextBuffer *buf;
+
+	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(panel->priv->extracted_comments));
 	
-	gtk_label_set_text(panel->priv->comment,
-			   comment);
-	
-	g_free(comment);
+	gtk_text_buffer_set_text(buf, extracted_comments, -1);
 }
