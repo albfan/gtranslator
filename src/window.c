@@ -673,9 +673,13 @@ gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
 	if(error)
 	{
 		/*
-		 * FIXME: We need a dialog here
+		 * We have to show the error in a dialog
 		 */
-		g_printf(error->message);
+		gtk_message_dialog_new(GTK_WINDOW(window),              								    					      GTK_DIALOG_DESTROY_WITH_PARENT,
+				      GTK_MESSAGE_ERROR,
+				      GTK_BUTTONS_CLOSE,
+				      error->message);
+
 		if(error->code == GTR_PO_ERROR_FILENAME)
 			gtranslator_recent_remove (window, path);
 	}
