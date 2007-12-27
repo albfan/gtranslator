@@ -25,6 +25,7 @@
 #include "application.h"
 #include "charmap.h"
 //#include "dictionary.h"
+#include "msg.h"
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
@@ -356,7 +357,10 @@ set_sensitive_according_to_window(GtranslatorWindow *window)
 }
 
 /*
- * FIXME: This needs improve.
+ * gtranslator_window_update_statusbar_message_count:
+ * 
+ * This func is used to show the global status of the message list
+ * in the statusbar widget.
  */
 static void
 gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
@@ -365,17 +369,40 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 {
 	GtranslatorPo *po;
 	gchar *msg;
+	gchar *status;
+	gchar *current;
+	gchar *total;
+	gchar *fuzzy_msg;
+	gchar *untranslated_msg;
 	gint pos, message_count, fuzzy, untranslated;
 	
+	g_return_if_fail(GTR_IS_MSG(message));
+
 	po = gtranslator_tab_get_po(tab);
 	
 	message_count = gtranslator_po_get_messages_count(po);
 	pos = gtranslator_po_get_message_position(po);
 	fuzzy = gtranslator_po_get_fuzzy_count(po);
 	untranslated = gtranslator_po_get_untranslated_count(po);
+
+	switch(gtranslator_msg_get_status(message))
+	{
+		case GTR_MSG_STATUS_UNTRANSLATED: status = g_strdup(_("Status: Untranslated"));
+						  break;
+		case GTR_MSG_STATUS_TRANSLATED: status = g_strdup(_("Status: Translated"));
+						  break;
+		case GTR_MSG_STATUS_FUZZY: status = g_strdup(_("Status: Fuzzy"));
+						  break;
+		default: break;
+	}
+
+	current = g_strdup_printf(_("Current: %d"), pos+1);
+	total = g_strdup_printf(_("Total: %d"), message_count);
+	fuzzy_msg = g_strdup_printf(_("Fuzzy: %d"), fuzzy);
+	untranslated_msg = g_strdup_printf(_("Untranslated: %d"), untranslated);
 		
-	msg = g_strdup_printf(_("    Current: %d    Total: %d    Fuzzy: %d    Untranslated: %d"), 
-			      pos+1, message_count, fuzzy, untranslated);
+	msg = g_strconcat("    ", current, "    ", status, "    ", total,
+			  "    ", fuzzy_msg, "    ", untranslated_msg, NULL);
 	
 	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
 			  0);
@@ -385,6 +412,11 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 			   msg);
 	
 	g_free(msg);			 
+	g_free(current);
+	g_free(status);
+	g_free(total);
+	g_free(fuzzy_msg);
+	g_free(untranslated_msg);
 }
 
 static GtranslatorWindow *
@@ -470,7 +502,9 @@ notebook_switch_page(GtkNotebook *nb,
 		     GtranslatorWindow *window)
 {
 	GtranslatorTab *tab;
+	GList *msg;
 	GtranslatorView *view;
+	GtranslatorPo *po;
 	
 	tab = GTR_TAB (gtk_notebook_get_nth_page (nb, page_num));
 	if (tab == window->priv->active_tab)
@@ -486,7 +520,9 @@ notebook_switch_page(GtkNotebook *nb,
 	gtranslator_statusbar_set_overwrite (GTR_STATUSBAR (window->priv->statusbar),
 					     gtk_text_view_get_overwrite (GTK_TEXT_VIEW (view)));
 	
-	gtranslator_window_update_statusbar_message_count(tab,NULL, window);
+	po = gtranslator_tab_get_po(tab);
+	msg = gtranslator_po_get_current_message(po);
+	gtranslator_window_update_statusbar_message_count(tab,msg->data, window);
 					    
 }
 

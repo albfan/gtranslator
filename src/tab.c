@@ -342,23 +342,6 @@ update_status(GtranslatorTab *tab,
 }
 
 static void
-status_widgets(GtranslatorTab *tab,
-	       GtranslatorMsg *msg)
-{
-	g_return_if_fail(msg != NULL);
-	
-	if(gtranslator_msg_is_fuzzy(msg))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->fuzzy), TRUE);
-	
-	else if(gtranslator_msg_is_translated(msg))
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->translated), TRUE);
-	
-	else
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tab->priv->untranslated), TRUE);
-}
-
-
-static void
 set_message_area (GtranslatorTab  *tab,
                   GtkWidget *message_area)
 {
@@ -404,8 +387,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 {
 	GtkWidget *image;
 	GtkWidget *vertical_box;
-	GtkWidget *status_box;
-	GtkWidget *status_label;
 	GtkTextBuffer *buf;
 	gchar *label;
 	gint i = 0;
@@ -478,25 +459,6 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(priv->text_msgid_plural), FALSE);
 	gtk_box_pack_start(GTK_BOX(vertical_box), priv->text_notebook, TRUE, TRUE, 0);
 
-	/*
-	 * Status widgets
-	 */
-	status_box = gtk_hbox_new(FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(vertical_box), status_box, FALSE, FALSE, 0);
-	status_label = gtk_label_new(_("Translation status:"));
-	gtk_box_pack_start(GTK_BOX(status_box), status_label, FALSE, FALSE, 0);
-	
-	priv->translated = gtk_radio_button_new_with_label(NULL, _("Translated"));
-	gtk_widget_set_sensitive(priv->translated, FALSE);
-	gtk_box_pack_start(GTK_BOX(status_box), priv->translated, FALSE, FALSE, 0);
-	priv->fuzzy = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(priv->translated),
-								  _("Fuzzy"));
-	gtk_widget_set_sensitive(priv->fuzzy, FALSE);
-	gtk_box_pack_start(GTK_BOX(status_box), priv->fuzzy, FALSE, FALSE, 0);
-	priv->untranslated = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(priv->translated),
-									 _("Untranslated"));
-	gtk_widget_set_sensitive(priv->untranslated, FALSE);
-	gtk_box_pack_start(GTK_BOX(status_box), priv->untranslated, FALSE, FALSE, 0);
 	
 	/*
 	 * Translation widgets
@@ -559,9 +521,6 @@ gtranslator_tab_class_init (GtranslatorTabClass *klass)
 
 	g_type_class_add_private (klass, sizeof (GtranslatorTabPrivate));
 
-	klass->message_changed = status_widgets;
-	klass->showed_message = status_widgets;
-	
 	object_class->finalize = gtranslator_tab_finalize;
 	
 	

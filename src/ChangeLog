@@ -1,5 +1,12 @@
 2007-12-26  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* tab.c:
+	* window.c:
+		Remove translation status area and add entry to status bar, by Ignacio
+		Casal Quinteiro.
+
+2007-12-26  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* alternatelanguage/alternate-language-panel.c: Minor fix.
 	* dialogs/header-dialog.c: Remove unneeded header.
 	* application.c: Remove unnecessary warnings.
