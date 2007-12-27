@@ -144,7 +144,6 @@ on_window_delete_event_cb(GtranslatorWindow *window,
 			  GtranslatorApplication *app)
 {
 	gtranslator_file_quit(NULL, window);
-	g_warning("delete app");
 	return TRUE;
 }
 
@@ -152,7 +151,6 @@ static void
 on_window_destroy_cb(GtranslatorWindow *window,
 		     GtranslatorApplication *app)
 {
-	g_warning("destroy app");
 	//if(app->priv->active_window == NULL)
 		g_object_unref(app);
 }
@@ -275,8 +273,6 @@ gtranslator_application_save_toolbars_model (GtranslatorApplication *application
 void
 gtranslator_application_shutdown(GtranslatorApplication *app)
 {
-	g_warning("shutdown");
-	
 	if(app->priv->toolbars_model)
 	{
 		g_object_unref(app->priv->toolbars_model);

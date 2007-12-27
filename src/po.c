@@ -288,16 +288,13 @@ gtranslator_po_parse(GtranslatorPo *po,
 	}
 	
 	/*
-	 * FIXME: We need some test for this:
-	 * maybe shouldn't be returned here.
+	 * No need to return; this can be corrected by the user
 	 */
 	if(message_error != NULL) {
 		g_set_error(error,
 			    GTR_PO_ERROR,
 			    GTR_PO_ERROR_GETTEXT,
 			    message_error);
-		g_object_unref(po);
-		return;
 	}
 	
 	/*

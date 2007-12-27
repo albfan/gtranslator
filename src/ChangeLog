@@ -1,3 +1,12 @@
+2007-12-26  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* alternatelanguage/alternate-language-panel.c: Minor fix.
+	* dialogs/header-dialog.c: Remove unneeded header.
+	* application.c: Remove unnecessary warnings.
+	* notebook.c: Correct tab style.
+	* po.c: Remove unnecessary return.
+	* window.c: Fill some blank strings and remove unnecessary warning.
+
 2007-12-25  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* tab.c: Don't show notebook borders if we have no tabs.

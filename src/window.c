@@ -163,7 +163,7 @@ static const GtkActionEntry entries[] = {
 	  N_("Copy the selected text"),
 	  G_CALLBACK (gtranslator_actions_edit_copy) },
 	{ "EditPaste", GTK_STOCK_PASTE, NULL, "<control>V",
-	  N_("   "),
+	  N_("Paste the contents of the clipboard"),
 	  G_CALLBACK (gtranslator_actions_edit_paste) },
 	{ "EditClear", GTK_STOCK_CLEAR, NULL, NULL,
 	  N_("Clear the selected translation"), NULL},
@@ -233,10 +233,10 @@ static const GtkActionEntry entries[] = {
 	  N_("Search for text"),
 	  G_CALLBACK(_gtranslator_actions_search_find) },
 	{ "SearchFindNext", NULL, N_("Find Ne_xt"), NULL,
-	  N_("   "), NULL},
+	  N_("Search forward for the same text"), NULL},
 	 // G_CALLBACK (gtranslator_find) },
 	{ "SearchFindPrevious", NULL, N_("Find _Previous"), NULL,
-	  N_("   "), NULL},
+	  N_("Search backward for the same text"), NULL},
 	 // G_CALLBACK (gtranslator_find) },
 	{ "SearchReplace", GTK_STOCK_FIND_AND_REPLACE, NULL, "<control>H",
 	  N_("Search for and replace text"),
@@ -1076,7 +1076,6 @@ save_panes_state(GtranslatorWindow *window)
 static void
 gtranslator_window_destroy (GtkObject *object)
 {
-	g_warning("destroy window");
         GtranslatorWindow *window;
 
         window = GTR_WINDOW (object);

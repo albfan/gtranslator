@@ -21,7 +21,6 @@
 #endif
 
 #include "header-dialog.h"
-#include "header_stuff.h"
 #include "utils_gui.h"
 #include "prefs-manager.h"
 #include "po.h"
