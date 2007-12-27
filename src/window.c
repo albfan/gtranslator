@@ -369,7 +369,7 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 {
 	GtranslatorPo *po;
 	gchar *msg;
-	gchar *status;
+	gchar *status, *status_msg;
 	gchar *current;
 	gchar *total;
 	gchar *fuzzy_msg;
@@ -387,21 +387,22 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 
 	switch(gtranslator_msg_get_status(message))
 	{
-		case GTR_MSG_STATUS_UNTRANSLATED: status = g_strdup(_("Status: Untranslated"));
+		case GTR_MSG_STATUS_UNTRANSLATED: status = _("Untranslated");
 						  break;
-		case GTR_MSG_STATUS_TRANSLATED: status = g_strdup(_("Status: Translated"));
+		case GTR_MSG_STATUS_TRANSLATED: status = _("Translated");
 						  break;
-		case GTR_MSG_STATUS_FUZZY: status = g_strdup(_("Status: Fuzzy"));
+		case GTR_MSG_STATUS_FUZZY: status = _("Fuzzy");
 						  break;
 		default: break;
 	}
 
+	status_msg = g_strdup_printf(_("Status: %s"), status);
 	current = g_strdup_printf(_("Current: %d"), pos+1);
 	total = g_strdup_printf(_("Total: %d"), message_count);
 	fuzzy_msg = g_strdup_printf(_("Fuzzy: %d"), fuzzy);
 	untranslated_msg = g_strdup_printf(_("Untranslated: %d"), untranslated);
 		
-	msg = g_strconcat("    ", current, "    ", status, "    ", total,
+	msg = g_strconcat("    ", current, "    ", status_msg, "    ", total,
 			  "    ", fuzzy_msg, "    ", untranslated_msg, NULL);
 	
 	gtk_statusbar_pop(GTK_STATUSBAR(window->priv->statusbar),
@@ -413,7 +414,7 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 	
 	g_free(msg);			 
 	g_free(current);
-	g_free(status);
+	g_free(status_msg);
 	g_free(total);
 	g_free(fuzzy_msg);
 	g_free(untranslated_msg);

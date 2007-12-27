@@ -41,12 +41,12 @@ gtranslator_about_dialog(GtkAction *action,
 	gchar *license_trans;
 	
 	const gchar *authors[] = {
-		"Present Developers",
+		N_("Current Developers"),
 		"---------------------------------------------------------",
 		"Ignacio Casal Quinteiro <nacho.resa@gmail.com>",
 		"Seán de Búrca <leftmostcat@gmail.com>",
 		"",
-		"Past Developers",
+		N_("Previous Developers"),
 		"---------------------------------------------------------",
 		"Ross Golder <ross@golder.org>",
 		"Fatih Demir <kabalak@kabalak.net>",
@@ -64,7 +64,7 @@ gtranslator_about_dialog(GtkAction *action,
 	
 	
 	const gchar *license[] = {
-		N_("This program is free software: you can redistribute it and/or modify"
+		N_("This program is free software: you can redistribute it and/or modify "
 		   "it under the terms of the GNU General Public License as published by "
 		   "the Free Software Foundation, either version 3 of the License, or "
 		   "(at your option) any later version."),
@@ -86,18 +86,18 @@ gtranslator_about_dialog(GtkAction *action,
 	gtk_show_about_dialog (GTK_WINDOW (window),
 		"comments", _("Translation file editing suite for localization of applications and libraries."),
 		"authors", authors,
-		"copyright", _("Copyright © 1999-2007 The Free Software Foundation, Inc."),
+		"copyright", _("Copyright © 1999-2007 Free Software Foundation, Inc."),
 		"documenters", documenters,
+		"license", license_trans,
+		"logo-icon-name", "gtranslator",
+		"title", _("About Gtranslator"),
 		/*
 		 * Note to translators: put here your name and email so it will show
 		 * up in the "about" box
 		 */
-		"license", license_trans,
-		"logo-icon-name", "gtranslator",
-		"title", _("About Gtranslator"),
 		"translator-credits", _("translator-credits"),
 		"version", VERSION,
-		"website", "http://gtranslator.sourceforge.net",
+		"website", "http://gtranslator.sourceforge.net/",
 		"wrap-license", TRUE,
 		"website-label", _("Gtranslator Web Site"),
 		NULL);

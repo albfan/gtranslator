@@ -1,5 +1,13 @@
 2007-12-26  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* dialogs/header-dialog.glade:
+	* actions-help.c:
+	* main.c:
+	* window.c:
+		Various string fixes.
+
+2007-12-26  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* tab.c:
 	* window.c:
 		Remove translation status area and add entry to status bar, by Ignacio
