@@ -1,6 +1,12 @@
 2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
 
 	*dialogs/header-dialog.c:
+	Added signals and callback functions in order to edit the values in
+	header dialog.
+
+2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
+
+	*dialogs/header-dialog.c:
 	Added function gtranslator_header_dialog_fill_from_header.
 	Now header dialog shows the values.
 	*window.h, window.c:

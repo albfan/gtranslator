@@ -83,6 +83,99 @@ take_my_options_checkbutton_toggled(GtkToggleButton *button,
 	gtranslator_prefs_manager_set_take_my_options(gtk_toggle_button_get_active(button));
 }
 
+static void
+prj_id_version_changed(GObject    *gobject,
+		    GParamSpec *arg1,
+		    GtranslatorHeader *header)
+{
+	const gchar *text;
+
+	text = gtk_entry_get_text(GTK_ENTRY(gobject));
+	
+	if(text)
+		gtranslator_header_set_prj_id_version(header, text);
+}
+
+static void
+rmbt_changed(GObject    *gobject,
+		    GParamSpec *arg1,
+		    GtranslatorHeader *header)
+{
+	const gchar *text;
+
+	text = gtk_entry_get_text(GTK_ENTRY(gobject));
+	
+	if(text)
+		gtranslator_header_set_rmbt(header, text);
+}
+
+static void
+translator_changed(GObject    *gobject,
+		    GParamSpec *arg1,
+		    GtranslatorHeader *header)
+{
+	const gchar *text;
+
+	text = gtk_entry_get_text(GTK_ENTRY(gobject));
+	
+	if(text)
+		gtranslator_header_set_translator(header, text);
+}
+
+static void
+tr_email_changed(GObject    *gobject,
+		    GParamSpec *arg1,
+		    GtranslatorHeader *header)
+{
+	const gchar *text,
+		    *text_temp;
+
+	text_temp = gtk_entry_get_text(GTK_ENTRY(gobject));
+
+	if (g_strrstr(text_temp, "<"))
+	{
+		text = g_strdup(text_temp);
+	}else {
+		text = g_strconcat("<", text_temp, ">", NULL);
+	}
+	
+	gtranslator_header_set_tr_email(header, text);
+}
+
+static void
+language_changed(GObject    *gobject,
+		    GParamSpec *arg1,
+		    GtranslatorHeader *header)
+{
+	const gchar *text;
+
+	text = gtk_entry_get_text(GTK_ENTRY(gobject));
+	
+	if(text)
+		gtranslator_header_set_language(header, text);
+}
+
+static void
+lg_email_changed(GObject    *gobject,
+		    GParamSpec *arg1,
+		    GtranslatorHeader *header)
+{
+	const gchar *text,
+		    *text_temp;
+
+	text_temp = gtk_entry_get_text(GTK_ENTRY(gobject));
+
+	if (g_strrstr(text_temp, "<"))
+	{
+		text = g_strdup(text_temp);
+	}else {
+		text = g_strconcat("<", text_temp, ">", NULL);
+	}
+	
+	gtranslator_header_set_lg_email(header, text);
+}
+
+
 static void 
 gtranslator_header_dialog_fill_from_header (GtranslatorHeaderDialog *dlg, GtranslatorHeader *header)
 {
@@ -220,6 +313,35 @@ void gtranslator_show_header_dialog (GtranslatorWindow *window)
 					      GTK_WINDOW (window));
 	}
 	
-	gtk_window_present (GTK_WINDOW (dlg));	
+	gtk_window_present (GTK_WINDOW (dlg));
+
+	/*
+         * Connect signals to edit Project information on Header dialog
+         */
+	g_signal_connect(GTR_HEADER_DIALOG(dlg)->priv->prj_id_version, "notify::text",
+			 G_CALLBACK(prj_id_version_changed),
+			 header);
+
+	g_signal_connect(GTR_HEADER_DIALOG(dlg)->priv->rmbt, "notify::text",
+			 G_CALLBACK(rmbt_changed),
+			 header);
+	/*
+         * Connect signals to edit Translator and Language information on Header dialog
+         */
+	g_signal_connect(GTR_HEADER_DIALOG(dlg)->priv->translator, "notify::text",
+			 G_CALLBACK(translator_changed),
+			 header);
+
+	g_signal_connect(GTR_HEADER_DIALOG(dlg)->priv->tr_email, "notify::text",
+			 G_CALLBACK(tr_email_changed),
+			 header);
+
+	g_signal_connect(GTR_HEADER_DIALOG(dlg)->priv->language, "notify::text",
+			 G_CALLBACK(language_changed),
+			 header);
+
+	g_signal_connect(GTR_HEADER_DIALOG(dlg)->priv->lg_email, "notify::text",
+			 G_CALLBACK(lg_email_changed),
+			 header);	
 }
 
