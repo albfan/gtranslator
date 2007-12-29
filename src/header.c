@@ -239,8 +239,8 @@ gchar *gtranslator_header_get_lg_email (GtranslatorHeader *header)
 void gtranslator_header_set_lg_email (GtranslatorHeader *header, gchar *data)
 {
 	if(header->priv->lg_email)
-		g_free(header->priv->lg_email),
-	header->priv->lg_email;
+		g_free(header->priv->lg_email);
+	header->priv->lg_email = g_strdup(data);
 }
 
 gchar *gtranslator_header_get_mime_version (GtranslatorHeader *header)

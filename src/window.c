@@ -25,6 +25,7 @@
 #include "application.h"
 #include "charmap.h"
 //#include "dictionary.h"
+#include "header.h"
 #include "msg.h"
 #include "notebook.h"
 #include "tab.h"
@@ -1176,6 +1177,18 @@ GtranslatorTab *
 gtranslator_window_get_active_tab(GtranslatorWindow *window)
 {
 	return gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
+}
+
+GtranslatorHeader *
+gtranslator_window_get_header_from_tab(GtranslatorWindow *window)
+{
+	GtranslatorTab *current_page;
+	GtranslatorPo *po;
+	GtranslatorHeader *header;
+	current_page = gtranslator_window_get_active_tab(window);
+	po = gtranslator_tab_get_po(current_page);
+	header = gtranslator_po_get_header(po);
+	return header;	
 }
 
 GtranslatorNotebook *

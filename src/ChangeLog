@@ -1,5 +1,16 @@
 2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
 
+	*dialogs/header-dialog.c:
+	Added function gtranslator_header_dialog_fill_from_header.
+	Now header dialog shows the values.
+	*window.h, window.c:
+	Added function gtranslator_window_get_header_from_tab in order to
+	get header object from current tab in window.
+	*header.c:
+	Fixed function gtranslator_header_set_lg_email because of bad implementation.
+
+2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
+
 	*dialogs/header-dialog.glade:
 	*dialogs/header-dialog.c: 
 	Merged prj_name and prj_version into prj_id_version.

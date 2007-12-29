@@ -54,10 +54,10 @@ struct _GtranslatorHeaderDialogPrivate
 	GtkWidget *tr_email;
 	GtkWidget *pot_date;
 	GtkWidget *po_date;
-	GtkWidget *language_entry;
-	GtkWidget *lg_email_entry;
-	GtkWidget *charset_entry;
-	GtkWidget *encoding_entry;
+	GtkWidget *language;
+	GtkWidget *lg_email;
+	GtkWidget *charset;
+	GtkWidget *encoding;
 };
 
 static void gtranslator_header_dialog_finalize (GObject *object)
@@ -81,6 +81,34 @@ take_my_options_checkbutton_toggled(GtkToggleButton *button,
 	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->take_my_options));
 	
 	gtranslator_prefs_manager_set_take_my_options(gtk_toggle_button_get_active(button));
+}
+
+static void 
+gtranslator_header_dialog_fill_from_header (GtranslatorHeaderDialog *dlg, GtranslatorHeader *header)
+{
+	GtkTextBuffer *buffer;
+
+	/*
+	 * Project Information
+	 */	
+	buffer=gtk_text_view_get_buffer(GTK_TEXT_VIEW(dlg->priv->prj_comment));
+	gtk_text_buffer_set_text(buffer, gtranslator_header_get_comment(header), 
+				strlen(gtranslator_header_get_comment(header)));
+
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->prj_id_version), gtranslator_header_get_prj_id_version(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->pot_date), gtranslator_header_get_pot_date(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->po_date), gtranslator_header_get_po_date(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->rmbt), gtranslator_header_get_rmbt(header));
+
+	/*
+	 * Translator and Language Information
+	 */
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->translator), gtranslator_header_get_translator(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->tr_email), gtranslator_header_get_tr_email(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->language), gtranslator_header_get_language(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->lg_email), gtranslator_header_get_lg_email(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->charset), gtranslator_header_get_charset(header));
+	gtk_entry_set_text(GTK_ENTRY(dlg->priv->encoding), gtranslator_header_get_encoding(header));
 }
 
 static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
@@ -124,10 +152,10 @@ static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
 		"tr_email", &dlg->priv->tr_email,
 		"pot_date", &dlg->priv->pot_date,
 		"po_date", &dlg->priv->po_date,
-		"language_entry", &dlg->priv->language_entry,
-		"lg_email_entry", &dlg->priv->lg_email_entry, 
-		"charset_entry", &dlg->priv->charset_entry,
-		"encoding_entry", &dlg->priv->encoding_entry,
+		"language_entry", &dlg->priv->language,
+		"lg_email_entry", &dlg->priv->lg_email, 
+		"charset_entry", &dlg->priv->charset,
+		"encoding_entry", &dlg->priv->encoding,
 		NULL);
 
 	if(!ret)
@@ -161,8 +189,15 @@ void gtranslator_show_header_dialog (GtranslatorWindow *window)
 {
 	
 	static GtkWidget *dlg = NULL;
+	
+	GtranslatorHeader *header;
 
 	g_return_if_fail(GTR_IS_WINDOW(window));
+
+	/*
+	 * Get header's values from tab in window
+	 */
+	header = gtranslator_window_get_header_from_tab(window);
 	
 	if(dlg == NULL)
 	{
@@ -173,6 +208,11 @@ void gtranslator_show_header_dialog (GtranslatorWindow *window)
 				  &dlg);
 		gtk_widget_show_all(dlg);
 	}
+
+	/*
+	 * Write header's values on Header dialog
+	 */	
+	gtranslator_header_dialog_fill_from_header(GTR_HEADER_DIALOG(dlg), header);
 	
 	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (dlg)))
 	{
