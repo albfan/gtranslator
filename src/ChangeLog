@@ -1,5 +1,11 @@
 2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
 
+	*msg.h, msg.c:
+	Added functions gtranslator_msg_get_filename 
+	and gtranslator_msg_get_file_line by Ignacio Casal Quinteiro
+
+2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
+
 	*dialogs/header-dialog.c:
 	Added signals and callback functions in order to edit the values in
 	header dialog.

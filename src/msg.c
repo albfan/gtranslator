@@ -354,6 +354,49 @@ gtranslator_msg_get_extracted_comments(GtranslatorMsg *msg)
 	return po_message_extracted_comments(msg->priv->message);
 }
 
+/**
+ * gtranslator_msg_get_filename:
+ * @msg: a #GtranslatorMsg
+ * @i: the i-th file for a message.
+ *
+ * Return value: the i-th filename for a message, or NULL if @i is out
+ * of range.
+ */
+const gchar *
+gtranslator_msg_get_filename(GtranslatorMsg *msg,
+			     gint i)
+{
+	po_filepos_t filepos;
+	
+	filepos = po_message_filepos(msg->priv->message, i);
+	
+	if(filepos == NULL)
+		return NULL;
+		
+	return po_filepos_file(filepos);
+}
+
+/**
+ * gtranslator_msg_get_file_line:
+ * @msg: a #GtranslatorMsg
+ * @i: the i-th file for a message.
+ *
+ * Return value: the i-th file line for a message, or NULL if @i is out
+ * of range.
+ */
+gint *
+gtranslator_msg_get_file_line(GtranslatorMsg *msg,
+			      gint i)
+{
+	po_filepos_t filepos;
+	
+	filepos = po_message_filepos(msg->priv->message, i);
+	
+	if(filepos == NULL)
+		return NULL;
+		
+	return (gint *)po_filepos_start_line(filepos);
+}
 
 static void
 on_gettext_po_xerror(gint severity,

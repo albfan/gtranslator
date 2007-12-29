@@ -83,10 +83,11 @@ po_message_t      gtranslator_msg_get_message          (GtranslatorMsg *msg);
 void              gtranslator_msg_set_message          (GtranslatorMsg *msg,
 							po_message_t message);
 
-GtkTreeRowReference	*gtranslator_msg_get_row_reference	(GtranslatorMsg *msg);
+GtkTreeRowReference
+                 *gtranslator_msg_get_row_reference    (GtranslatorMsg *msg);
 
-void			gtranslator_msg_set_row_reference	(GtranslatorMsg *msg,
-								 GtkTreeRowReference *row_reference);
+void              gtranslator_msg_set_row_reference    (GtranslatorMsg *msg,
+							GtkTreeRowReference *row_reference);
 
 gboolean          gtranslator_msg_is_translated        (GtranslatorMsg *msg);
 
@@ -124,6 +125,12 @@ void              gtranslator_msg_set_comment          (GtranslatorMsg *msg,
 
 const gchar      *gtranslator_msg_get_extracted_comments
                                                        (GtranslatorMsg *msg);
+                                                       
+const gchar      *gtranslator_msg_get_filename         (GtranslatorMsg *msg,
+							gint i);
+
+gint             *gtranslator_msg_get_file_line        (GtranslatorMsg *msg,
+							gint i);
 
 const gchar      *gtranslator_msg_check                (GtranslatorMsg *msg);
 
