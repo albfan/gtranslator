@@ -1,3 +1,15 @@
+2007-12-29  Pablo Sanxiao  <psanxiao@gmail.com>
+
+	*dialogs/header-dialog.glade:
+	*dialogs/header-dialog.c: 
+	Merged prj_name and prj_version into prj_id_version.
+	Changed combo_boxes to text_entries.
+	*header.h, header.c, notebook.c:
+	Changed name of atribute and functions project_id_version to prj_id_version.
+	*po.c:
+	Fixed parse function to parse comments and charset correctly.
+	
+				      
 2007-12-26  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* dialogs/header-dialog.glade:

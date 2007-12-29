@@ -328,13 +328,15 @@ gtranslator_po_parse(GtranslatorPo *po,
 
 		priv->header = gtranslator_header_new();		
 		
-		gchar *comment, *project_id_version, *rmbt, *pot_date, *po_date,
+		gchar *comment, *prj_id_version, *rmbt, *pot_date, *po_date,
 		      *translator, *tr_email, *language, *lg_email, *mime_version,
 		      *charset, *encoding;
 
-		gchar *space1, *space2;
-		project_id_version = po_header_field(msgstr, "Project-Id-Version");
+		gchar *space1, *space2, *space3;
+
+		comment = po_message_comments(message);
 		
+		prj_id_version = po_header_field(msgstr, "Project-Id-Version");
 		rmbt = g_strdup(po_header_field(msgstr, "Report-Msgid-Bugs-To"));
 		pot_date = g_strdup(po_header_field(msgstr, "POT-Creation-Date"));
 		po_date = g_strdup(po_header_field(msgstr, "PO-Revision-Date"));
@@ -364,11 +366,21 @@ gtranslator_po_parse(GtranslatorPo *po,
 		}
 
 		mime_version = g_strdup(po_header_field(msgstr, "MIME-Version"));
-		charset = g_strdup(po_header_field(msgstr, "Content-Type"));
+
+		gchar *charset_temp = g_strdup(po_header_field(msgstr, "Content-Type"));
+		space3 = g_strrstr(charset_temp, "=");
+
+		if (!space3)
+		{
+			charset = g_strdup("");
+		}else {	
+			charset = g_strdup(space3 +1);
+		}
+		
 		encoding = g_strdup(po_header_field(msgstr, "Content-Transfer-Encoding"));
 	
 		gtranslator_header_set_comment(priv->header, comment);
-		gtranslator_header_set_project_id_version(priv->header, project_id_version);
+		gtranslator_header_set_prj_id_version(priv->header, prj_id_version);
 		gtranslator_header_set_rmbt(priv->header, rmbt);
 		gtranslator_header_set_pot_date(priv->header, pot_date);
 		gtranslator_header_set_po_date(priv->header, po_date);
@@ -382,6 +394,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 		
 		g_free(translator_temp);
 		g_free(language_temp);
+		g_free(charset_temp);
 	}
 	else {
 		/* Reset our pointer */

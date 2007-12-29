@@ -45,8 +45,7 @@ struct _GtranslatorHeaderDialogPrivate
 	GtkWidget *lang_page;
 	GtkWidget *lang_vbox;
 
-	GtkWidget *prj_name;
-	GtkWidget *prj_version;
+	GtkWidget *prj_id_version;
 	GtkWidget *rmbt;
 	GtkWidget *prj_comment;
 	GtkWidget *take_my_options;
@@ -55,10 +54,10 @@ struct _GtranslatorHeaderDialogPrivate
 	GtkWidget *tr_email;
 	GtkWidget *pot_date;
 	GtkWidget *po_date;
-	GtkWidget *language_combo;
-	GtkWidget *charset_combo;
-	GtkWidget *enc_combo;
-	GtkWidget *lg_combo;
+	GtkWidget *language_entry;
+	GtkWidget *lg_email_entry;
+	GtkWidget *charset_entry;
+	GtkWidget *encoding_entry;
 };
 
 static void gtranslator_header_dialog_finalize (GObject *object)
@@ -117,8 +116,7 @@ static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
 		"main_box", &dlg->priv->main_box,
 		"notebook", &dlg->priv->notebook,
 		"vbox1", &dlg->priv->lang_vbox,
-		"prj_name", &dlg->priv->prj_name,
-		"prj_version", &dlg->priv->prj_version,
+		"prj_id_version", &dlg->priv->prj_id_version,
 		"rmbt", &dlg->priv->rmbt,
 		"prj_comment", &dlg->priv->prj_comment,
 		"take_my_options", &dlg->priv->take_my_options,
@@ -126,10 +124,10 @@ static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
 		"tr_email", &dlg->priv->tr_email,
 		"pot_date", &dlg->priv->pot_date,
 		"po_date", &dlg->priv->po_date,
-		"language_name_combo", &dlg->priv->language_combo,
-		"charset_combo", &dlg->priv->charset_combo, 
-		"encoding_combo", &dlg->priv->enc_combo,
-		"language_email_combo", &dlg->priv->lg_combo,
+		"language_entry", &dlg->priv->language_entry,
+		"lg_email_entry", &dlg->priv->lg_email_entry, 
+		"charset_entry", &dlg->priv->charset_entry,
+		"encoding_entry", &dlg->priv->encoding_entry,
 		NULL);
 
 	if(!ret)

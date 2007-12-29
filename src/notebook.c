@@ -156,7 +156,7 @@ set_label_name(GtranslatorTab *tab,
 	po = gtranslator_tab_get_po(tab);
 	header = gtranslator_po_get_header(po);
 
-	str = gtranslator_header_get_project_id_version(header);
+	str = gtranslator_header_get_prj_id_version(header);
 	g_return_if_fail(str != NULL);
 
 	gtk_label_set_text(GTK_LABEL(label), str);
