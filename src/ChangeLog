@@ -1,6 +1,8 @@
 2007-12-30  Djihed Afifi  <djihed@gmail.com>
 
 	* dialogs/preferences-dialog.c: Fix sidepane position for RTL languages.
+	* messages-table.c: Left align translated column for all lang
+	directions.
 
 2007-12-29  Seán de Búrca  <sdeburca@svn.gnome.org>
 
