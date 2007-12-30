@@ -1,3 +1,7 @@
+2007-12-30  Djihed Afifi  <djihed@gmail.com>
+
+	* dialogs/preferences-dialog.c: Fix sidepane position for RTL languages.
+
 2007-12-29  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* messages-table.c: Proper column sizing for original and translated text.
