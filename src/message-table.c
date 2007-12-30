@@ -69,63 +69,6 @@ enum
 };
 
 static void
-gtranslator_tree_size_allocate (GtkTreeView *widget, 
-				GtkAllocation *allocation, 
-				GtranslatorMessageTable *table)
-{
-	/*
-	 * Here we will change the column widths so that the message table will look nice.
-	 * This function will be called when the size of treeview widget will be changed.
-	 */
-	GtkTreeViewColumn *col1, *col2;
-	gint width;
-	GList *cells;
-	GtkTreeIter iter;
-	GtkTreePath *path;
-
-	width = allocation->width >> 1;
-	col1 = gtk_tree_view_get_column( widget, ORIGINAL_COLUMN );
-	gtk_tree_view_column_set_min_width( col1, width );
-	gtk_tree_view_column_set_max_width( col1, width );
-	col2 = gtk_tree_view_get_column( widget, TRANSLATION_COLUMN );
-	gtk_tree_view_column_set_min_width( col2, width );
-	gtk_tree_view_column_set_max_width( col2, width );
-
-	/*
-	 * We need to set the wrap width of the renderer.
-	 */
-	cells = gtk_tree_view_column_get_cell_renderers(col1);
-	while(cells != NULL)
-	{
-		g_object_set(cells->data, "wrap-width", width, NULL);
-		cells = cells->next;
-	}
-	g_list_free(cells);
-	
-	cells = gtk_tree_view_column_get_cell_renderers(col2);
-	while(cells != NULL)
-	{
-		g_object_set(cells->data, "wrap-width", width, NULL);
-		cells = cells->next;
-	}
-	g_list_free(cells);
-	
-	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(table->priv->store),
-					 &iter))
-	{
-		do{
-			path = gtk_tree_model_get_path(GTK_TREE_MODEL(table->priv->store), &iter);
-			gtk_tree_model_row_changed(GTK_TREE_MODEL(table->priv->store),
-						   path,
-						   &iter);
-			gtk_tree_path_free(path);
-			
-		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(table->priv->store),
-						&iter));
-	}
-}
-
-static void
 gtranslator_message_table_selection_changed (GtkTreeSelection *selection,
 					     GtranslatorMessageTable *table)
 {
@@ -238,7 +181,7 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
 		
 	renderer = gtk_cell_renderer_text_new();
-	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	
 	column = gtk_tree_view_column_new_with_attributes(_("Original Text"),
 							  renderer,
@@ -246,11 +189,12 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 							  "foreground-gdk", COLOR_COLUMN,
 							  NULL);
 
+	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
 	
 	renderer=gtk_cell_renderer_text_new();
-	g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	
 	column = gtk_tree_view_column_new_with_attributes(_("Translated Text"),
 							  renderer,
@@ -258,6 +202,7 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 							  "foreground-gdk", COLOR_COLUMN,
 							  NULL);
 
+	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
 	
@@ -267,10 +212,6 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	g_signal_connect (G_OBJECT(selection), "changed", 
 			  G_CALLBACK(gtranslator_message_table_selection_changed), 
 			  table);
-	
-	g_signal_connect(G_OBJECT(priv->treeview), "size-allocate",
-		G_CALLBACK(gtranslator_tree_size_allocate), table );
-	
 }
 
 
