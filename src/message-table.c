@@ -52,10 +52,6 @@ struct _GtranslatorMessageTablePrivate
 	GtkListStore *store;
 	
 	GtranslatorTab *tab;
-	
-	GdkColor fuzzy;
-	GdkColor translated;
-	GdkColor untranslated;
 };
 
 enum
@@ -237,11 +233,6 @@ gtranslator_message_table_init (GtranslatorMessageTable *table)
 	GtkWidget *scrolledwindow;
 
 	table->priv = GTR_MESSAGE_TABLE_GET_PRIVATE (table);
-
-	/* Store the colors */
-	gdk_color_parse(TABLE_FUZZY_COLOR, &table->priv->fuzzy);
-	gdk_color_parse(TABLE_TRANSLATED_COLOR, &table->priv->translated);
-	gdk_color_parse(TABLE_UNTRANSLATED_COLOR, &table->priv->untranslated);
 
 	gtranslator_message_table_draw(table);
 

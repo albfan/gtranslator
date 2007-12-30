@@ -1,5 +1,9 @@
 2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* messages-table.c: Remove unnecessary variables.
+
+2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* messages-table.c: Add icon column (using gtk+ stock icons for now) and
 		remove status colors.
 
