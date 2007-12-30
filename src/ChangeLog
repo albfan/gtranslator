@@ -1,3 +1,8 @@
+2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* messages-table.c: Add icon column (using gtk+ stock icons for now) and
+		remove status colors.
+
 2007-12-30  Djihed Afifi  <djihed@gmail.com>
 
 	* dialogs/preferences-dialog.c: Fix sidepane position for RTL languages.
