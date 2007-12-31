@@ -173,10 +173,8 @@ dnl -------------------------------------------------------------------
 dnl Get the date for the man-page and substitute it there and anywhere.
 dnl -------------------------------------------------------------------
 MY_DATE=`date +%Y-%m-%d`
-PIXMAP_DIR=${prefix}/share/pixmaps
 
 AC_SUBST(MY_DATE)
-AC_SUBST(PIXMAP_DIR)
 
 dnl -------------------------------------------------------------------
 dnl Put out the configured files.
@@ -189,7 +187,6 @@ data/desktop/Makefile
 data/desktop/gtranslator.desktop.in
 data/mime/Makefile
 data/mime/gtranslator.keys_template
-data/pixmaps/Makefile
 data/scripts/Makefile
 doc/Makefile
 doc/UMTF/Makefile
