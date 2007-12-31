@@ -3,7 +3,6 @@
 SUBDIRS = \
 	desktop \
 	mime \
-	pixmaps \
 	scripts
 
 uidir = $(pkgdatadir)

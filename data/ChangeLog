@@ -1,3 +1,9 @@
+2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* pixmaps/:
+	* Makefile.am:
+		Remove unused directory.
+
 2007-12-22  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* desktop/gtranslator.desktop.in.in: Clean up strings.
