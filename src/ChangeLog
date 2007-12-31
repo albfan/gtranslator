@@ -1,8 +1,14 @@
+2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* message-table.c:
+	* msg.h:
+		A bit of rearranging and we can reuse an earlier enum.
+
 2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
 
-	* message-table.c
-	* msg.{c,h}
-	* po.{c,h}
+	* message-table.c:
+	* msg.{c,h}:
+	* po.{c,h}:
 	* window.c:
 		Add the ability to sort by either message position or status.
 

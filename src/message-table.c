@@ -65,13 +65,6 @@ enum
 	N_COLUMNS
 };
 
-enum
-{
-	MSG_STATUS_UNTRANSLATED,
-	MSG_STATUS_FUZZY,
-	MSG_STATUS_TRANSLATED
-};
-
 static void
 gtranslator_message_table_selection_changed (GtkTreeSelection *selection,
 					     GtranslatorMessageTable *table)
@@ -201,19 +194,8 @@ list_compare_by_status (gconstpointer a,
 {
 	gint a_status, b_status, a_pos, b_pos;
 
-	if (gtranslator_msg_is_fuzzy(GTR_MSG(a)))
-		a_status = MSG_STATUS_FUZZY;
-	else if (gtranslator_msg_is_translated(GTR_MSG(a)))
-		a_status = MSG_STATUS_TRANSLATED;
-	else
-		a_status = MSG_STATUS_UNTRANSLATED;
-
-	if (gtranslator_msg_is_fuzzy(GTR_MSG(b)))
-		b_status = MSG_STATUS_FUZZY;
-	else if (gtranslator_msg_is_translated(GTR_MSG(b)))
-		b_status = MSG_STATUS_TRANSLATED;
-	else
-		b_status = MSG_STATUS_UNTRANSLATED;
+	a_status = gtranslator_msg_get_status(GTR_MSG(a));
+	b_status = gtranslator_msg_get_status(GTR_MSG(b));
 
 	a_pos = gtranslator_msg_get_po_position(GTR_MSG(a));
 	b_pos = gtranslator_msg_get_po_position(GTR_MSG(b));
@@ -428,18 +410,14 @@ gtranslator_message_table_populate(GtranslatorMessageTable *table,
 
 		pos = gtranslator_msg_get_po_position(GTR_MSG(messages->data));
 
-		if (gtranslator_msg_is_fuzzy(GTR_MSG(messages->data))) {
+		status = gtranslator_msg_get_status(GTR_MSG(messages->data));
+
+		if (gtranslator_msg_is_fuzzy(GTR_MSG(messages->data)))
 			status_icon = TABLE_FUZZY_ICON;
-			status = MSG_STATUS_FUZZY;
-		}
-		else if (gtranslator_msg_is_translated(GTR_MSG(messages->data))) {
+		else if (gtranslator_msg_is_translated(GTR_MSG(messages->data)))
 			status_icon = TABLE_TRANSLATED_ICON;
-			status = MSG_STATUS_TRANSLATED;
-		}
-		else {
+		else
 			status_icon = TABLE_UNTRANSLATED_ICON;
-			status = MSG_STATUS_UNTRANSLATED;
-		}
 
 		gtk_list_store_append(table->priv->store, &iter);
 		gtk_list_store_set(table->priv->store, &iter,

@@ -65,8 +65,8 @@ struct _GtranslatorMsgClass
 typedef enum
 {
 	GTR_MSG_STATUS_UNTRANSLATED,
-	GTR_MSG_STATUS_TRANSLATED,
-	GTR_MSG_STATUS_FUZZY
+	GTR_MSG_STATUS_FUZZY,
+	GTR_MSG_STATUS_TRANSLATED
 } GtranslatorMsgStatus;
 
 /*
