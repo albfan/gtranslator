@@ -1,5 +1,10 @@
 2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* message-table.c: Remove expensive and seemingly unnecessary function
+		call.
+
+2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* message-table.c:
 	* msg.h:
 		A bit of rearranging and we can reuse an earlier enum.

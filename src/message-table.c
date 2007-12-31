@@ -238,7 +238,6 @@ static void sort_message_list (GtkTreeViewColumn *column,
 		messages = g_list_reverse(messages);
 
 	gtranslator_po_set_messages(po, messages);
-	gtranslator_message_table_populate(table, messages);
 }
 
 static void
@@ -398,8 +397,6 @@ gtranslator_message_table_populate(GtranslatorMessageTable *table,
 
 	g_return_if_fail(table != NULL);
 	g_return_if_fail(messages != NULL);
-
-	gtk_list_store_clear(table->priv->store);
 
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(table->priv->treeview));
 
