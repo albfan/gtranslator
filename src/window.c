@@ -398,7 +398,7 @@ gtranslator_window_update_statusbar_message_count(GtranslatorTab *tab,
 	}
 
 	status_msg = g_strdup_printf(_("Status: %s"), status);
-	current = g_strdup_printf(_("Current: %d"), pos+1);
+	current = g_strdup_printf(_("Current: %d"), pos);
 	total = g_strdup_printf(_("Total: %d"), message_count);
 	fuzzy_msg = g_strdup_printf(_("Fuzzy: %d"), fuzzy);
 	untranslated_msg = g_strdup_printf(_("Untranslated: %d"), untranslated);

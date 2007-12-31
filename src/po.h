@@ -97,6 +97,9 @@ gboolean         gtranslator_po_get_write_perms        (GtranslatorPo *po);
 
 GList           *gtranslator_po_get_messages           (GtranslatorPo *po);
 
+void		gtranslator_po_set_messages		(GtranslatorPo *po,
+							 GList *messages);
+
 GList           *gtranslator_po_get_current_message    (GtranslatorPo *po);
 
 GList           *gtranslator_po_get_domains            (GtranslatorPo *po);

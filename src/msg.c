@@ -45,6 +45,8 @@ struct _GtranslatorMsgPrivate
 	GtranslatorMsgStatus status;
 
 	GtkTreeRowReference *row_reference;
+
+	gint po_position;
 };
 
 static gchar *message_error = NULL;
@@ -340,6 +342,35 @@ gtranslator_msg_set_comment(GtranslatorMsg *msg,
 			    const gchar *comment)
 {
 	po_message_set_comments(msg->priv->message, comment);
+}
+
+/**
+ * gtranslator_msg_get_po_position:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: the position of the message.
+ *
+ * Gets the position of this message in the PO file in relation to the other
+ * messages.
+ **/
+gint
+gtranslator_msg_get_po_position (GtranslatorMsg *msg)
+{
+	return msg->priv->po_position;
+}
+
+/**
+ * gtranslator_msg_set_po_position:
+ * @msg: a #GtranslatorMsg
+ * @po_position: the numerical position of the message.
+ *
+ * Sets the numerical position of this message in relation to other messages.
+ **/
+void
+gtranslator_msg_set_po_position (GtranslatorMsg *msg,
+				 gint po_position)
+{
+	msg->priv->po_position = po_position;
 }
 
 /**

@@ -246,6 +246,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 	const gchar * const *domains;
 	gchar *base;
 	gint i = 0;
+	gint pos = 1;
 	
 	g_return_if_fail(filename!=NULL);
 	g_return_if_fail(GTR_IS_PO(po));
@@ -422,6 +423,9 @@ gtranslator_po_parse(GtranslatorPo *po,
 			else if(gtranslator_msg_is_translated(msg))
 				gtranslator_msg_set_status(msg, GTR_MSG_STATUS_TRANSLATED);
 			else gtranslator_msg_set_status(msg, GTR_MSG_STATUS_UNTRANSLATED);
+
+			/* Set position in PO file */
+			gtranslator_msg_set_po_position(msg, pos++);
 			
 			/* Build up messages */
 			priv->messages = g_list_append(priv->messages, msg);
@@ -493,6 +497,20 @@ gtranslator_po_get_messages(GtranslatorPo *po)
 	return po->priv->messages;
 }
 
+/**
+ * gtranslator_po_set_messages:
+ * @po: a #GtranslatorPo
+ * @messages: a pointer to a new messages list.
+ *
+ * Sets an updated list of messages.
+ **/
+void
+gtranslator_po_set_messages (GtranslatorPo *po,
+			     GList *messages)
+{
+//	g_list_free(po->priv->messages);
+	po->priv->messages = messages;
+}
 
 /**
  * gtranslator_po_get_current_message:
@@ -691,8 +709,7 @@ gtranslator_po_get_messages_count(GtranslatorPo *po)
 gint
 gtranslator_po_get_message_position(GtranslatorPo *po)
 {
-	return g_list_position(po->priv->messages,
-			       po->priv->current);
+	return gtranslator_msg_get_po_position(GTR_MSG(po->priv->current->data));
 }
 
 /**

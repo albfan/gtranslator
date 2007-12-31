@@ -123,6 +123,11 @@ const gchar      *gtranslator_msg_get_comment          (GtranslatorMsg *msg);
 void              gtranslator_msg_set_comment          (GtranslatorMsg *msg,
 							const gchar *comment);
 
+gint		gtranslator_msg_get_po_position		(GtranslatorMsg *msg);
+
+void		gtranslator_msg_set_po_position		(GtranslatorMsg *msg,
+							 gint po_position);
+
 const gchar      *gtranslator_msg_get_extracted_comments
                                                        (GtranslatorMsg *msg);
                                                        
@@ -133,7 +138,6 @@ gint             *gtranslator_msg_get_file_line        (GtranslatorMsg *msg,
 							gint i);
 
 const gchar      *gtranslator_msg_check                (GtranslatorMsg *msg);
-
 
 G_END_DECLS
 

@@ -1,5 +1,13 @@
 2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* message-table.c
+	* msg.{c,h}
+	* po.{c,h}
+	* window.c:
+		Add the ability to sort by either message position or status.
+
+2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* messages-table.c: Remove unnecessary variables.
 
 2007-12-30  Seán de Búrca  <sdeburca@svn.gnome.org>
