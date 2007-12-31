@@ -1,5 +1,11 @@
 2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* message-table.c: Make sort a bit more predictable. Fixes some issues
+		with tree going to default sort and leaving our messages list
+		improperly sorted.
+
+2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* message-table.c: Remove expensive and seemingly unnecessary function
 		call.
 

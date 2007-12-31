@@ -262,6 +262,13 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 
 	priv->treeview = gtk_tree_view_new_with_model(sort_model);
 
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sort_model),
+					     ID_COLUMN,
+					     GTK_SORT_ASCENDING);
+
+	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sort_model),
+						NULL, NULL, NULL);
+
 	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(sort_model),
 					STATUS_COLUMN,
 					model_compare_by_status,
