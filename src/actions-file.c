@@ -51,6 +51,7 @@ gtranslator_open(const gchar *filename,
 	GtranslatorPo	*po;
 	GtranslatorTab *tab;
 	GList *current;
+	GtranslatorView *active_view;
 
 	/*
 	 * If the filename can't be opened, pass the error back to the caller
@@ -77,6 +78,12 @@ gtranslator_open(const gchar *filename,
 	 */
 	current = gtranslator_po_get_current_message(po);
 	gtranslator_tab_message_go_to(tab, current);
+	
+	/*
+	 * Grab the focus
+	 */
+	active_view = gtranslator_tab_get_active_view(tab);
+	gtk_widget_grab_focus(GTK_WIDGET(active_view));
 	
 	gtranslator_window_update_progress_bar(window);
 	

@@ -1,5 +1,10 @@
 2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* actions-file.c: Focus translation editing box on file open, part of a
+		patch from Ignacio Casal Quinteiro.
+
+2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* pixmaps/: Remove unused directory.
 
 2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
