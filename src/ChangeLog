@@ -1,3 +1,7 @@
+2008-01-01  Djihed Afifi  <djihed@gmail.com>
+
+	* messages-table.c: Sortable original and translation rows.
+
 2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* message-table.c: Make sort a bit more predictable. Fixes some issues

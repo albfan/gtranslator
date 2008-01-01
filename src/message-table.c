@@ -214,6 +214,30 @@ list_compare_by_position (gconstpointer a,
 	return a_pos - b_pos;
 }
 
+gint
+list_compare_by_original (gconstpointer a,
+			gconstpointer b)
+{
+	const gchar *a_original, *b_original;
+
+	a_original = gtranslator_msg_get_msgid(GTR_MSG(a));
+	b_original = gtranslator_msg_get_msgid(GTR_MSG(b));
+
+	return g_utf8_collate(a_original, b_original);
+}
+
+gint
+list_compare_by_translation (gconstpointer a,
+			gconstpointer b)
+{
+	const gchar *a_translated, *b_translated;
+
+	a_translated = gtranslator_msg_get_msgstr(GTR_MSG(a));
+	b_translated = gtranslator_msg_get_msgstr(GTR_MSG(b));
+
+	return g_utf8_collate(a_translated, b_translated);
+}
+
 static void sort_message_list (GtkTreeViewColumn *column,
 			       GtranslatorMessageTable *table)
 {
@@ -231,6 +255,12 @@ static void sort_message_list (GtkTreeViewColumn *column,
 			break;
 		case STATUS_COLUMN:
 			messages = g_list_sort(messages, list_compare_by_status);
+			break;
+		case ORIGINAL_COLUMN:
+			messages = g_list_sort(messages, list_compare_by_original);
+			break;
+		case TRANSLATION_COLUMN:
+			messages = g_list_sort(messages, list_compare_by_translation);
 			break;
 	}
 
@@ -312,9 +342,13 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 							  "text", ORIGINAL_COLUMN,
 							  NULL);
 
+	gtk_tree_view_column_set_sort_column_id(column, ORIGINAL_COLUMN);
 	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
+
+	/* Resort underlying GList when column header clicked */
+	g_signal_connect(G_OBJECT(column), "clicked", G_CALLBACK(sort_message_list), table);
 
 	renderer=gtk_cell_renderer_text_new();
 	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
@@ -324,9 +358,13 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 							  "text", TRANSLATION_COLUMN,
 							  NULL);
 
+	gtk_tree_view_column_set_sort_column_id(column, TRANSLATION_COLUMN);
 	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
+
+	/* Resort underlying GList when column header clicked */
+	g_signal_connect(G_OBJECT(column), "clicked", G_CALLBACK(sort_message_list), table);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(priv->treeview));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
