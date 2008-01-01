@@ -268,6 +268,7 @@ static void sort_message_list (GtkTreeViewColumn *column,
 		messages = g_list_reverse(messages);
 
 	gtranslator_po_set_messages(po, messages);
+	gtranslator_tab_message_go_to(table->priv->tab, gtranslator_po_get_current_message(po));
 }
 
 static void

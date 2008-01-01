@@ -1,5 +1,9 @@
 2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* message-table.c: Focus on current message when GtkTreeView is sorted.
+
+2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* actions-file.c: Focus translation editing box on file open, part of a
 		patch from Ignacio Casal Quinteiro.
 
