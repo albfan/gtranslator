@@ -1,3 +1,7 @@
+2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* pixmaps/: Remove unused directory.
+
 2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* alternatelanguage/alternate-language.c:
