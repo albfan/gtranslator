@@ -60,6 +60,7 @@ gtranslator_msg_init (GtranslatorMsg *msg)
 static void
 gtranslator_msg_finalize (GObject *object)
 {
+	g_free(message_error);
 	G_OBJECT_CLASS (gtranslator_msg_parent_class)->finalize (object);
 }
 

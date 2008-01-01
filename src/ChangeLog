@@ -1,3 +1,9 @@
+2007-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* msg.c:
+	* po.c:
+		Free memory when closing a file, by Ignacio Casal Quinteiro.
+
 2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* message-table.c: Focus on current message when GtkTreeView is sorted.
