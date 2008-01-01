@@ -127,6 +127,10 @@ void			 gtranslator_prefs_manager_shutdown                     (void);
 
 /** PREFS MANAGEMENT FUNCTIONS **/
 
+/* Use preferences for header */
+void			gtranslator_prefs_manager_set_take_my_options		(gboolean take_options);
+gboolean		gtranslator_prefs_manager_get_take_my_options		(void);
+
 /* Warn if fuzzy*/
 void                     gtranslator_prefs_manager_set_warn_if_fuzzy            (gboolean wif);
 gboolean                 gtranslator_prefs_manager_get_warn_if_fuzzy            (void);
@@ -200,5 +204,3 @@ void                    gtranslator_prefs_manager_set_side_pane_position        
 gboolean                gtranslator_prefs_manager_get_side_pane_position        (void);
 
 #endif  /* __GTR_PREFS_MANAGER_H__ */
-
-

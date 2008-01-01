@@ -93,8 +93,7 @@ alternate_lang_activate (GtranslatorWindow *window)
 void
 alternate_lang_deactivate(GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
-
+//	GtranslatorPanel *panel;
 
 	/*panel = gtranslator_window_get_side_panel (window);
 	gtranslator_panel_remove_item (panel, data->panel);

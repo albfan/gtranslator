@@ -97,7 +97,6 @@ on_table_set_active_char (GucharmapTable *chartable,
 			  GtranslatorWindow    *window)
 {
 	GString *gs;
-	const gchar *temp;
 	const gchar **temps;
 	gint i;
 
@@ -186,7 +185,6 @@ create_charmap_panel (GtranslatorWindow *window)
 {
 	GtkWidget      *panel;
 	GucharmapTable *table;
-	gchar          *font;
 
 	panel = gtranslator_charmap_panel_new ();
 	table = gtranslator_charmap_panel_get_table (GTR_CHARMAP_PANEL (panel));

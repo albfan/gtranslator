@@ -323,9 +323,9 @@ gtranslator_po_parse(GtranslatorPo *po,
 	priv->iter = iter = po_message_iterator(priv->gettext_po_file, NULL);
 	message = po_next_message(iter);
 	msgstr = po_message_msgstr(message);
-	if(!strncmp(msgstr, "Project-Id-Version: ", 20)) {
+	if (!strncmp(msgstr, "Project-Id-Version: ", 20)) {
 		
-		/*Parse into our header structure */
+		/* Parse into our header structure */
 
 		priv->header = gtranslator_header_new();		
 		
@@ -335,7 +335,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 
 		gchar *space1, *space2, *space3;
 
-		comment = po_message_comments(message);
+		comment = g_strdup(po_message_comments(message));
 		
 		prj_id_version = po_header_field(msgstr, "Project-Id-Version");
 		rmbt = g_strdup(po_header_field(msgstr, "Report-Msgid-Bugs-To"));
@@ -349,7 +349,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 		{
 			translator = g_strdup(translator_temp);
 			tr_email = g_strdup("");
-		}else {
+		} else {
 			translator = g_strndup(translator_temp, space1 - translator_temp);
 			tr_email = g_strdup(space1 + 1);
 		}

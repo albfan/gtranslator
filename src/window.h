@@ -82,7 +82,7 @@ GtranslatorTab   *gtranslator_window_get_active_tab   (GtranslatorWindow *window
 GtranslatorNotebook
                  *gtranslator_window_get_notebook     (GtranslatorWindow *window);
 GtranslatorHeader
-		*gtrasnaltor_window_get_header_from_tab (GtranslatorWindow *window);
+		*gtranslator_window_get_header_from_active_tab (GtranslatorWindow *window);
 
 GtranslatorPanel *gtranslator_window_get_side_panel   (GtranslatorWindow *window);
 

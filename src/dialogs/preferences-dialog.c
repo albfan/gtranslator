@@ -84,25 +84,6 @@ struct _GtranslatorPreferencesDialogPrivate
 	GtkWidget *right_radiobutton;
 };
 
-static GdkPixbuf *
-create_pixbuf(const gchar *path)
-{
-	GdkPixbuf *icon;
-	GError *error = NULL;
-	
-	icon = gdk_pixbuf_new_from_file(path, &error);
-	
-	if (error)
-	{
-		g_warning ("Could not load icon: %s\n", error->message);
-		g_error_free(error);
-		error = NULL;
-		return NULL;
-	}
-	
-	return icon;
-}
-
 /***************Files pages****************/
 
 static void

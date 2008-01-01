@@ -20,14 +20,16 @@
 #include <config.h>
 #endif
 
-#include "header-dialog.h"
-#include "utils_gui.h"
-#include "prefs-manager.h"
-#include "po.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <string.h>
+
+#include "header-dialog.h"
+#include "utils_gui.h"
+#include "prefs-manager.h"
+#include "po.h"
 
 #define GTR_HEADER_DIALOG_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 						 	(object),	\
@@ -91,9 +93,9 @@ prj_id_version_changed(GObject    *gobject,
 	const gchar *text;
 
 	text = gtk_entry_get_text(GTK_ENTRY(gobject));
-	
-	if(text)
-		gtranslator_header_set_prj_id_version(header, text);
+
+	if (text)
+		gtranslator_header_set_prj_id_version(header, g_strdup(text));
 }
 
 static void
@@ -104,9 +106,9 @@ rmbt_changed(GObject    *gobject,
 	const gchar *text;
 
 	text = gtk_entry_get_text(GTK_ENTRY(gobject));
-	
-	if(text)
-		gtranslator_header_set_rmbt(header, text);
+
+	if (text)
+		gtranslator_header_set_rmbt(header, g_strdup(text));
 }
 
 static void
@@ -117,9 +119,9 @@ translator_changed(GObject    *gobject,
 	const gchar *text;
 
 	text = gtk_entry_get_text(GTK_ENTRY(gobject));
-	
-	if(text)
-		gtranslator_header_set_translator(header, text);
+
+	if (text)
+		gtranslator_header_set_translator(header, g_strdup(text));
 }
 
 static void
@@ -127,15 +129,15 @@ tr_email_changed(GObject    *gobject,
 		    GParamSpec *arg1,
 		    GtranslatorHeader *header)
 {
-	const gchar *text,
-		    *text_temp;
+	const gchar *text_temp;
+	gchar *text;
 
 	text_temp = gtk_entry_get_text(GTK_ENTRY(gobject));
 
 	if (g_strrstr(text_temp, "<"))
 	{
 		text = g_strdup(text_temp);
-	}else {
+	} else {
 		text = g_strconcat("<", text_temp, ">", NULL);
 	}
 	
@@ -150,9 +152,9 @@ language_changed(GObject    *gobject,
 	const gchar *text;
 
 	text = gtk_entry_get_text(GTK_ENTRY(gobject));
-	
-	if(text)
-		gtranslator_header_set_language(header, text);
+
+	if (text)
+		gtranslator_header_set_language(header, g_strdup(text));
 }
 
 static void
@@ -160,18 +162,18 @@ lg_email_changed(GObject    *gobject,
 		    GParamSpec *arg1,
 		    GtranslatorHeader *header)
 {
-	const gchar *text,
-		    *text_temp;
+	const gchar *text_temp;
+	gchar *text;
 
 	text_temp = gtk_entry_get_text(GTK_ENTRY(gobject));
 
 	if (g_strrstr(text_temp, "<"))
 	{
 		text = g_strdup(text_temp);
-	}else {
+	} else {
 		text = g_strconcat("<", text_temp, ">", NULL);
 	}
-	
+
 	gtranslator_header_set_lg_email(header, text);
 }
 
@@ -290,7 +292,7 @@ void gtranslator_show_header_dialog (GtranslatorWindow *window)
 	/*
 	 * Get header's values from tab in window
 	 */
-	header = gtranslator_window_get_header_from_tab(window);
+	header = gtranslator_window_get_header_from_active_tab(window);
 	
 	if(dlg == NULL)
 	{

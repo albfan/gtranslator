@@ -1,3 +1,17 @@
+2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* alternatelanguage/alternate-language.c:
+	* alternatelanguage/alternate-language-panel.c:
+	* charmap/charmap.c:
+	* dialogs/file-dialogs.h:
+	* dialogs/header-dialog.c:
+	* dialogs/preferences-dialog.c:
+	* po.c:
+	* prefs-manager.h:
+	* window.{c,h}:
+		Clean up all warnings; add functions to headers, include headers,
+		duplicate const strings, remove unused variables, etc.
+
 2008-01-01  Djihed Afifi  <djihed@gmail.com>
 
 	* messages-table.c: Sortable original and translation rows.

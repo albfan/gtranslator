@@ -80,7 +80,7 @@ search_message(GtranslatorAlternateLangPanel *panel,
 								  gtranslator_msg_get_msgstr(l->data));
 			return;
 		}
-	} while (l = g_list_next(l));
+	} while ((l = g_list_next(l)));
 	
 	gtranslator_alternate_lang_panel_set_text(panel,
 						  _("Message not found"));
