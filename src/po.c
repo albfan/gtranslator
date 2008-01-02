@@ -355,7 +355,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			tr_email = g_strdup("");
 		} else {
 			translator = g_strndup(translator_temp, space1 - translator_temp);
-			tr_email = g_strdup(space1 + 1);
+			tr_email = g_strndup(space1 + 2, strlen(space1)-3);
 		}
 
 		gchar *language_temp = po_header_field(msgstr, "Language-Team");
@@ -367,7 +367,7 @@ gtranslator_po_parse(GtranslatorPo *po,
 			lg_email = g_strdup("");
 		}else {
 			language = g_strndup(language_temp, space2 - language_temp);
-			lg_email = g_strdup(space2 + 1);
+			lg_email = g_strndup(space2 + 2, strlen(space2)-3);
 		}
 
 		mime_version = g_strdup(po_header_field(msgstr, "MIME-Version"));

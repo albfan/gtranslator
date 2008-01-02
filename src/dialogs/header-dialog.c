@@ -129,19 +129,12 @@ tr_email_changed(GObject    *gobject,
 		    GParamSpec *arg1,
 		    GtranslatorHeader *header)
 {
-	const gchar *text_temp;
-	gchar *text;
+	const gchar *text;
 
-	text_temp = gtk_entry_get_text(GTK_ENTRY(gobject));
+	text = gtk_entry_get_text(GTK_ENTRY(gobject));
 
-	if (g_strrstr(text_temp, "<"))
-	{
-		text = g_strdup(text_temp);
-	} else {
-		text = g_strconcat("<", text_temp, ">", NULL);
-	}
-	
-	gtranslator_header_set_tr_email(header, text);
+	if (text)
+		gtranslator_header_set_tr_email(header, g_strdup(text));
 }
 
 static void
@@ -162,19 +155,12 @@ lg_email_changed(GObject    *gobject,
 		    GParamSpec *arg1,
 		    GtranslatorHeader *header)
 {
-	const gchar *text_temp;
-	gchar *text;
+	const gchar *text;
 
-	text_temp = gtk_entry_get_text(GTK_ENTRY(gobject));
-
-	if (g_strrstr(text_temp, "<"))
-	{
-		text = g_strdup(text_temp);
-	} else {
-		text = g_strconcat("<", text_temp, ">", NULL);
-	}
-
-	gtranslator_header_set_lg_email(header, text);
+	text = gtk_entry_get_text(GTK_ENTRY(gobject));
+	
+	if (text)
+		gtranslator_header_set_lg_email(header, g_strdup(text));
 }
 
 
@@ -274,10 +260,6 @@ static void gtranslator_header_dialog_init (GtranslatorHeaderDialog *dlg)
 	g_signal_connect(dlg->priv->take_my_options, "toggled",
 			 G_CALLBACK(take_my_options_checkbutton_toggled),
 			 dlg);	
-
-	/*
-	 * TODO: Set header's values from GtranslatorHeader object into widget
-	 */
 }
 
 void gtranslator_show_header_dialog (GtranslatorWindow *window)
