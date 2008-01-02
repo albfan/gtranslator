@@ -623,7 +623,8 @@ notebook_tab_added(GtkNotebook *notebook,
 
 void
 gtranslator_recent_add (GtranslatorWindow *window,
-			const gchar *path)
+			const gchar *path,
+			gchar *project_id)
 {
 	GtkRecentData *recent_data;
 	gchar *uri;
@@ -640,7 +641,7 @@ gtranslator_recent_add (GtranslatorWindow *window,
 
 	recent_data = g_slice_new (GtkRecentData);
 
-	recent_data->display_name   = NULL;
+	recent_data->display_name   = project_id;
 	recent_data->description    = NULL;
 	recent_data->mime_type      = "text/x-gettext-translation";
 	recent_data->app_name       = (gchar *) g_get_application_name ();

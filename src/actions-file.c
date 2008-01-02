@@ -48,10 +48,12 @@ gtranslator_open(const gchar *filename,
 		 GtranslatorWindow *window,
 		 GError **error)
 {
+	GtranslatorHeader *header;
 	GtranslatorPo	*po;
 	GtranslatorTab *tab;
 	GList *current;
 	GtranslatorView *active_view;
+	gchar *project_id;
 
 	/*
 	 * If the filename can't be opened, pass the error back to the caller
@@ -63,10 +65,13 @@ gtranslator_open(const gchar *filename,
 	if(*error != NULL)
 		return FALSE;
 
+	header = gtranslator_po_get_header(po);
+	project_id = gtranslator_header_get_prj_id_version(header);
+
 	/*
 	 * If not a crash/temporary file, add to the history.
 	 */
-	gtranslator_recent_add(window, filename);
+	gtranslator_recent_add(window, filename, project_id);
 
 	/*
 	 * Create a page to add to our list of open files

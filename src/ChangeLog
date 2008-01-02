@@ -1,4 +1,10 @@
-2007-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
+2008-01-02  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* actions-file.c:
+	* window.c:
+		Use Project-Id-Version as display name in recent files.
+
+2008-01-01  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* msg.c:
 	* po.c:
