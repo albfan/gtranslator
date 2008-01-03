@@ -56,6 +56,23 @@ tab_label_style_set_cb (GtkWidget *hbox,
 	gtk_widget_set_size_request (button, w + 2, h + 2);
 }
 
+static void
+sync_name (GtranslatorTab *tab,
+	   GParamSpec *pspec,
+	   GtkWidget *hbox)
+{
+	gchar *str;
+	GtkWidget *label;
+	
+	label = GTK_WIDGET (g_object_get_data (G_OBJECT (hbox), "label"));
+	
+	str = gtranslator_tab_get_name (tab);
+	g_return_if_fail (str != NULL);
+	
+	gtk_label_set_text (GTK_LABEL (label), str);
+	g_free (str);
+}
+
 static GtkWidget *
 build_tab_label (GtranslatorNotebook *nb, 
 		 GtranslatorTab      *tab)
@@ -102,11 +119,6 @@ build_tab_label (GtranslatorNotebook *nb,
 			  G_CALLBACK (close_button_clicked_cb),
 			  tab);*/
 
-	/* setup spinner */
-	/*spinner = gedit_spinner_new ();
-	gedit_spinner_set_size (GEDIT_SPINNER (spinner), GTK_ICON_SIZE_MENU);
-	gtk_box_pack_start (GTK_BOX (label_hbox), spinner, FALSE, FALSE, 0);*/
-
 	/* setup site icon, empty by default */
 	icon = gtk_image_new ();
 	gtk_box_pack_start (GTK_BOX (label_hbox), icon, FALSE, FALSE, 0);
@@ -135,31 +147,10 @@ build_tab_label (GtranslatorNotebook *nb,
 	
 	g_object_set_data (G_OBJECT (hbox), "label", label);
 	g_object_set_data (G_OBJECT (hbox), "label-ebox", label_ebox);
-	g_object_set_data (G_OBJECT (hbox), "spinner", spinner);
-	g_object_set_data (G_OBJECT (hbox), "icon", icon);
 	g_object_set_data (G_OBJECT (hbox), "close-button", close_button);
 	g_object_set_data (G_OBJECT (tab), "close-button", close_button);
 
 	return hbox;
-}
-
-static void
-set_label_name(GtranslatorTab *tab,
-	       GtkWidget *hbox)
-{
-	GtkWidget *label;
-	GtranslatorHeader *header;
-	GtranslatorPo *po;
-	gchar *str;
-
-	label = GTK_WIDGET(g_object_get_data(G_OBJECT (hbox), "label"));
-	po = gtranslator_tab_get_po(tab);
-	header = gtranslator_po_get_header(po);
-
-	str = gtranslator_header_get_prj_id_version(header);
-	g_return_if_fail(str != NULL);
-
-	gtk_label_set_text(GTK_LABEL(label), str);
 }
 
 static void
@@ -207,7 +198,13 @@ gtranslator_notebook_add_page(GtranslatorNotebook *notebook,
 	
 	label = build_tab_label(notebook, tab);
 
-	set_label_name(tab, label);
+	sync_name (tab, NULL, label);
+		         
+	g_signal_connect_object (tab, 
+				 "notify::state",
+			         G_CALLBACK (sync_name), 
+			         label, 
+			         0);
 
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
 				 GTK_WIDGET(tab), label);

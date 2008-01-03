@@ -34,57 +34,70 @@ bin_PROGRAMS = \
 #	gtranslator-export-learn-buffer
 
 BUILT_SOURCES =                         \
-        gtranslator-marshal.h                 \
-        gtranslator-marshal.c
+        gtranslator-marshal.h  \
+        gtranslator-marshal.c	\
+	gtranslator-enum-types.h \
+	gtranslator-enum-types.c
+
+INST_H_FILES =				\
+	application.h \
+	comment.h \
+	header.h \
+	io-error-message-area.h \
+	message-area.h \
+	message-table.h \
+	msg.h \
+	notebook.h \
+	panel.h \
+	po.h \
+	statusbar.h \
+	tab.h \
+	utils_gui.h \
+	view.h \
+	window.h
 
 gtranslator_SOURCES = \
-	gtranslator-marshal.h \
-	gtranslator-marshal.c \
-	application.c application.h \
+	$(BUILT_SOURCES) \
+	application.c \
 	compile.h \
 	draw-spaces.c draw-spaces.h \
 	languages.c languages.h \
 	main.c \
-	message-area.c message-area.h \
-	message-table.c message-table.h \
-	nautilus-string.c nautilus-string.h \
-	notebook.c notebook.h \
-	panel.c panel.h \
-	tab.c tab.h \
-	translator.h \
-	view.c view.h \
-	window.c window.h \
+	message-area.c \
+	message-table.c \
+	nautilus-string.c \
+	nautilus-string.h \
+	notebook.c \
+	panel.c \
+	tab.c \
+	view.c \
+	window.c \
 	po.c \
-	po.h \
+	translator.h \
 	translator.c \
 	utils_gui.c \
-	utils_gui.h \
 	utils.c \
 	utils.h \
 	msg.c \
-	msg.h \
-	actions-file.c \
 	actions.h \
+	actions-file.c \
 	actions-go.c \
 	actions-edit.c \
 	actions-view.c \
+	actions-help.c \
 	io-error-message-area.c \
-	io-error-message-area.h \
 	prefs-manager.c \
 	prefs-manager.h \
 	prefs-manager-private.h \
-	actions-help.c \
 	prefs-manager-app.c \
 	prefs-manager-app.h \
 	history-entry.c \
 	history-entry.h \
 	actions-search.c \
-	header.h \
 	header.c \
 	statusbar.c \
-	statusbar.h \
 	comment.c \
-	comment.h
+	$(INST_H_FILES) 
 
 gtranslator_LDADD = \
 	$(top_srcdir)/src/dialogs/libdialogs.la \
@@ -107,6 +120,12 @@ gtranslator_LDFLAGS = \
 #gtranslator_export_learn_buffer_SOURCES = \
 #	export-learn-buffer.c
 #	
+
+gtranslator-enum-types.h: gtranslator-enum-types.h.template $(INST_H_FILES) $(GLIB_MKENUMS)
+	(cd $(srcdir) && $(GLIB_MKENUMS) --template gtranslator-enum-types.h.template $(INST_H_FILES)) > $@
+	
+gtranslator-enum-types.c: gtranslator-enum-types.c.template $(INST_H_FILES) $(GLIB_MKENUMS)
+	(cd $(srcdir) && $(GLIB_MKENUMS) --template gtranslator-enum-types.c.template $(INST_H_FILES)) > $@
 
 gtranslator-marshal.h: gtranslator-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=gtranslator_marshal > $@

@@ -72,6 +72,12 @@ struct _GtranslatorTabClass
 				  GtranslatorMsg *msg);
 };
 
+typedef enum
+{
+	GTR_TAB_STATE_SAVED,
+	GTR_TAB_STATE_MODIFIED
+}GtranslatorTabState;
+
 /*
  * Public methods
  */
@@ -82,6 +88,11 @@ GType	               gtranslator_tab_register_type       (GTypeModule * module);
 GtranslatorTab        *gtranslator_tab_new	           (GtranslatorPo *po);
 
 GtranslatorPo         *gtranslator_tab_get_po              (GtranslatorTab *tab);
+
+GtranslatorTabState    gtranslator_tab_get_state           (GtranslatorTab *tab);
+
+void                   gtranslator_tab_set_state           (GtranslatorTab *tab,
+							    GtranslatorTabState state);
 
 GtranslatorPanel      *gtranslator_tab_get_panel           (GtranslatorTab *tab);
 
@@ -97,6 +108,8 @@ GtranslatorView       *gtranslator_tab_get_active_view     (GtranslatorTab *tab)
 GList                 *gtranslator_tab_get_all_views       (GtranslatorTab *tab,
 							    gboolean original,
 							    gboolean translated);
+
+gchar                 *gtranslator_tab_get_name            (GtranslatorTab *tab);
 
 void                   gtranslator_tab_message_go_to       (GtranslatorTab *tab,
 							    GList * to_go);

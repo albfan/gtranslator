@@ -1,3 +1,20 @@
+2008-01-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* actions-file.c:
+	* notebook.c:
+	* tab.ch:
+	* window.c:
+	Added new property to tab object to notify the
+	state. Now it stores the status to notify if the
+	tab was modified and then change the name or set
+	the sensitivity of the save actions.
+
+	gtranslator-enum-types.{c,h}.template:
+	Added for glib-mkenums autogeneration.
+
+	* Makefile.am:
+	Added glib-mkenums autogeneration and clean up.
+
 2008-01-02  Pablo Sanxiao  <psanxiao@gmail.com>
 
 	* po.c:

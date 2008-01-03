@@ -311,6 +311,7 @@ set_sensitive_according_to_tab(GtranslatorWindow *window,
 	GtkSourceBuffer *buf;
 	GtkAction *action;
 	GList *current;
+	GtranslatorTabState state;
 	
 	view = gtranslator_tab_get_active_view(tab);
 	po = gtranslator_tab_get_po(tab);
@@ -319,6 +320,13 @@ set_sensitive_according_to_tab(GtranslatorWindow *window,
 	
 	if(gtk_action_group_get_sensitive(window->priv->action_group) == FALSE)
 		gtk_action_group_set_sensitive(window->priv->action_group, TRUE);
+	
+	/*File*/
+	state = gtranslator_tab_get_state(tab);
+	action = gtk_action_group_get_action (window->priv->action_group,
+					      "FileSave");
+	gtk_action_set_sensitive (action,
+				  state == GTR_TAB_STATE_MODIFIED);
 	
 	/*Edit*/
 	action = gtk_action_group_get_action(window->priv->action_group,
@@ -575,6 +583,14 @@ can_redo(GtkSourceBuffer *doc,
 }
 
 static void
+sync_state (GtranslatorTab    *tab,
+	    GParamSpec  *pspec,
+	    GtranslatorWindow *window)
+{	
+	set_sensitive_according_to_tab (window, tab);
+}
+
+static void
 notebook_tab_added(GtkNotebook *notebook,
 		   GtkWidget   *child,
 		   guint        page_num,
@@ -619,6 +635,11 @@ notebook_tab_added(GtkNotebook *notebook,
 				"showed_message",
 				G_CALLBACK(gtranslator_window_update_statusbar_message_count),
 				window);
+				
+	g_signal_connect (tab, 
+			 "notify::state",
+			  G_CALLBACK (sync_state), 
+			  window);
 }
 
 void

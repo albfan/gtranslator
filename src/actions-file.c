@@ -504,6 +504,9 @@ gtranslator_save_current_file_dialog(GtkWidget * widget,
 		g_clear_error(&error);
 		return;
 	}
+	
+	/* We have to change the state of the tab */
+	gtranslator_tab_set_state(current, GTR_TAB_STATE_SAVED);
 }
 
 static gboolean
