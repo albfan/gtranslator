@@ -1,3 +1,9 @@
+2007-01-05  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* notebook.{c,h}:
+	* window.c:
+		Allow closure of tabs, by Ignacio Casal Quinteiro.
+
 2008-01-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* actions-file.c:

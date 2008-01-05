@@ -537,6 +537,16 @@ notebook_switch_page(GtkNotebook *nb,
 }
 
 static void
+notebook_tab_close_request (GtranslatorNotebook *notebook,
+			    GtranslatorTab      *tab,
+			    GtranslatorWindow     *window)
+{
+	/* Note: we are destroying the tab before the default handler
+	 * seems to be ok, but we need to keep an eye on this. */
+	gtranslator_file_close (NULL, window);
+}
+
+static void
 can_undo(GtkSourceBuffer *doc,
 	 GParamSpec *pspec,
 	 GtranslatorWindow *window)
@@ -735,7 +745,8 @@ gtranslator_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
 		/*
 		 * We have to show the error in a dialog
 		 */
-		gtk_message_dialog_new(GTK_WINDOW(window),              								    					      GTK_DIALOG_DESTROY_WITH_PARENT,
+		gtk_message_dialog_new(GTK_WINDOW(window),          
+				      GTK_DIALOG_DESTROY_WITH_PARENT,
 				      GTK_MESSAGE_ERROR,
 				      GTK_BUTTONS_CLOSE,
 				      error->message);
@@ -989,6 +1000,10 @@ gtranslator_window_draw (GtranslatorWindow *window)
 			 G_CALLBACK(notebook_switch_page), window);
 	g_signal_connect(priv->notebook, "page-added",
 			 G_CALLBACK(notebook_tab_added), window);
+	g_signal_connect (priv->notebook,
+			  "tab_close_request",
+			  G_CALLBACK (notebook_tab_close_request),
+			  window);
 	
 	if(!gtranslator_prefs_manager_get_side_pane_position())
 		gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
@@ -1077,7 +1092,6 @@ gtranslator_window_init (GtranslatorWindow *window)
 	
 	/* Alterante language */
 	alternate_lang_activate(window);
-	
 }
 
 static void
@@ -1208,9 +1222,15 @@ gtranslator_window_get_header_from_active_tab(GtranslatorWindow *window)
 	GtranslatorPo *po;
 	GtranslatorHeader *header;
 
+	g_return_val_if_fail(GTR_IS_WINDOW(window), NULL);
+
 	current_page = gtranslator_window_get_active_tab(window);
+	if(!current_page)
+		return NULL;
+
 	po = gtranslator_tab_get_po(current_page);
 	header = gtranslator_po_get_header(po);
+
 	return header;	
 }
 

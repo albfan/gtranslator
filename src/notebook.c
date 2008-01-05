@@ -41,6 +41,15 @@ struct _GtranslatorNotebookPrivate
 	
 };
 
+/* Signals */
+enum
+{
+	TAB_CLOSE_REQUEST,
+	LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL] = { 0 };
+
 static void
 tab_label_style_set_cb (GtkWidget *hbox,
 			GtkStyle *previous_style,
@@ -71,6 +80,16 @@ sync_name (GtranslatorTab *tab,
 	
 	gtk_label_set_text (GTK_LABEL (label), str);
 	g_free (str);
+}
+
+static void
+close_button_clicked_cb (GtkWidget *widget, 
+			 GtkWidget *tab)
+{
+	GtranslatorNotebook *notebook;
+
+	notebook = GTR_NOTEBOOK (gtk_widget_get_parent (tab));
+	g_signal_emit (notebook, signals[TAB_CLOSE_REQUEST], 0, tab);
 }
 
 static GtkWidget *
@@ -114,10 +133,10 @@ build_tab_label (GtranslatorNotebook *nb,
 
 	gtk_widget_set_tooltip_text(close_button, _("Close document"));
 
-	/*g_signal_connect (close_button,
+	g_signal_connect (close_button,
 			  "clicked",
 			  G_CALLBACK (close_button_clicked_cb),
-			  tab);*/
+			  tab);
 
 	/* setup site icon, empty by default */
 	icon = gtk_image_new ();
@@ -176,6 +195,17 @@ gtranslator_notebook_class_init (GtranslatorNotebookClass *klass)
 	g_type_class_add_private (klass, sizeof (GtranslatorNotebookPrivate));
 
 	object_class->finalize = gtranslator_notebook_finalize;
+
+	signals[TAB_CLOSE_REQUEST] =
+		g_signal_new ("tab-close-request",
+			      G_OBJECT_CLASS_TYPE (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GtranslatorNotebookClass, tab_close_request),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__OBJECT,
+			      G_TYPE_NONE,
+			      1,
+			      GTR_TYPE_TAB);
 }
 
 /***************************** Public funcs ***********************************/

@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+
 #include "tab.h"
 
 G_BEGIN_DECLS
@@ -60,6 +61,10 @@ typedef struct _GtranslatorNotebookClass	GtranslatorNotebookClass;
 struct _GtranslatorNotebookClass
 {
 	GtkNotebookClass parent_class;
+
+	void	 (* tab_close_request)
+				    (GtranslatorNotebook *notebook,
+				     GtranslatorTab      *tab);
 };
 
 /*
