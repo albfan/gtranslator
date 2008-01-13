@@ -1,3 +1,7 @@
+2007-01-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* window.c: Added plugin load at window startup.
+
 2007-01-05  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* notebook.{c,h}:

@@ -30,6 +30,7 @@
 #include "notebook.h"
 #include "tab.h"
 #include "panel.h"
+#include "plugins-engine.h"
 #include "po.h"
 #include "statusbar.h"
 #include "utils_gui.h"
@@ -1092,6 +1093,12 @@ gtranslator_window_init (GtranslatorWindow *window)
 	
 	/* Alterante language */
 	alternate_lang_activate(window);
+
+	/*
+	 * Plugins
+	 */
+	gtranslator_plugins_engine_update_plugins_ui (gtranslator_plugins_engine_get_default (),
+						window, TRUE);
 }
 
 static void
