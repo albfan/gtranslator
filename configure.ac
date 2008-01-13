@@ -10,6 +10,9 @@ AC_INIT(gtranslator, 1.9.2,
 AC_CONFIG_SRCDIR(src/main.c)
 AM_CONFIG_HEADER(config.h)
 
+GTR_API_VERSION=2.0
+AC_SUBST(GTR_API_VERSION)
+
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_MAINTAINER_MODE
 
@@ -183,6 +186,7 @@ AC_OUTPUT([
 Makefile
 gtranslator.spec
 data/Makefile
+data/gtranslator.pc
 data/desktop/Makefile
 data/desktop/gtranslator.desktop.in
 data/mime/Makefile
@@ -200,6 +204,7 @@ src/dialogs/Makefile
 src/toolbareditor/Makefile
 src/charmap/Makefile
 src/alternatelanguage/Makefile
+src/plugin-system/Makefile
 ])
 
 dnl ------------------------------------------------------------------

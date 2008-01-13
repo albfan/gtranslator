@@ -3,6 +3,7 @@ INCLUDES =                                                      \
         -I$(top_builddir)                                       \
         -I$(top_srcdir)/src                                     \
         -I$(top_builddir)/src                                   \
+	-I$(top_srcdir)/src/plugin-system			\
 	-DDATADIR=\""$(pkgdatadir)"\"				\
 	-DPIXMAPSDIR=\""$(datadir)"/pixmaps/gtranslator\"	\
         $(GTRANSLATOR_CFLAGS)                                   \

@@ -1,3 +1,19 @@
+2008-01-13  Seán de Búrca  <sdeburca@svn.gnome.org>
+
+	* data/Makefile.am:
+	* data/gtranslator.pc.in:
+	* src/dialogs/Makefile.am:
+	* src/dialogs/preferences-dialog.{c,glade}:
+	* src/plugin-system/:
+	* src/Makefile.am:
+	* src/application.{c,h}:
+	* src/main.c:
+	* src/utils_gui.{c,h}:
+	* INSTALL:
+	* configure.ac:
+		Add plugin functionality, by Ignacio Casal Quinteiro with some help
+		from myself.
+
 2007-12-31  Seán de Búrca  <sdeburca@svn.gnome.org>
 
 	* configure.ac: Remove deleted directory.

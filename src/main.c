@@ -28,6 +28,7 @@
 
 #include "application.h"
 #include "prefs-manager-app.h"
+#include "plugins-engine.h"
 
 #include <locale.h>
 #include <glib.h>
@@ -45,6 +46,7 @@ main(gint argc,
 {
 	GError *error = NULL;
 	GnomeProgram *program;
+	GtranslatorPluginsEngine *engine;
 	
 	/*
 	 * Initialize gettext.
@@ -90,7 +92,15 @@ main(gint argc,
 		g_clear_error(&error);
 	}
 	
+	/*
+	 * Init preferences manager
+	 */
 	gtranslator_prefs_manager_app_init();
+	
+	/*
+	 * Init plugin engine
+	 */
+	engine = gtranslator_plugins_engine_get_default ();
 
 	/* 
 	 * Create the main app-window. 

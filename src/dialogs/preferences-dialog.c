@@ -23,6 +23,7 @@
 #include "preferences-dialog.h"
 #include "prefs-manager.h"
 #include "utils_gui.h"
+#include "plugin-manager.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -82,6 +83,9 @@ struct _GtranslatorPreferencesDialogPrivate
 	/*Inteface*/
 	GtkWidget *left_radiobutton;
 	GtkWidget *right_radiobutton;
+	
+	/*Plugins*/
+	GtkWidget *plugins_box;
 };
 
 /***************Files pages****************/
@@ -499,6 +503,23 @@ setup_interface_pages(GtranslatorPreferencesDialog *dlg)
 			 dlg);
 }
 
+static void
+setup_plugin_pages(GtranslatorPreferencesDialog *dlg)
+{
+	GtkWidget *page_content;
+
+	page_content = gtranslator_plugin_manager_new ();
+	g_return_if_fail (page_content != NULL);
+
+	gtk_box_pack_start (GTK_BOX (dlg->priv->plugins_box),
+			    page_content,
+			    TRUE,
+			    TRUE,
+			    0);
+
+	gtk_widget_show_all (page_content);
+}
+
 
 static void
 dialog_response_handler (GtkDialog *dlg, 
@@ -583,6 +604,8 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 						  
 		"left_radiobutton", &dlg->priv->left_radiobutton,
 		"right_radiobutton", &dlg->priv->right_radiobutton,
+		
+		"plugins_box", &dlg->priv->plugins_box,
 		NULL);
 	
 	if(!ret)
@@ -605,6 +628,7 @@ gtranslator_preferences_dialog_init (GtranslatorPreferencesDialog *dlg)
 	setup_editor_pages(dlg);
 	setup_po_header_pages(dlg);
 	setup_interface_pages(dlg);
+	setup_plugin_pages(dlg);
 }
 
 static void

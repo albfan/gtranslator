@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 #define GTR_IS_APPLICATION_CLASS(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), GTR_TYPE_APPLICATION))
 #define GTR_APPLICATION_GET_CLASS(o)	(G_TYPE_INSTANCE_GET_CLASS ((o), GTR_TYPE_APPLIAPPLICATION, GtranslatorApplicationClass))
 
-#define GTR_APP			        (gtranslator_application_get_instance())
+#define GTR_APP			        (gtranslator_application_get_default())
 
 /* Private structure type */
 typedef struct _GtranslatorApplicationPrivate	GtranslatorApplicationPrivate;
@@ -70,7 +70,7 @@ struct _GtranslatorApplicationClass
  * Public methods
  */
 GType		         gtranslator_application_get_type	   (void) G_GNUC_CONST;
-GtranslatorApplication	*gtranslator_application_get_instance	           (void);
+GtranslatorApplication	*gtranslator_application_get_default	           (void);
 
 
 EggToolbarsModel *gtranslator_application_get_toolbars_model  (GtranslatorApplication   *application);
@@ -84,6 +84,9 @@ GList            *gtranslator_application_get_views           (GtranslatorApplic
 							       gboolean translated);
 
 GtranslatorWindow *gtranslator_application_get_active_window  (GtranslatorApplication * app);
+
+const GList *
+gtranslator_application_get_windows (GtranslatorApplication *app);
 
 G_END_DECLS
 

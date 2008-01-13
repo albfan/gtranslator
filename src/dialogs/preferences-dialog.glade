@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.0 on Fri Dec 21 21:48:57 2007 -->
+<!--Generated with glade3 3.4.0 on Sat Jan 12 17:11:29 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="preferences_dialog">
     <property name="border_width">5</property>
@@ -534,15 +534,25 @@
                             <property name="column_spacing">6</property>
                             <property name="row_spacing">6</property>
                             <child>
-                              <widget class="GtkLabel" id="label28">
+                              <widget class="GtkEntry" id="email_entry">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">_Name:</property>
-                                <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">name_entry</property>
+                                <property name="can_focus">True</property>
                               </widget>
                               <packing>
-                                <property name="x_options">GTK_FILL</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkEntry" id="name_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
                               </packing>
                             </child>
                             <child>
@@ -560,25 +570,15 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkEntry" id="name_entry">
+                              <widget class="GtkLabel" id="label28">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">_Name:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">name_entry</property>
                               </widget>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="email_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                              </widget>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
                               </packing>
                             </child>
                           </widget>
@@ -638,147 +638,20 @@
                                 <property name="column_spacing">6</property>
                                 <property name="row_spacing">6</property>
                                 <child>
-                                  <widget class="GtkSpinButton" id="number_plurals_spinbutton">
+                                  <widget class="GtkComboBoxEntry" id="encoding_combobox">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="adjustment">2 1 10 1 10 10</property>
+                                    <child internal-child="entry">
+                                      <widget class="GtkEntry" id="encoding_comboentry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                      </widget>
+                                    </child>
                                   </widget>
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
-                                    <property name="top_attach">5</property>
-                                    <property name="bottom_attach">6</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="number_plurals_label">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Number of pl_urals:</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">number_plurals_spinbutton</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="top_attach">5</property>
-                                    <property name="bottom_attach">6</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label34">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">_Language:</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">language_combobox</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label35">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Language _code:</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">langcode_combobox</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label37">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Character _set:</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">charset_combobox</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label38">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Transfer enc_oding:</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">encoding_combobox</property>
-                                  </widget>
-                                  <packing>
                                     <property name="top_attach">3</property>
                                     <property name="bottom_attach">4</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label39">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">_Team email:</property>
-                                    <property name="use_underline">True</property>
-                                    <property name="mnemonic_widget">team_email_combobox</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="top_attach">4</property>
-                                    <property name="bottom_attach">5</property>
-                                    <property name="x_options">GTK_FILL</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkComboBoxEntry" id="language_combobox">
-                                    <property name="visible">True</property>
-                                    <child internal-child="entry">
-                                      <widget class="GtkEntry" id="language_comboentry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkComboBoxEntry" id="langcode_combobox">
-                                    <property name="visible">True</property>
-                                    <child internal-child="entry">
-                                      <widget class="GtkEntry" id="langcode_comboentry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkComboBoxEntry" id="charset_combobox">
-                                    <property name="visible">True</property>
-                                    <child internal-child="entry">
-                                      <widget class="GtkEntry" id="charset_comboentry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -799,10 +672,10 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <widget class="GtkComboBoxEntry" id="encoding_combobox">
+                                  <widget class="GtkComboBoxEntry" id="charset_combobox">
                                     <property name="visible">True</property>
                                     <child internal-child="entry">
-                                      <widget class="GtkEntry" id="encoding_comboentry">
+                                      <widget class="GtkEntry" id="charset_comboentry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                       </widget>
@@ -811,8 +684,135 @@
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkComboBoxEntry" id="langcode_combobox">
+                                    <property name="visible">True</property>
+                                    <child internal-child="entry">
+                                      <widget class="GtkEntry" id="langcode_comboentry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                      </widget>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkComboBoxEntry" id="language_combobox">
+                                    <property name="visible">True</property>
+                                    <child internal-child="entry">
+                                      <widget class="GtkEntry" id="language_comboentry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                      </widget>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label39">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">_Team email:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">team_email_combobox</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">4</property>
+                                    <property name="bottom_attach">5</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label38">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Transfer enc_oding:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">encoding_combobox</property>
+                                  </widget>
+                                  <packing>
                                     <property name="top_attach">3</property>
                                     <property name="bottom_attach">4</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label37">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Character _set:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">charset_combobox</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label35">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Language _code:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">langcode_combobox</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="label34">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">_Language:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">language_combobox</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="number_plurals_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Number of pl_urals:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">number_plurals_spinbutton</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">5</property>
+                                    <property name="bottom_attach">6</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkSpinButton" id="number_plurals_spinbutton">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="adjustment">2 1 10 1 10 10</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">5</property>
+                                    <property name="bottom_attach">6</property>
                                   </packing>
                                 </child>
                               </widget>
@@ -961,6 +961,29 @@
               <packing>
                 <property name="type">tab</property>
                 <property name="position">3</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkVBox" id="plugins_box">
+                <property name="visible">True</property>
+                <property name="spacing">6</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label12">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Plugins</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="position">4</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>

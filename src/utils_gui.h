@@ -21,6 +21,22 @@
 #define GTR_UTILS_GUI_H 1
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtkmenu.h>
+
+GtkWidget     *gtranslator_gtk_button_new_with_stock_icon (const gchar *label,
+				      const gchar *stock_id);
+
+void           gtranslator_utils_menu_position_under_widget (GtkMenu  *menu,
+					gint     *x,
+					gint     *y,
+					gboolean *push_in,
+					gpointer  user_data);
+					
+void           gtranslator_utils_menu_position_under_tree_view (GtkMenu  *menu,
+					   gint     *x,
+					   gint     *y,
+					   gboolean *push_in,
+					   gpointer  user_data);
 
 gboolean       gtranslator_utils_get_glade_widgets    (const gchar *filename,
 						       const gchar *root_node,

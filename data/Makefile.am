@@ -5,6 +5,12 @@ SUBDIRS = \
 	mime \
 	scripts
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gtranslator-@GTR_API_VERSION@.pc
+
+gtranslator-@GTR_API_VERSION@.pc: gtranslator.pc
+	cp gtranslator.pc gtranslator-@GTR_API_VERSION@.pc
+
 uidir = $(pkgdatadir)
 ui_DATA = \
 		gtranslator-ui.xml \
@@ -12,4 +18,8 @@ ui_DATA = \
 		po.lang
 
 EXTRA_DIST = \
-		$(ui_DATA)
+		$(ui_DATA) \
+		gtranslator.pc.in
+
+CLEANFILES =	 			\
+		$(pkgconfig_DATA)

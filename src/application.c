@@ -41,6 +41,7 @@ G_DEFINE_TYPE(GtranslatorApplication, gtranslator_application, G_TYPE_OBJECT)
 
 struct _GtranslatorApplicationPrivate
 {
+	GList *windows;
 	GtranslatorWindow *active_window;
 	
 	gchar *toolbars_file;
@@ -163,6 +164,8 @@ gtranslator_application_init (GtranslatorApplication *application)
 	application->priv = GTR_APPLICATION_GET_PRIVATE (application);
 	priv = application->priv;
 	
+	priv->windows = NULL;
+	
 	gtranslator_init_session(application);
 	
 	priv->toolbars_model = egg_toolbars_model_new ();
@@ -208,7 +211,7 @@ app_weak_notify (gpointer data,
 }
 
 GtranslatorApplication *
-gtranslator_application_get_instance (void)
+gtranslator_application_get_default (void)
 {
 	static GtranslatorApplication *instance = NULL;
 	
@@ -318,3 +321,15 @@ gtranslator_application_get_active_window(GtranslatorApplication * app)
 {
 	return GTR_WINDOW(app->priv->active_window);
 }
+
+const GList *
+gtranslator_application_get_windows (GtranslatorApplication *app)
+{
+	g_return_val_if_fail (GTR_IS_APPLICATION (app), NULL);
+
+	if(!app->priv->windows)
+		app->priv->windows = g_list_prepend(app->priv->windows, app->priv->active_window);
+		
+	return app->priv->windows;
+}
+

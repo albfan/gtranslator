@@ -5,7 +5,10 @@
 SUBDIRS = toolbareditor \
 	  dialogs \
 	  charmap \
-	  alternatelanguage
+	  alternatelanguage \
+	  plugin-system
+
+noinst_LTLIBRARIES = libgtranslator.la
 
 INCLUDES = \
 	-I$(top_srcdir)						\
@@ -14,6 +17,7 @@ INCLUDES = \
 	-I$(top_srcdir)/src/toolbareditor			\
 	-I$(top_srcdir)/src/charmap				\
 	-I$(top_srcdir)/src/alternatelanguage			\
+	-I$(top_srcdir)/src/plugin-system			\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
 	-DPREFIX=\""$(prefix)"\"                                \
 	-DSYSCONFDIR=\""$(sysconfdir)"\"                        \
@@ -32,6 +36,14 @@ bin_PROGRAMS = \
 #	gtranslator-auto-translate \
 #	gtranslator-auto-learn \
 #	gtranslator-export-learn-buffer
+
+gtranslator_SOURCES = main.c
+
+gtranslator_LDADD = libgtranslator.la $(GTRANSLATOR_LIBS) $(GTKSPELL_LIBS) $(INTLLIBS)
+
+gtranslator_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*"
+
+libgtranslator_la_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*"
 
 BUILT_SOURCES =                         \
         gtranslator-marshal.h  \
@@ -56,13 +68,17 @@ INST_H_FILES =				\
 	view.h \
 	window.h
 
-gtranslator_SOURCES = \
+headerdir = $(prefix)/include/gtranslator-@GTR_API_VERSION@/gtranslator
+
+header_DATA = \
+	$(INST_H_FILES)
+
+libgtranslator_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	application.c \
 	compile.h \
 	draw-spaces.c draw-spaces.h \
 	languages.c languages.h \
-	main.c \
 	message-area.c \
 	message-table.c \
 	nautilus-string.c \
@@ -99,18 +115,14 @@ gtranslator_SOURCES = \
 	comment.c \
 	$(INST_H_FILES) 
 
-gtranslator_LDADD = \
-	$(top_srcdir)/src/dialogs/libdialogs.la \
-	$(top_srcdir)/src/toolbareditor/libtoolbareditor.la \
-	$(top_srcdir)/src/charmap/libcharmap.la \
-	$(top_srcdir)/src/alternatelanguage/libalternatelang.la \
-	$(INTLLIBS) \
+libgtranslator_la_LIBADD = \
 	$(GTRANSLATOR_LIBS) \
-	$(GTKSPELL_LIBS)
+	dialogs/libdialogs.la \
+	toolbareditor/libtoolbareditor.la \
+	charmap/libcharmap.la \
+	alternatelanguage/libalternatelang.la \
+	plugin-system/libpluginsystem.la 
 	
-gtranslator_LDFLAGS = \
-	-Wall
-
 #gtranslator_auto_learn_SOURCES = \
 #	auto-learn.c
 #	
