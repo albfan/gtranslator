@@ -1,5 +1,13 @@
 2008-01-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* glossary:
+	* dictionary:
+	* charmap:
+	* alternate-language:
+ 	  Removed useless directories.
+
+2008-01-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* Makefile.am:
 	* window.c: Added get_all_tab func and removed old
 	plugins load system.
