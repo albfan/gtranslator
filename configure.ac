@@ -88,7 +88,6 @@ AC_SUBST(GNOME_VFS_REQUIRED)
 AC_SUBST(LIBXML_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(SOURCEVIEW_REQUIRED)
-AC_SUBST(LIBGUCHARMAP_REQUIRED)
 AC_SUBST(GDICT_REQUIRED)
 AC_SUBST(GTKSPELL_OPTIONAL)
 
@@ -99,7 +98,6 @@ gnome-vfs-2.0 >= $GNOME_VFS_REQUIRED
 libxml-2.0 >= $LIBXML_REQUIRED 
 libglade-2.0 >= $LIBGLADE_REQUIRED
 gtksourceview-2.0 >= $SOURCEVIEW_REQUIRED
-gucharmap >= $LIBGUCHARMAP_REQUIRED
 ])
 
 AC_SUBST(GTRANSLATOR_CFLAGS)
@@ -158,6 +156,74 @@ PKG_CHECK_EXISTS([gtkspell-2.0 >= $GTKSPELL_OPTIONAL], [
 AC_SUBST(GTKSPELL_CFLAGS)
 AC_SUBST(GTKSPELL_LIBS)
 
+dnl Check for libsoup, needed for Open-tran
+if test "x$enable_opentran" != "xno"; then
+	PKG_CHECK_MODULES(SOUP,                            \
+		libsoup-2.2,
+		have_libsoup=yes,
+		have_libsoup=no)
+	if test x"$have_libsoup" = "xno"; then
+		PKG_CHECK_MODULES(SOUP,
+			libsoup-2.4,
+			have_libsoup=yes,
+			have_libsoup=no)
+	fi
+	if test x"$have_libsoup" = "xyes"; then
+		AC_DEFINE(HAVE_LIBSOUP, 1, [Define if libsoup support is enabled])
+	fi
+fi
+
+AM_CONDITIONAL(USE_LIBSOUP, test x"$have_libsoup" = "xyes")
+
+# ================================================================
+# gdict
+# ================================================================
+have_gdict=no
+AC_ARG_WITH(dictionary,
+	    AC_HELP_STRING([--with-dictionary],
+	    		   [Build with dictionary support]),,
+	    with_dictionary=auto)
+
+if test x"$with_dictionary" != "xno"
+then
+	PKG_CHECK_MODULES([DICTIONARY], [
+		gdict-1.0 >= $GDICT_REQUIRED
+	], have_gdict=yes, have_gdict=no)
+	
+	if test x"$have_gdict" = "xyes"
+	then
+		AC_DEFINE([HAVE_DICTIONARY], 1, [Have gdict])
+	fi
+
+fi
+
+AM_CONDITIONAL(USE_DICTIONARY, test x"$have_gdict" = "xyes")
+
+# ================================================================
+# gcharmap
+# ================================================================
+have_gucharmap=no
+AC_ARG_WITH(charmap,
+	    AC_HELP_STRING([--with-charmap],
+	    		   [Build with charmap support]),,
+	    with_charmap=auto)
+
+if test x"$with_charmap" != "xno"
+then
+	PKG_CHECK_MODULES([GUCHARMAP], [
+		gucharmap >= $LIBGUCHARMAP_REQUIRED
+	], have_gucharmap=yes, have_gucharmap=no)
+	
+	if test x"$have_gucharmap" = "xyes"
+	then
+		AC_DEFINE([HAVE_CHARMAP], 1, [Have gucharmap])
+	fi
+
+fi
+
+AM_CONDITIONAL(USE_CHARMAP, test x"$have_gucharmap" = "xyes")
+
+
 dnl -------------------------------------------------------------------
 dnl Enable debug builds.
 dnl -------------------------------------------------------------------
@@ -199,11 +265,14 @@ help/C/Makefile
 man/Makefile
 man/gtranslator.1
 po/Makefile.in
+plugins/Makefile
+plugins/alternate-language/Makefile
+plugins/charmap/Makefile
+plugins/open-tran/Makefile
+plugins/dictionary/Makefile
 src/Makefile
 src/dialogs/Makefile
 src/toolbareditor/Makefile
-src/charmap/Makefile
-src/alternatelanguage/Makefile
 src/plugin-system/Makefile
 ])
 

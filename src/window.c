@@ -21,10 +21,7 @@
 #endif
 
 #include "actions.h"
-#include "alternate-language.h"
 #include "application.h"
-#include "charmap.h"
-//#include "dictionary.h"
 #include "header.h"
 #include "msg.h"
 #include "notebook.h"
@@ -993,6 +990,7 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	if (gtranslator_prefs_manager_get_side_pane_visible ())
 		gtk_widget_show(priv->sidebar);
 
+
 	/*
 	 * notebook
 	 */
@@ -1049,6 +1047,8 @@ static void
 gtranslator_window_init (GtranslatorWindow *window)
 {
 	GtkTargetList *tl;
+	gint active_page;
+	
 	window->priv = GTR_WINDOW_GET_PRIVATE (window);
 	
 	window->priv->destroy_has_run = FALSE;
@@ -1084,21 +1084,17 @@ gtranslator_window_init (GtranslatorWindow *window)
 			  "drag_data_received",
 	                  G_CALLBACK (drag_data_received_cb), 
 	                  NULL);
-	
-	/* Charmap panel */
-	impl_activate(window);
-	
-	/* Dictionary panel */
-	//dictionary_activate(window);
-	
-	/* Alterante language */
-	alternate_lang_activate(window);
 
 	/*
 	 * Plugins
 	 */
 	gtranslator_plugins_engine_update_plugins_ui (gtranslator_plugins_engine_get_default (),
 						window, TRUE);
+						
+	/*We have to active the right tab after plugins load*/
+	active_page = gtranslator_prefs_manager_get_side_panel_active_page ();
+	_gtranslator_panel_set_active_item_by_id (GTR_PANEL (window->priv->sidebar),
+					    active_page);
 }
 
 static void
@@ -1117,10 +1113,6 @@ gtranslator_window_dispose (GObject *object)
 		g_object_unref(priv->action_group);
 		priv->action_group = NULL;
 	}
-	
-	/* Deactivate Panels */
-	//impl_deactivate(window);
-//dictionary_deactivate(window);
 	
 	G_OBJECT_CLASS (gtranslator_window_parent_class)->dispose (object);
 }
@@ -1220,6 +1212,25 @@ GtranslatorTab *
 gtranslator_window_get_active_tab(GtranslatorWindow *window)
 {
 	return gtranslator_notebook_get_page(GTR_NOTEBOOK(window->priv->notebook));
+}
+
+GList *
+gtranslator_window_get_all_tabs(GtranslatorWindow *window)
+{
+	gint num_pages;
+	gint i = 0;
+	GList *toret = NULL;
+
+	num_pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(window->priv->notebook));
+
+	while(i < num_pages)
+	{
+		toret = g_list_append(toret,
+				      gtk_notebook_get_nth_page(GTK_NOTEBOOK(window->priv->notebook),i));
+		i++;
+	}
+
+	return toret;
 }
 
 GtranslatorHeader *

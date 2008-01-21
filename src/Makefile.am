@@ -4,8 +4,6 @@
 
 SUBDIRS = toolbareditor \
 	  dialogs \
-	  charmap \
-	  alternatelanguage \
 	  plugin-system
 
 noinst_LTLIBRARIES = libgtranslator.la
@@ -15,8 +13,6 @@ INCLUDES = \
 	-I$(includedir)						\
 	-I$(top_srcdir)/src/dialogs				\
 	-I$(top_srcdir)/src/toolbareditor			\
-	-I$(top_srcdir)/src/charmap				\
-	-I$(top_srcdir)/src/alternatelanguage			\
 	-I$(top_srcdir)/src/plugin-system			\
 	-DGNOMELOCALEDIR=\""$(prefix)/${DATADIRNAME}/locale"\"	\
 	-DPREFIX=\""$(prefix)"\"                                \
@@ -119,8 +115,6 @@ libgtranslator_la_LIBADD = \
 	$(GTRANSLATOR_LIBS) \
 	dialogs/libdialogs.la \
 	toolbareditor/libtoolbareditor.la \
-	charmap/libcharmap.la \
-	alternatelanguage/libalternatelang.la \
 	plugin-system/libpluginsystem.la 
 	
 #gtranslator_auto_learn_SOURCES = \

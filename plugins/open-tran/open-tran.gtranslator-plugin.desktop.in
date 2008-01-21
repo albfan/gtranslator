@@ -1,0 +1,8 @@
+[Gtranslator Plugin]
+Module=opentran
+IAge=2
+_Name=Open Tran
+_Description=Look for word in Open tran memory translation data base.
+Authors=Ignacio Casal Quinteiro <nacho.resa@gmail.com>
+Copyright=Copyright @ 2008 Ignacio Casal Quinteiro
+Website=http://gtranslator.sf.net
