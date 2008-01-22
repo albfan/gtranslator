@@ -36,6 +36,7 @@ AC_PROG_CC
 AC_ISC_POSIX
 AM_PROG_LIBTOOL
 AC_TYPE_SIGNAL
+GTK_DOC_CHECK([1.0])
 
 dnl -------------------------------------------------------------------
 dnl The standard checks for the compiler.
@@ -259,6 +260,8 @@ data/mime/Makefile
 data/mime/gtranslator.keys_template
 data/scripts/Makefile
 doc/Makefile
+doc/reference/Makefile
+doc/reference/version.xml
 doc/UMTF/Makefile
 help/Makefile
 help/C/Makefile

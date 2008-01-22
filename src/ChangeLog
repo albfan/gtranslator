@@ -1,4 +1,8 @@
-2008-01-13  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+2008-01-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* window.h: Added missed func.
+
+2008-01-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* glossary:
 	* dictionary:

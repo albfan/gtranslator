@@ -79,6 +79,8 @@ GtranslatorTab   *gtranslator_window_create_tab       (GtranslatorWindow *window
 
 GtranslatorTab   *gtranslator_window_get_active_tab   (GtranslatorWindow *window);
 
+GList            *gtranslator_window_get_all_tabs     (GtranslatorWindow *window);
+
 GtranslatorNotebook
                  *gtranslator_window_get_notebook     (GtranslatorWindow *window);
 GtranslatorHeader
