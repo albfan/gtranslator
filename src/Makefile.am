@@ -74,22 +74,15 @@ libgtranslator_la_SOURCES = \
 	application.c \
 	compile.h \
 	draw-spaces.c draw-spaces.h \
-	languages.c languages.h \
 	message-area.c \
 	message-table.c \
-	nautilus-string.c \
-	nautilus-string.h \
 	notebook.c \
 	panel.c \
 	tab.c \
 	view.c \
 	window.c \
 	po.c \
-	translator.h \
-	translator.c \
 	utils_gui.c \
-	utils.c \
-	utils.h \
 	msg.c \
 	actions.h \
 	actions-file.c \

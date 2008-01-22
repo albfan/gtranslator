@@ -1,5 +1,29 @@
 2008-01-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* src/utils.c:
+	* src/utils.h:
+	* src/translator.c:
+	* src/translator.h:
+	* src/nautilus-string.c:
+	* src/nautilus-string.h:
+	* src/sighandling.c:
+	* src/sighandling.h:
+	* src/learn.c:
+	* src/learn.h:
+	* src/languages.c:
+	* src/languages.h:
+	* src/compile.c:
+	* src/languages.xsl:
+	* src/compile.h:
+	* src/header_stuff.c:
+	* src/header_stuff.h:
+	* src/bookmark.c:
+	* src/bookmark.h:
+	* src/Makefile.am:
+	Cleanup all unneccessary sources.
+
+2008-01-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* window.h: Added missed func.
 
 2008-01-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
