@@ -430,6 +430,21 @@ gtranslator_msg_get_file_line(GtranslatorMsg *msg,
 	return (gint *)po_filepos_start_line(filepos);
 }
 
+/*
+ * gtranslator_msg_get_msgctxt:
+ * @msg: a #GtranslatorMsg
+ *
+ * Return value: the context of a message, or NULL for a 
+ * message not restricted to a context.
+ */
+const gchar *
+gtranslator_msg_get_msgctxt(GtranslatorMsg *msg)
+{
+    	g_return_val_if_fail(GTR_IS_MSG(msg), NULL);
+
+	return po_message_msgctxt(msg->priv->message);
+}
+
 static void
 on_gettext_po_xerror(gint severity,
 		     po_message_t message,

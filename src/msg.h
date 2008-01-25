@@ -137,6 +137,8 @@ const gchar      *gtranslator_msg_get_filename         (GtranslatorMsg *msg,
 gint             *gtranslator_msg_get_file_line        (GtranslatorMsg *msg,
 							gint i);
 
+const gchar      *gtranslator_msg_get_msgctxt          (GtranslatorMsg *msg);
+
 const gchar      *gtranslator_msg_check                (GtranslatorMsg *msg);
 
 G_END_DECLS

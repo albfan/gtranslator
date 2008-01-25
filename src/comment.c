@@ -48,8 +48,24 @@ showed_message_cb(GtranslatorTab *tab,
 		  GtranslatorMsg *msg,
 		  GtranslatorCommentPanel *panel)
 {
+	
+	gchar *extracted;
+	gchar *context;
+    	gchar *toset;
+    
+    	context = g_strconcat(_("Context:\n"), gtranslator_msg_get_msgctxt (msg), NULL);
+    	extracted = g_strconcat(_("Extracted comments:\n"),
+				gtranslator_msg_get_extracted_comments(msg), NULL);
+    
+   	toset = g_strdup_printf("%s\n%s", context, extracted);
+    
+    	g_free(context);
+    	g_free(extracted);
+
 	gtranslator_comment_panel_set_extracted_comments(panel,
-							 gtranslator_msg_get_extracted_comments(msg));
+							 toset);
+    
+    	g_free(toset);
 
 	gtranslator_comment_panel_set_comments(panel,
 					       gtranslator_msg_get_comment(msg));
