@@ -89,7 +89,7 @@ on_table_status_message (GucharmapTable *chartable,
 		gtk_statusbar_push (statusbar, data->context_id, message);
 }
 
-void
+static void
 on_table_set_active_char (GucharmapTable *chartable,
 			  gunichar        wc,
 			  GtranslatorWindow    *window)

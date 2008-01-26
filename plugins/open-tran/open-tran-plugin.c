@@ -106,13 +106,11 @@ static void
 impl_deactivate	(GtranslatorPlugin *plugin,
 		 GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
+/*	GtranslatorPanel *panel;
 
+	gtranslator_debug (DEBUG_PLUGINS);
 
-
-	//gtranslator_debug (DEBUG_PLUGINS);
-
-	/*data = (WindowData *) g_object_get_data (G_OBJECT (window),
+	data = (WindowData *) g_object_get_data (G_OBJECT (window),
 						 WINDOW_DATA_KEY);
 	g_return_if_fail (data != NULL);
 
