@@ -50,6 +50,7 @@ struct _GtranslatorMessageTablePrivate
 {
 	GtkWidget *treeview;
 	GtkListStore *store;
+	GtkTreeModel *sort_model;
 	
 	GtranslatorTab *tab;
 };
@@ -97,7 +98,7 @@ showed_message_cb (GtranslatorTab *tab,
 	GtkTreePath *path, *sort_path;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter, sort_iter;
-			   
+	
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(table->priv->treeview));
 	
 	path = gtk_tree_row_reference_get_path(gtranslator_msg_get_row_reference(msg));
@@ -107,7 +108,7 @@ showed_message_cb (GtranslatorTab *tab,
 	gtk_tree_model_get_iter(GTK_TREE_MODEL(model),
 				&iter,
 				path);
-			   
+	
 	gtk_tree_selection_select_iter(selection, &iter);
 				       
 	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(table->priv->treeview),
@@ -279,7 +280,6 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *selection;
-	GtkTreeModel *sort_model;
 	
 	priv->store = gtk_list_store_new (N_COLUMNS,
 					  G_TYPE_STRING,
@@ -289,18 +289,18 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 					  G_TYPE_INT,
 					  G_TYPE_POINTER);
 	
-	sort_model = gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(priv->store));
+	priv->sort_model = gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(priv->store));
 
-	priv->treeview = gtk_tree_view_new_with_model(sort_model);
+	priv->treeview = gtk_tree_view_new();
 
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sort_model),
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(priv->sort_model),
 					     ID_COLUMN,
 					     GTK_SORT_ASCENDING);
 
-	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sort_model),
+	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(priv->sort_model),
 						NULL, NULL, NULL);
 
-	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(sort_model),
+	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(priv->sort_model),
 					STATUS_COLUMN,
 					model_compare_by_status,
 					NULL,
@@ -444,8 +444,6 @@ gtranslator_message_table_populate(GtranslatorMessageTable *table,
 	g_return_if_fail(table != NULL);
 	g_return_if_fail(messages != NULL);
 
-	model = gtk_tree_view_get_model(GTK_TREE_VIEW(table->priv->treeview));
-
 	while (messages)
 	{
 		msgid = gtranslator_msg_get_msgid(GTR_MSG(messages->data));
@@ -472,13 +470,20 @@ gtranslator_message_table_populate(GtranslatorMessageTable *table,
 				   POINTER_COLUMN, messages,
 				   -1);
 
-		gtk_tree_model_sort_convert_child_iter_to_iter(GTK_TREE_MODEL_SORT(model), &sort_iter, &iter);
-		path = gtk_tree_model_get_path(model, &sort_iter);
-		row = gtk_tree_row_reference_new(model, path);
+		gtk_tree_model_sort_convert_child_iter_to_iter(GTK_TREE_MODEL_SORT(table->priv->sort_model),
+							       &sort_iter, &iter);
+		path = gtk_tree_model_get_path(table->priv->sort_model, &sort_iter);
+		row = gtk_tree_row_reference_new(table->priv->sort_model, path);
 		gtk_tree_path_free(path);
 
 		gtranslator_msg_set_row_reference(GTR_MSG(messages->data), row);
 
 		messages = g_list_next(messages);
 	}
+
+	/*
+	 * It is much faster set the model after list population
+	 */
+	gtk_tree_view_set_model (GTK_TREE_VIEW (table->priv->treeview),
+				 table->priv->sort_model);
 }
