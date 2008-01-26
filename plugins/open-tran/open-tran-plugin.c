@@ -29,6 +29,8 @@
 #include "panel.h"
 
 #define OPEN_TRAN_PLUGIN_ICON PIXMAPSDIR"/open-tran.png"
+#define WINDOW_DATA_KEY	"GtranslatorOpenTranPluginWindowData"
+
 
 #define GTR_OPEN_TRAN_PLUGIN_GET_PRIVATE(object) \
 				(G_TYPE_INSTANCE_GET_PRIVATE ((object),	\
@@ -99,6 +101,10 @@ impl_activate (GtranslatorPlugin *plugin,
 
 	gtk_object_sink (GTK_OBJECT (image));
 	
+	g_object_set_data(G_OBJECT(window),
+			  WINDOW_DATA_KEY,
+			  opentran);
+	
 	gtk_widget_show_all(opentran);
 }
 
@@ -106,22 +112,17 @@ static void
 impl_deactivate	(GtranslatorPlugin *plugin,
 		 GtranslatorWindow *window)
 {
-/*	GtranslatorPanel *panel;
+	GtranslatorPanel *panel;
+	GtkWidget *opentran;
 
-	gtranslator_debug (DEBUG_PLUGINS);
-
-	data = (WindowData *) g_object_get_data (G_OBJECT (window),
-						 WINDOW_DATA_KEY);
-	g_return_if_fail (data != NULL);
-
-	chartable = gtranslator_open_tran_panel_get_table
-					(GTR_OPEN_TRAN_PANEL (data->panel));
-	on_table_status_message (chartable, NULL, window);
+	opentran = (GtkWidget *) g_object_get_data (G_OBJECT (window),
+						    WINDOW_DATA_KEY);
+	g_return_if_fail (opentran != NULL);
 
 	panel = gtranslator_window_get_side_panel (window);
-	gtranslator_panel_remove_item (panel, data->panel);
+	gtranslator_panel_remove_item (panel, opentran);
 
-	g_object_set_data (G_OBJECT (window), WINDOW_DATA_KEY, NULL);*/
+	g_object_set_data (G_OBJECT (window), WINDOW_DATA_KEY, NULL);
 }
 
 static void
