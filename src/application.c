@@ -28,9 +28,6 @@
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libgnomeui/gnome-client.h>
-
-
 
 #define GTR_APPLICATION_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 					 (object),	\
@@ -48,97 +45,7 @@ struct _GtranslatorApplicationPrivate
 	EggToolbarsModel *toolbars_model;
 };
 
-/*
- * Quits via the normal quit.
- */
-static void
-gtranslator_session_die(GnomeClient * client,
-			GtranslatorApplication *app)
-{
-	gtranslator_application_shutdown(app);
-}
 
-/*
- * Saves the state of gtranslator before quitting.
- */
-static gint
-gtranslator_session_sleep(GnomeClient * client, gint phase,
-			  GnomeSaveStyle s_style, gint shutdown,
-			  GnomeInteractStyle i_style, gint fast,
-			  GtranslatorApplication *app)
-{
-	GtranslatorTab *tab = gtranslator_window_get_active_tab(app->priv->active_window);
-	GtranslatorPo *po = gtranslator_tab_get_po(tab);
-	
-	gchar *argv[] = {
-		"rm",
-		"-r",
-		NULL
-	};
-	
-	/*
-	 * The state (for now only the current message number) is stored
-	 *  in the preferences.
-	 */
-/*	gtranslator_config_set_int("state/message_number", 
-			     g_list_position(gtranslator_po_get_messages(po),
-					     gtranslator_po_get_current_message(po)));*/
-	
-	argv[2] = NULL;
-
-	gnome_client_set_discard_command(client, 3, argv);
-
-	//argv[0] = (gchar *) data;
-	argv[1] = gtranslator_po_get_filename(po);
-
-	gnome_client_set_restart_command(client, 2, argv);
-
-	return TRUE;
-}
-
-/*
- * Restores a previously closed session.
- */ 
-static void
-gtranslator_session_restore(GnomeClient * client,
-			    GtranslatorApplication *app)
-{
-	guint num;
-
-	/*num = gtranslator_config_get_int("state/message_number");
-
-	gtranslator_message_go_to_no(NULL, GUINT_TO_POINTER(num));
-
-	push_statusbar_data(NULL, _("Session restored successfully."));*/
-	
-}
-
-static void
-gtranslator_init_session(GtranslatorApplication *app)
-{
-	GnomeClient *client;
-	GnomeClientFlags flags;
-	
-	client = gnome_master_client();
-	
-	g_signal_connect(G_OBJECT(client), "save_yourself",
-			 G_CALLBACK(gtranslator_session_sleep),
-			 app);
-	g_signal_connect(G_OBJECT(client), "die",
-			 G_CALLBACK(gtranslator_session_die), app);
-	
-	flags = gnome_client_get_flags(client);
-	if(flags & GNOME_CLIENT_RESTORED)
-	{
-//		gtranslator_session_restore(client);
-	}
-}
-
-
-
-/***************
- FIXME: This should be improved
-***************/
 static gboolean
 on_window_delete_event_cb(GtranslatorWindow *window,
 			  GdkEvent *event,
@@ -165,9 +72,7 @@ gtranslator_application_init (GtranslatorApplication *application)
 	priv = application->priv;
 	
 	priv->windows = NULL;
-	
-	gtranslator_init_session(application);
-	
+
 	priv->toolbars_model = egg_toolbars_model_new ();
 
 	priv->toolbars_file = g_strdup_printf(

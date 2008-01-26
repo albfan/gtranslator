@@ -24,7 +24,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gnome.h>
 
 #include "application.h"
 #include "prefs-manager-app.h"
@@ -32,8 +31,7 @@
 
 #include <locale.h>
 #include <glib.h>
-
-#include <libgnome/gnome-program.h>
+#include <glib/gi18n.h>
 
 #include <gconf/gconf.h>
 
@@ -45,7 +43,6 @@ main(gint argc,
      gchar *argv[])
 {
 	GError *error = NULL;
-	GnomeProgram *program;
 	GtranslatorPluginsEngine *engine;
 	
 	/*
@@ -73,13 +70,7 @@ main(gint argc,
 		g_clear_error(&error);
 	}
 
-	/*
-	 * Initialize gtranslator within libgnomeui.
-	 */
-	program = gnome_program_init(PACKAGE, VERSION, LIBGNOMEUI_MODULE, 
-				     argc, argv,
-				     GNOME_PROGRAM_STANDARD_PROPERTIES,
-				     NULL);
+	gtk_init(&argc, &argv);
 
 	/*
 	 * Show the application window with icon.
@@ -113,8 +104,6 @@ main(gint argc,
 	gtk_main();
 	
 	gtranslator_prefs_manager_app_shutdown();
-	
-	g_object_unref(program);
-	
+
 	return 0;
 }

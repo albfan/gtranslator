@@ -1,5 +1,13 @@
 2008-01-26  Seán de Búrca  <sdeburca@svn.gnome.org>
 
+	* src/application.c:
+	* src/main.c:
+	* configure.ac:
+		Remove dependencies on libgnome and libgnomeui, by Ignacio Casal
+		Quinteiro and myself.
+
+2008-01-26  Seán de Búrca  <sdeburca@svn.gnome.org>
+
 	* plugins/charmap/charmap-plugin.c:
 	* plugins/open-tran/open-tran-plugin.c:
 		Fix compile warnings.
