@@ -1,9 +1,0 @@
-2008-01-21  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
-
-	* dictionary:
-	* glossary:
-	* alternate-language:
-	* charmap:
-	* open-tran:
-	* Makefile.am:
-	  Added all this plugins.

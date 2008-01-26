@@ -1,3 +1,8 @@
+2008-01-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* plugins/ChangeLog:
+	Removed. It's better use the main ChangeLog file.
+
 2008-01-26  Seán de Búrca  <sdeburca@svn.gnome.org>
 	* plugins/dictionary/dict-panel.c:
 	* plugins/dictionary/dictionary-plugin.c:
