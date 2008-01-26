@@ -1,19 +1,18 @@
 /* gdict-sidebar.c - sidebar widget
  *
  * Copyright (C) 2006  Emmanuele Bassi <ebassi@gmail.com>
- * 		 2007  Ignacio Casal Quinteiro <nacho.resa@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public
+ * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  *
@@ -59,6 +58,7 @@ struct _GdictSidebarPrivate
   GtkWidget *hbox;
   GtkWidget *notebook;
   GtkWidget *menu;
+  GtkWidget *close_button;
   GtkWidget *label;
   GtkWidget *select_button;
 };
@@ -72,17 +72,11 @@ enum
 };
 
 static guint sidebar_signals[LAST_SIGNAL] = { 0 };
+static GQuark sidebar_page_id_quark = 0;
 
 G_DEFINE_TYPE (GdictSidebar, gdict_sidebar, GTK_TYPE_VBOX);
 
-#define SIDEBAR_PAGE_ID		(sidebar_page_id_quark ())
-static GQuark
-sidebar_page_id_quark (void)
-{
-  return g_quark_from_static_string ("gdict-sidebar-page-id");
-}
-
-SidebarPage *
+static SidebarPage *
 sidebar_page_new (const gchar *id,
 		  const gchar *name,
 		  GtkWidget   *widget)
@@ -100,7 +94,7 @@ sidebar_page_new (const gchar *id,
   return page;
 }
 
-void
+static void
 sidebar_page_free (SidebarPage *page)
 {
   if (G_LIKELY (page))
@@ -220,6 +214,14 @@ gdict_sidebar_select_key_press_cb (GtkWidget   *widget,
   return FALSE;
 }
 
+static void
+gdict_sidebar_close_clicked_cb (GtkWidget *widget,
+				gpointer   user_data)
+{
+  GdictSidebar *sidebar = GDICT_SIDEBAR (user_data);
+
+  g_signal_emit (sidebar, sidebar_signals[CLOSED], 0);
+}
 
 static void
 gdict_sidebar_menu_deactivate_cb (GtkWidget *widget,
@@ -253,7 +255,7 @@ gdict_sidebar_menu_item_activate (GtkWidget *widget,
   gint current_index;
 
   menu_item = gtk_menu_get_active (GTK_MENU (priv->menu));
-  id = g_object_get_qdata (G_OBJECT (menu_item), SIDEBAR_PAGE_ID);
+  id = g_object_get_qdata (G_OBJECT (menu_item), sidebar_page_id_quark);
   g_assert (id != NULL);
   
   page = g_hash_table_lookup (priv->pages_by_id, id);
@@ -275,6 +277,10 @@ gdict_sidebar_class_init (GdictSidebarClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
+  g_type_class_add_private (gobject_class, sizeof (GdictSidebarPrivate));
+  
+  sidebar_page_id_quark = g_quark_from_static_string ("gdict-sidebar-page-id");
+
   gobject_class->finalize = gdict_sidebar_finalize;
   gobject_class->dispose = gdict_sidebar_dispose;
 
@@ -294,8 +300,6 @@ gdict_sidebar_class_init (GdictSidebarClass *klass)
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
-
-  g_type_class_add_private (gobject_class, sizeof (GdictSidebarPrivate));
 }
 
 static void
@@ -305,6 +309,7 @@ gdict_sidebar_init (GdictSidebar *sidebar)
   GtkWidget *hbox;
   GtkWidget *select_hbox;
   GtkWidget *select_button;
+  GtkWidget *close_button;
   GtkWidget *arrow;
 
   sidebar->priv = priv = GDICT_SIDEBAR_GET_PRIVATE (sidebar);
@@ -350,6 +355,18 @@ gdict_sidebar_init (GdictSidebar *sidebar)
 
   gtk_box_pack_start (GTK_BOX (hbox), select_button, TRUE, TRUE, 0);
   gtk_widget_show (select_button);
+
+  close_button = gtk_button_new ();
+  gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
+  gtk_button_set_image (GTK_BUTTON (close_button),
+		        gtk_image_new_from_stock (GTK_STOCK_CLOSE,
+						  GTK_ICON_SIZE_SMALL_TOOLBAR));
+  g_signal_connect (close_button, "clicked",
+		    G_CALLBACK (gdict_sidebar_close_clicked_cb),
+		    sidebar);
+  gtk_box_pack_end (GTK_BOX (hbox), close_button, FALSE, FALSE, 0);
+  gtk_widget_show (close_button);
+  priv->close_button = close_button;
 
   sidebar->priv->menu = gtk_menu_new ();
   g_signal_connect (sidebar->priv->menu, "deactivate",
@@ -416,8 +433,8 @@ gdict_sidebar_add_page (GdictSidebar *sidebar,
   /* add the menu item for the page */
   menu_item = gtk_image_menu_item_new_with_label (page_name);
   g_object_set_qdata_full (G_OBJECT (menu_item),
-		           SIDEBAR_PAGE_ID,
-			   g_strdup (page_id),
+			   sidebar_page_id_quark,
+                           g_strdup (page_id),
 			   (GDestroyNotify) g_free);
   g_signal_connect (menu_item, "activate",
 		    G_CALLBACK (gdict_sidebar_menu_item_activate),
@@ -437,7 +454,6 @@ gdict_sidebar_remove_page (GdictSidebar *sidebar,
 {
   GdictSidebarPrivate *priv;
   SidebarPage *page;
-  GtkWidget *menu_item;
   GList *children, *l;
   
   g_return_if_fail (GDICT_IS_SIDEBAR (sidebar));
@@ -500,8 +516,7 @@ gdict_sidebar_view_page (GdictSidebar *sidebar,
   if (!page)
     return;
 
-  gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook),
-		  		 page->index);
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook), page->index);
   gtk_label_set_text (GTK_LABEL (priv->label), page->name);
   gtk_menu_shell_select_item (GTK_MENU_SHELL (priv->menu), page->menu_item);
 }
@@ -522,4 +537,29 @@ gdict_sidebar_current_page (GdictSidebar *sidebar)
   g_assert (page != NULL);
 
   return page->id;
+}
+
+gchar **
+gdict_sidebar_list_pages (GdictSidebar *sidebar,
+                          gsize        *length)
+{
+  GdictSidebarPrivate *priv;
+  gchar **retval;
+  gint i;
+  GSList *l;
+
+  g_return_val_if_fail (GDICT_IS_SIDEBAR (sidebar), NULL);
+
+  priv = sidebar->priv;
+
+  retval = g_new (gchar*, g_slist_length (priv->pages) + 1);
+  for (l = priv->pages, i = 0; l; l = l->next, i++)
+    retval[i++] = g_strdup (l->data);
+
+  retval[i] = NULL;
+
+  if (length)
+    *length = i;
+
+  return retval;
 }

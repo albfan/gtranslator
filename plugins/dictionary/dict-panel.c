@@ -21,6 +21,7 @@
 
 #include "dict-panel.h"
 #include "gdict-sidebar.h"
+#include "plugin.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -28,7 +29,7 @@
 #include <gtk/gtk.h>
 #include <gdict/gdict.h>
 #include <gconf/gconf-client.h>
-#include <gtranslator/plugin.h>
+#include <string.h>
 
 #define GTR_DICT_PANEL_GET_PRIVATE(object)	(G_TYPE_INSTANCE_GET_PRIVATE ( \
 						 (object),		       \
@@ -103,20 +104,6 @@ gdict_gconf_get_string_with_default (GConfClient *client,
 	
 	val = gconf_client_get_string (client, key, NULL);
 	return val ? val : g_strdup (def);
-}
-
-static void
-clear_cb (GtkWidget   *widget,
-	  GtranslatorDictPanel *panel)
-{
-	GtranslatorDictPanelPrivate *priv = panel->priv;
-
-	gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
-
-	if (!priv->defbox)
-		return;
-  
-	gdict_defbox_clear (GDICT_DEFBOX (priv->defbox));
 }
 
 static void
@@ -290,9 +277,9 @@ strategy_activated_cb (GdictStrategyChooser *chooser,
                        const gchar          *strat_desc,
                        GtranslatorDictPanel *panel)
 {
-	GtranslatorDictPanelPrivate *priv = panel->priv;
+/*	GtranslatorDictPanelPrivate *priv = panel->priv;
 	gtranslator_dict_panel_set_strategy (panel, strat_name);
-/*
+
   if (window->status)
     {
       gchar *message;
@@ -309,9 +296,9 @@ database_activated_cb (GdictDatabaseChooser *chooser,
 		       const gchar          *db_desc,
 		       GtranslatorDictPanel *panel)
 {
-	GtranslatorDictPanelPrivate *priv = panel->priv;
+/*	GtranslatorDictPanelPrivate *priv = panel->priv;
 	gtranslator_dict_panel_set_database (panel, db_name);
-	/*
+
   if (window->status)
     {
       gchar *message;
@@ -328,19 +315,18 @@ gtranslator_dict_panel_set_word (GtranslatorDictPanel *panel,
 				 const gchar *database)
 {
 	GtranslatorDictPanelPrivate *priv = panel->priv;
-	gchar *title;
-	
+
 	g_free (priv->word);
 	priv->word = NULL;
-	
+
 	if (word && word[0] != '\0')
 		priv->word = g_strdup (word);
 	else
 		return;
-	
+
 	if (!database || database[0] == '\0')
 		database = priv->database;
-	
+
 	if (priv->defbox)
 	{
 		gdict_defbox_set_database (GDICT_DEFBOX (priv->defbox), database);
@@ -580,7 +566,6 @@ gtranslator_dict_panel_gconf_notify_cb (GConfClient *client,
 			      gpointer     user_data)
 {
 	GtranslatorDictPanel *panel = GTR_DICT_PANEL (user_data);
-	GtranslatorDictPanelPrivate *priv = panel->priv;
 
 	if (strcmp (entry->key, GDICT_GCONF_SOURCE_KEY) == 0)
 	{

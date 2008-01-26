@@ -21,13 +21,12 @@
 
 #include "dictionary-plugin.h"
 #include "dict-panel.h"
+#include "panel.h"
+#include "window.h"
 
 #include <glib/gi18n-lib.h>
 #include <gconf/gconf-client.h>
 //#include <gtranslator/gtranslator-debug.h>
-#include <gtranslator/window.h>
-#include <gtranslator/panel.h>
-
 
 #define WINDOW_DATA_KEY	"GtranslatorDictPluginWindowData"
 #define PANEL_KEY "/apps/gtranslator/plugins/dictionary"
@@ -103,7 +102,6 @@ impl_activate (GtranslatorPlugin *plugin,
 	GtranslatorPanel *panel;
 	GtkWidget *image;
 	GtkIconTheme *theme;
-	GtkStatusbar *statusbar;
 	WindowData *data;
 
 	//gtranslator_debug (DEBUG_PLUGINS);

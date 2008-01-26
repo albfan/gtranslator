@@ -18,9 +18,10 @@
 #ifndef __GTR_Dict_PLUGIN_H__
 #define __GTR_Dict_PLUGIN_H__
 
+#include "plugin.h"
+
 #include <glib.h>
 #include <glib-object.h>
-#include <gtranslator/plugin.h>
 
 G_BEGIN_DECLS
 
@@ -60,7 +61,7 @@ struct _GtranslatorDictPluginClass
 /*
  * Public methods
  */
-GType	gtranslator_Dict_plugin_get_type	(void) G_GNUC_CONST;
+GType	gtranslator_dict_plugin_get_type	(void) G_GNUC_CONST;
 
 /* All the plugins must implement this function */
 G_MODULE_EXPORT GType register_gtranslator_plugin (GTypeModule *module);

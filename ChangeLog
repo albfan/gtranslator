@@ -1,3 +1,11 @@
+2008-01-26  Seán de Búrca  <sdeburca@svn.gnome.org>
+	* plugins/dictionary/dict-panel.c:
+	* plugins/dictionary/dictionary-plugin.c:
+	* plugins/dictionary/gdict-sidebar.c:
+	* plugins/dictionary/dictionary-plugin.h:
+	* plugins/dictionary/gdict-sidebar.h:
+		Fix compile errors and warnings.
+
 2008-01-22  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac:
