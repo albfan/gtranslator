@@ -190,8 +190,6 @@ gtranslator_application_shutdown(GtranslatorApplication *app)
 	}
 	
 	g_object_unref(app);
-	
-	//gtk_main_quit();
 }
 
 /**

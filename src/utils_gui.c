@@ -25,7 +25,6 @@
 
 #include <string.h>
 
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glade/glade.h>
@@ -290,37 +289,12 @@ gtranslator_utils_is_valid_uri (const gchar *uri)
 
 gchar *
 gtranslator_utils_make_canonical_uri_from_shell_arg (const gchar *str)
-{	
-	gchar *uri;
-	gchar *canonical_uri;
-
+{
 	g_return_val_if_fail (str != NULL, NULL);
 	g_return_val_if_fail (*str != '\0', NULL);
-	
-	/* Note for the future: 
-	 *
-	 * <federico> paolo: and flame whoever tells 
-	 * you that file:///gnome/test_files/hëllò 
-	 * doesn't work --- that's not a valid URI
-	 *
-	 * <paolo> federico: well, another solution that 
-	 * does not requires patch to _from_shell_args 
-	 * is to check that the string returned by it 
-	 * contains only ASCII chars
-	 * <federico> paolo: hmmmm, isn't there 
-	 * gnome_vfs_is_uri_valid() or something?
-	 * <paolo>: I will use gedit_utils_is_valid_uri ()
-	 *
-	 */
-	 
-	uri = gnome_vfs_make_uri_from_shell_arg (str);
-	canonical_uri = gnome_vfs_make_uri_canonical (uri);
-	g_free (uri);
-	
-	/* g_print ("URI: %s\n", canonical_uri); */
-	
-	if (gtranslator_utils_is_valid_uri (canonical_uri))
-		return canonical_uri;
+		
+	if (gtranslator_utils_is_valid_uri (str))
+		return g_strdup (str);
 	
 	return NULL;
 }

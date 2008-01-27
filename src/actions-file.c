@@ -515,7 +515,7 @@ is_duplicated_uri (const GSList *uris,
 {
 	while (uris != NULL)
 	{
-		if (gnome_vfs_uris_match (u, (const gchar*)uris->data))
+		if (strcmp (u, (const gchar*)uris->data) == 0)
 			return TRUE;
 			
 		uris = g_slist_next (uris);
