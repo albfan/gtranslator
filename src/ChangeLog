@@ -1,3 +1,9 @@
+2008-01-27  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* utils_gui.ch:
+	* main.c:
+	Now about dialogs have the link button.
+
 2008-01-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* message-table.c:

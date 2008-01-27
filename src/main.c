@@ -28,6 +28,7 @@
 #include "application.h"
 #include "prefs-manager-app.h"
 #include "plugins-engine.h"
+#include "utils_gui.h"
 
 #include <locale.h>
 #include <glib.h>
@@ -92,6 +93,8 @@ main(gint argc,
 	 * Init plugin engine
 	 */
 	engine = gtranslator_plugins_engine_get_default ();
+	
+	gtk_about_dialog_set_url_hook (gtranslator_utils_activate_url, NULL, NULL);
 
 	/* 
 	 * Create the main app-window. 

@@ -22,6 +22,7 @@
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkmenu.h>
+#include <gtk/gtkaboutdialog.h>
 
 GtkWidget     *gtranslator_gtk_button_new_with_stock_icon (const gchar *label,
 				      const gchar *stock_id);
@@ -54,5 +55,9 @@ gboolean       g_utf8_caselessnmatch                  (const gchar *s1,
 						       const gchar *s2,
 						       gssize n1,
 						       gssize n2);
+
+void           gtranslator_utils_activate_url         (GtkAboutDialog *dialog,
+						       const gchar *url,
+						       gpointer data);
 
 #endif

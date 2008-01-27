@@ -25,7 +25,7 @@
 
 #include <string.h>
 
-#include <libgnomevfs/gnome-vfs.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glade/glade.h>
@@ -537,4 +537,36 @@ finally_2:
 	g_free (normalized_s2);	
 
 	return ret;
+}
+
+void
+gtranslator_utils_activate_url (GtkAboutDialog *dialog,
+				const gchar *url,
+				gpointer data)
+{
+	gchar **open;
+	gchar *program;
+	GPtrArray *array;
+
+	if (g_find_program_in_path ("xdg-open"))
+	{
+		program = g_strdup ("xdg-open");
+	}
+	else return;
+	
+	array = g_ptr_array_new ();
+	g_ptr_array_add (array, program);
+	g_ptr_array_add (array, g_strdup (url));
+	
+	open = (gchar **)g_ptr_array_free (array, FALSE);
+					
+	gdk_spawn_on_screen (gdk_screen_get_default (),
+			     NULL,
+			     open,
+			     NULL,
+			     G_SPAWN_SEARCH_PATH,
+			     NULL,
+			     NULL, NULL, NULL);
+					
+	g_strfreev (open);
 }
