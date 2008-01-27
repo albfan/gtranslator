@@ -65,7 +65,6 @@ free_window_data (WindowData *data)
 {
 	g_return_if_fail (data != NULL);
 	
-	g_object_unref (data->panel);
 	g_free (data);
 }
 
