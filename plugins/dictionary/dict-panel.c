@@ -54,8 +54,6 @@ GTR_PLUGIN_DEFINE_TYPE(GtranslatorDictPanel, gtranslator_dict_panel, GTK_TYPE_VB
 struct _GtranslatorDictPanelPrivate
 {
 	GtkPaned   *paned;
-
-	GtkTooltips *tooltips;
   
 	GConfClient *gconf_client;
 	guint notify_id;

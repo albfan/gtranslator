@@ -37,6 +37,10 @@
 #include "egg-toolbar-editor.h"
 #include "egg-editable-toolbar.h"
 
+#include <gdl/gdl-dock.h>
+#include <gdl/gdl-dock-bar.h>
+#include <gdl/gdl-dock-layout.h>
+#include <gdl/gdl-switcher.h>
 
 #include <glib.h>
 #include <glib-object.h>
@@ -59,6 +63,7 @@ struct _GtranslatorWindowPrivate
 	GtkWidget *hpaned;
 	
 	GtkWidget *menubar;
+	GtkWidget *view_menu;
 	GtkWidget *toolbar;
 	GtkActionGroup *always_sensitive_action_group;
 	GtkActionGroup *action_group;
@@ -68,6 +73,10 @@ struct _GtranslatorWindowPrivate
 	
 	GtkWidget *sidebar;
 	gint sidebar_size;
+	
+	GtkWidget *dock;
+ 	GdlDockLayout *layout_manager;
+	GHashTable *widgets;
 	
 	GtkWidget *statusbar;
 	guint generic_message_cid;
@@ -96,8 +105,8 @@ static const GtkActionEntry always_sensitive_entries[] = {
 	{ "File", NULL, N_("_File") },
         { "Edit", NULL, N_("_Edit") },
 	{ "View", NULL, N_("_View") },
-	{ "Bookmarks", NULL, N_("_Bookmarks") },
-	{ "Actions", NULL, N_("_Actions") },
+	//{ "Bookmarks", NULL, N_("_Bookmarks") },
+	//{ "Actions", NULL, N_("_Actions") },
 	{ "Search", NULL, N_("_Search") },
         { "Go", NULL, N_("_Go") },
 	{ "Help", NULL, N_("_Help") },
@@ -180,14 +189,19 @@ static const GtkActionEntry entries[] = {
 	  N_("Toggle fuzzy status of a message"),
 	  G_CALLBACK (gtranslator_message_status_toggle_fuzzy) },
 	
+	/* View menu */
+	{ "ViewSidePane", NULL, N_("Side _Pane"), "F9",
+	  N_("Show or hide the side pane in the current window"),
+	  NULL },
+	
 	/* Bookmarks menu */
-	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
+	/*{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
           N_("Add a bookmark to the current message"), NULL},
 	{ "BookmarksEdit", GTK_STOCK_EDIT, N_("_Edit Bookmarks"), "<control>B",
-          N_("Edit stored bookmarks"), NULL},
+          N_("Edit stored bookmarks"), NULL},*/
 	
 	/* Action menu */
-	{ "ActionsCompile", GTK_STOCK_CONVERT, N_("_Compile"), NULL,
+	/*{ "ActionsCompile", GTK_STOCK_CONVERT, N_("_Compile"), NULL,
           N_("Compile the current file to a MO file"), NULL },
 	{ "ActionsRefresh", GTK_STOCK_REFRESH, NULL, NULL,
           N_("  "), NULL },
@@ -197,7 +211,7 @@ static const GtkActionEntry entries[] = {
 	  //G_CALLBACK(gtranslator_auto_translation_dialog) },
 	{ "ActionsRemoveTranslations", GTK_STOCK_REMOVE, N_("Remo_ve All Translations..."), NULL,
           N_("Remove all existing translations"), NULL},
-	  //G_CALLBACK(gtranslator_remove_all_translations_dialog) },
+	  //G_CALLBACK(gtranslator_remove_all_translations_dialog) },*/
 	
         /* Go menu */
         { "GoFirst", GTK_STOCK_GOTO_FIRST, NULL, NULL,
@@ -244,11 +258,305 @@ static const GtkActionEntry entries[] = {
 	
 };
 
-static const GtkToggleActionEntry toggle_entries[] = {
-	{ "ViewSidePane", NULL, N_("Side _Pane"), "F9",
-	  N_("Show or hide the side pane in the current window"),
-	  G_CALLBACK (gtranslator_actions_view_show_side_pane), FALSE }
-};
+/*
+ * Dock funcs
+ */
+static void
+on_toggle_widget_view (GtkCheckMenuItem *menuitem,
+		       GtkWidget *dockitem)
+{
+	gboolean state;
+	state = gtk_check_menu_item_get_active (menuitem);
+	if (state)
+		gdl_dock_item_show_item (GDL_DOCK_ITEM (dockitem));
+	else
+		gdl_dock_item_hide_item (GDL_DOCK_ITEM (dockitem));
+}
+
+static void
+on_update_widget_view_menuitem (gpointer key,
+				gpointer wid,
+				gpointer data)
+{
+	GtkCheckMenuItem *menuitem;
+	GdlDockItem *dockitem;
+	
+	dockitem = g_object_get_data (G_OBJECT (wid), "dockitem");
+	menuitem = g_object_get_data (G_OBJECT (wid), "menuitem");
+	
+	g_signal_handlers_block_by_func (menuitem,
+					 G_CALLBACK (on_toggle_widget_view),
+					 dockitem);
+	
+	if (GDL_DOCK_OBJECT_ATTACHED (dockitem))
+		gtk_check_menu_item_set_active (menuitem, TRUE);
+	else
+		gtk_check_menu_item_set_active (menuitem, FALSE);
+	
+	g_signal_handlers_unblock_by_func (menuitem,
+					   G_CALLBACK (on_toggle_widget_view),
+					   dockitem);
+}
+
+static void 
+on_layout_dirty_notify (GObject *object,
+			GParamSpec *pspec,
+			GtranslatorWindow *window)
+{
+	if (!strcmp (pspec->name, "dirty")) {
+		gboolean dirty;
+		g_object_get (object, "dirty", &dirty, NULL);
+		if (dirty) {
+			/* Update UI toggle buttons */
+			g_hash_table_foreach (window->priv->widgets,
+					      on_update_widget_view_menuitem,
+					      NULL);
+		}
+	}
+}
+
+static void
+gtranslator_window_layout_save (GtranslatorWindow *window,
+			const gchar *filename,
+			const gchar *name)
+{
+	g_return_if_fail (GTR_IS_WINDOW (window));
+	g_return_if_fail (filename != NULL);
+
+	gdl_dock_layout_save_layout (window->priv->layout_manager, name);
+	if (!gdl_dock_layout_save_to_file (window->priv->layout_manager, filename))
+		g_warning ("Saving dock layout to '%s' failed!", filename);
+}
+
+static void
+gtranslator_window_layout_load (GtranslatorWindow *window,
+			const gchar *layout_filename,
+			const gchar *name)
+{
+	g_return_if_fail (GTR_IS_WINDOW (window));
+
+	if (!layout_filename ||
+		!gdl_dock_layout_load_from_file (window->priv->layout_manager,
+						 layout_filename))
+	{
+		gchar *filename;
+		
+		filename = g_build_filename (DATADIR"/layout.xml", NULL);
+		//DEBUG_PRINT ("Layout = %s", filename);
+		if (!gdl_dock_layout_load_from_file (window->priv->layout_manager,
+						     filename))
+			g_warning ("Loading layout from '%s' failed!!", filename);
+		g_free (filename);
+	}
+	
+	if (!gdl_dock_layout_load_layout (window->priv->layout_manager, name))
+		g_warning ("Loading layout failed!!");
+}
+
+
+static gboolean
+remove_from_widgets_hash (gpointer name,
+			  gpointer hash_widget,
+			  gpointer widget)
+{
+	if (hash_widget == widget)
+		return TRUE;
+	return FALSE;
+}
+
+static void
+on_widget_destroy (GtkWidget *widget,
+		   GtranslatorWindow *window)
+{
+	//DEBUG_PRINT ("Widget about to be destroyed");
+	g_hash_table_foreach_remove (window->priv->widgets,
+				     remove_from_widgets_hash,
+				     widget);
+}
+
+static void
+on_widget_remove (GtkWidget *container,
+		  GtkWidget *widget,
+		  GtranslatorWindow *window)
+{
+	GtkWidget *dock_item;
+
+	dock_item = g_object_get_data (G_OBJECT (widget), "dockitem");
+	if (dock_item)
+	{
+		gchar* unique_name = g_object_get_data(G_OBJECT(dock_item), "unique_name");
+		g_free(unique_name);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (dock_item),
+						      G_CALLBACK (on_widget_remove),
+						      window);
+		gdl_dock_item_unbind (GDL_DOCK_ITEM(dock_item));
+	}
+	if (g_hash_table_foreach_remove (window->priv->widgets,
+					 remove_from_widgets_hash,
+					 widget)){
+		//DEBUG_PRINT ("Widget removed from container");
+	}
+}
+
+static void
+on_widget_removed_from_hash (gpointer widget)
+{
+	GtranslatorWindow *window;
+	GtkWidget *menuitem;
+	GdlDockItem *dockitem;
+	
+	//DEBUG_PRINT ("Removing widget from hash");
+	
+	window = g_object_get_data (G_OBJECT (widget), "window-object");
+	dockitem = g_object_get_data (G_OBJECT (widget), "dockitem");
+	menuitem = g_object_get_data (G_OBJECT (widget), "menuitem");
+	
+	gtk_widget_destroy (menuitem);
+	
+	g_object_set_data (G_OBJECT (widget), "dockitem", NULL);
+	g_object_set_data (G_OBJECT (widget), "menuitem", NULL);
+
+	g_signal_handlers_disconnect_by_func (G_OBJECT (widget),
+					      G_CALLBACK (on_widget_destroy), window);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (dockitem),
+					      G_CALLBACK (on_widget_remove), window);
+	
+	g_object_unref (G_OBJECT (widget));
+}
+
+static void 
+add_widget_full (GtranslatorWindow *window, 
+		 GtkWidget *widget,
+		 const char *name,
+		 const char *title,
+		 const char *stock_id,
+		 GtranslatorWindowPlacement placement,
+		 gboolean locked,
+		 GError **error)
+{
+	GtkWidget *item;
+	GtkCheckMenuItem* menuitem;
+
+	g_return_if_fail (GTR_IS_WINDOW (window));
+	g_return_if_fail (GTK_IS_WIDGET (widget));
+	g_return_if_fail (name != NULL);
+	g_return_if_fail (title != NULL);
+
+	/* Add the widget to hash */
+	if (window->priv->widgets == NULL)
+	{
+		window->priv->widgets = g_hash_table_new_full (g_str_hash, g_str_equal,
+							       g_free,
+							       on_widget_removed_from_hash);
+	}
+	g_hash_table_insert (window->priv->widgets, g_strdup (name), widget);
+	g_object_ref (widget);
+	
+	/* Add the widget to dock */
+	if (stock_id == NULL)
+		item = gdl_dock_item_new (name, title, GDL_DOCK_ITEM_BEH_NORMAL);
+	else
+		item = gdl_dock_item_new_with_stock (name, title, stock_id,
+						     GDL_DOCK_ITEM_BEH_NORMAL);
+	if (locked)
+	{
+		guint flags = 0;
+		flags |= GDL_DOCK_ITEM_BEH_NEVER_FLOATING;
+		flags |= GDL_DOCK_ITEM_BEH_CANT_CLOSE;
+		flags |= GDL_DOCK_ITEM_BEH_CANT_ICONIFY;
+		flags |= GDL_DOCK_ITEM_BEH_NO_GRIP;
+		g_object_set(G_OBJECT(item), "behavior", flags, NULL);
+	}
+	
+	gtk_container_add (GTK_CONTAINER (item), widget);
+	gdl_dock_add_item (GDL_DOCK (window->priv->dock),
+			   GDL_DOCK_ITEM (item), placement);
+	gtk_widget_show_all (item);
+	
+	/* Add toggle button for the widget */
+	menuitem = GTK_CHECK_MENU_ITEM (gtk_check_menu_item_new_with_label (title));
+	gtk_widget_show (GTK_WIDGET (menuitem));
+	gtk_check_menu_item_set_active (menuitem, TRUE);
+	gtk_menu_append (GTK_MENU (window->priv->view_menu), GTK_WIDGET (menuitem));
+
+	if (locked)
+		g_object_set( G_OBJECT(menuitem), "visible", FALSE, NULL);
+
+	
+	g_object_set_data (G_OBJECT (widget), "window-object", window);
+	g_object_set_data (G_OBJECT (widget), "menuitem", menuitem);
+	g_object_set_data (G_OBJECT (widget), "dockitem", item);
+	
+	/* For toggling widget view on/off */
+	g_signal_connect (G_OBJECT (menuitem), "toggled",
+			  G_CALLBACK (on_toggle_widget_view), item);
+	
+	/*
+	  Watch for widget removal/destruction so that it could be
+	  removed from widgets hash.
+	*/
+	g_signal_connect (G_OBJECT (item), "remove",
+			  G_CALLBACK (on_widget_remove), window);
+	g_signal_connect_after (G_OBJECT (widget), "destroy",
+				G_CALLBACK (on_widget_destroy), window);
+}
+
+static void 
+remove_widget (GtranslatorWindow *window,
+	       GtkWidget *widget,
+	       GError **error)
+{
+	GtkWidget *dock_item;
+
+	g_return_if_fail (GTR_IS_WINDOW (window));
+	g_return_if_fail (GTK_IS_WIDGET (widget));
+
+	g_return_if_fail (window->priv->widgets != NULL);
+	
+	dock_item = g_object_get_data (G_OBJECT (widget), "dockitem");
+	g_return_if_fail (dock_item != NULL);
+	
+	/* Remove the widget from container */
+	g_object_ref (widget);
+	/* It should call on_widget_remove() and clean up should happen */
+	gtk_container_remove (GTK_CONTAINER (dock_item), widget);
+	g_object_unref (widget);
+}
+
+static void 
+gtranslator_app_present_widget (GtranslatorWindow *window,
+			   GtkWidget *widget,
+			   GError **error)
+{
+	GdlDockItem *dock_item;
+	GtkWidget *parent;
+	
+	g_return_if_fail (GTR_IS_WINDOW (window));
+	g_return_if_fail (GTK_IS_WIDGET (widget));
+	
+	g_return_if_fail (window->priv->widgets != NULL);
+	
+	dock_item = g_object_get_data (G_OBJECT(widget), "dockitem");
+	g_return_if_fail (dock_item != NULL);
+	
+	/* Hack to present the dock item if it's in a notebook dock item */
+	parent = gtk_widget_get_parent (GTK_WIDGET(dock_item) );
+	if (GTK_IS_NOTEBOOK (parent))
+	{
+		gint pagenum;
+		pagenum = gtk_notebook_page_num (GTK_NOTEBOOK (parent), GTK_WIDGET (dock_item));
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (parent), pagenum);
+	} 
+	else if (!GDL_DOCK_OBJECT_ATTACHED (dock_item)) 
+	{ 
+	    gdl_dock_item_show_item (GDL_DOCK_ITEM (dock_item));  
+	}
+	
+	/* FIXME: If the item is floating, present the window */
+	/* FIXME: There is no way to detect if a widget was floating before it was
+	detached since it no longer has a parent there is no way to access the
+	floating property of the GdlDock structure.*/
+}
 
 void
 set_sensitive_according_to_message(GtranslatorWindow *window,
@@ -867,7 +1175,8 @@ gtranslator_window_draw (GtranslatorWindow *window)
 	GtkWidget *hbox; //Statusbar and progressbar
 	GtkWidget *widget;
 	GError *error = NULL;
-	gint table_pane_position;
+	GtkWidget *dockbar;
+	GtkWidget *hbox_dock;
 	
 	GtranslatorWindowPrivate *priv = window->priv;
 	
@@ -892,9 +1201,6 @@ gtranslator_window_draw (GtranslatorWindow *window)
 				      always_sensitive_entries,
 				      G_N_ELEMENTS(always_sensitive_entries),
 				      window);
-
-	gtk_action_group_add_toggle_actions (priv->always_sensitive_action_group, toggle_entries,
-				      G_N_ELEMENTS (toggle_entries), window);
 
 	gtk_ui_manager_insert_action_group (priv->ui_manager,
 					    priv->always_sensitive_action_group, 0);
@@ -921,7 +1227,9 @@ gtranslator_window_draw (GtranslatorWindow *window)
 			    priv->menubar,
 			    FALSE, FALSE, 0);
 	
-	/* recent files */	
+	/*
+	 * Recent files 
+	 */	
 	priv->recent_manager = gtk_recent_manager_get_default();
 
 	priv->recent_menu = create_recent_chooser_menu (window, priv->recent_manager);
@@ -952,44 +1260,32 @@ gtranslator_window_draw (GtranslatorWindow *window)
 			    FALSE, FALSE, 0);
 	gtk_widget_show (priv->toolbar);
 	
-	
 	/*
-	 * hpaned
+	 * Docker
 	 */
-	priv->hpaned = gtk_hpaned_new ();
-	g_signal_connect (priv->hpaned,
-			  "notify::position",
-			  G_CALLBACK (window_sidebar_position_change_cb),
+	hbox = gtk_hbox_new (FALSE, 0);
+	priv->dock = gdl_dock_new ();
+	gtk_widget_show (priv->dock);
+	gtk_box_pack_end(GTK_BOX (hbox),
+			   priv->dock, TRUE, TRUE, 0);
+	
+	dockbar = gdl_dock_bar_new (GDL_DOCK(priv->dock));
+	gtk_widget_show (dockbar);
+	gtk_box_pack_start (GTK_BOX (hbox),
+			    dockbar, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->main_box),
+			    hbox, TRUE, TRUE, 0);
+	gtk_widget_show (hbox);
+	
+	priv->layout_manager = gdl_dock_layout_new (GDL_DOCK (priv->dock));
+	g_object_set (priv->layout_manager->master,
+		      "switcher-style",
+		      gtranslator_prefs_manager_get_gdl_style (),
+		      NULL);
+	g_signal_connect (priv->layout_manager,
+			  "notify::dirty",
+			  G_CALLBACK (on_layout_dirty_notify),
 			  window);
-	
-	gtk_paned_set_position (GTK_PANED (priv->hpaned),
-				gtranslator_prefs_manager_get_side_panel_size());
-	
-	gtk_box_pack_start (GTK_BOX (priv->main_box), priv->hpaned,
-			    TRUE, TRUE, 0);
-	gtk_widget_show (priv->hpaned);
-	
-	
-	/*
-	 * sidebar
-	 */
-	priv->sidebar = gtranslator_panel_new(GTK_ORIENTATION_VERTICAL);
-	if(!gtranslator_prefs_manager_get_side_pane_position())
-		gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
-	else gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->sidebar, FALSE, FALSE);
-
-	g_signal_connect_after (priv->sidebar,
-				"show",
-				G_CALLBACK (side_pane_visibility_changed),
-				window);
-	g_signal_connect_after (priv->sidebar,
-				"hide",
-				G_CALLBACK (side_pane_visibility_changed),
-				window);
-
-	if (gtranslator_prefs_manager_get_side_pane_visible ())
-		gtk_widget_show(priv->sidebar);
-
 
 	/*
 	 * notebook
@@ -1003,13 +1299,6 @@ gtranslator_window_draw (GtranslatorWindow *window)
 			  "tab_close_request",
 			  G_CALLBACK (notebook_tab_close_request),
 			  window);
-	
-	if(!gtranslator_prefs_manager_get_side_pane_position())
-		gtk_paned_pack2(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
-	else gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->notebook, FALSE, FALSE);
-	gtk_widget_show(priv->notebook);
-
-
 	/*
 	 * hbox
 	 */
@@ -1048,6 +1337,8 @@ gtranslator_window_init (GtranslatorWindow *window)
 {
 	GtkTargetList *tl;
 	gint active_page;
+	GtkWidget *view_menu;
+	gchar *filename;
 	
 	window->priv = GTR_WINDOW_GET_PRIVATE (window);
 	
@@ -1086,15 +1377,40 @@ gtranslator_window_init (GtranslatorWindow *window)
 	                  NULL);
 
 	/*
+	 * Create widgets menu 
+	 */
+	view_menu = 
+		gtk_ui_manager_get_widget (window->priv->ui_manager,
+					   "/MainMenu/ViewMenu");
+	window->priv->view_menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (view_menu));
+	
+	/*
 	 * Plugins
 	 */
 	gtranslator_plugins_engine_update_plugins_ui (gtranslator_plugins_engine_get_default (),
 						window, TRUE);
-						
-	/*We have to active the right tab after plugins load*/
-	active_page = gtranslator_prefs_manager_get_side_panel_active_page ();
-	_gtranslator_panel_set_active_item_by_id (GTR_PANEL (window->priv->sidebar),
-					    active_page);
+	
+	/*
+	 * Adding notebook to dock
+	 */
+	add_widget_full (window,
+			 window->priv->notebook,
+			 "GtranslatorNotebook",
+			 _("Documents"),
+			 NULL,
+			 GTR_WINDOW_PLACEMENT_CENTER,
+			 TRUE,
+			 NULL);
+	
+	/*
+	 * Loading dock layout
+	 */
+	filename = g_strdup_printf ("%s/.config/gtranslator-layout.xml",
+				    g_get_home_dir());
+	gtranslator_window_layout_load (window,
+					filename,
+					NULL);
+	g_free (filename);
 }
 
 static void
@@ -1126,7 +1442,7 @@ gtranslator_window_finalize (GObject *object)
 static void
 save_panes_state(GtranslatorWindow *window)
 {
-	gint pane_page;
+	gchar *filename;
 
         if (gtranslator_prefs_manager_window_size_can_set ())
         	gtranslator_prefs_manager_set_window_size (window->priv->width,
@@ -1135,15 +1451,10 @@ save_panes_state(GtranslatorWindow *window)
         if (gtranslator_prefs_manager_window_state_can_set ())
 		gtranslator_prefs_manager_set_window_state (window->priv->window_state);
 
-        if ((window->priv->sidebar_size > 0) &&
-	    gtranslator_prefs_manager_side_panel_size_can_set ())
-		gtranslator_prefs_manager_set_side_panel_size (
-                                        window->priv->sidebar_size);
-
-	pane_page = _gtranslator_panel_get_active_item_id (GTR_PANEL (window->priv->sidebar));
-	if (pane_page != 0 &&
-	    gtranslator_prefs_manager_side_panel_active_page_can_set ())
-		gtranslator_prefs_manager_set_side_panel_active_page (pane_page);
+	filename = g_strdup_printf ("%s/.config/gtranslator-layout.xml",
+				    g_get_home_dir());
+        gtranslator_window_layout_save (window,
+					filename, NULL);
 }
 
 static void
@@ -1369,4 +1680,34 @@ gtranslator_window_update_progress_bar(GtranslatorWindow *window)
 		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(window->priv->progressbar),
 					      percentage);
 	}
+}
+
+void
+gtranslator_window_add_widget (GtranslatorWindow *window,
+			       GtkWidget *widget,
+			       const gchar *name,
+			       const gchar *title,
+			       const gchar *stock_id,
+			       GtranslatorWindowPlacement placement)
+{
+	/*FIXME: We have to manage the error*/
+	add_widget_full (window, widget,
+			 name, title, stock_id,
+			 placement, FALSE, NULL);
+}
+
+void
+gtranslator_window_remove_widget (GtranslatorWindow *window,
+				  GtkWidget *widget)
+{
+	/*FIXME: We have to manage the error*/
+	remove_widget (window, widget, NULL);
+}
+
+GObject *
+_gtranslator_window_get_layout_manager (GtranslatorWindow *window)
+{
+	g_return_val_if_fail (GTR_IS_WINDOW (window), NULL);
+	
+	return G_OBJECT (window->priv->layout_manager);
 }

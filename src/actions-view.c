@@ -16,26 +16,3 @@
  */
 
 #include "actions.h"
-#include "window.h"
-
-void
-gtranslator_actions_view_show_side_pane (GtkAction   *action,
-					 GtranslatorWindow *window)
-{
-	gboolean visible;
-	GtranslatorPanel *panel;
-
-	visible = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-
-	panel = gtranslator_window_get_side_panel (window);
-
-	if (visible)
-	{
-		gtk_widget_show (GTK_WIDGET (panel));
-		gtk_widget_grab_focus (GTK_WIDGET (panel));
-	}
-	else
-	{
-		gtk_widget_hide (GTK_WIDGET (panel));
-	}
-}

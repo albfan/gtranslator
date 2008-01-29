@@ -74,8 +74,7 @@
 
 /* Interface */
 #define GPM_INTERFACE_DIR		GTR_BASE_KEY "/interface"
-#define GPM_SIDE_PANE_VISIBLE		GPM_INTERFACE_DIR "/side_pane_visible"
-#define GPM_SIDE_PANE_POSITION		GPM_INTERFACE_DIR "/side_pane_position"
+#define GPM_GDL_STYLE			GPM_INTERFACE_DIR "/gdl_style"
 
 /* Fallback default values. Keep in sync with gtranslator.schemas */
 
@@ -114,8 +113,7 @@
 #define GPM_DEFAULT_PLURALS		(const gchar*) ""
 
 /* Interface */
-#define GPM_DEFAULT_SIDE_PANE_VISIBLE	1
-#define GPM_DEFAULT_SIDE_PANE_POSITION	0 //0 Left - 1 Right
+#define GPM_DEFAULT_GDL_STYLE           2 //Both icons and text
 
 /** LIFE CYCLE MANAGEMENT FUNCTIONS **/
 
@@ -195,12 +193,8 @@ const gchar *            gtranslator_prefs_manager_get_email                    
 void                     gtranslator_prefs_manager_set_number_plurals           (gint plurals);
 gint                     gtranslator_prefs_manager_get_number_plurals           (void);
 
-/* Side pane visibility */
-void			gtranslator_prefs_manager_set_side_pane_visible		(gboolean side_pane_visible);
-gboolean		gtranslator_prefs_manager_get_side_pane_visible		(void);
-
-/* Side pane position */
-void                    gtranslator_prefs_manager_set_side_pane_position        (gboolean position);
-gboolean                gtranslator_prefs_manager_get_side_pane_position        (void);
+/*gdl style*/
+void                     gtranslator_prefs_manager_set_gdl_style                (gint style);
+gint                     gtranslator_prefs_manager_get_gdl_style                (void);
 
 #endif  /* __GTR_PREFS_MANAGER_H__ */

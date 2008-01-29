@@ -67,6 +67,17 @@ struct _GtranslatorWindowClass
 	GtkWindowClass parent_class;
 };
 
+typedef enum
+{
+	GTR_WINDOW_PLACEMENT_NONE = 0,
+	GTR_WINDOW_PLACEMENT_TOP,
+	GTR_WINDOW_PLACEMENT_BOTTOM,
+	GTR_WINDOW_PLACEMENT_RIGHT,
+	GTR_WINDOW_PLACEMENT_LEFT,
+	GTR_WINDOW_PLACEMENT_CENTER,
+	GTR_WINDOW_PLACEMENT_FLOATING
+} GtranslatorWindowPlacement;
+
 /*
  * Public methods
  */
@@ -85,8 +96,6 @@ GtranslatorNotebook
                  *gtranslator_window_get_notebook     (GtranslatorWindow *window);
 GtranslatorHeader
 		*gtranslator_window_get_header_from_active_tab (GtranslatorWindow *window);
-
-GtranslatorPanel *gtranslator_window_get_side_panel   (GtranslatorWindow *window);
 
 GtkStatusbar 	 *gtranslator_window_get_statusbar    (GtranslatorWindow *window);
 
@@ -107,6 +116,19 @@ void              set_sensitive_according_to_message  (GtranslatorWindow *window
 						       GtranslatorPo *po);
 
 void              set_sensitive_according_to_window   (GtranslatorWindow *window);
+
+void              gtranslator_window_add_widget       (GtranslatorWindow *window,
+						       GtkWidget *widget,
+						       const gchar *name,
+						       const gchar *title,
+						       const gchar *stock_id,
+						       GtranslatorWindowPlacement placement);
+
+void              gtranslator_window_remove_widget    (GtranslatorWindow *window,
+						       GtkWidget *widget);
+
+GObject *        _gtranslator_window_get_layout_manager
+						      (GtranslatorWindow *window);
 
 G_END_DECLS
 

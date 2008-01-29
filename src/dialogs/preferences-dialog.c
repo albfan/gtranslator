@@ -456,51 +456,11 @@ setup_po_header_pages(GtranslatorPreferencesDialog *dlg)
 
 /***************Interface pages****************/
 
-static void
-right_radio_button_toggled(GtkToggleButton *button,
-			   GtranslatorPreferencesDialog *dlg)
-{
-	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->right_radiobutton));
-	if(gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL)
-		gtranslator_prefs_manager_set_side_pane_position(FALSE);
-	else
-		gtranslator_prefs_manager_set_side_pane_position(TRUE);
-}
-
-static void
-left_radio_button_toggled(GtkToggleButton *button,
-			  GtranslatorPreferencesDialog *dlg)
-{
-	g_return_if_fail(button == GTK_TOGGLE_BUTTON(dlg->priv->left_radiobutton));
-	if(gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL)
-		gtranslator_prefs_manager_set_side_pane_position(TRUE);
-	else
-		gtranslator_prefs_manager_set_side_pane_position(FALSE);
-}
 
 static void
 setup_interface_pages(GtranslatorPreferencesDialog *dlg)
 {
-	gboolean pos; //FALSE: left
 	
-	/*Setup initial value*/
-	pos = gtranslator_prefs_manager_get_side_pane_position();
-	if(gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL)
-		pos = !pos;
-
-	if(pos)
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->right_radiobutton),
-					     pos);
-	else gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg->priv->left_radiobutton),
-					  pos);
-	
-	/*Connect signals*/
-	g_signal_connect(dlg->priv->left_radiobutton, "toggled",
-			 G_CALLBACK(left_radio_button_toggled),
-			 dlg);
-	g_signal_connect(dlg->priv->right_radiobutton, "toggled",
-			 G_CALLBACK(right_radio_button_toggled),
-			 dlg);
 }
 
 static void

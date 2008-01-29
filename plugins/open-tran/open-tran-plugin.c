@@ -26,7 +26,6 @@
 
 #include <glib/gi18n-lib.h>
 #include "window.h"
-#include "panel.h"
 
 #define OPEN_TRAN_PLUGIN_ICON PIXMAPSDIR"/open-tran.png"
 #define WINDOW_DATA_KEY	"GtranslatorOpenTranPluginWindowData"
@@ -66,16 +65,13 @@ static void
 impl_activate (GtranslatorPlugin *plugin,
 	       GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
-	GtkWidget *image = NULL;
+	//GtkWidget *image = NULL;
 	GtkWidget *opentran;
-	GdkPixbuf *pixbuf;
+	/*GdkPixbuf *pixbuf;
 	GtkIconSet *iconset;
-	GError *error = NULL;
+	GError *error = NULL;*/
 	
-	panel = gtranslator_window_get_side_panel (window);
-
-	pixbuf = gdk_pixbuf_new_from_file(OPEN_TRAN_PLUGIN_ICON, &error);
+	/*pixbuf = gdk_pixbuf_new_from_file(OPEN_TRAN_PLUGIN_ICON, &error);
 	
 	if (error)
 	{
@@ -90,17 +86,17 @@ impl_activate (GtranslatorPlugin *plugin,
 	
 		image = gtk_image_new_from_icon_set(iconset,
 						    GTK_ICON_SIZE_MENU);
-	}
+	}*/
 
 	opentran = gtranslator_open_tran_panel_new(window);
 
-	gtranslator_panel_add_item (panel,
-			      opentran,
-			      _("Open-Tran"),
-			      image);
+	gtranslator_window_add_widget (window,
+				       opentran,
+				       "GtranslatorOpenTranPlugin",
+				       _("Open Tran"),
+				       NULL,
+				       GTR_WINDOW_PLACEMENT_LEFT);
 
-	gtk_object_sink (GTK_OBJECT (image));
-	
 	g_object_set_data(G_OBJECT(window),
 			  WINDOW_DATA_KEY,
 			  opentran);
@@ -112,16 +108,14 @@ static void
 impl_deactivate	(GtranslatorPlugin *plugin,
 		 GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
 	GtkWidget *opentran;
 
 	opentran = (GtkWidget *) g_object_get_data (G_OBJECT (window),
 						    WINDOW_DATA_KEY);
 	g_return_if_fail (opentran != NULL);
 
-	panel = gtranslator_window_get_side_panel (window);
-	gtranslator_panel_remove_item (panel, opentran);
-
+	gtranslator_window_remove_widget (window, opentran);
+	
 	g_object_set_data (G_OBJECT (window), WINDOW_DATA_KEY, NULL);
 }
 

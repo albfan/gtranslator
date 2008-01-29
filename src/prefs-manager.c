@@ -334,13 +334,9 @@ DEFINE_STRING_PREF(plurals,
 		   GPM_DEFAULT_PLURALS)
 
 /* Interface */
-DEFINE_BOOL_PREF (side_pane_visible,
-		  GPM_SIDE_PANE_VISIBLE,
-		  GPM_DEFAULT_SIDE_PANE_VISIBLE)
-
-DEFINE_BOOL_PREF (side_pane_position,
-		  GPM_SIDE_PANE_POSITION,
-		  GPM_DEFAULT_SIDE_PANE_POSITION)
+DEFINE_INT_PREF (gdl_style,
+		 GPM_GDL_STYLE,
+		 GPM_DEFAULT_GDL_STYLE)
 
 /* The following functions are taken from gconf-client.c 
  * and partially modified. 

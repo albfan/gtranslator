@@ -27,6 +27,8 @@
 #endif
 
 #include <string.h>
+#include <gdl/gdl-dock-layout.h>
+#include <gdl/gdl-switcher.h>
 
 #include "prefs-manager.h"
 #include "prefs-manager-private.h"
@@ -55,6 +57,10 @@ static void gtranslator_prefs_manager_visible_whitespace_changed(GConfClient *cl
 							       GConfEntry  *entry, 
 							       gpointer     user_data);
 
+static void gtranslator_prefs_manager_gdl_style_changed (GConfClient* client, guint id,
+							 GConfEntry* entry,
+							 gpointer user_data);
+
 /*
 static void gtranslator_prefs_manager_system_font_changed	(GConfClient *client,
 							 guint        cnxn_id,
@@ -74,7 +80,6 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_DEFAULT_WINDOW_STATE		0
 #define GTR_STATE_DEFAULT_WINDOW_WIDTH		775
 #define GTR_STATE_DEFAULT_WINDOW_HEIGHT		500
-#define GTR_STATE_DEFAULT_SIDE_PANEL_SIZE	200
 #define GTR_STATE_DEFAULT_CONTENT_PANE_POS	325
 #define GTR_STATE_DEFAULT_COMMENT_PANE_POS	525
 
@@ -84,16 +89,12 @@ static void gtranslator_prefs_manager_auto_save_changed	(GConfClient *client,
 #define GTR_STATE_WINDOW_STATE "state"
 #define GTR_STATE_WINDOW_HEIGHT "height"
 #define GTR_STATE_WINDOW_WIDTH "width"
-#define GTR_STATE_SIDE_PANEL_SIZE "side_panel_size"
-#define GTR_STATE_SIDE_PANEL_ACTIVE_PAGE "side_panel_active_page"
 #define GTR_STATE_CONTENT_PANE_POS "content_pane_pos"
 #define GTR_STATE_COMMENT_PANE_POS "comment_pane_pos"
 
 static gint window_state = -1;
 static gint window_height = -1;
 static gint window_width = -1;
-static gint side_panel_size = -1;
-static gint side_panel_active_page = 0;
 static gint content_pane_pos = -1;
 static gint comment_pane_pos = -1;
 
@@ -344,79 +345,6 @@ gtranslator_prefs_manager_window_size_can_set (void)
 	return TRUE;
 }
 
-/* Side panel */
-gint
-gtranslator_prefs_manager_get_side_panel_size (void)
-{
-	if (side_panel_size == -1)
-	{
-		gtranslator_state_get_int (GTR_STATE_WINDOW_GROUP,
-				     GTR_STATE_SIDE_PANEL_SIZE,
-				     GTR_STATE_DEFAULT_SIDE_PANEL_SIZE,
-				     &side_panel_size);
-	}
-
-	return side_panel_size;
-}
-
-gint 
-gtranslator_prefs_manager_get_default_side_panel_size (void)
-{
-	return GTR_STATE_DEFAULT_SIDE_PANEL_SIZE;
-}
-
-void 
-gtranslator_prefs_manager_set_side_panel_size (gint ps)
-{
-	g_return_if_fail (ps > -1);
-	
-	if (side_panel_size == ps)
-		return;
-		
-	side_panel_size = ps;
-	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
-			     GTR_STATE_SIDE_PANEL_SIZE,
-			     ps);
-}
-
-gboolean 
-gtranslator_prefs_manager_side_panel_size_can_set (void)
-{
-	return TRUE;
-}
-
-gint
-gtranslator_prefs_manager_get_side_panel_active_page (void)
-{
-	if (side_panel_active_page == 0)
-	{
-		gtranslator_state_get_int (GTR_STATE_WINDOW_GROUP,
-				     GTR_STATE_SIDE_PANEL_ACTIVE_PAGE,
-				     -1,
-				     &side_panel_active_page);
-	}
-
-	return side_panel_active_page;
-}
-
-void
-gtranslator_prefs_manager_set_side_panel_active_page (gint id)
-{
-	if (side_panel_active_page == id)
-		return;
-
-	side_panel_active_page = id;
-	gtranslator_state_set_int (GTR_STATE_WINDOW_GROUP,
-				   GTR_STATE_SIDE_PANEL_ACTIVE_PAGE,
-				   id);
-}
-
-gboolean 
-gtranslator_prefs_manager_side_panel_active_page_can_set (void)
-{
-	return TRUE;
-}
-
 /* Content pane */
 gint
 gtranslator_prefs_manager_get_content_pane_pos (void)
@@ -524,18 +452,12 @@ gtranslator_prefs_manager_app_init (void)
 				GPM_VISIBLE_WHITESPACE,
 				gtranslator_prefs_manager_visible_whitespace_changed,
 				NULL, NULL, NULL);
-/*
-		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
-				GPM_SYSTEM_FONT,
-				gtranslator_prefs_manager_system_font_changed,
-				NULL, NULL, NULL);
-
 		
-
 		gconf_client_notify_add (gtranslator_prefs_manager->gconf_client,
-				GPM_SAVE_DIR,
-				gtranslator_prefs_manager_auto_save_changed,
-				NULL, NULL, NULL);*/
+				GPM_GDL_STYLE,
+				gtranslator_prefs_manager_gdl_style_changed,
+				NULL, NULL, NULL);
+		
 	}
 
 	return gtranslator_prefs_manager != NULL;	
@@ -702,73 +624,20 @@ gtranslator_prefs_manager_visible_whitespace_changed (GConfClient *client,
 	}
 }
 
-/*
 static void
-gtranslator_prefs_manager_auto_save_changed (GConfClient *client,
-				       guint        cnxn_id,
-				       GConfEntry  *entry,
-				       gpointer     user_data)
+gtranslator_prefs_manager_gdl_style_changed (GConfClient* client, guint id,
+					     GConfEntry* entry,
+					     gpointer user_data)
 {
-	GList *docs;
-	GList *l;
-
-	gtranslator_debug (DEBUG_PREFS);
-
-	g_return_if_fail (entry->key != NULL);
-	g_return_if_fail (entry->value != NULL);
-
-	if (strcmp (entry->key, GPM_AUTO_SAVE) == 0)
-	{
-		gboolean auto_save;
-
-		if (entry->value->type == GCONF_VALUE_BOOL)
-			auto_save = gconf_value_get_bool (entry->value);
-		else
-			auto_save = GPM_DEFAULT_AUTO_SAVE;
-
-		docs = gtranslator_app_get_documents (gtranslator_app_get_default ());
-		l = docs;
-
-		while (l != NULL)
-		{
-			GtranslatorDocument *doc = GTR_DOCUMENT (l->data);
-			GtranslatorTab *tab = gtranslator_tab_get_from_document (doc);
-
-			gtranslator_tab_set_auto_save_enabled (tab, auto_save);
-
-			l = l->next;
-		}
-
-		g_list_free (docs);
-	}
-	else if (strcmp (entry->key,  GPM_AUTO_SAVE_INTERVAL) == 0)
-	{
-		gint auto_save_interval;
-
-		if (entry->value->type == GCONF_VALUE_INT)
-		{
-			auto_save_interval = gconf_value_get_int (entry->value);
-
-			if (auto_save_interval <= 0)
-				auto_save_interval = GPM_DEFAULT_AUTO_SAVE_INTERVAL;
-		}
-		else
-			auto_save_interval = GPM_DEFAULT_AUTO_SAVE_INTERVAL;
-
-		docs = gtranslator_app_get_documents (gtranslator_app_get_default ());
-		l = docs;
-
-		while (l != NULL)
-		{
-			GtranslatorDocument *doc = GTR_DOCUMENT (l->data);
-			GtranslatorTab *tab = gtranslator_tab_get_from_document (doc);
-
-			gtranslator_tab_set_auto_save_interval (tab, auto_save_interval);
-
-			l = l->next;
-		}
-
-		g_list_free (docs);
-	}
+	GtranslatorWindow *window = GTR_WINDOW (user_data);
+	GdlSwitcherStyle style;
+	GdlDockLayout *layout_manager;
+	
+	style = gtranslator_prefs_manager_get_gdl_style ();
+	
+	layout_manager = GDL_DOCK_LAYOUT (_gtranslator_window_get_layout_manager (window));
+	
+	g_object_set (G_OBJECT (layout_manager->master),
+		      "switcher-style", style, NULL);
 }
-*/
+

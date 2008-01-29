@@ -37,7 +37,7 @@
       <menuitem name="ViewSidePaneMenu" action="ViewSidePane"/>
     </menu>
 
-    <menu name="BookmarksMenu" action="Bookmarks">
+    <?--<menu name="BookmarksMenu" action="Bookmarks">
       <menuitem name="BookmarksAddMenu" action="BookmarksAdd"/>
       <menuitem name="BookmarksEditMenu" action="BookmarksEdit"/>
     </menu>
@@ -49,7 +49,7 @@
       <menuitem name="ActionsAutotranslateMenu" action="ActionsAutotranslate"/>
       <separator/>
       <menuitem name="ActionsRemoveTranslationsMenu" action="ActionsRemoveTranslations"/>
-    </menu>
+    </menu>--?>
 
     <menu name="GoMenu" action="Go">
       <menuitem name="GoFirstMenu" action="GoFirst"/>

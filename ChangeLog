@@ -1,3 +1,23 @@
+2008-01-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* plugins/open-tran/open-tran-plugin.c:
+	* plugins/dictionary/dict-panel.c:
+	* plugins/dictionary/dictionary-plugin.c:
+	* plugins/charmap/charmap-plugin.c:
+	* src/prefs-manager-app.c:
+	* src/actions.h:
+	* src/dialogs/preferences-dialog.c:
+	* src/window.c:
+	* src/actions-view.c:
+	* src/window.h:
+	* src/prefs-manager.c:
+	* src/prefs-manager.h:
+	* configure.ac:
+	* data/Makefile.am:
+	* data/gtranslator-ui.xml:
+	Switched to gdl and removed some useless menus.
+
+
 2008-01-27  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* plugins/dictionary/dictionary-plugin.c:

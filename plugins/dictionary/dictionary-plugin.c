@@ -21,7 +21,6 @@
 
 #include "dictionary-plugin.h"
 #include "dict-panel.h"
-#include "panel.h"
 #include "window.h"
 
 #include <glib/gi18n-lib.h>
@@ -98,36 +97,35 @@ static void
 impl_activate (GtranslatorPlugin *plugin,
 	       GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
-	GtkWidget *image;
-	GtkIconTheme *theme;
+	/*GtkWidget *image;
+	GtkIconTheme *theme;*/
 	WindowData *data;
 
 	//gtranslator_debug (DEBUG_PLUGINS);
 
-	panel = gtranslator_window_get_side_panel (window);
-
 	data = g_new (WindowData, 1);
 
-	theme = gtk_icon_theme_get_default ();
+	/*theme = gtk_icon_theme_get_default ();
 	
 	if (gtk_icon_theme_has_icon (theme, "accessories-dictionary"))
 		image = gtk_image_new_from_icon_name ("accessories-dictionary",
 						      GTK_ICON_SIZE_MENU);
 	else
 		image = gtk_image_new_from_icon_name ("gdict",
-						      GTK_ICON_SIZE_MENU);
+						      GTK_ICON_SIZE_MENU);*/
 
 	data->panel = create_dict_panel (window);
 	
 	restore_position(GTR_DICT_PANEL(data->panel));
 	
-	gtranslator_panel_add_item (panel,
-			      data->panel,
-			      _("Dictionary"),
-			      image);
+	gtranslator_window_add_widget (window,
+				       data->panel,
+				       "GtranslatorDictionaryPlugin",
+				       _("Dictionary"),
+				       NULL,
+				       GTR_WINDOW_PLACEMENT_LEFT);
 
-	gtk_object_sink (GTK_OBJECT (image));
+	//gtk_object_sink (GTK_OBJECT (image));
 
 	g_object_set_data_full (G_OBJECT (window),
 				WINDOW_DATA_KEY,
@@ -139,18 +137,13 @@ static void
 impl_deactivate	(GtranslatorPlugin *plugin,
 		 GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
 	WindowData *data;
-
-	//gtranslator_debug (DEBUG_PLUGINS);
 
 	data = (WindowData *) g_object_get_data (G_OBJECT (window),
 						 WINDOW_DATA_KEY);
 	g_return_if_fail (data != NULL);
 
-	panel = gtranslator_window_get_side_panel (window);
-	
-	gtranslator_panel_remove_item (panel, data->panel);
+	gtranslator_window_remove_widget (window, data->panel);
 
 	g_object_set_data (G_OBJECT (window), WINDOW_DATA_KEY, NULL);
 }

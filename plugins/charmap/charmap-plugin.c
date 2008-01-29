@@ -27,7 +27,6 @@
 
 #include <glib/gi18n-lib.h>
 #include "window.h"
-#include "panel.h"
 #include <gucharmap/gucharmap-table.h>
 #include <gucharmap/gucharmap-unicode-info.h>
 
@@ -217,35 +216,34 @@ static void
 impl_activate (GtranslatorPlugin *plugin,
 	       GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
-	GtkWidget *image;
-	GtkIconTheme *theme;
+	/*GtkWidget *image;
+	GtkIconTheme *theme;*/
 	GtkStatusbar *statusbar;
 	WindowData *data;
 
 	//gtranslator_debug (DEBUG_PLUGINS);
 
-	panel = gtranslator_window_get_side_panel (window);
-
 	data = g_new (WindowData, 1);
 
-	theme = gtk_icon_theme_get_default ();
+	/*theme = gtk_icon_theme_get_default ();
 	
 	if (gtk_icon_theme_has_icon (theme, "accessories-character-map"))
 		image = gtk_image_new_from_icon_name ("accessories-character-map",
 						      GTK_ICON_SIZE_MENU);
 	else
 		image = gtk_image_new_from_icon_name ("gucharmap",
-						      GTK_ICON_SIZE_MENU);
+						      GTK_ICON_SIZE_MENU);*/
 
 	data->panel = create_charmap_panel (window);
 	
-	gtranslator_panel_add_item (panel,
-			      data->panel,
-			      _("Character Map"),
-			      image);
+	gtranslator_window_add_widget (window,
+				       data->panel,
+				       "GtranslatorCharmapPlugin",
+				       _("Character Map"),
+				       NULL,
+				       GTR_WINDOW_PLACEMENT_LEFT);
 
-	gtk_object_sink (GTK_OBJECT (image));
+	//gtk_object_sink (GTK_OBJECT (image));
 
 	statusbar = GTK_STATUSBAR (gtranslator_window_get_statusbar (window));
 	data->context_id = gtk_statusbar_get_context_id (statusbar,
@@ -261,7 +259,6 @@ static void
 impl_deactivate	(GtranslatorPlugin *plugin,
 		 GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
 	GucharmapTable *chartable;
 	WindowData *data;
 
@@ -275,9 +272,8 @@ impl_deactivate	(GtranslatorPlugin *plugin,
 					(GTR_CHARMAP_PANEL (data->panel));
 	on_table_status_message (chartable, NULL, window);
 
-	panel = gtranslator_window_get_side_panel (window);
-	gtranslator_panel_remove_item (panel, data->panel);
-
+	gtranslator_window_remove_widget (window, data->panel);
+			 
 	g_object_set_data (G_OBJECT (window), WINDOW_DATA_KEY, NULL);
 }
 
