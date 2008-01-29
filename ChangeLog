@@ -1,5 +1,9 @@
 2008-01-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* data/layout.xml: I forgot this file.
+
+2008-01-29  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* plugins/open-tran/open-tran-plugin.c:
 	* plugins/dictionary/dict-panel.c:
 	* plugins/dictionary/dictionary-plugin.c:
