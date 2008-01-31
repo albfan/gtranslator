@@ -9,7 +9,6 @@
 #include "msg.h"
 #include "notebook.h"
 #include "plugin.h"
-#include "panel.h"
 #include "po.h"
 #include "statusbar.h"
 #include "tab.h"

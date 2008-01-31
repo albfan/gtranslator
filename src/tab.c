@@ -58,7 +58,7 @@ struct _GtranslatorTabPrivate
 	
 	GtkWidget *table_pane;
 	GtkWidget *content_pane;
-	GtranslatorPanel *panel;
+	GtkWidget *panel;
 	GtkWidget *message_table;
 
 	GtkWidget *comment_pane;
@@ -423,6 +423,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	GtkWidget *vertical_box;
 	GtkTextBuffer *buf;
 	gchar *label;
+	GtkWidget *label_widget;
 	gint i = 0;
 	
 	GtranslatorTabPrivate *priv = tab->priv;
@@ -430,20 +431,20 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	/*
 	 * Panel
 	 */
-	priv->panel = GTR_PANEL(gtranslator_panel_new(GTK_ORIENTATION_HORIZONTAL));
+	priv->panel = gtk_notebook_new ();
+	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (priv->panel),
+				  GTK_POS_BOTTOM);
 
 	/*
 	 * Message table
 	 */
 	priv->message_table = gtranslator_message_table_new(GTK_WIDGET(tab));
 
-	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
-					 GTK_ICON_SIZE_SMALL_TOOLBAR);
-
-	gtranslator_panel_add_item(priv->panel,
-				   priv->message_table,
-				   _("Message Table"),
-				   image);
+	label_widget = gtk_label_new (_("Mesage Table"));
+	
+	gtk_notebook_append_page (GTK_NOTEBOOK (priv->panel),
+				  priv->message_table,
+				  label_widget);
 	
 	/*
 	 * Comment pane
@@ -647,9 +648,9 @@ gtranslator_tab_set_state(GtranslatorTab *tab,
  * gtranslator_tab_get_panel:
  * @tab: a #GtranslationTab
  * 
- * Return value: the horizontal #GtranslatorPanel of the #GtranslationTab
+ * Return value: the horizontal notebook of the #GtranslationTab
 **/
-GtranslatorPanel *
+GtkWidget *
 gtranslator_tab_get_panel(GtranslatorTab *tab)
 {
 	g_return_val_if_fail(tab != NULL, NULL);

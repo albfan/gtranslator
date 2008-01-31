@@ -56,7 +56,6 @@ INST_H_FILES =				\
 	message-table.h \
 	msg.h \
 	notebook.h \
-	panel.h \
 	po.h \
 	statusbar.h \
 	tab.h \
@@ -76,7 +75,6 @@ libgtranslator_la_SOURCES = \
 	message-area.c \
 	message-table.c \
 	notebook.c \
-	panel.c \
 	tab.c \
 	view.c \
 	window.c \

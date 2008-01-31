@@ -25,7 +25,6 @@
 
 #include "comment.h"
 #include "msg.h"
-#include "panel.h"
 #include "po.h"
 #include "view.h"
 
@@ -94,7 +93,7 @@ GtranslatorTabState    gtranslator_tab_get_state           (GtranslatorTab *tab)
 void                   gtranslator_tab_set_state           (GtranslatorTab *tab,
 							    GtranslatorTabState state);
 
-GtranslatorPanel      *gtranslator_tab_get_panel           (GtranslatorTab *tab);
+GtkWidget             *gtranslator_tab_get_panel           (GtranslatorTab *tab);
 
 gint                   gtranslator_tab_get_active_text_tab (GtranslatorTab *tab);
 

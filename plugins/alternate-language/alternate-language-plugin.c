@@ -59,29 +59,28 @@ create_alternate_lang_plugin_panel (GtkNotebook *notebook,
 			     GtranslatorWindow *window)
 {
 	GtkWidget *alternatelang;
-	GtkWidget *image;
 	GtranslatorPo *po;
-	GtranslatorPanel *panel;
+	GtkWidget *panel;
+	GtkWidget *label;
 	
-	po = gtranslator_tab_get_po(GTR_TAB(child));
+	po = gtranslator_tab_get_po (GTR_TAB (child));
 	
-	g_return_if_fail(po != NULL);
+	g_return_if_fail (po != NULL);
 	
-	alternatelang = gtranslator_alternate_lang_panel_new(child);
+	alternatelang = gtranslator_alternate_lang_panel_new (child);
+	gtk_widget_show (alternatelang);
 	
-	panel = gtranslator_tab_get_panel(GTR_TAB(child));
+	panel = gtranslator_tab_get_panel (GTR_TAB(child));
 	
-	image = gtk_image_new_from_stock(GTK_STOCK_INDEX,
-					 GTK_ICON_SIZE_SMALL_TOOLBAR);
+	label = gtk_label_new (_("Alternate Language"));
 	
-	gtranslator_panel_add_item(panel,
-				   alternatelang,
-				   _("Alternate Language"),
-				   image);
+	gtk_notebook_append_page (GTK_NOTEBOOK (panel),
+				  alternatelang,
+				  label);
 
-	g_object_set_data(G_OBJECT(child),
-			  WINDOW_DATA_KEY,
-			  alternatelang);
+	g_object_set_data (G_OBJECT (child),
+			   WINDOW_DATA_KEY,
+			   alternatelang);
 }
 
 static void
@@ -113,10 +112,11 @@ static void
 impl_deactivate(GtranslatorPlugin *plugin,
 	        GtranslatorWindow *window)
 {
-	GtranslatorPanel *panel;
+	GtkWidget *panel;
 	GtranslatorNotebook *notebook;
 	GtkWidget *alternatelang;
 	GList *tabs;
+	gint page_num;
 	
 	tabs = gtranslator_window_get_all_tabs(window);
 	notebook = gtranslator_window_get_notebook(window);
@@ -126,7 +126,11 @@ impl_deactivate(GtranslatorPlugin *plugin,
 	do{
 		alternatelang = g_object_get_data(G_OBJECT(tabs->data), WINDOW_DATA_KEY);
 		panel = gtranslator_tab_get_panel (GTR_TAB(tabs->data));
-		gtranslator_panel_remove_item (panel, alternatelang);
+		
+		page_num = gtk_notebook_page_num (GTK_NOTEBOOK (panel),
+						  alternatelang);
+		gtk_notebook_remove_page (GTK_NOTEBOOK (panel),
+					  page_num);
 
 		g_object_set_data (G_OBJECT (tabs->data), WINDOW_DATA_KEY, NULL);
 		
