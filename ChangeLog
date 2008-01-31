@@ -1,6 +1,15 @@
 2008-01-31  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* src:
+		tab.c:
+		message-table.c:
+		comment.c:
+		Now widgets are showed with gtk_widget_show instead
+		of gtk_widget_show_all.
+
+2008-01-31  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* src:
 		* actions-help:
 			Changed copyright date.
 		* window.c:

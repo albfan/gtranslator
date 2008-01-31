@@ -390,9 +390,11 @@ gtranslator_message_table_init (GtranslatorMessageTable *table)
 				       GTK_POLICY_AUTOMATIC,
 				       GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start(GTK_BOX(table), scrolledwindow, TRUE, TRUE, 0);
+	gtk_widget_show (scrolledwindow);
 
 	gtk_container_add(GTK_CONTAINER(scrolledwindow),
 			  table->priv->treeview);
+	gtk_widget_show (table->priv->treeview);
 }
 
 static void

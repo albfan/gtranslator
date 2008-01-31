@@ -206,8 +206,10 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	label = gtk_label_new(tab_label);
 	
 	scroll = gtk_scrolled_window_new(NULL, NULL);
+	gtk_widget_show (scroll);
 	
 	widget = gtranslator_view_new();
+	gtk_widget_show (widget);
 	
 	if(spellcheck && gtranslator_prefs_manager_get_spellcheck())
 		gtranslator_view_enable_spellcheck(GTR_VIEW(widget),
@@ -219,9 +221,7 @@ gtranslator_tab_append_page(const gchar *tab_label,
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
 				       GTK_POLICY_AUTOMATIC,
 				       GTK_POLICY_AUTOMATIC);
-	
-	gtk_widget_show_all(scroll);
-	
+		
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), scroll, label);
 	return widget;
 }
@@ -433,17 +433,19 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	priv->panel = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (priv->panel),
 				  GTK_POS_BOTTOM);
+	gtk_widget_show (priv->panel);
 
 	/*
 	 * Message table
 	 */
 	priv->message_table = gtranslator_message_table_new(GTK_WIDGET(tab));
 
-	label_widget = gtk_label_new (_("Mesage Table"));
+	label_widget = gtk_label_new (_("Message Table"));
 	
 	gtk_notebook_append_page (GTK_NOTEBOOK (priv->panel),
 				  priv->message_table,
 				  label_widget);
+	gtk_widget_show (priv->message_table);
 	
 	/*
 	 * Comment pane
@@ -454,22 +456,26 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 			  "notify::position",
 			  G_CALLBACK (comment_pane_position_changed),
 			  tab);
+	gtk_widget_show (priv->comment_pane);
 
 	/*
 	 * Comment
 	 */
 	priv->comment = gtranslator_comment_panel_new(GTK_WIDGET(tab));
 	gtk_paned_pack2(GTK_PANED(priv->comment_pane), priv->comment, TRUE, TRUE);
+	gtk_widget_show (priv->comment);
 	
 	/*
 	 * Content pane; this is where the message table and message area go
 	 */
 	priv->content_pane = gtk_vpaned_new();
-	gtk_paned_set_position(GTK_PANED(priv->content_pane), gtranslator_prefs_manager_get_content_pane_pos());
+	gtk_paned_set_position(GTK_PANED(priv->content_pane),
+			       gtranslator_prefs_manager_get_content_pane_pos());
 	g_signal_connect (priv->content_pane,
 			  "notify::position",
 			  G_CALLBACK (content_pane_position_changed),
 			  tab);
+	gtk_widget_show (priv->content_pane);
 
 	/*
 	 * Pack the comments pane and the main content
@@ -477,12 +483,14 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	vertical_box=gtk_vbox_new(FALSE, 0);
 	gtk_paned_pack1(GTK_PANED(priv->content_pane), GTK_WIDGET(priv->panel), TRUE, FALSE);
 	gtk_paned_pack2(GTK_PANED(priv->content_pane), priv->comment_pane, FALSE, TRUE);
+	gtk_widget_show (vertical_box);
 	
 	/*
 	 * Orignal text widgets
 	 */
 	priv->text_notebook = gtk_notebook_new();
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(priv->text_notebook), FALSE);
+	gtk_widget_show (priv->text_notebook);
 	priv->text_msgid = gtranslator_tab_append_page(_("Singular"),
 						       priv->text_notebook,
 						       FALSE);
@@ -499,6 +507,7 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 */
 	priv->trans_notebook = gtk_notebook_new();
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(priv->trans_notebook), FALSE);
+	gtk_widget_show (priv->trans_notebook);
 	do{
 		label = g_strdup_printf(_("Plural %d"), i+1);
 		priv->trans_msgstr[i] = gtranslator_tab_append_page(label,
@@ -612,7 +621,7 @@ gtranslator_tab_new (GtranslatorPo *po)
 	gtranslator_message_table_populate(GTR_MESSAGE_TABLE(tab->priv->message_table),
 					   gtranslator_po_get_messages(tab->priv->po));
 	
-	gtk_widget_show_all(GTK_WIDGET(tab));
+	gtk_widget_show (GTK_WIDGET(tab));
 	return tab;
 }
 
