@@ -1,5 +1,16 @@
 2008-01-31  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* src:
+		* actions-help:
+			Changed copyright date.
+		* window.c:
+		* tab.c:
+			Added some comments.
+	* configure.ac:
+		Changed vesion to 1.9.3.
+
+2008-01-31  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* plugins/alternate-language/alternate-language-plugin.c
 	* plugins/open-tran/open-tran.gtranslator-plugin.desktop.in
 	* src/panel.c

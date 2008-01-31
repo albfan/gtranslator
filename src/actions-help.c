@@ -2,7 +2,7 @@
  * (C) 2000-2007 	Fatih Demir <kabalak@kabalak.net>
  *			Gediminas Paulauskas <menesis@kabalak.net>
  *			Roy-Magne Mo <rmo@sunnmore.net>
- *			Ignacio Casal <nacho.resa@gmail.com>
+ *			Ignacio Casal Quinteiro <nacho.resa@gmail.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ gtranslator_about_dialog(GtkAction *action,
 	gtk_show_about_dialog (GTK_WINDOW (window),
 		"comments", _("Translation file editing suite for localization of applications and libraries."),
 		"authors", authors,
-		"copyright", _("Copyright © 1999-2007 Free Software Foundation, Inc."),
+		"copyright", _("Copyright © 1999-2008 Free Software Foundation, Inc."),
 		"documenters", documenters,
 		"license", license_trans,
 		"logo-icon-name", "gtranslator",

@@ -26,7 +26,6 @@
 #include "msg.h"
 #include "notebook.h"
 #include "tab.h"
-#include "panel.h"
 #include "plugins-engine.h"
 #include "po.h"
 #include "statusbar.h"
@@ -1567,13 +1566,6 @@ GtranslatorNotebook *
 gtranslator_window_get_notebook(GtranslatorWindow *window)
 {
 	return GTR_NOTEBOOK(window->priv->notebook);
-}
-
-
-GtranslatorPanel *
-gtranslator_window_get_side_panel(GtranslatorWindow *window)
-{
-	return GTR_PANEL(window->priv->sidebar);
 }
 
 GtkStatusbar *

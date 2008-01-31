@@ -31,7 +31,6 @@
 #include "message-table.h"
 #include "msg.h"
 #include "tab.h"
-#include "panel.h"
 #include "po.h"
 #include "prefs-manager.h"
 #include "view.h"
@@ -629,12 +628,25 @@ gtranslator_tab_get_po(GtranslatorTab *tab)
 	return tab->priv->po;
 }
 
+/**
+ * gtranslator_tab_get_state:
+ * @tab: a #GtranslatorTab
+ *
+ * Return value: the #GtranslatorTabState value of the @tab.
+ */
 GtranslatorTabState
 gtranslator_tab_get_state(GtranslatorTab *tab)
 {
 	return tab->priv->state;
 }
 
+/**
+ * gtranslator_tab_set_state:
+ * @tab: a #GtranslatorTab
+ * @state: a #GtranslatorTabState
+ *
+ * Sets the state for a #GtranslatorTab
+ */
 void
 gtranslator_tab_set_state(GtranslatorTab *tab,
 			  GtranslatorTabState state)
@@ -686,7 +698,7 @@ gtranslator_tab_get_active_trans_tab(GtranslatorTab *tab)
  * gtranslator_tab_get_comment_panel:
  * @tab: a #GtranslatorTab
  *
- * Return value: the comment panel
+ * Return value: the #GtranslaorCommentPanel
  */
 GtranslatorCommentPanel *
 gtranslator_tab_get_comment_panel(GtranslatorTab *tab)
@@ -749,6 +761,12 @@ gtranslator_tab_get_all_views(GtranslatorTab *tab,
 	return ret;
 }
 
+/**
+ * gtranslator_tab_get_name:
+ * @tab: a #GtranslatorTab 
+ * 
+ * Return value: a new allocated string with the name of the @tab.
+ */
 gchar *
 gtranslator_tab_get_name(GtranslatorTab *tab)
 {
@@ -773,6 +791,9 @@ gtranslator_tab_get_name(GtranslatorTab *tab)
  * gtranslator_tab_message_go_to:
  * @tab: a #GtranslatorTab
  * @to_go: the #GtranslatorMsg you want to jump
+ *
+ * Jumps to the specific @to_go pointer message and show the message
+ * in the #GtranslatorView.
 **/
 void 
 gtranslator_tab_message_go_to(GtranslatorTab *tab,
