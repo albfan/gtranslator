@@ -131,7 +131,7 @@ AC_SUBST(SC_OMFDIR)
 AC_SUBST(SC_STATEDIR)
 
 dnl -------------------------------------------------------------------
-dnl Check for gettext >= 0.14.2 - uses it's parser/writer functions
+dnl Check for gettext >= 0.16.0 - uses it's parser/writer functions
 dnl -------------------------------------------------------------------
 AC_CHECK_HEADER([gettext-po.h])
 AC_CHECK_LIB([gettextpo], [po_message_create], [
@@ -143,17 +143,31 @@ AC_CHECK_LIB([gettextpo], [po_message_create], [
 dnl -------------------------------------------------------------------
 dnl Check for gtkspell >= 2.0 and use it if found
 dnl -------------------------------------------------------------------
-AC_MSG_CHECKING([for a gtkspell >= $GTKSPELL_OPTIONAL])
-PKG_CHECK_EXISTS([gtkspell-2.0 >= $GTKSPELL_OPTIONAL], [
-	PKG_CHECK_MODULES(GTKSPELL, [gtkspell-2.0 >= $GTKSPELL_OPTIONAL])
-	AC_DEFINE(HAVE_GTKSPELL, [true], [A usable GtkSpell library was found])
-],[
-	echo "not found - spellchecking disabled."
-])
+have_gtkspell=no
+AC_ARG_WITH(gtkspell,
+            AC_HELP_STRING([--with-gtkspell],
+                           [Build with spell support]),,
+            with_gtkspell=auto)
+
+if test x"$with_gtkspell" != "xno"
+then
+        PKG_CHECK_MODULES([GTKSPELL], [
+                gtkspell-2.0 >= $GTKSPELL_OPTIONAL
+        ], have_gtkspell=yes, have_gtkspell=no)
+
+        if test x"$have_gtkspell" = "xyes"
+        then
+                AC_DEFINE([HAVE_GTKSPELL], 1, [A usable GtkSpell library was found])
+        fi
+
+fi
+
 AC_SUBST(GTKSPELL_CFLAGS)
 AC_SUBST(GTKSPELL_LIBS)
 
+dnl -------------------------------------------------------------------
 dnl Check for libsoup, needed for Open-tran
+dnl -------------------------------------------------------------------
 if test "x$enable_opentran" != "xno"; then
 	PKG_CHECK_MODULES(SOUP,                            \
 		libsoup-2.2,
