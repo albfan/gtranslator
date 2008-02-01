@@ -26,7 +26,6 @@
 #include "header.h"
 #include "notebook.h"
 #include "tab.h"
-#include "panel.h"
 #include "view.h"
 
 G_BEGIN_DECLS

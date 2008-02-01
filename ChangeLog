@@ -1,3 +1,9 @@
+2008-02-01  Ignacio Casal Quinteiro  <nacho.reas@gmail.com>
+
+	* src/window.h:
+	* plugins/alternate-lang:
+	Removed plugin.h includes by Silvia Miranda.
+
 2008-02-01  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac: Now you can instruct gtkspell to on or off

@@ -24,7 +24,6 @@
 #include "alternate-language-panel.h"
 #include "notebook.h"
 #include "window.h"
-#include "panel.h"
 
 #include <glib/gi18n-lib.h>
 
