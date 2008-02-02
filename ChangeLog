@@ -1,3 +1,7 @@
+2008-02-02  Ignacio Casal Quinteiro  <nacho.reas@gmail.com>
+
+	* src/po.c: Fixed crash when the file doesn't exist.
+
 2008-02-01  Ignacio Casal Quinteiro  <nacho.reas@gmail.com>
 
 	* src/window.h:

@@ -154,18 +154,19 @@ gtranslator_po_finalize (GObject *object)
 	GtranslatorPo *po = GTR_PO(object);
 
 	if (po->priv->messages) {
-		g_list_foreach(po->priv->messages, (GFunc)g_object_unref, NULL);
-		g_list_free(po->priv->messages);
+		g_list_foreach (po->priv->messages, (GFunc)g_object_unref, NULL);
+		g_list_free (po->priv->messages);
 	}
 	if (po->priv->domains)
-		g_list_free(po->priv->domains);
+		g_list_free (po->priv->domains);
 
-	g_free(po->priv->filename);
-	g_free(po->priv->obsolete);
+	g_free (po->priv->filename);
+	g_free (po->priv->obsolete);
 
-	po_file_free(po->priv->gettext_po_file);
+	if (po->priv->gettext_po_file)
+		po_file_free (po->priv->gettext_po_file);
 
-	G_OBJECT_CLASS(gtranslator_po_parent_class)->finalize(object);
+	G_OBJECT_CLASS (gtranslator_po_parent_class)->finalize(object);
 }
 
 static void
