@@ -22,6 +22,9 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include <gtk/gtktreemodel.h>
+#include "msg.h"
+
 G_BEGIN_DECLS
 
 /*
@@ -84,8 +87,12 @@ GType		  gtranslator_message_table_model_register_type	       (GTypeModule * mod
 GtranslatorMessageTableModel
                  *gtranslator_message_table_model_new                  (void);
                  
-void              gtranslator_message_table_model_set_list             (GtranslatorMessageTableModel *model,
-					                                GList *messages);
+void              gtranslator_message_table_model_append             (GtranslatorMessageTableModel *model,
+								      GtranslatorMsg *msg,
+								      GtkTreeIter *iter);
+
+void              gtranslator_message_table_model_update_row           (GtranslatorMessageTableModel *model,
+									GtkTreePath *path);
 
 G_END_DECLS
 

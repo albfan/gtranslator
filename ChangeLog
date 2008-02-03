@@ -1,5 +1,17 @@
 2008-02-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* src/message-table.c:
+	* src/message-table-model.ch:
+	* Makefile.am:
+	Switched to the new model. Now the load it is faster.
+	
+	* src/update-from-gedit.sh:
+	Removed gedit-panel.ch
+
+	* tab.c: Added exception. 
+
+2008-02-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* src/po.c: Improving a bit more the parse.
 
 2008-02-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>

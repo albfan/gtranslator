@@ -7,9 +7,7 @@ SVN_URI=http://svn.gnome.org/svn/gedit/trunk/gedit
 FILES="gedit-history-entry.h \
        gedit-history-entry.c \
        gedit-message-area.h \
-       gedit-message-area.c \
-       gedit-panel.c \
-       gedit-panel.h"
+       gedit-message-area.c"
 
 echo "Obtaining latest version of the sources"
 for FILE in $FILES
@@ -21,7 +19,6 @@ sed_it () {
 	sed \
 	-e 's/gedit-history-entry/history-entry/g' \
 	-e 's/gedit-message-area/message-area/g' \
-	-e 's/gedit-panel.h/panel.h/g' \
 	-e 's/gedit-window.h/window.h/g' \
 	-e 's/#include "gedit-debug.h"/\/\/#include "gedit-debug.h"/g' \
 	-e 's/gedit/gtranslator/g' \
@@ -34,11 +31,7 @@ sed_it gedit-history-entry.h > history-entry.h
 sed_it gedit-history-entry.c > history-entry.c
 sed_it gedit-message-area.c > message-area.c
 sed_it gedit-message-area.h > message-area.h
-sed_it gedit-panel.h > panel.h
-sed_it gedit-panel.c > panel.c
 
-rm gedit-panel.h
-rm gedit-panel.c
 rm gedit-message-area.h
 rm gedit-message-area.c
 rm gedit-history-entry.c

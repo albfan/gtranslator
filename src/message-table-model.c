@@ -253,6 +253,27 @@ gtranslator_message_table_model_iter_nth_child (GtkTreeModel *tree_model,
 		return FALSE;
 }
 
+static gboolean
+gtranslator_message_table_model_iter_children (GtkTreeModel *tree_model,
+					       GtkTreeIter  *iter,
+					       GtkTreeIter  *parent)
+{
+	GtranslatorMessageTableModel *model = GTR_MESSAGE_TABLE_MODEL (tree_model);
+  
+	/* this is a list, nodes have no children */
+	if (parent)
+		return FALSE;
+
+	if (g_list_length (model->values) > 0)
+	{
+		iter->stamp = model->stamp;
+		iter->user_data = g_list_first (model->values);
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
 static void
 gtranslator_message_table_model_tree_model_init (GtkTreeModelIface *iface)
 {
@@ -266,6 +287,7 @@ gtranslator_message_table_model_tree_model_init (GtkTreeModelIface *iface)
 	iface->iter_has_child = gtranslator_message_table_model_iter_has_child;
 	iface->iter_n_children = gtranslator_message_table_model_iter_n_children;
 	iface->iter_nth_child = gtranslator_message_table_model_iter_nth_child;
+	iface->iter_children = gtranslator_message_table_model_iter_children;
 }
 
 static void
@@ -309,31 +331,25 @@ gtranslator_message_table_model_new (void)
 }
 
 void
-gtranslator_message_table_model_set_list (GtranslatorMessageTableModel *model,
-					  GList *messages)
+gtranslator_message_table_model_append (GtranslatorMessageTableModel *model,
+					GtranslatorMsg *msg,
+					GtkTreeIter *iter)
 {
 	GList *list;
-	GtkTreeIter iter;
 	GtkTreePath *path;
-	GtkTreeRowReference *row;
 	
-	for (list = messages; list; list = list->next) {
+	//The sort stuff can be improved using a GPtrArray or gsecuence instead of a GList
+	model->values = g_list_append (model->values, msg);
+	model->length++;
 
-		model->values = g_list_append (model->values, list->data);
-		model->length++;
+	model->stamp++;
 
-		model->stamp++;
+	iter->stamp = model->stamp;
+	iter->user_data = g_list_last (model->values);
 
-		iter.stamp = model->stamp;
-		iter.user_data = g_list_last (model->values);
-
-		path = gtk_tree_model_get_path (GTK_TREE_MODEL (model), &iter);
-		gtk_tree_model_row_inserted (GTK_TREE_MODEL (model), path, &iter);
-		row = gtk_tree_row_reference_new (GTK_TREE_MODEL (model), path);
-		gtk_tree_path_free (path);
-		
-		gtranslator_msg_set_row_reference (GTR_MSG (list->data), row);
-	}
+	path = gtk_tree_model_get_path (GTK_TREE_MODEL (model), iter);
+	gtk_tree_model_row_inserted (GTK_TREE_MODEL (model), path, iter);
+	gtk_tree_path_free (path);
 }
 
 void

@@ -74,6 +74,8 @@ libgtranslator_la_SOURCES = \
 	draw-spaces.c draw-spaces.h \
 	message-area.c \
 	message-table.c \
+	message-table-model.c \
+	message-table-model.h \
 	notebook.c \
 	tab.c \
 	view.c \

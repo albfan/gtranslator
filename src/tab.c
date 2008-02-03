@@ -815,7 +815,8 @@ gtranslator_tab_message_go_to(GtranslatorTab *tab,
 	GtkWidget *message_area;
  
 	g_return_if_fail (tab != NULL);
-	g_return_if_fail (to_go!=NULL);
+	g_return_if_fail (to_go != NULL);
+	g_return_if_fail (GTR_IS_MSG (to_go->data));
 		
 	po = tab->priv->po;
 	
@@ -838,4 +839,5 @@ gtranslator_tab_message_go_to(GtranslatorTab *tab,
 	 * Emitting showed-message signal
 	 */
 	g_signal_emit(G_OBJECT(tab), signals[SHOWED_MESSAGE], 0, GTR_MSG(to_go->data)); 
+	
 }

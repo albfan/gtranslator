@@ -25,10 +25,11 @@
 #include <config.h>
 #endif
 
-#include "application.h"
 #include "message-table.h"
+#include "message-table-model.h"
 #include "msg.h"
 #include "po.h"
+#include "tab.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -40,30 +41,15 @@
 							GTR_TYPE_MESSAGE_TABLE,	\
 							GtranslatorMessageTablePrivate))
 
-G_DEFINE_TYPE(GtranslatorMessageTable, gtranslator_message_table, GTK_TYPE_VBOX)
-
-#define TABLE_FUZZY_ICON	"gtk-dialog-warning"
-#define TABLE_UNTRANSLATED_ICON	"gtk-dialog-error"
-#define TABLE_TRANSLATED_ICON	NULL
+G_DEFINE_TYPE (GtranslatorMessageTable, gtranslator_message_table, GTK_TYPE_VBOX)
 
 struct _GtranslatorMessageTablePrivate
 {
 	GtkWidget *treeview;
-	GtkListStore *store;
+	GtranslatorMessageTableModel *store;
 	GtkTreeModel *sort_model;
 	
 	GtranslatorTab *tab;
-};
-
-enum
-{
-	ICON_COLUMN,
-	ID_COLUMN,
-	ORIGINAL_COLUMN,
-	TRANSLATION_COLUMN,
-	STATUS_COLUMN,
-	POINTER_COLUMN,
-	N_COLUMNS
 };
 
 static void
@@ -76,16 +62,18 @@ gtranslator_message_table_selection_changed (GtkTreeSelection *selection,
 	GList *current_msg = NULL;
 	GtranslatorPo *po;
 	
-	g_return_if_fail(selection != NULL);
+	g_return_if_fail (selection != NULL);
 
-	po = gtranslator_tab_get_po(table->priv->tab);
-	current_msg = gtranslator_po_get_current_message(po);
+	po = gtranslator_tab_get_po (table->priv->tab);
+	current_msg = gtranslator_po_get_current_message (po);
 	
-	if(gtk_tree_selection_get_selected(selection, &model, &iter) == TRUE)
+	if (gtk_tree_selection_get_selected (selection, &model, &iter) == TRUE)
 	{
-		gtk_tree_model_get(model, &iter, POINTER_COLUMN, &msg, -1);
-		if(msg != NULL && msg != current_msg)
-			gtranslator_tab_message_go_to(table->priv->tab, msg);
+		gtk_tree_model_get (model, &iter,
+				    GTR_MESSAGE_TABLE_MODEL_POINTER_COLUMN,
+				    &msg, -1);
+		if (msg != NULL && msg != current_msg)
+			gtranslator_tab_message_go_to (table->priv->tab, msg);
 	}
 }
 
@@ -99,24 +87,22 @@ showed_message_cb (GtranslatorTab *tab,
 	GtkTreeSelection *selection;
 	GtkTreeIter iter, sort_iter;
 	
-	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(table->priv->treeview));
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (table->priv->treeview));
 	
-	path = gtk_tree_row_reference_get_path(gtranslator_msg_get_row_reference(msg));
-
-	model = gtk_tree_view_get_model(GTK_TREE_VIEW(table->priv->treeview));
-
-	gtk_tree_model_get_iter(GTK_TREE_MODEL(model),
-				&iter,
-				path);
+	path = gtk_tree_row_reference_get_path (gtranslator_msg_get_row_reference (msg));
 	
-	gtk_tree_selection_select_iter(selection, &iter);
+	gtk_tree_model_get_iter (table->priv->sort_model,
+				 &iter,
+				 path);
+	
+	gtk_tree_selection_select_iter (selection, &iter);
 				       
-	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(table->priv->treeview),
-				     path,
-				     NULL,
-				     FALSE,
-				     0.0, 0.0);
-	gtk_tree_path_free(path);
+	gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (table->priv->treeview),
+				      path,
+				      NULL,
+				      FALSE,
+				      0.0, 0.0);
+	gtk_tree_path_free (path);
 }
 
 static void
@@ -124,33 +110,17 @@ message_changed_cb (GtranslatorTab *tab,
 		    GtranslatorMsg *msg,
 		    GtranslatorMessageTable *table)
 {
-	GtkTreeModel *model, *sort_model;
-	GtkTreePath *path, *sort_path;
+	GtkTreePath *sort_path, *path;
 	GtkTreeRowReference *row;
-	GtkTreeIter iter;
-	gchar *status_icon;
-
-	/* Set appropriate icon for row */
-	if (gtranslator_msg_is_fuzzy(msg))
-		status_icon = TABLE_FUZZY_ICON;
-	else if (gtranslator_msg_is_translated(msg))
-		status_icon = TABLE_TRANSLATED_ICON;
-	else
-		status_icon = TABLE_UNTRANSLATED_ICON;
 
 	row = gtranslator_msg_get_row_reference(msg);
-	sort_model = gtk_tree_row_reference_get_model(row);
 	sort_path = gtk_tree_row_reference_get_path(row);
-
-	model = gtk_tree_model_sort_get_model(GTK_TREE_MODEL_SORT(sort_model));
-	path = gtk_tree_model_sort_convert_path_to_child_path(GTK_TREE_MODEL_SORT(sort_model), sort_path);
-
-	gtk_tree_model_get_iter(model, &iter, path);
-
-	gtk_list_store_set(table->priv->store, &iter,
-			   ICON_COLUMN, status_icon,
-			   TRANSLATION_COLUMN, gtranslator_msg_get_msgstr(msg),
-			   -1);
+			    
+	path = gtk_tree_model_sort_convert_path_to_child_path(GTK_TREE_MODEL_SORT(table->priv->sort_model),
+							      sort_path);
+	
+	gtranslator_message_table_model_update_row (table->priv->store,
+						    path);
 }
 
 gint
@@ -173,20 +143,20 @@ model_compare_by_status (GtkTreeModel *model,
 {
 	gint a_status, b_status, a_pos, b_pos;
 
-	gtk_tree_model_get(model, a,
-				STATUS_COLUMN,
-				&a_status,
-				ID_COLUMN,
-				&a_pos,
-				-1);
-	gtk_tree_model_get(model, b,
-				STATUS_COLUMN,
-				&b_status,
-				ID_COLUMN,
-				&b_pos,
-				-1);
+	gtk_tree_model_get (model, a,
+			    GTR_MESSAGE_TABLE_MODEL_STATUS_COLUMN,
+			    &a_status,
+			    GTR_MESSAGE_TABLE_MODEL_ID_COLUMN,
+			    &a_pos,
+			    -1);
+	gtk_tree_model_get (model, b,
+			    GTR_MESSAGE_TABLE_MODEL_STATUS_COLUMN,
+			    &b_status,
+			    GTR_MESSAGE_TABLE_MODEL_ID_COLUMN,
+			    &b_pos,
+			    -1);
 
-	return compare_by_status(a_status, b_status, a_pos, b_pos);
+	return compare_by_status (a_status, b_status, a_pos, b_pos);
 }
 
 gint
@@ -195,13 +165,13 @@ list_compare_by_status (gconstpointer a,
 {
 	gint a_status, b_status, a_pos, b_pos;
 
-	a_status = gtranslator_msg_get_status(GTR_MSG(a));
-	b_status = gtranslator_msg_get_status(GTR_MSG(b));
+	a_status = gtranslator_msg_get_status (GTR_MSG (a));
+	b_status = gtranslator_msg_get_status (GTR_MSG (b));
 
-	a_pos = gtranslator_msg_get_po_position(GTR_MSG(a));
-	b_pos = gtranslator_msg_get_po_position(GTR_MSG(b));
+	a_pos = gtranslator_msg_get_po_position (GTR_MSG (a));
+	b_pos = gtranslator_msg_get_po_position (GTR_MSG (b));
 
-	return compare_by_status(a_status, b_status, a_pos, b_pos);
+	return compare_by_status (a_status, b_status, a_pos, b_pos);
 }
 
 gint
@@ -209,34 +179,34 @@ list_compare_by_position (gconstpointer a,
 			  gconstpointer b)
 {
 	gint a_pos, b_pos;
-	a_pos = gtranslator_msg_get_po_position(GTR_MSG(a));
-	b_pos = gtranslator_msg_get_po_position(GTR_MSG(b));
+	a_pos = gtranslator_msg_get_po_position (GTR_MSG (a));
+	b_pos = gtranslator_msg_get_po_position (GTR_MSG (b));
 
 	return a_pos - b_pos;
 }
 
 gint
 list_compare_by_original (gconstpointer a,
-			gconstpointer b)
+			  gconstpointer b)
 {
 	const gchar *a_original, *b_original;
 
-	a_original = gtranslator_msg_get_msgid(GTR_MSG(a));
-	b_original = gtranslator_msg_get_msgid(GTR_MSG(b));
+	a_original = gtranslator_msg_get_msgid (GTR_MSG (a));
+	b_original = gtranslator_msg_get_msgid (GTR_MSG (b));
 
-	return g_utf8_collate(a_original, b_original);
+	return g_utf8_collate (a_original, b_original);
 }
 
 gint
 list_compare_by_translation (gconstpointer a,
-			gconstpointer b)
+			     gconstpointer b)
 {
 	const gchar *a_translated, *b_translated;
 
-	a_translated = gtranslator_msg_get_msgstr(GTR_MSG(a));
-	b_translated = gtranslator_msg_get_msgstr(GTR_MSG(b));
+	a_translated = gtranslator_msg_get_msgstr (GTR_MSG (a));
+	b_translated = gtranslator_msg_get_msgstr (GTR_MSG (b));
 
-	return g_utf8_collate(a_translated, b_translated);
+	return g_utf8_collate (a_translated, b_translated);
 }
 
 static void sort_message_list (GtkTreeViewColumn *column,
@@ -246,30 +216,32 @@ static void sort_message_list (GtkTreeViewColumn *column,
 	GList *messages;
 	gint sort_column;
 
-	po = gtranslator_tab_get_po(table->priv->tab);
-	messages = gtranslator_po_get_messages(po);
+	po = gtranslator_tab_get_po (table->priv->tab);
+	messages = gtranslator_po_get_messages (po);
 
-	sort_column = gtk_tree_view_column_get_sort_column_id(column);
+	sort_column = gtk_tree_view_column_get_sort_column_id (column);
 	switch (sort_column) {
-		case ID_COLUMN:
+		case GTR_MESSAGE_TABLE_MODEL_ID_COLUMN:
 			messages = g_list_sort(messages, list_compare_by_position);
 			break;
-		case STATUS_COLUMN:
+		case GTR_MESSAGE_TABLE_MODEL_STATUS_COLUMN:
 			messages = g_list_sort(messages, list_compare_by_status);
 			break;
-		case ORIGINAL_COLUMN:
+		case GTR_MESSAGE_TABLE_MODEL_ORIGINAL_COLUMN:
 			messages = g_list_sort(messages, list_compare_by_original);
 			break;
-		case TRANSLATION_COLUMN:
+		case GTR_MESSAGE_TABLE_MODEL_TRANSLATION_COLUMN:
 			messages = g_list_sort(messages, list_compare_by_translation);
 			break;
 	}
 
-	if (gtk_tree_view_column_get_sort_order(column) == GTK_SORT_DESCENDING)
+	if (gtk_tree_view_column_get_sort_order (column) == GTK_SORT_DESCENDING)
 		messages = g_list_reverse(messages);
 
-	gtranslator_po_set_messages(po, messages);
-	gtranslator_tab_message_go_to(table->priv->tab, gtranslator_po_get_current_message(po));
+	gtranslator_po_set_messages (po, messages);
+
+	gtranslator_tab_message_go_to (table->priv->tab,
+				       g_list_first (messages));
 }
 
 static void
@@ -281,40 +253,34 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *selection;
 	
-	priv->store = gtk_list_store_new (N_COLUMNS,
-					  G_TYPE_STRING,
-					  G_TYPE_INT,
-					  G_TYPE_STRING,
-					  G_TYPE_STRING,
-					  G_TYPE_INT,
-					  G_TYPE_POINTER);
+	priv->store = gtranslator_message_table_model_new ();
 	
-	priv->sort_model = gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(priv->store));
+	priv->sort_model = gtk_tree_model_sort_new_with_model (GTK_TREE_MODEL (priv->store));
 
-	priv->treeview = gtk_tree_view_new();
+	priv->treeview = gtk_tree_view_new ();
 
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(priv->sort_model),
-					     ID_COLUMN,
-					     GTK_SORT_ASCENDING);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (priv->sort_model),
+					      GTR_MESSAGE_TABLE_MODEL_ID_COLUMN,
+					      GTK_SORT_ASCENDING);
 
-	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(priv->sort_model),
-						NULL, NULL, NULL);
+	gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (priv->sort_model),
+						 NULL, NULL, NULL);
 
-	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(priv->sort_model),
-					STATUS_COLUMN,
-					model_compare_by_status,
-					NULL,
-					NULL);
+	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (priv->sort_model),
+					 GTR_MESSAGE_TABLE_MODEL_STATUS_COLUMN,
+					 model_compare_by_status,
+					 NULL,
+					 NULL);
 
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(priv->treeview), TRUE);
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (priv->treeview), TRUE);
 		
-	renderer = gtk_cell_renderer_pixbuf_new();
+	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new_with_attributes(_("Status"),
 							  renderer,
-							  "icon-name", ICON_COLUMN,
+							  "icon-name", GTR_MESSAGE_TABLE_MODEL_ICON_COLUMN,
 							  NULL);
 
-	gtk_tree_view_column_set_sort_column_id(column, STATUS_COLUMN);
+	gtk_tree_view_column_set_sort_column_id(column, GTR_MESSAGE_TABLE_MODEL_STATUS_COLUMN);
 	gtk_tree_view_column_set_resizable(column, FALSE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
 
@@ -324,10 +290,10 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	renderer = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(_("ID"),
 							  renderer,
-							  "text", ID_COLUMN,
+							  "text", GTR_MESSAGE_TABLE_MODEL_ID_COLUMN,
 							  NULL);
 
-	gtk_tree_view_column_set_sort_column_id(column, ID_COLUMN);
+	gtk_tree_view_column_set_sort_column_id(column, GTR_MESSAGE_TABLE_MODEL_ID_COLUMN);
 	gtk_tree_view_column_set_resizable(column, FALSE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
 
@@ -340,10 +306,10 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 		g_object_set(renderer, "xalign", 1.0, NULL);	
 	column = gtk_tree_view_column_new_with_attributes(_("Original Text"),
 							  renderer,
-							  "text", ORIGINAL_COLUMN,
+							  "text", GTR_MESSAGE_TABLE_MODEL_ORIGINAL_COLUMN,
 							  NULL);
 
-	gtk_tree_view_column_set_sort_column_id(column, ORIGINAL_COLUMN);
+	gtk_tree_view_column_set_sort_column_id(column, GTR_MESSAGE_TABLE_MODEL_ORIGINAL_COLUMN);
 	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
@@ -356,10 +322,10 @@ gtranslator_message_table_draw (GtranslatorMessageTable *table)
 	
 	column = gtk_tree_view_column_new_with_attributes(_("Translated Text"),
 							  renderer,
-							  "text", TRANSLATION_COLUMN,
+							  "text", GTR_MESSAGE_TABLE_MODEL_TRANSLATION_COLUMN,
 							  NULL);
 
-	gtk_tree_view_column_set_sort_column_id(column, TRANSLATION_COLUMN);
+	gtk_tree_view_column_set_sort_column_id(column, GTR_MESSAGE_TABLE_MODEL_TRANSLATION_COLUMN);
 	gtk_tree_view_column_set_expand(column, TRUE);
 	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW(priv->treeview), column);
@@ -380,7 +346,7 @@ static void
 gtranslator_message_table_init (GtranslatorMessageTable *table)
 {
 	GtkWidget *scrolledwindow;
-
+	
 	table->priv = GTR_MESSAGE_TABLE_GET_PRIVATE (table);
 
 	gtranslator_message_table_draw(table);
@@ -434,43 +400,18 @@ void
 gtranslator_message_table_populate(GtranslatorMessageTable *table, 
 				   GList *messages)
 {
-	const gchar *msgid, *msgstr;
-	GtkTreeIter iter, sort_iter;
-	GtkTreeModel *model;
+	GtkTreeIter iter, sort_iter;	
 	GtkTreePath *path;
 	GtkTreeRowReference *row;
-	gchar *status_icon;
-	gint pos;
-	gint status;
-
+	
 	g_return_if_fail(table != NULL);
 	g_return_if_fail(messages != NULL);
 
 	while (messages)
 	{
-		msgid = gtranslator_msg_get_msgid(GTR_MSG(messages->data));
-		msgstr = gtranslator_msg_get_msgstr(GTR_MSG(messages->data));
-
-		pos = gtranslator_msg_get_po_position(GTR_MSG(messages->data));
-
-		status = gtranslator_msg_get_status(GTR_MSG(messages->data));
-
-		if (gtranslator_msg_is_fuzzy(GTR_MSG(messages->data)))
-			status_icon = TABLE_FUZZY_ICON;
-		else if (gtranslator_msg_is_translated(GTR_MSG(messages->data)))
-			status_icon = TABLE_TRANSLATED_ICON;
-		else
-			status_icon = TABLE_UNTRANSLATED_ICON;
-
-		gtk_list_store_append(table->priv->store, &iter);
-		gtk_list_store_set(table->priv->store, &iter,
-				   ICON_COLUMN, status_icon,
-				   ID_COLUMN, pos,
-				   ORIGINAL_COLUMN, msgid,
-				   TRANSLATION_COLUMN, msgstr,
-				   STATUS_COLUMN, status,
-				   POINTER_COLUMN, messages,
-				   -1);
+		gtranslator_message_table_model_append (table->priv->store,
+							messages->data,
+							&iter);
 
 		gtk_tree_model_sort_convert_child_iter_to_iter(GTK_TREE_MODEL_SORT(table->priv->sort_model),
 							       &sort_iter, &iter);
@@ -479,10 +420,9 @@ gtranslator_message_table_populate(GtranslatorMessageTable *table,
 		gtk_tree_path_free(path);
 
 		gtranslator_msg_set_row_reference(GTR_MSG(messages->data), row);
-
+	
 		messages = g_list_next(messages);
 	}
-
 	/*
 	 * It is much faster set the model after list population
 	 */
