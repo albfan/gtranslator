@@ -56,7 +56,7 @@ get_accel_file (void)
 	{
 		return g_build_filename (home,
 					 ".config",
-					 "accels"
+					 "accels",
 					 "gtranslator",
 					 NULL);
 	}
