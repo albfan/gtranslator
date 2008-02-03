@@ -1,3 +1,8 @@
+2008-02-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* src/message-table-model.ch:
+	Object that implements our own GtkTreeModel.
+
 2008-02-02  Ignacio Casal Quinteiro  <nacho.reas@gmail.com>
 
 	* src/po.c: Fixed crash when the file doesn't exist.
