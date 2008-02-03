@@ -1,5 +1,9 @@
 2008-02-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* src/po.c: Improving a bit more the parse.
+
+2008-02-03  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* src/message-table-model.ch:
 	Object that implements our own GtkTreeModel.
 

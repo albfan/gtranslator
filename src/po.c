@@ -410,33 +410,34 @@ gtranslator_po_parse(GtranslatorPo *po,
 	/*
 	 * Post-process these into a linked list of GtrMsgs.
 	 */
-	while((message = po_next_message(iter)))
+	while ((message = po_next_message (iter)))
 	{
 		/*FIXME: We have to change this:
 		 * we have to add a gtranslator_msg_is_obsolete fund msg.c
 		 * and detect if we want obsoletes messages in show message
 		 */
-		if(!po_message_is_obsolete(message))
+		if (!po_message_is_obsolete (message))
 		{
 			/* Unpack into a GtrMsg */
-			msg = gtranslator_msg_new(iter);
-			gtranslator_msg_set_message(msg, message);
+			msg = gtranslator_msg_new (iter);
+			gtranslator_msg_set_message (msg, message);
   
 			/* Set the status */
-			if(gtranslator_msg_is_fuzzy(msg))
-				gtranslator_msg_set_status(msg, GTR_MSG_STATUS_FUZZY);
-			else if(gtranslator_msg_is_translated(msg))
-				gtranslator_msg_set_status(msg, GTR_MSG_STATUS_TRANSLATED);
-			else gtranslator_msg_set_status(msg, GTR_MSG_STATUS_UNTRANSLATED);
+			if (gtranslator_msg_is_fuzzy (msg))
+				gtranslator_msg_set_status (msg, GTR_MSG_STATUS_FUZZY);
+			else if (gtranslator_msg_is_translated (msg))
+				gtranslator_msg_set_status (msg, GTR_MSG_STATUS_TRANSLATED);
+			else gtranslator_msg_set_status (msg, GTR_MSG_STATUS_UNTRANSLATED);
 
 			/* Set position in PO file */
-			gtranslator_msg_set_po_position(msg, pos++);
+			gtranslator_msg_set_po_position (msg, pos++);
 			
 			/* Build up messages */
-			priv->messages = g_list_append(priv->messages, msg);
+			priv->messages = g_list_prepend (priv->messages, msg);
 		}
 	}
-	if(priv->messages == NULL) {
+	
+	if (priv->messages == NULL) {
 		g_set_error(error,
 			    GTR_PO_ERROR,
 			    GTR_PO_ERROR_OTHER,
@@ -444,6 +445,8 @@ gtranslator_po_parse(GtranslatorPo *po,
 		g_object_unref(po);
 		return;
 	}
+	
+	priv->messages = g_list_reverse (priv->messages);
 
 	/*
 	 * Set the current message to the first message.
