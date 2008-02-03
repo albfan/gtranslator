@@ -45,6 +45,50 @@ struct _GtranslatorApplicationPrivate
 	EggToolbarsModel *toolbars_model;
 };
 
+static gchar *
+get_accel_file (void)
+{
+	const gchar *home;
+
+	home = g_get_home_dir();
+
+	if (home != NULL)
+	{
+		return g_build_filename (home,
+					 ".config",
+					 "accels"
+					 "gtranslator",
+					 NULL);
+	}
+
+	return NULL;
+}
+
+static void
+load_accels (void)
+{
+	gchar *filename;
+
+	filename = get_accel_file ();
+	if (filename != NULL)
+	{
+		gtk_accel_map_load (filename);
+		g_free (filename);
+	}
+}
+
+static void
+save_accels (void)
+{
+	gchar *filename;
+
+	filename = get_accel_file ();
+	if (filename != NULL)
+	{
+		gtk_accel_map_save (filename);
+		g_free (filename);
+	}
+}
 
 static gboolean
 on_window_delete_event_cb(GtranslatorWindow *window,
@@ -59,6 +103,7 @@ static void
 on_window_destroy_cb(GtranslatorWindow *window,
 		     GtranslatorApplication *app)
 {
+	save_accels ();
 	//if(app->priv->active_window == NULL)
 		g_object_unref(app);
 }
@@ -89,6 +134,8 @@ gtranslator_application_init (GtranslatorApplication *application)
 
 	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
+	
+	load_accels ();
 }
 
 
