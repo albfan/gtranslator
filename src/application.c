@@ -36,6 +36,8 @@
 
 G_DEFINE_TYPE(GtranslatorApplication, gtranslator_application, G_TYPE_OBJECT)
 
+#define CONFIG_DIRECTORY ".config/gtranslator"
+
 struct _GtranslatorApplicationPrivate
 {
 	GList *windows;
@@ -56,8 +58,7 @@ get_accel_file (void)
 	{
 		return g_build_filename (home,
 					 ".config",
-					 "accels",
-					 "gtranslator",
+					 "gtranslator-accels",
 					 NULL);
 	}
 
@@ -83,6 +84,7 @@ save_accels (void)
 	gchar *filename;
 
 	filename = get_accel_file ();
+	g_warning (filename);
 	if (filename != NULL)
 	{
 		gtk_accel_map_save (filename);
@@ -134,6 +136,9 @@ gtranslator_application_init (GtranslatorApplication *application)
 
 	egg_toolbars_model_set_flags (priv->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
+	
+	/* We build our config directory */
+	
 	
 	load_accels ();
 }
