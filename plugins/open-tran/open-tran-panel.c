@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <glib/gi18n-lib.h>
 #include <glib-object.h>
+#include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 #include <libsoup/soup.h>
 #include <libsoup/soup-xmlrpc-message.h>
@@ -47,11 +48,12 @@ GTR_PLUGIN_DEFINE_TYPE(GtranslatorOpenTranPanel, gtranslator_open_tran_panel, GT
 
 struct _GtranslatorOpenTranPanelPrivate
 {
+	GConfClient *gconf_client;
+	
 	GtkWidget *treeview;
 	GtkListStore *store;
 	
 	GtkWidget *entry;
-	GtkWidget *lang_code;
 	
 	SoupSession *session;
 	
@@ -66,19 +68,6 @@ enum
 	TEXT_COLUMN,
 	N_COLUMNS
 };
-
-
-static void
-dialog_response_cb(GtkWidget *dialog,
-		   gint response,
-		   gpointer useless)
-{
-	switch(response)
-	{
-		case GTK_RESPONSE_CLOSE: gtk_widget_destroy(dialog);
-		break;
-	}
-}
 
 static void
 show_error_dialog (GtranslatorWindow *parent,
@@ -101,7 +90,8 @@ show_error_dialog (GtranslatorWindow *parent,
 	g_free(msg);
 	
 	g_signal_connect(dialog, "response",
-			 G_CALLBACK(dialog_response_cb), NULL);
+			 G_CALLBACK(gtk_widget_destroy),
+			 &dialog);
 	gtk_widget_show(dialog);
 }
 
@@ -304,7 +294,8 @@ got_response (SoupMessage *msg,
 static void
 open_connection(GtranslatorOpenTranPanel *panel,
 		const gchar *text,
-		const gchar *lang_code)
+		const gchar *search_code,
+		const gchar *own_code)
 {
 	SoupUri *proxy = NULL; //This can be useful in a future
 	SoupXmlrpcMessage *msg;
@@ -321,10 +312,11 @@ open_connection(GtranslatorOpenTranPanel *panel,
 		return;
 	}
 
-	soup_xmlrpc_message_start_call (msg, "suggest");
+	soup_xmlrpc_message_start_call (msg, "suggest2");
 	soup_xmlrpc_message_start_param (msg);
 	soup_xmlrpc_message_write_string (msg, text);
-	soup_xmlrpc_message_write_string (msg, lang_code);
+	soup_xmlrpc_message_write_string (msg, search_code);
+	soup_xmlrpc_message_write_string (msg, own_code);
 	soup_xmlrpc_message_end_param (msg);
 	soup_xmlrpc_message_end_call (msg);
 
@@ -338,7 +330,8 @@ entry_activate_cb (GtkEntry *entry,
 		   GtranslatorOpenTranPanel *panel)
 {
 	const gchar *entry_text = NULL;
-	const gchar *lang_code = NULL;
+	const gchar *search_code = NULL;
+	const gchar *own_code = NULL;
 	
 	gtk_list_store_clear(panel->priv->store);
 	
@@ -350,15 +343,27 @@ entry_activate_cb (GtkEntry *entry,
 		return;
 	}
 	
-	lang_code = gtk_entry_get_text(GTK_ENTRY(panel->priv->lang_code));
-	if(!lang_code)
+	search_code = gconf_client_get_string (panel->priv->gconf_client,
+					       SEARCH_CODE_KEY,
+					       NULL);
+	if(!search_code)
 	{
 		show_error_dialog(panel->priv->window,
-				  _("You have to provide a language code"));
+				  _("You have to provide a search language code"));
 		return;
 	}
 	
-	open_connection(panel, entry_text, lang_code);
+	own_code = gconf_client_get_string (panel->priv->gconf_client,
+					    OWN_CODE_KEY,
+					    NULL);
+	if(!own_code)
+	{
+		show_error_dialog(panel->priv->window,
+				  _("You have to provide a language code for your language"));
+		return;
+	}
+	
+	open_connection(panel, entry_text, search_code, own_code);
 }
 
 static void
@@ -408,7 +413,6 @@ gtranslator_open_tran_panel_draw (GtranslatorOpenTranPanel *panel)
 {
 	GtkWidget *scrolledwindow;
 	GtkWidget *button;
-	GtkWidget *label;
 	GtkWidget *hbox;
 	
 	/*
@@ -448,23 +452,6 @@ gtranslator_open_tran_panel_draw (GtranslatorOpenTranPanel *panel)
 			 G_CALLBACK(entry_activate_cb), panel);
 	
 	gtk_box_pack_start(GTK_BOX(panel), hbox, FALSE, TRUE, 0);
-	
-	/*
-	 * Language code
-	 */		 
-	hbox = gtk_hbox_new(FALSE, 6);
-	
-	label = gtk_label_new(_("Lang code:"));
-	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
-
-	panel->priv->lang_code = gtk_entry_new();
-	gtk_widget_set_tooltip_text(panel->priv->lang_code,
-				    _("For example: gl"));
-	gtk_box_pack_start(GTK_BOX(hbox), panel->priv->lang_code, TRUE, TRUE, 0);	
-	g_signal_connect(panel->priv->lang_code, "activate",
-			 G_CALLBACK(entry_activate_cb), panel);
-	
-	gtk_box_pack_start(GTK_BOX(panel), hbox, FALSE, TRUE, 0);
 }
 
 static void
@@ -473,6 +460,8 @@ gtranslator_open_tran_panel_init (GtranslatorOpenTranPanel *panel)
 	
 	panel->priv = GTR_OPEN_TRAN_PANEL_GET_PRIVATE (panel);
 
+	panel->priv->gconf_client = gconf_client_get_default ();
+	
 	gtranslator_open_tran_panel_draw(panel);
 }
 

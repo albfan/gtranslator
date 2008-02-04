@@ -1,5 +1,11 @@
 2008-02-04  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* plugins/open-tran:
+	Added configuration dialog and improved.
+	Now you can choose the search code too.
+
+2008-02-04  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* src/application.c:
 	Now you can edit the menu shortcuts. (Fixes bug #514177)
 

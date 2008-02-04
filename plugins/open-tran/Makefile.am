@@ -7,6 +7,7 @@ INCLUDES =                                                      \
 	-I$(top_srcdir)/src/plugin-system		\
 	-I$(top_srcdir)/src/toolbareditor		\
 	-DPIXMAPSDIR=\""$(datadir)"/pixmaps/gtranslator\"       \
+	-DDATADIR=\""$(pkgdatadir)"\"                           \
 	$(GTRANSLATOR_CFLAGS) 				\
 	$(SOUP_CFLAGS)				\
 	$(WARN_CFLAGS)					\
@@ -26,6 +27,11 @@ libopentran_la_LDFLAGS = \
 	$(GTRANSLATOR_LIBS)					\
 	$(SOUP_LIBS)
 
+gladedir = $(pkgdatadir)
+
+glade_DATA =  \
+	open-tran-dialog.glade
+
 pixmaps_dir = $(datadir)/pixmaps/gtranslator
 pixmaps__DATA = \
         gnome.png \
@@ -42,7 +48,7 @@ plugin_in_files = open-tran.gtranslator-plugin.desktop.in
 
 plugin_DATA = $(plugin_in_files:.gtranslator-plugin.desktop.in=.gtranslator.plugin)
 
-EXTRA_DIST = $(pixmaps__DATA) $(plugin_in_files)
+EXTRA_DIST = $(glade_DATA) $(pixmaps__DATA) $(plugin_in_files)
 
 CLEANFILES = $(plugin_DATA)
 DISTCLEANFILES = $(plugin_DATA)

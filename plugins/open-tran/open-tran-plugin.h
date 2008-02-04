@@ -47,6 +47,9 @@ typedef struct _GtranslatorOpenTranPlugin		GtranslatorOpenTranPlugin;
 struct _GtranslatorOpenTranPlugin
 {
 	GtranslatorPlugin parent_instance;
+	
+	/* private */
+	GtranslatorOpenTranPluginPrivate *priv;
 };
 
 /*
