@@ -1,3 +1,8 @@
+2008-02-08  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* configure.ac: Changed some libraries from REQUIRED
+	to OPTIONAL.
+
 2008-02-06  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* configure.ac: I removed the libxml dependency
