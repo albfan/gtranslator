@@ -439,13 +439,13 @@ gtranslator_tab_draw (GtranslatorTab *tab)
 	 * Message table
 	 */
 	priv->message_table = gtranslator_message_table_new(GTK_WIDGET(tab));
-
+	gtk_widget_show (priv->message_table);
+	
 	label_widget = gtk_label_new (_("Message Table"));
 	
 	gtk_notebook_append_page (GTK_NOTEBOOK (priv->panel),
 				  priv->message_table,
 				  label_widget);
-	gtk_widget_show (priv->message_table);
 	
 	/*
 	 * Comment pane

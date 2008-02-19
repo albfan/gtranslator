@@ -1,5 +1,10 @@
 2008-02-19  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
+	* src/tab.c: Now is showed message table at startup.
+	(Fixes bug #513994)
+
+2008-02-19  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
 	* src/notebook.c: Added tooltip in the tab to
 	show the path of the file.
 
