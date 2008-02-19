@@ -72,13 +72,25 @@ sync_name (GtranslatorTab *tab,
 {
 	gchar *str;
 	GtkWidget *label;
+	GtkWidget *ebox;
+	gchar *tooltip;
+	GtranslatorPo *po;
 	
 	label = GTK_WIDGET (g_object_get_data (G_OBJECT (hbox), "label"));
+	ebox = GTK_WIDGET (g_object_get_data (G_OBJECT (hbox), "label-ebox"));
+	
+	po = gtranslator_tab_get_po (tab);
 	
 	str = gtranslator_tab_get_name (tab);
 	g_return_if_fail (str != NULL);
 	
 	gtk_label_set_text (GTK_LABEL (label), str);
+	
+	tooltip = g_strdup_printf (_("<b>Path:</b> %s"),
+				   gtranslator_po_get_filename (po));
+	gtk_widget_set_tooltip_markup (ebox, tooltip);
+	
+	g_free (tooltip);
 	g_free (str);
 }
 
