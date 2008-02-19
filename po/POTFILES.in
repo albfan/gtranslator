@@ -13,11 +13,13 @@ plugins/charmap/charmap.gtranslator-plugin.desktop.in
 plugins/dictionary/dict-panel.c
 plugins/dictionary/dict.gtranslator-plugin.desktop.in
 plugins/dictionary/dictionary-plugin.c
+plugins/open-tran/open-tran-dialog.glade
 plugins/open-tran/open-tran-panel.c
 plugins/open-tran/open-tran-plugin.c
 plugins/open-tran/open-tran.gtranslator-plugin.desktop.in
 src/actions-file.c
 src/actions-help.c
+src/comment.c
 src/dialogs/bookmarks-dialog.glade
 src/dialogs/comment-dialog.c
 src/dialogs/comment-dialog.glade
@@ -31,7 +33,6 @@ src/dialogs/search-dialog.glade
 src/main.c
 src/message-table.c
 src/notebook.c
-src/panel.c
 src/po.c
 src/plugin-system/plugin-manager.c
 src/prefs-manager.c
