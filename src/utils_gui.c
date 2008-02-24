@@ -287,18 +287,6 @@ gtranslator_utils_is_valid_uri (const gchar *uri)
 	return TRUE;
 }
 
-gchar *
-gtranslator_utils_make_canonical_uri_from_shell_arg (const gchar *str)
-{
-	g_return_val_if_fail (str != NULL, NULL);
-	g_return_val_if_fail (*str != '\0', NULL);
-		
-	if (gtranslator_utils_is_valid_uri (str))
-		return g_strdup (str);
-	
-	return NULL;
-}
-
 /**
  * gtranslator_utils_drop_get_uris:
  * @selection_data: the #GtkSelectionData from drag_data_received
