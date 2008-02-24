@@ -311,13 +311,9 @@ gtranslator_utils_drop_get_uris (GtkSelectionData *selection_data)
 
 	for (i = 0; uris[i] != NULL; i++)
 	{
-		gchar *uri;
-		
-		uri = gtranslator_utils_make_canonical_uri_from_shell_arg (uris[i]);
-		
 		/* Silently ignore malformed URI/filename */
-		if (uri != NULL)
-			uri_list[p++] = uri;
+		if (gtranslator_utils_is_valid_uri (uris[i]))
+			uri_list[p++] = g_strdup (uris[i]);
 	}
 
 	if (*uri_list == NULL)
