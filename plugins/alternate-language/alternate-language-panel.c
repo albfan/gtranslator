@@ -25,6 +25,7 @@
 #include "plugin.h"
 #include "po.h"
 #include "tab.h"
+#include "view.h"
 
 #include <string.h>
 #include <glib.h>
@@ -46,110 +47,137 @@ struct _GtranslatorAlternateLangPanelPrivate
 	GtkWidget *close_button;
 	GtkWidget *textview;
 	
+	GtkWidget *translated;
+	GtkWidget *untranslated;
+	GtkWidget *fuzzy;
+	
 	GtranslatorPo *po;
 	GtranslatorMsg *first;
 };
 
 static void
-gtranslator_alternate_lang_panel_set_text(GtranslatorAlternateLangPanel *panel,
-					  const gchar *text)
+gtranslator_alternate_lang_panel_set_text (GtranslatorAlternateLangPanel *panel,
+					   const gchar *text)
 {
 	GtkTextBuffer *buf;
 	
-	buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(panel->priv->textview));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (panel->priv->textview));
 	
-	gtk_text_buffer_set_text(buf, text, -1);
+	gtk_text_buffer_set_text (buf, text, -1);
 }
 
 static void
-search_message(GtranslatorAlternateLangPanel *panel,
-	       GtranslatorMsg *msg)
+search_message (GtranslatorAlternateLangPanel *panel,
+		GtranslatorMsg *msg)
 {
 	GList *messages;
 	GList *l;
-	const gchar *msgid = gtranslator_msg_get_msgid(msg);
+	const gchar *msgid = gtranslator_msg_get_msgid (msg);
 	const gchar *string;
+	GtranslatorMsgStatus status;
 	
-	messages = gtranslator_po_get_messages(panel->priv->po);
+	messages = gtranslator_po_get_messages (panel->priv->po);
 	l = messages;
 	do
 	{
-		string = gtranslator_msg_get_msgid(l->data);
-		if(g_utf8_collate(string, msgid) == 0)
+		string = gtranslator_msg_get_msgid (l->data);
+		if (g_utf8_collate(string, msgid) == 0)
 		{
-			gtranslator_alternate_lang_panel_set_text(panel,
-								  gtranslator_msg_get_msgstr(l->data));
+			gtranslator_alternate_lang_panel_set_text (panel,
+								   gtranslator_msg_get_msgstr (l->data));
+			status = gtranslator_msg_get_status (GTR_MSG (l->data));
+			switch (status)
+			{
+				case GTR_MSG_STATUS_TRANSLATED: 
+					gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (panel->priv->translated),
+								      TRUE);
+					break;
+				case GTR_MSG_STATUS_FUZZY:
+					gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (panel->priv->fuzzy),
+								      TRUE);
+					break;
+				default: break;
+			}
+			
 			return;
 		}
-	} while ((l = g_list_next(l)));
+	} while ((l = g_list_next (l)));
 	
-	gtranslator_alternate_lang_panel_set_text(panel,
-						  _("Message not found"));
+	gtranslator_alternate_lang_panel_set_text (panel,
+						   _("Message not found"));
+	
+	/*
+	 * If we are here the status is untranslated
+	 */
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (panel->priv->untranslated),
+				      TRUE);
 }
 
 static void
-showed_message_cb(GtranslatorTab *tab,
-		  GtranslatorMsg *msg,
-		  GtranslatorAlternateLangPanel *panel)
+showed_message_cb (GtranslatorTab *tab,
+		   GtranslatorMsg *msg,
+		   GtranslatorAlternateLangPanel *panel)
 {
-	if(panel->priv->po == NULL)
+	if (panel->priv->po == NULL)
 	{
 		panel->priv->first = msg;
 		return;
 	}
-	search_message(panel, msg);
+	search_message (panel, msg);
 }
 
 static void
-open_file(GtkWidget *dialog,
-	  GtranslatorAlternateLangPanel *panel)
+open_file (GtkWidget *dialog,
+	   GtranslatorAlternateLangPanel *panel)
 {
 	GError *error = NULL;
-	gchar *po_file = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+	gchar *po_file = g_strdup (gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog)));
 		  
 		  
-	panel->priv->po = gtranslator_po_new();
-	gtranslator_po_parse(panel->priv->po, po_file, &error);
+	panel->priv->po = gtranslator_po_new ();
+	gtranslator_po_parse (panel->priv->po, po_file, &error);
 	
-	if(error != NULL)
+	if (error != NULL)
 	{
+		GtkWidget *erdialog;
 		/*
-		 * We have to show the error in a dialog
+		 * FIXME: We have to get the window
 		 */
-		gtk_message_dialog_new(NULL,
-				       GTK_DIALOG_DESTROY_WITH_PARENT,
-				       GTK_MESSAGE_ERROR,
-				       GTK_BUTTONS_CLOSE,
-				       error->message);
-		g_error_free(error);
+		erdialog = gtk_message_dialog_new (NULL,
+						   GTK_DIALOG_DESTROY_WITH_PARENT,
+						   GTK_MESSAGE_ERROR,
+						   GTK_BUTTONS_CLOSE,
+						   error->message);
+		gtk_dialog_run (GTK_DIALOG (erdialog));
+		gtk_widget_destroy (erdialog);
+		g_error_free (error);
 	}
 	
-	search_message(panel, panel->priv->first);
-	gtk_widget_set_sensitive(panel->priv->textview, TRUE);
+	search_message (panel, panel->priv->first);
+	gtk_widget_set_sensitive (panel->priv->textview, TRUE);
 		  
-	g_free(po_file);
-	
-	gtk_widget_destroy(dialog);
+	g_free (po_file);
+	gtk_widget_destroy (dialog);
 }
 
 
 static void
-gtranslator_file_chooser_analyse(gpointer dialog,
-				 GtranslatorAlternateLangPanel *panel)
+gtranslator_file_chooser_analyse (gpointer dialog,
+				  GtranslatorAlternateLangPanel *panel)
 {	
 	gint reply;
 
-	reply = gtk_dialog_run(GTK_DIALOG (dialog));
+	reply = gtk_dialog_run (GTK_DIALOG (dialog));
 	switch (reply){
 		case GTK_RESPONSE_ACCEPT:
-			open_file(GTK_WIDGET(dialog),
+			open_file (GTK_WIDGET (dialog),
 				  panel);
 			break;
 		case GTK_RESPONSE_CANCEL:
-			gtk_widget_hide(GTK_WIDGET(dialog));
+			gtk_widget_hide (GTK_WIDGET (dialog));
 			break;
 		case GTK_RESPONSE_DELETE_EVENT:
-			gtk_widget_hide(GTK_WIDGET(dialog));
+			gtk_widget_hide (GTK_WIDGET (dialog));
 			break;
 		default:
 			break;
@@ -157,8 +185,8 @@ gtranslator_file_chooser_analyse(gpointer dialog,
 }
 
 static void
-open_button_clicked_cb(GtkWidget *open_button,
-		       GtranslatorAlternateLangPanel *panel)
+open_button_clicked_cb (GtkWidget *open_button,
+			GtranslatorAlternateLangPanel *panel)
 {
 	GtkWindow *dialog = NULL;
 			       
@@ -180,16 +208,16 @@ open_button_clicked_cb(GtkWidget *open_button,
 }
 
 static void
-close_button_clicked_cb(GtkWidget *close_button,
-			GtranslatorAlternateLangPanel *panel)
+close_button_clicked_cb (GtkWidget *close_button,
+			 GtranslatorAlternateLangPanel *panel)
 {
 	if(panel->priv->po != NULL)
 	{
-		gtranslator_alternate_lang_panel_set_text(panel, _("File closed"));
+		gtranslator_alternate_lang_panel_set_text (panel, _("File closed"));
 	
-		gtk_widget_set_sensitive(panel->priv->textview, FALSE);
+		gtk_widget_set_sensitive (panel->priv->textview, FALSE);
 	
-		g_object_unref(panel->priv->po);
+		g_object_unref (panel->priv->po);
 		
 		panel->priv->po = NULL;
 	}
@@ -198,63 +226,91 @@ close_button_clicked_cb(GtkWidget *close_button,
 static void
 gtranslator_alternate_lang_panel_draw (GtranslatorAlternateLangPanel *panel)
 {
+	GtkWidget *hbox;
 	GtkWidget *buttonbox;
 	GtkWidget *scroll;
+	GSList *group;
+	
+	/*
+	 * Hbox
+	 */
+	hbox = gtk_hbox_new (FALSE, 6);
+	gtk_widget_show (hbox);
+	gtk_box_pack_start (GTK_BOX (panel), hbox, FALSE, TRUE, 0);
 	
 	/*
 	 * Button box
 	 */
-	buttonbox = gtk_hbutton_box_new();
-	gtk_button_box_set_layout(GTK_BUTTON_BOX(buttonbox), GTK_BUTTONBOX_START);
-	gtk_widget_show(buttonbox);
+	buttonbox = gtk_hbutton_box_new ();
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_START);
+	gtk_widget_show (buttonbox);
 	
-	panel->priv->open_button = gtk_button_new_from_stock(GTK_STOCK_OPEN);
-	g_signal_connect(panel->priv->open_button,
-			 "clicked",
-			 G_CALLBACK(open_button_clicked_cb),
-			 panel);
-	gtk_widget_show(panel->priv->open_button);
+	panel->priv->open_button = gtk_button_new_from_stock (GTK_STOCK_OPEN);
+	g_signal_connect (panel->priv->open_button,
+			  "clicked",
+			  G_CALLBACK (open_button_clicked_cb),
+			  panel);
+	gtk_widget_show (panel->priv->open_button);
 	
-	panel->priv->close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-	g_signal_connect(panel->priv->close_button,
-			 "clicked",
-			 G_CALLBACK(close_button_clicked_cb),
-			 panel);
-	gtk_widget_show(panel->priv->close_button);
+	panel->priv->close_button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+	g_signal_connect (panel->priv->close_button,
+			  "clicked",
+			  G_CALLBACK (close_button_clicked_cb),
+			  panel);
+	gtk_widget_show (panel->priv->close_button);
 	
-	gtk_box_pack_start(GTK_BOX(buttonbox),
-			   panel->priv->open_button,
-			   TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(buttonbox),
-			   panel->priv->close_button,
-			   TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (buttonbox),
+			    panel->priv->open_button,
+			    TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (buttonbox),
+			    panel->priv->close_button,
+			    TRUE, TRUE, 0);
 	
-	gtk_box_pack_start(GTK_BOX(panel), buttonbox, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), buttonbox, FALSE, TRUE, 0);
+	
+	/*
+	 * Radio buttons
+	 */
+	panel->priv->translated = gtk_radio_button_new_with_label (NULL,
+								   _("Translated"));
+	gtk_widget_show (panel->priv->translated);
+	gtk_box_pack_start (GTK_BOX (hbox), panel->priv->translated, FALSE, TRUE, 0);
+	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (panel->priv->translated));
+	
+	panel->priv->fuzzy = gtk_radio_button_new_with_label (group,
+							      _("Fuzzy"));
+	gtk_widget_show (panel->priv->fuzzy);
+	gtk_box_pack_start (GTK_BOX (hbox), panel->priv->fuzzy, FALSE, TRUE, 0);
+	
+	panel->priv->untranslated = gtk_radio_button_new_with_label (group,
+								     _("Untranslated"));
+	gtk_widget_show (panel->priv->untranslated);
+	gtk_box_pack_start (GTK_BOX (hbox), panel->priv->untranslated, FALSE, TRUE, 0);
 	
 	/*
 	 * Text view
 	 */
-	scroll = gtk_scrolled_window_new(NULL, NULL);
-	gtk_widget_show(scroll);
+	scroll = gtk_scrolled_window_new (NULL, NULL);
+	gtk_widget_show (scroll);
 	
-	panel->priv->textview = gtk_text_view_new();
-	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(panel->priv->textview),
-				    GTK_WRAP_WORD);
-	gtk_text_view_set_editable(GTK_TEXT_VIEW(panel->priv->textview),
-				   FALSE);
-	gtranslator_alternate_lang_panel_set_text(panel, _("There isn't any file loaded"));
-	gtk_widget_set_sensitive(panel->priv->textview, FALSE);
-	gtk_widget_show(panel->priv->textview);
+	panel->priv->textview = gtranslator_view_new ();
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (panel->priv->textview),
+				     GTK_WRAP_WORD);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (panel->priv->textview),
+				    FALSE);
+	gtranslator_alternate_lang_panel_set_text (panel, _("There isn't any file loaded"));
+	gtk_widget_set_sensitive (panel->priv->textview, FALSE);
+	gtk_widget_show (panel->priv->textview);
 	
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll),
-					      panel->priv->textview);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll),
+					       panel->priv->textview);
 	
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
-				       GTK_POLICY_AUTOMATIC,
-				       GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
 	
-	gtk_box_pack_start(GTK_BOX(panel), scroll,
-			   TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (panel), scroll,
+			    TRUE, TRUE, 0);
 }
 
 static void
@@ -262,7 +318,7 @@ gtranslator_alternate_lang_panel_init (GtranslatorAlternateLangPanel *panel)
 {
 	panel->priv = GTR_ALTERNATE_LANG_PANEL_GET_PRIVATE (panel);
 	
-	gtranslator_alternate_lang_panel_draw(panel);
+	gtranslator_alternate_lang_panel_draw (panel);
 	
 	panel->priv->po = NULL;
 }
@@ -291,9 +347,9 @@ gtranslator_alternate_lang_panel_new (GtkWidget *tab)
 	GtranslatorAlternateLangPanel *panel;
 	panel = g_object_new (GTR_TYPE_ALTERNATE_LANG_PANEL, NULL);
 	
-	g_signal_connect(tab, "showed-message",
-			 G_CALLBACK(showed_message_cb),
-			 panel);
+	g_signal_connect (tab, "showed-message",
+			  G_CALLBACK (showed_message_cb),
+			  panel);
 	
-	return GTK_WIDGET(panel);
+	return GTK_WIDGET (panel);
 }

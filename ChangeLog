@@ -1,3 +1,9 @@
+2008-02-25  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
+
+	* plugins/alternate-language: Now it shows the status of
+	the alternate language and it uses GtranslatorView instead
+	of GtkTextView.
+
 2008-02-24  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
 	* src/utils_gui.c: Fixed drop uris func.
